@@ -1,0 +1,59 @@
+{
+  "name": "@epilot/pricing",
+  "version": "4.10.0",
+  "description": "Pricing Library",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/epilot-dev/pricing.git"
+  },
+  "homepage": "https://github.com/epilot-dev/pricing/README.md",
+  "keywords": [
+    "pricing"
+  ],
+  "scripts": {
+    "start": "mkdir -p dist && cp -r src/types dist/types && webpack --watch",
+    "test": "jest",
+    "gen-docs": "rm -rf docs && typedoc --plugin typedoc-plugin-markdown --out docs src && echo '{ \"label\": \"Pricing Library\", \"position\": 0 }' > docs/_category_.json",
+    "test:watch": "jest --watch --silent=false --verbose",
+    "clean": "rm -rf dist",
+    "bundle-definition": "webpack --mode=production",
+    "build": "npm run clean && tsc && mkdir -p dist && cp -r src/types dist/types && npm run bundle-definition",
+    "typegen": "echo '/* eslint-disable */\n/**\n * DO NOT MODIFY - GENERATED TYPES FROM OPENAPI\n **/' > src/types/pricing-types.d.ts && typegen ../../lambda/ApiHandlerFunction/openapi.yml >> src/types/pricing-types.d.ts",
+    "prepare": "npm run build",
+    "eslint": "../../node_modules/.bin/eslint -c ../.eslintrc.yml",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "dist/*.js",
+    "dist/*.d.ts",
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "!*.test.*",
+    "!**/*.test.*",
+    "!node_modules",
+    "!src",
+    "!*.config.js"
+  ],
+  "author": "epilot GmbH",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@types/dinero.js": "^1.9.0",
+    "dinero.js": "^1.9.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.20",
+    "jest": "^26.6.3",
+    "nodemon-webpack-plugin": "^4.7.1",
+    "openapi-client-axios-typegen": "^3.13.1",
+    "ts-jest": "^26.5.0",
+    "ts-loader": "^8.0.14",
+    "ts-node": "^9.1.1",
+    "typedoc": "^0.24.7",
+    "typedoc-plugin-markdown": "^3.15.3",
+    "typescript": "^4.1.3",
+    "webpack": "~5.18.0",
+    "webpack-cli": "^4.4.0"
+  }
+}

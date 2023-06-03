@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": "src",
+    "outDir": "dist",
+    "target": "es2017",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": ["esnext", "dom"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "sourceMap": true,
+    "declaration": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["**/*.test.ts"]
+}

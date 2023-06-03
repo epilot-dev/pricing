@@ -35,8 +35,6 @@ export {
 } from './pricing';
 export { getDisplayTierByQuantity, getTierDescription } from './tiers';
 export type { PriceTierDisplayMode, PricingDetails, Tax, TaxAmountBreakdown, TimeFrequency } from './types';
-export * from './types';
-export * from './types/pricing-types';
 export type { OperationType } from './normalizers/constants';
 export type { RelationAttributeValue } from './pricing';
 export { isTaxInclusivePrice } from './utils';

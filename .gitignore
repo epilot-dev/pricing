@@ -1,2 +1,5 @@
 *.js
 !webpack.config.js
+node_modules/
+docs/
+dist

@@ -1,3 +1,5 @@
+[![CI](https://github.com/epilot-dev/pricing/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/epilot-dev/pricing/actions/workflows/ci.yml)
+
 # Pricing Library
 
 A library that provides pricing utility operations for Pricing Entities within the epilot 360 Platform, such as calculation of price item totals and aggregated totals. The purpose of this library is to provide support for common pricing concerns to all our APIs, micro-frontends and epilot Journeys.

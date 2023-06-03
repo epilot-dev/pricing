@@ -34,7 +34,24 @@ export {
   extractPricingEntitiesBySlug,
 } from './pricing';
 export { getDisplayTierByQuantity, getTierDescription } from './tiers';
-export type { PriceTierDisplayMode, PricingDetails, Tax, TaxAmountBreakdown, TimeFrequency } from './types';
+export type {
+  PriceTierDisplayMode,
+  PricingDetails,
+  Tax,
+  TaxAmountBreakdown,
+  TimeFrequency,
+  BillingPeriod,
+  PriceItem,
+  PriceTier,
+  PriceItemsDto,
+  PriceItemDto,
+  PriceInputMappings,
+  CompositePriceItemDto,
+  PriceInputMapping,
+  Price,
+  CompositePriceItem,
+} from './types';
+export type { Components as PricingTypes } from './types/pricing-types';
 export type { OperationType } from './normalizers/constants';
 export type { RelationAttributeValue } from './pricing';
 export { isTaxInclusivePrice } from './utils';

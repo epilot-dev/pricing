@@ -462,12 +462,8 @@ export const computePriceItem: ComputePriceItem = (priceItem, price, applicableT
   const priceTax = getPriceTax(applicableTax, price, priceItem?.taxes);
   const isTaxInclusive = isTaxInclusivePrice(price);
 
-  const {
-    safeQuantity,
-    quantityToSelectTier,
-    unitAmountMultiplier,
-    isUsingPriceMappingToSelectTier,
-  } = computeQuantities(price, quantity, priceMapping);
+  const { safeQuantity, quantityToSelectTier, unitAmountMultiplier, isUsingPriceMappingToSelectTier } =
+    computeQuantities(price, quantity, priceMapping);
 
   const itemValues =
     price?.pricing_model === PricingModel.tieredVolume

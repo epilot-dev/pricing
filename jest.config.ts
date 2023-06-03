@@ -1,9 +1,26 @@
 import type { Config } from '@jest/types';
 
-import base from '../../jest.config.base';
-
 const config: Config.InitialOptions = {
-  ...base,
+  preset: 'ts-jest',
+  clearMocks: true,
+  testEnvironment: 'node',
+  testMatch: ['**/?(*.)+(spec|test).ts?(x)'],
+  testPathIgnorePatterns: ['node_modules'],
+  collectCoverage: true,
+  coveragePathIgnorePatterns: ['__tests__', 'node_modules'],
+  coverageThreshold: {
+    global: {
+      branches: 65,
+      functions: 80,
+      lines: 80,
+      statements: 80,
+    },
+  },
+  maxWorkers: '50%',
+  verbose: true,
+  silent: true,
+  forceExit: true,
+  coverageDirectory: '<rootDir>/coverage/',
 };
 
 export default config;

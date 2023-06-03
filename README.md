@@ -16,7 +16,7 @@ yarn add @epilot/pricing
 npm install --save @epilot/pricing
 ```
 
-## Disclaimer
+## ⚠️ Disclaimer
 
 This library is made available as an open source contribution to the community to ensure that all our clients and integrators can have the flexibility to build their own custom frontends and integrations with our platform [^1].
 

@@ -285,7 +285,11 @@ export const computeAggregatedAndPriceTotals: ComputeAggregatedAndPriceTotals = 
 
       const priceItemToAppend = computePriceItem(priceItem, price, tax, priceItem.quantity, priceMapping);
 
-      const updatedTotals = isUnitAmountApproved(price, priceItem)
+      const updatedTotals = isUnitAmountApproved(
+        priceItemToAppend?._price?.price_display_in_journeys ?? price.price_display_in_journeys,
+        priceItem,
+        null,
+      )
         ? recomputeDetailTotals(details, price, priceItemToAppend)
         : {
             amount_subtotal: details.amount_subtotal,
@@ -436,7 +440,11 @@ const recomputeDetailTotalsFromCompositePrice = (details: PricingDetails, compos
   };
 
   return compositePriceItem?.item_components?.reduce((detailTotals, itemComponent: Price) => {
-    const updatedTotals = isUnitAmountApproved(itemComponent._price, itemComponent, compositePriceItem)
+    const updatedTotals = isUnitAmountApproved(
+      itemComponent._price?.price_display_in_journeys,
+      itemComponent,
+      compositePriceItem,
+    )
       ? recomputeDetailTotals(detailTotals, itemComponent._price, itemComponent)
       : {
           amount_subtotal: details?.amount_subtotal || 0,
@@ -462,8 +470,12 @@ export const computePriceItem: ComputePriceItem = (priceItem, price, applicableT
   const priceTax = getPriceTax(applicableTax, price, priceItem?.taxes);
   const isTaxInclusive = isTaxInclusivePrice(price);
 
-  const { safeQuantity, quantityToSelectTier, unitAmountMultiplier, isUsingPriceMappingToSelectTier } =
-    computeQuantities(price, quantity, priceMapping);
+  const {
+    safeQuantity,
+    quantityToSelectTier,
+    unitAmountMultiplier,
+    isUsingPriceMappingToSelectTier,
+  } = computeQuantities(price, quantity, priceMapping);
 
   const itemValues =
     price?.pricing_model === PricingModel.tieredVolume
@@ -474,6 +486,7 @@ export const computePriceItem: ComputePriceItem = (priceItem, price, applicableT
           quantityToSelectTier,
           priceTax,
           unitAmountMultiplier,
+          priceItem._price?.unchanged_price_display_in_journeys,
         )
       : price?.pricing_model === PricingModel.tieredFlatFee
       ? computeTieredFlatFeePriceItemValues(
@@ -484,6 +497,7 @@ export const computePriceItem: ComputePriceItem = (priceItem, price, applicableT
           priceTax,
           safeQuantity,
           isUsingPriceMappingToSelectTier,
+          priceItem._price?.unchanged_price_display_in_journeys,
         )
       : price?.pricing_model === PricingModel.tieredGraduated
       ? computeTieredGraduatedPriceItemValues(
@@ -494,6 +508,7 @@ export const computePriceItem: ComputePriceItem = (priceItem, price, applicableT
           priceTax,
           safeQuantity,
           isUsingPriceMappingToSelectTier,
+          priceItem._price?.unchanged_price_display_in_journeys,
         )
       : computePriceItemValues(unitAmountDecimal, currency, isTaxInclusive, unitAmountMultiplier, priceTax);
 
@@ -513,7 +528,14 @@ export const computePriceItem: ComputePriceItem = (priceItem, price, applicableT
         amount: itemValues.taxAmount,
       },
     ],
-    _price: price,
+    _price: {
+      ...price,
+      ...(itemValues.displayMode && {
+        price_display_in_journeys: itemValues.displayMode ?? price.price_display_in_journeys,
+        unchanged_price_display_in_journeys:
+          priceItem._price?.unchanged_price_display_in_journeys ?? price.price_display_in_journeys,
+      }),
+    },
   };
 };
 
@@ -618,7 +640,11 @@ const getPriceRecurrence = (price: Price, recurrences: RecurrenceAmount[]) => {
   return recurrences.find((recurrenceItem) => recurrenceItem.type === 'one_time');
 };
 
-const isUnitAmountApproved = (price: Price, priceItem: PriceItem, parentPriceItem?: CompositePriceItem) => {
+const isUnitAmountApproved = (
+  priceDisplayInJourneys: Price['price_display_in_journeys'],
+  priceItem: PriceItem,
+  parentPriceItem?: CompositePriceItem,
+) => {
   if (parentPriceItem) {
     const parentHasHiddenPriceComponents = parentPriceItem.item_components.some(
       (component) =>
@@ -635,7 +661,7 @@ const isUnitAmountApproved = (price: Price, priceItem: PriceItem, parentPriceIte
     return true;
   }
 
-  return price?.price_display_in_journeys !== 'show_as_on_request' || priceItem?.on_request_approved;
+  return priceDisplayInJourneys !== 'show_as_on_request' || priceItem?.on_request_approved;
 };
 
 export const computeQuantities = (price: Price, quantity?: number, priceMapping?: PriceInputMapping) => {

@@ -10,6 +10,7 @@ type PriceItemsTotals = {
   amountSubtotal: number;
   amountTotal: number;
   taxAmount: number;
+  displayMode?: Price['price_display_in_journeys'];
 };
 
 export const TaxRates = Object.freeze({
@@ -137,6 +138,7 @@ export const computeTieredVolumePriceItemValues = (
   quantityToSelectTier: number,
   tax: Tax,
   unitAmountMultiplier: number,
+  unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'],
 ): PriceItemsTotals => {
   const tier = getPriceTierForQuantity(tiers, quantityToSelectTier);
 
@@ -148,10 +150,14 @@ export const computeTieredVolumePriceItemValues = (
     tax,
   );
 
+  const displayMode: Price['price_display_in_journeys'] =
+    tier?.display_mode === 'on_request' ? 'show_as_on_request' : unchangedPriceDisplayInJourneys;
+
   return {
     amountSubtotal: d(tierValues.amountSubtotal).getAmount(),
     amountTotal: d(tierValues.amountTotal).getAmount(),
     taxAmount: d(tierValues.taxAmount).getAmount(),
+    displayMode,
   };
 };
 
@@ -163,6 +169,7 @@ export const computeTieredFlatFeePriceItemValues = (
   tax: Tax,
   quantity: number,
   isUsingPriceMappingToSelectTier: boolean,
+  unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'],
 ): PriceItemsTotals => {
   const tier = getPriceTierForQuantity(tiers, quantityToSelectTier);
 
@@ -180,10 +187,14 @@ export const computeTieredFlatFeePriceItemValues = (
     tax,
   );
 
+  const displayMode: Price['price_display_in_journeys'] =
+    tier?.display_mode === 'on_request' ? 'show_as_on_request' : unchangedPriceDisplayInJourneys;
+
   return {
     amountSubtotal: d(tierValues.amountSubtotal).getAmount(),
     amountTotal: d(tierValues.amountTotal).getAmount(),
     taxAmount: d(tierValues.taxAmount).getAmount(),
+    displayMode,
   };
 };
 
@@ -195,6 +206,7 @@ export const computeTieredGraduatedPriceItemValues = (
   tax: Tax,
   quantity: number,
   isUsingPriceMappingToSelectTier: boolean,
+  unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'],
 ): PriceItemsTotals => {
   const priceTiersForQuantity = getPriceTiersForQuantity(tiers, quantityToSelectTier);
 
@@ -212,10 +224,14 @@ export const computeTieredGraduatedPriceItemValues = (
         tax,
       );
 
+      const displayMode: Price['price_display_in_journeys'] =
+        tier?.display_mode === 'on_request' ? 'show_as_on_request' : unchangedPriceDisplayInJourneys;
+
       return {
         amountSubtotal: d(totals.amountSubtotal).add(d(tierValues.amountSubtotal)).getAmount(),
         amountTotal: d(totals.amountTotal).add(d(tierValues.amountTotal)).getAmount(),
         taxAmount: d(totals.taxAmount).add(d(tierValues.taxAmount)).getAmount(),
+        displayMode,
       };
     },
     { amountSubtotal: 0, amountTotal: 0, taxAmount: 0 },

@@ -3,7 +3,7 @@ import { Currency } from 'dinero.js';
 import { PricingModel } from '../pricing';
 import { PriceTier } from '../types';
 
-import { getDisplayTierByQuantity, getTierDescription } from './index';
+import { getDisplayTierByQuantity, getDisplayTiersByQuantity, getTierDescription } from './index';
 
 const baseTiers: PriceTier[] = [
   { up_to: 10, unit_amount: 1000, unit_amount_decimal: '10.00' },
@@ -19,6 +19,60 @@ const mockTranslations = {
 const t = jest.fn().mockImplementation((key: string) => mockTranslations[key] || key);
 
 describe('getDisplayTierByQuantity', () => {
+  it.each`
+    tiers        | quantity     | pricingModel                    | expected
+    ${baseTiers} | ${-1}        | ${PricingModel.tieredGraduated} | ${undefined}
+    ${baseTiers} | ${0}         | ${PricingModel.tieredGraduated} | ${undefined}
+    ${baseTiers} | ${5}         | ${PricingModel.tieredGraduated} | ${[baseTiers[0]]}
+    ${baseTiers} | ${10}        | ${PricingModel.tieredGraduated} | ${[baseTiers[0]]}
+    ${baseTiers} | ${10.999}    | ${PricingModel.tieredGraduated} | ${[baseTiers[0], baseTiers[1]]}
+    ${baseTiers} | ${15}        | ${PricingModel.tieredGraduated} | ${[baseTiers[0], baseTiers[1]]}
+    ${baseTiers} | ${20}        | ${PricingModel.tieredGraduated} | ${[baseTiers[0], baseTiers[1]]}
+    ${baseTiers} | ${21}        | ${PricingModel.tieredGraduated} | ${baseTiers}
+    ${baseTiers} | ${100}       | ${PricingModel.tieredGraduated} | ${baseTiers}
+    ${undefined} | ${30}        | ${PricingModel.tieredGraduated} | ${undefined}
+    ${baseTiers} | ${undefined} | ${PricingModel.tieredGraduated} | ${undefined}
+    ${baseTiers} | ${-1}        | ${PricingModel.tieredVolume}    | ${undefined}
+    ${baseTiers} | ${0}         | ${PricingModel.tieredVolume}    | ${undefined}
+    ${undefined} | ${0}         | ${PricingModel.tieredVolume}    | ${undefined}
+    ${baseTiers} | ${undefined} | ${PricingModel.tieredVolume}    | ${undefined}
+    ${baseTiers} | ${5}         | ${PricingModel.tieredVolume}    | ${[baseTiers[0]]}
+    ${baseTiers} | ${10}        | ${PricingModel.tieredVolume}    | ${[baseTiers[0]]}
+    ${baseTiers} | ${10.999}    | ${PricingModel.tieredVolume}    | ${[baseTiers[1]]}
+    ${baseTiers} | ${15}        | ${PricingModel.tieredVolume}    | ${[baseTiers[1]]}
+    ${baseTiers} | ${20}        | ${PricingModel.tieredVolume}    | ${[baseTiers[1]]}
+    ${baseTiers} | ${21}        | ${PricingModel.tieredVolume}    | ${[baseTiers[2]]}
+    ${baseTiers} | ${100}       | ${PricingModel.tieredVolume}    | ${[baseTiers[2]]}
+    ${baseTiers} | ${0}         | ${PricingModel.tieredFlatFee}   | ${undefined}
+    ${undefined} | ${0}         | ${PricingModel.tieredFlatFee}   | ${undefined}
+    ${baseTiers} | ${undefined} | ${PricingModel.tieredFlatFee}   | ${undefined}
+    ${baseTiers} | ${5}         | ${PricingModel.tieredFlatFee}   | ${[baseTiers[0]]}
+    ${baseTiers} | ${10}        | ${PricingModel.tieredFlatFee}   | ${[baseTiers[0]]}
+    ${baseTiers} | ${10.999}    | ${PricingModel.tieredFlatFee}   | ${[baseTiers[1]]}
+    ${baseTiers} | ${15}        | ${PricingModel.tieredFlatFee}   | ${[baseTiers[1]]}
+    ${baseTiers} | ${20}        | ${PricingModel.tieredFlatFee}   | ${[baseTiers[1]]}
+    ${baseTiers} | ${21}        | ${PricingModel.tieredFlatFee}   | ${[baseTiers[2]]}
+    ${baseTiers} | ${100}       | ${PricingModel.tieredFlatFee}   | ${[baseTiers[2]]}
+    ${baseTiers} | ${100}       | ${undefined}                    | ${undefined}
+  `(
+    'should return correctly for quantity=$quantity and pricingModel=$pricingModel',
+    ({
+      tiers,
+      quantity,
+      pricingModel,
+      expected,
+    }: {
+      tiers: PriceTier[];
+      quantity: number;
+      pricingModel: PricingModel;
+      expected: PriceTier[] | undefined;
+    }) => {
+      expect(getDisplayTiersByQuantity(tiers, quantity, pricingModel)).toEqual(expected);
+    },
+  );
+});
+
+describe('getDisplayTiersByQuantity', () => {
   it.each`
     tiers        | quantity                           | pricingModel                    | expected
     ${baseTiers} | ${-1}                              | ${PricingModel.tieredGraduated} | ${undefined}

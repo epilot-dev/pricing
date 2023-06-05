@@ -35,6 +35,31 @@ export function getDisplayTierByQuantity(
 }
 
 /**
+ * This function returns all the price tier that matches the input quantity.
+ *
+ * @param {PriceTier[]} tiers - The price tiers.
+ * @param {Number} quantity - The quantity.
+ * @param {PricingModel} pricingModel - The pricing model.
+ * @returns {Price} The selected tiers.
+ */
+export function getDisplayTiersByQuantity(
+  tiers: PriceTier[],
+  quantity: number,
+  pricingModel: PricingModel | Price['pricing_model'],
+): PriceTier[] {
+  if (!tiers || !tiers.length || !quantity || quantity <= 0 || !pricingModel) {
+    return;
+  }
+  const matchingTiers = tiers.filter(byInputQuantity(tiers, quantity));
+
+  if (pricingModel === PricingModel.tieredGraduated) {
+    return matchingTiers;
+  }
+
+  return [matchingTiers[matchingTiers.length - 1]];
+}
+
+/**
  * Get the tier description for a tiered price. This function will return a string
  * describing the price, based on the tier and unit.
  *
@@ -61,6 +86,13 @@ export function getTierDescription(
 
   if (!tier) {
     return;
+  }
+
+  if (tier.display_mode === 'on_request') {
+    return t('show_as_on_request', {
+      ns: '',
+      defaultValue: 'Price on request',
+    });
   }
 
   if (typeof tier.unit_amount !== 'number' && typeof tier.flat_fee_amount !== 'number') {

@@ -21,8 +21,12 @@ export function getDisplayTierByQuantity(
   quantity: number,
   pricingModel: PricingModel | Price['pricing_model'],
 ): PriceTier {
-  if (!tiers || !tiers.length || !quantity || quantity <= 0 || !pricingModel) {
+  if (!tiers || !tiers.length) {
     return;
+  }
+
+  if (!quantity || quantity <= 0 || !pricingModel) {
+    return tiers[0];
   }
 
   if (pricingModel === PricingModel.tieredGraduated) {
@@ -47,9 +51,14 @@ export function getDisplayTiersByQuantity(
   quantity: number,
   pricingModel: PricingModel | Price['pricing_model'],
 ): PriceTier[] {
-  if (!tiers || !tiers.length || !quantity || quantity <= 0 || !pricingModel) {
+  if (!tiers || !tiers.length) {
     return;
   }
+
+  if (!quantity || quantity <= 0 || !pricingModel) {
+    return [tiers[0]];
+  }
+
   const matchingTiers = tiers.filter(byInputQuantity(tiers, quantity));
 
   if (pricingModel === PricingModel.tieredGraduated) {

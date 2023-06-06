@@ -21,8 +21,8 @@ const t = jest.fn().mockImplementation((key: string) => mockTranslations[key] ||
 describe('getDisplayTierByQuantity', () => {
   it.each`
     tiers        | quantity     | pricingModel                    | expected
-    ${baseTiers} | ${-1}        | ${PricingModel.tieredGraduated} | ${undefined}
-    ${baseTiers} | ${0}         | ${PricingModel.tieredGraduated} | ${undefined}
+    ${baseTiers} | ${-1}        | ${PricingModel.tieredGraduated} | ${[baseTiers[0]]}
+    ${baseTiers} | ${0}         | ${PricingModel.tieredGraduated} | ${[baseTiers[0]]}
     ${baseTiers} | ${5}         | ${PricingModel.tieredGraduated} | ${[baseTiers[0]]}
     ${baseTiers} | ${10}        | ${PricingModel.tieredGraduated} | ${[baseTiers[0]]}
     ${baseTiers} | ${10.999}    | ${PricingModel.tieredGraduated} | ${[baseTiers[0], baseTiers[1]]}
@@ -31,11 +31,11 @@ describe('getDisplayTierByQuantity', () => {
     ${baseTiers} | ${21}        | ${PricingModel.tieredGraduated} | ${baseTiers}
     ${baseTiers} | ${100}       | ${PricingModel.tieredGraduated} | ${baseTiers}
     ${undefined} | ${30}        | ${PricingModel.tieredGraduated} | ${undefined}
-    ${baseTiers} | ${undefined} | ${PricingModel.tieredGraduated} | ${undefined}
-    ${baseTiers} | ${-1}        | ${PricingModel.tieredVolume}    | ${undefined}
-    ${baseTiers} | ${0}         | ${PricingModel.tieredVolume}    | ${undefined}
+    ${baseTiers} | ${undefined} | ${PricingModel.tieredGraduated} | ${[baseTiers[0]]}
+    ${baseTiers} | ${-1}        | ${PricingModel.tieredVolume}    | ${[baseTiers[0]]}
+    ${baseTiers} | ${0}         | ${PricingModel.tieredVolume}    | ${[baseTiers[0]]}
     ${undefined} | ${0}         | ${PricingModel.tieredVolume}    | ${undefined}
-    ${baseTiers} | ${undefined} | ${PricingModel.tieredVolume}    | ${undefined}
+    ${baseTiers} | ${undefined} | ${PricingModel.tieredVolume}    | ${[baseTiers[0]]}
     ${baseTiers} | ${5}         | ${PricingModel.tieredVolume}    | ${[baseTiers[0]]}
     ${baseTiers} | ${10}        | ${PricingModel.tieredVolume}    | ${[baseTiers[0]]}
     ${baseTiers} | ${10.999}    | ${PricingModel.tieredVolume}    | ${[baseTiers[1]]}
@@ -43,9 +43,9 @@ describe('getDisplayTierByQuantity', () => {
     ${baseTiers} | ${20}        | ${PricingModel.tieredVolume}    | ${[baseTiers[1]]}
     ${baseTiers} | ${21}        | ${PricingModel.tieredVolume}    | ${[baseTiers[2]]}
     ${baseTiers} | ${100}       | ${PricingModel.tieredVolume}    | ${[baseTiers[2]]}
-    ${baseTiers} | ${0}         | ${PricingModel.tieredFlatFee}   | ${undefined}
+    ${baseTiers} | ${0}         | ${PricingModel.tieredFlatFee}   | ${[baseTiers[0]]}
     ${undefined} | ${0}         | ${PricingModel.tieredFlatFee}   | ${undefined}
-    ${baseTiers} | ${undefined} | ${PricingModel.tieredFlatFee}   | ${undefined}
+    ${baseTiers} | ${undefined} | ${PricingModel.tieredFlatFee}   | ${[baseTiers[0]]}
     ${baseTiers} | ${5}         | ${PricingModel.tieredFlatFee}   | ${[baseTiers[0]]}
     ${baseTiers} | ${10}        | ${PricingModel.tieredFlatFee}   | ${[baseTiers[0]]}
     ${baseTiers} | ${10.999}    | ${PricingModel.tieredFlatFee}   | ${[baseTiers[1]]}
@@ -53,7 +53,7 @@ describe('getDisplayTierByQuantity', () => {
     ${baseTiers} | ${20}        | ${PricingModel.tieredFlatFee}   | ${[baseTiers[1]]}
     ${baseTiers} | ${21}        | ${PricingModel.tieredFlatFee}   | ${[baseTiers[2]]}
     ${baseTiers} | ${100}       | ${PricingModel.tieredFlatFee}   | ${[baseTiers[2]]}
-    ${baseTiers} | ${100}       | ${undefined}                    | ${undefined}
+    ${baseTiers} | ${100}       | ${undefined}                    | ${[baseTiers[0]]}
   `(
     'should return correctly for quantity=$quantity and pricingModel=$pricingModel',
     ({
@@ -75,14 +75,14 @@ describe('getDisplayTierByQuantity', () => {
 describe('getDisplayTiersByQuantity', () => {
   it.each`
     tiers        | quantity                           | pricingModel                    | expected
-    ${baseTiers} | ${-1}                              | ${PricingModel.tieredGraduated} | ${undefined}
+    ${baseTiers} | ${-1}                              | ${PricingModel.tieredGraduated} | ${baseTiers[0]}
     ${baseTiers} | ${Math.floor(Math.random() * 100)} | ${PricingModel.tieredGraduated} | ${baseTiers[0]}
     ${undefined} | ${Math.floor(Math.random() * 100)} | ${PricingModel.tieredGraduated} | ${undefined}
-    ${baseTiers} | ${undefined}                       | ${PricingModel.tieredGraduated} | ${undefined}
-    ${baseTiers} | ${-1}                              | ${PricingModel.tieredVolume}    | ${undefined}
-    ${baseTiers} | ${0}                               | ${PricingModel.tieredVolume}    | ${undefined}
+    ${baseTiers} | ${undefined}                       | ${PricingModel.tieredGraduated} | ${baseTiers[0]}
+    ${baseTiers} | ${-1}                              | ${PricingModel.tieredVolume}    | ${baseTiers[0]}
+    ${baseTiers} | ${0}                               | ${PricingModel.tieredVolume}    | ${baseTiers[0]}
     ${undefined} | ${0}                               | ${PricingModel.tieredVolume}    | ${undefined}
-    ${baseTiers} | ${undefined}                       | ${PricingModel.tieredVolume}    | ${undefined}
+    ${baseTiers} | ${undefined}                       | ${PricingModel.tieredVolume}    | ${baseTiers[0]}
     ${baseTiers} | ${5}                               | ${PricingModel.tieredVolume}    | ${baseTiers[0]}
     ${baseTiers} | ${10}                              | ${PricingModel.tieredVolume}    | ${baseTiers[0]}
     ${baseTiers} | ${10.999}                          | ${PricingModel.tieredVolume}    | ${baseTiers[1]}
@@ -90,9 +90,9 @@ describe('getDisplayTiersByQuantity', () => {
     ${baseTiers} | ${20}                              | ${PricingModel.tieredVolume}    | ${baseTiers[1]}
     ${baseTiers} | ${21}                              | ${PricingModel.tieredVolume}    | ${baseTiers[2]}
     ${baseTiers} | ${100}                             | ${PricingModel.tieredVolume}    | ${baseTiers[2]}
-    ${baseTiers} | ${0}                               | ${PricingModel.tieredFlatFee}   | ${undefined}
+    ${baseTiers} | ${0}                               | ${PricingModel.tieredFlatFee}   | ${baseTiers[0]}
     ${undefined} | ${0}                               | ${PricingModel.tieredFlatFee}   | ${undefined}
-    ${baseTiers} | ${undefined}                       | ${PricingModel.tieredFlatFee}   | ${undefined}
+    ${baseTiers} | ${undefined}                       | ${PricingModel.tieredFlatFee}   | ${baseTiers[0]}
     ${baseTiers} | ${5}                               | ${PricingModel.tieredFlatFee}   | ${baseTiers[0]}
     ${baseTiers} | ${10}                              | ${PricingModel.tieredFlatFee}   | ${baseTiers[0]}
     ${baseTiers} | ${10.999}                          | ${PricingModel.tieredFlatFee}   | ${baseTiers[1]}
@@ -100,7 +100,7 @@ describe('getDisplayTiersByQuantity', () => {
     ${baseTiers} | ${20}                              | ${PricingModel.tieredFlatFee}   | ${baseTiers[1]}
     ${baseTiers} | ${21}                              | ${PricingModel.tieredFlatFee}   | ${baseTiers[2]}
     ${baseTiers} | ${100}                             | ${PricingModel.tieredFlatFee}   | ${baseTiers[2]}
-    ${baseTiers} | ${100}                             | ${undefined}                    | ${undefined}
+    ${baseTiers} | ${100}                             | ${undefined}                    | ${baseTiers[0]}
   `(
     'should return correctly for quantity=$quantity and pricingModel=$pricingModel',
     ({
@@ -138,11 +138,11 @@ describe('getTierDescription', () => {
     unit_amount_decimal: '0',
   };
 
-  const tierWithUnitAmountUndefined = ({
+  const tierWithUnitAmountUndefined = {
     up_to: 10,
     unit_amount: undefined,
     unit_amount_decimal: undefined,
-  } as unknown) as PriceTier;
+  } as unknown as PriceTier;
 
   const tierWithFlatFeeAmount = {
     up_to: 10,
@@ -156,11 +156,11 @@ describe('getTierDescription', () => {
     flat_fee_amount_decimal: '0',
   };
 
-  const tierWithFlatFeeAmountUndefined = ({
+  const tierWithFlatFeeAmountUndefined = {
     up_to: 10,
     flat_fee_amount: undefined,
     flat_fee_amount_decimal: undefined,
-  } as unknown) as PriceTier;
+  } as unknown as PriceTier;
 
   const tierInvalid = {
     up_to: 10,

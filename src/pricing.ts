@@ -663,7 +663,7 @@ const isUnitAmountApproved = (
 export const computeQuantities = (price: Price, quantity?: number, priceMapping?: PriceInputMapping) => {
   const safeQuantity = isNaN(quantity) ? 1 : quantity;
   const normalizedPriceMappingInput = normalizePriceMappingInput(priceMapping, price);
-  const quantityToSelectTier = normalizedPriceMappingInput ? normalizedPriceMappingInput.toUnit() : safeQuantity;
+  const quantityToSelectTier = normalizedPriceMappingInput ? normalizedPriceMappingInput.toUnit() : 1;
   const unitAmountMultiplier = normalizedPriceMappingInput
     ? normalizedPriceMappingInput.multiply(safeQuantity).toUnit()
     : safeQuantity;

@@ -2433,6 +2433,7 @@ export const compositePriceWithTotalDetails: CompositePriceItemDto = {
 export const priceItemWithGraduatedTiersNoFlatFee: PriceItemDto = {
   quantity: 1,
   _price: {
+    _id: 'price#1-graduated-no-flat-fee',
     is_composite_price: false,
     pricing_model: 'tiered_graduated',
     tiers: [
@@ -2460,6 +2461,7 @@ export const priceItemWithGraduatedTiersNoFlatFee: PriceItemDto = {
 export const priceItemWithVolumeTiersNoFlatFee: PriceItemDto = {
   quantity: 1,
   _price: {
+    _id: 'price#1-volume-no-flat-fee',
     is_composite_price: false,
     pricing_model: 'tiered_volume',
     tiers: [
@@ -2703,6 +2705,7 @@ export const compositePriceItemWithTieredGraduatedComponent: CompositePriceItemD
       quantity: 1,
       taxes: [{ tax: tax10percent }],
       _price: {
+        _id: 'price#1-tiered-graduated',
         pricing_model: 'tiered_graduated',
         tiers: [
           {
@@ -2737,6 +2740,7 @@ export const compositePriceItemWithTieredVolumeComponent: CompositePriceItemDto 
       quantity: 1,
       taxes: [{ tax: tax10percent }],
       _price: {
+        _id: 'price#1-tiered-volume',
         pricing_model: 'tiered_volume',
         tiers: [
           {
@@ -2799,6 +2803,7 @@ export const compositePriceItemWithFlatFee: CompositePriceItemDto = {
       quantity: 1,
       taxes: [{ tax: tax10percent }],
       _price: {
+        _id: 'price#1-tiered-flat-fee',
         pricing_model: 'tiered_flatfee',
         tiers: [
           {

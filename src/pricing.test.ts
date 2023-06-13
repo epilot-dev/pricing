@@ -8,7 +8,15 @@ import {
   extractPricingEntitiesBySlug,
   isCompositePrice,
 } from './pricing';
-import { CompositePrice, CompositePriceItemDto, Price, PriceItemDto, PriceTier, TimeFrequency } from './types';
+import {
+  CompositePrice,
+  CompositePriceItemDto,
+  Price,
+  PriceInputMappings,
+  PriceItemDto,
+  PriceTier,
+  TimeFrequency,
+} from './types';
 
 describe('computeAggregatedAndPriceTotals', () => {
   describe('when is_composite_price = false', () => {
@@ -151,8 +159,20 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 0', () => {
-        const priceItems = [{ ...samples.priceItemWithGraduatedTiersNoFlatFee, quantity: 0 }];
+      it('should return the correct result when input mapping is 0', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithGraduatedTiersNoFlatFee,
+            price_mappings: [
+              {
+                frequency_unit: 'one_time',
+                price_id: samples.priceItemWithGraduatedTiersNoFlatFee._price?._id,
+                value: 0,
+              },
+            ] as PriceInputMappings,
+            quantity: 0,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -178,8 +198,19 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 2', () => {
-        const priceItems = [{ ...samples.priceItemWithGraduatedTiersNoFlatFee, quantity: 2 }];
+      it('should return the correct result when input mapping is 2', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithGraduatedTiersNoFlatFee,
+            price_mappings: [
+              {
+                frequency_unit: 'one_time',
+                price_id: samples.priceItemWithGraduatedTiersNoFlatFee._price?._id,
+                value: 2,
+              },
+            ] as PriceInputMappings,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -205,8 +236,19 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 10', () => {
-        const priceItems = [{ ...samples.priceItemWithGraduatedTiersNoFlatFee, quantity: 10 }];
+      it('should return the correct result when input mapping is 10', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithGraduatedTiersNoFlatFee,
+            price_mappings: [
+              {
+                frequency_unit: 'one_time',
+                price_id: samples.priceItemWithGraduatedTiersNoFlatFee._price?._id,
+                value: 10,
+              },
+            ] as PriceInputMappings,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -232,8 +274,19 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 10.999', () => {
-        const priceItems = [{ ...samples.priceItemWithGraduatedTiersNoFlatFee, quantity: 10.999 }];
+      it('should return the correct result when input mapping is 10.999', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithGraduatedTiersNoFlatFee,
+            price_mappings: [
+              {
+                frequency_unit: 'one_time',
+                price_id: samples.priceItemWithGraduatedTiersNoFlatFee._price?._id,
+                value: 10.999,
+              },
+            ] as PriceInputMappings,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -259,8 +312,19 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 15', () => {
-        const priceItems = [{ ...samples.priceItemWithGraduatedTiersNoFlatFee, quantity: 15 }];
+      it('should return the correct result when input mapping is 15', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithGraduatedTiersNoFlatFee,
+            price_mappings: [
+              {
+                frequency_unit: 'one_time',
+                price_id: samples.priceItemWithGraduatedTiersNoFlatFee._price?._id,
+                value: 15,
+              },
+            ] as PriceInputMappings,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -286,8 +350,19 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 100', () => {
-        const priceItems = [{ ...samples.priceItemWithGraduatedTiersNoFlatFee, quantity: 100 }];
+      it('should return the correct result when input mapping is 100', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithGraduatedTiersNoFlatFee,
+            price_mappings: [
+              {
+                frequency_unit: 'one_time',
+                price_id: samples.priceItemWithGraduatedTiersNoFlatFee._price?._id,
+                value: 100,
+              },
+            ] as PriceInputMappings,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -381,8 +456,20 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 0', () => {
-        const priceItems = [{ ...samples.priceItemWithVolumeTiersNoFlatFee, quantity: 0 }];
+      it('should return the correct result when input mapping is 0', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithVolumeTiersNoFlatFee,
+            price_mappings: [
+              {
+                frequency_unit: 'one_time',
+                price_id: samples.priceItemWithVolumeTiersNoFlatFee._price?._id,
+                value: 0,
+              },
+            ] as PriceInputMappings,
+            quantity: 0,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -408,7 +495,7 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 2', () => {
+      it('should return the correct result when input mapping is 2', () => {
         const priceItems = [{ ...samples.priceItemWithVolumeTiersNoFlatFee, quantity: 2 }];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
@@ -435,7 +522,7 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 10', () => {
+      it('should return the correct result when input mapping is 10', () => {
         const priceItems = [{ ...samples.priceItemWithVolumeTiersNoFlatFee, quantity: 10 }];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
@@ -462,8 +549,19 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 10.999', () => {
-        const priceItems = [{ ...samples.priceItemWithVolumeTiersNoFlatFee, quantity: 10.999 }];
+      it('should return the correct result when input mapping is 10.999', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithVolumeTiersNoFlatFee,
+            price_mappings: [
+              {
+                frequency_unit: 'yearly' as TimeFrequency,
+                price_id: samples.priceItemWithVolumeTiersNoFlatFee._price?._id,
+                value: 10.999,
+              },
+            ],
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -489,8 +587,19 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 15', () => {
-        const priceItems = [{ ...samples.priceItemWithVolumeTiersNoFlatFee, quantity: 15 }];
+      it('should return the correct result when input mapping is 15', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithVolumeTiersNoFlatFee,
+            price_mappings: [
+              {
+                frequency_unit: 'yearly' as TimeFrequency,
+                price_id: samples.priceItemWithVolumeTiersNoFlatFee._price?._id,
+                value: 15,
+              },
+            ],
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -511,8 +620,19 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 100', () => {
-        const priceItems = [{ ...samples.priceItemWithVolumeTiersNoFlatFee, quantity: 100 }];
+      it('should return the correct result when input mapping is 100', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithVolumeTiersNoFlatFee,
+            price_mappings: [
+              {
+                frequency_unit: 'yearly' as TimeFrequency,
+                price_id: samples.priceItemWithVolumeTiersNoFlatFee._price?._id,
+                value: 100,
+              },
+            ],
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -601,8 +721,20 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 0', () => {
-        const priceItems = [{ ...samples.priceItemWithFlatFeeTiers, quantity: 0 }];
+      it('should return the correct result when input mapping is 0', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithFlatFeeTiers,
+            price_mappings: [
+              {
+                frequency_unit: 'yearly' as TimeFrequency,
+                price_id: samples.priceItemWithFlatFeeTiers._price?._id,
+                value: 0,
+              },
+            ],
+            quantity: 0,
+          },
+        ];
         const result = computeAggregatedAndPriceTotals(priceItems);
 
         expect(result).toStrictEqual(
@@ -627,8 +759,15 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 2', () => {
-        const priceItems = [{ ...samples.priceItemWithFlatFeeTiers, quantity: 2 }];
+      it('should return the correct result when input mapping is 2', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithFlatFeeTiers,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: samples.priceItemWithFlatFeeTiers._price?._id, value: 2 },
+            ] as PriceInputMappings,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -654,8 +793,15 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 10', () => {
-        const priceItems = [{ ...samples.priceItemWithFlatFeeTiers, quantity: 10 }];
+      it('should return the correct result when input mapping is 10', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithFlatFeeTiers,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: samples.priceItemWithFlatFeeTiers._price?._id, value: 10 },
+            ] as PriceInputMappings,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -720,8 +866,15 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 10.999', () => {
-        const priceItems = [{ ...samples.priceItemWithFlatFeeTiers, quantity: 10.999 }];
+      it('should return the correct result when input mapping is 10.999', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithFlatFeeTiers,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: samples.priceItemWithFlatFeeTiers._price?._id, value: 10.999 },
+            ] as PriceInputMappings,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -747,8 +900,15 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 15', () => {
-        const priceItems = [{ ...samples.priceItemWithFlatFeeTiers, quantity: 15 }];
+      it('should return the correct result when input mapping is 15', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithFlatFeeTiers,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: samples.priceItemWithFlatFeeTiers._price?._id, value: 15 },
+            ] as PriceInputMappings,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -769,8 +929,15 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 100', () => {
-        const priceItems = [{ ...samples.priceItemWithFlatFeeTiers, quantity: 100 }];
+      it('should return the correct result when input mapping is 100', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithFlatFeeTiers,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: samples.priceItemWithFlatFeeTiers._price?._id, value: 100 },
+            ] as PriceInputMappings,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -791,8 +958,15 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 100', () => {
-        const priceItems = [{ ...samples.compositePriceItemWithFlatFee, quantity: 100 }];
+      it('should return the correct result when input mapping is 100', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithFlatFee,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-flat-fee', value: 100 },
+            ] as PriceInputMappings,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -953,8 +1127,15 @@ describe('computeAggregatedAndPriceTotals', () => {
     });
 
     describe('pricing_model = tiered_graduated', () => {
-      it('should return the correct result when quantity is 2', () => {
-        const priceItems = [{ ...samples.compositePriceItemWithTieredGraduatedComponent, quantity: 2 }];
+      it('should return the correct result when input mapping is 2', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithTieredGraduatedComponent,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-graduated', value: 2 },
+            ] as PriceInputMappings,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -980,8 +1161,15 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 10', () => {
-        const priceItems = [{ ...samples.compositePriceItemWithTieredGraduatedComponent, quantity: 10 }];
+      it('should return the correct result when input mapping is 10', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithTieredGraduatedComponent,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-graduated', value: 10 },
+            ] as PriceInputMappings,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -1007,8 +1195,15 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 15', () => {
-        const priceItems = [{ ...samples.compositePriceItemWithTieredGraduatedComponent, quantity: 15 }];
+      it('should return the correct result when input mapping is 15', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithTieredGraduatedComponent,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-graduated', value: 15 },
+            ] as PriceInputMappings,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -1034,8 +1229,15 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 100', () => {
-        const priceItems = [{ ...samples.compositePriceItemWithTieredGraduatedComponent, quantity: 100 }];
+      it('should return the correct result when input mapping is 100', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithTieredGraduatedComponent,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-graduated', value: 100 },
+            ] as PriceInputMappings,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -1063,8 +1265,15 @@ describe('computeAggregatedAndPriceTotals', () => {
     });
 
     describe('pricing_model = volume_graduated', () => {
-      it('should return the correct result when quantity is 2', () => {
-        const priceItems = [{ ...samples.compositePriceItemWithTieredVolumeComponent, quantity: 2 }];
+      it('should return the correct result when input mapping is 2', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithTieredVolumeComponent,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-volume', value: 2 },
+            ] as PriceInputMappings,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -1085,8 +1294,15 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 10', () => {
-        const priceItems = [{ ...samples.compositePriceItemWithTieredVolumeComponent, quantity: 10 }];
+      it('should return the correct result when input mapping is 10', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithTieredVolumeComponent,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-volume', value: 10 },
+            ] as PriceInputMappings,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -1107,8 +1323,15 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 15', () => {
-        const priceItems = [{ ...samples.compositePriceItemWithTieredVolumeComponent, quantity: 15 }];
+      it('should return the correct result when input mapping is 15', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithTieredVolumeComponent,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-volume', value: 15 },
+            ] as PriceInputMappings,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -1129,8 +1352,15 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when quantity is 100', () => {
-        const priceItems = [{ ...samples.compositePriceItemWithTieredVolumeComponent, quantity: 100 }];
+      it('should return the correct result when input mapping is 100', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithTieredVolumeComponent,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-volume', value: 100 },
+            ] as PriceInputMappings,
+          },
+        ];
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 

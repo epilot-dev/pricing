@@ -78,6 +78,30 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(result).toEqual(results.priceWithDisplayOnRequest);
     });
 
+    it('should return the right result when there is one simple price with display mode "Display as starting price"', () => {
+      const priceItems = [samples.priceItemDisplayAsStartingPrice];
+
+      const result = computeAggregatedAndPriceTotals(priceItems);
+
+      expect(result).toEqual(expect.objectContaining({
+        amount_subtotal: 4546, 
+        amount_total: 5000,
+        total_details: expect.objectContaining({
+          breakdown: expect.objectContaining({
+            recurrences: [
+              {
+                amount_subtotal: 4546,
+                amount_tax: 455,
+                amount_total: 5000,
+                type: "recurring",
+                billing_period: "yearly",
+              }
+            ]
+        })
+      })
+      }));
+    });
+
     it('should return the right result when there is one simple price with display mode "On Request" and other simple prices', () => {
       const priceItems = [
         samples.priceItem1,
@@ -1012,6 +1036,31 @@ describe('computeAggregatedAndPriceTotals', () => {
       const result = computeAggregatedAndPriceTotals(priceItems);
 
       expect(result).toEqual(results.compositePriceWithDisplayOnRequestAndOthers);
+    });
+
+    it('should return the right result when there is one component with display mode "Show as starting price"', () => {
+      const priceItems = [
+        samples.priceComponentDisplayAsStartingPrice,
+      ]
+
+      const result = computeAggregatedAndPriceTotals(priceItems);
+
+      expect(result).toEqual(expect.objectContaining({
+        amount_subtotal: 1800, 
+        amount_total: 1800,
+        total_details: expect.objectContaining({
+          breakdown: expect.objectContaining({
+            recurrences: [
+              {
+                amount_subtotal: 1800,
+                amount_tax: 0,
+                amount_total: 1800,
+                type: "one_time"
+              }
+            ]
+        })
+      })
+      }));
     });
 
     it('should return the right result when there is one composite price with quantity 2', () => {

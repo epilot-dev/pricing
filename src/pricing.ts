@@ -643,12 +643,9 @@ const isUnitAmountApproved = (
 ) => {
   if (parentPriceItem) {
     const parentHasHiddenPriceComponents = parentPriceItem.item_components.some(
-      (component) =>
-        component._price?.price_display_in_journeys && component._price.price_display_in_journeys !== 'show_price',
+      (component) => component._price.price_display_in_journeys === 'show_as_on_request',
     );
-    const parentPriceIsHiddenPrice =
-      parentPriceItem._price.price_display_in_journeys &&
-      parentPriceItem._price.price_display_in_journeys !== 'show_price';
+    const parentPriceIsHiddenPrice = parentPriceItem._price?.price_display_in_journeys === 'show_as_on_request';
 
     if (parentHasHiddenPriceComponents || parentPriceIsHiddenPrice) {
       return parentPriceItem?.on_request_approved;

@@ -111,7 +111,7 @@ const byPriceTiersForQuantity = (tiers: PriceTier[], quantity: number) => (_: Pr
  * @param {number} quantity - The quantity.
  * @return {PriceTier[]} - The result price tiers.
  */
-const getPriceTiersForQuantity = (tiers: PriceTier[], quantity: number): PriceTier[] => {
+export const getPriceTiersForQuantity = (tiers: PriceTier[], quantity: number): PriceTier[] => {
   const selectedTiers = tiers?.filter(byPriceTiersForQuantity(tiers, quantity));
 
   if (selectedTiers?.length) {

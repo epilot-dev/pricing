@@ -3,7 +3,12 @@ import { Currency } from 'dinero.js';
 import { PricingModel } from '../pricing';
 import { PriceTier } from '../types';
 
-import { getDisplayTierByQuantity, getDisplayTiersByQuantity, getTierDescription } from './index';
+import {
+  computeCumulativeValue,
+  getDisplayTierByQuantity,
+  getDisplayTiersByQuantity,
+  getTierDescription,
+} from './index';
 
 const baseTiers: PriceTier[] = [
   { up_to: 10, unit_amount: 1000, unit_amount_decimal: '10.00' },
@@ -13,10 +18,11 @@ const baseTiers: PriceTier[] = [
 const mockTranslations = {
   ['selectvalues.Price.unit.kWh' as string]: 'kWh',
   ['selectvalues.Price.unit.unit' as string]: 'unit',
+  ['selectvalues.Price.unit.m' as string]: 'm',
   ['starts_at' as string]: 'Starts at',
 };
 
-const t = jest.fn().mockImplementation((key: string) => mockTranslations[key] || key);
+const t = jest.fn().mockImplementation((key: string, { defaultValue }) => mockTranslations[key] ?? defaultValue ?? key);
 
 describe('getDisplayTierByQuantity', () => {
   it.each`
@@ -214,6 +220,22 @@ describe('getTierDescription', () => {
       });
 
       expect(result?.replace(/\s+/g, ' ').trim()).toEqual(expected);
+    },
+  );
+});
+
+describe('computeCumulativeValue', () => {
+  it.each`
+    quantityToSelectTier | unit        | locale       | currency | expected
+    ${1}                 | ${'kWh'}    | ${undefined} | ${'EUR'} | ${{ total: '10,00\xa0€', average: '10,00\xa0€/kWh', breakdown: [{ quantityUsed: '1 kWh', tierAmountDecimal: '10,00\xa0€', totalAmountDecimal: '10,00\xa0€' }] }}
+    ${2}                 | ${'m'}      | ${'de'}      | ${'EUR'} | ${{ total: '20,00\xa0€', average: '10,00\xa0€/m', breakdown: [{ quantityUsed: '2 m', tierAmountDecimal: '10,00\xa0€', totalAmountDecimal: '20,00\xa0€' }] }}
+    ${5}                 | ${'kWh'}    | ${'en'}      | ${'EUR'} | ${{ total: '€50.00', average: '€10.00/kWh', breakdown: [{ quantityUsed: '5 kWh', tierAmountDecimal: '€10.00', totalAmountDecimal: '€50.00' }] }}
+    ${15}                | ${'banana'} | ${'en'}      | ${'EUR'} | ${{ total: '€145.00', average: '€9.67/banana', breakdown: [{ quantityUsed: '10 banana', tierAmountDecimal: '€10.00', totalAmountDecimal: '€100.00' }, { quantityUsed: '5 banana', tierAmountDecimal: '€9.00', totalAmountDecimal: '€45.00' }] }}
+    ${30}                | ${'kWh'}    | ${'en'}      | ${'USD'} | ${{ total: '$270.00', average: '$9.00/kWh', breakdown: [{ quantityUsed: '10 kWh', tierAmountDecimal: '$10.00', totalAmountDecimal: '$100.00' }, { quantityUsed: '10 kWh', tierAmountDecimal: '$9.00', totalAmountDecimal: '$90.00' }, { quantityUsed: '10 kWh', tierAmountDecimal: '$8.00', totalAmountDecimal: '$80.00' }] }}
+  `(
+    'should compute cumulative value correctly when quantityToSelectTier=$quantityToSelectTier',
+    ({ quantityToSelectTier, unit, locale, currency, expected }) => {
+      expect(computeCumulativeValue(baseTiers, quantityToSelectTier, unit, locale, currency, t)).toEqual(expected);
     },
   );
 });

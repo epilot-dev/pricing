@@ -1,12 +1,19 @@
-import { Currency } from 'dinero.js';
+import { Currency, Dinero } from 'dinero.js';
 
 import { DEFAULT_CURRENCY } from '../currencies';
-import { formatAmountFromString } from '../formatters';
+import { DEFAULT_LOCALE, formatAmountFromString, toDinero } from '../formatters';
 import { PricingModel } from '../pricing';
 import { Price, PriceTier } from '../types';
+import { getQuantityForTier } from '../utils';
 
 const byInputQuantity = (tiers: PriceTier[], quantity: number) => (_: PriceTier, index: number) =>
   Math.ceil(quantity) > (tiers[index - 1]?.up_to || 0);
+
+type CumulativePriceBreakdownItem = {
+  quantityUsed: string;
+  tierAmountDecimal: string;
+  totalAmountDecimal: string;
+};
 
 /**
  * This function returns the price tier that matches the input quantity.
@@ -154,3 +161,63 @@ export function getTierDescription(
     (formatedFlatFeeString || '')
   );
 }
+
+export const computeCumulativeValue = (
+  tiers: PriceTier[] | undefined,
+  quantityToSelectTier: number,
+  unit: string | undefined,
+  locale: string,
+  currency: Currency | undefined,
+  t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
+) => {
+  if (!tiers || !tiers.length || quantityToSelectTier <= 0) {
+    return;
+  }
+
+  const priceTiersForQuantity = getDisplayTiersByQuantity(tiers, quantityToSelectTier, PricingModel.tieredGraduated);
+  const formattedUnit = t(`selectvalues.Price.unit.${unit || 'unit'}`, {
+    ns: 'entity',
+    defaultValue: unit,
+  });
+  const formatOptions = {
+    currency: currency || DEFAULT_CURRENCY,
+    locale: locale || DEFAULT_LOCALE,
+    useRealPrecision: true,
+    enableSubunitDisplay: true,
+  };
+
+  const breakdown: CumulativePriceBreakdownItem[] = [];
+
+  const total = priceTiersForQuantity.reduce((total: Dinero, tier: PriceTier, index: number) => {
+    const tierMinQuantity = index === 0 ? 0 : tiers[index - 1].up_to;
+    const tierMaxQuantity = tier.up_to || Infinity;
+    const graduatedQuantity = getQuantityForTier(tierMinQuantity, tierMaxQuantity, quantityToSelectTier);
+    const tierAmount = toDinero(tier.unit_amount_decimal).multiply(graduatedQuantity);
+
+    breakdown.push({
+      quantityUsed: `${graduatedQuantity} ${formattedUnit}`,
+      tierAmountDecimal: formatAmountFromString({
+        decimalAmount: tier.unit_amount_decimal,
+        ...formatOptions,
+      }),
+      totalAmountDecimal: formatAmountFromString({
+        decimalAmount: tierAmount.toFormat('0.00'),
+        ...formatOptions,
+      }),
+    });
+
+    return tierAmount.add(total);
+  }, toDinero('0'));
+
+  return {
+    total: formatAmountFromString({
+      decimalAmount: total.toFormat('0.00'),
+      ...formatOptions,
+    }),
+    average: `${formatAmountFromString({
+      decimalAmount: total.divide(quantityToSelectTier).toFormat('0.00'),
+      ...formatOptions,
+    })}/${formattedUnit}`,
+    breakdown,
+  };
+};

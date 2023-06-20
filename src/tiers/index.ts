@@ -1,7 +1,7 @@
 import { Currency, Dinero } from 'dinero.js';
 
 import { DEFAULT_CURRENCY } from '../currencies';
-import { formatAmountFromString, toDinero } from '../formatters';
+import { DEFAULT_LOCALE, formatAmountFromString, toDinero } from '../formatters';
 import { PricingModel } from '../pricing';
 import { Price, PriceTier } from '../types';
 import { getQuantityForTier } from '../utils';
@@ -177,10 +177,11 @@ export const computeCumulativeValue = (
   const priceTiersForQuantity = getDisplayTiersByQuantity(tiers, quantityToSelectTier, PricingModel.tieredGraduated);
   const formattedUnit = t(`selectvalues.Price.unit.${unit || 'unit'}`, {
     ns: 'entity',
+    defaultValue: unit,
   });
   const formatOptions = {
     currency: currency || DEFAULT_CURRENCY,
-    locale,
+    locale: locale || DEFAULT_LOCALE,
     useRealPrecision: true,
     enableSubunitDisplay: true,
   };

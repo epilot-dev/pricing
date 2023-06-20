@@ -33,6 +33,11 @@ export {
   computeQuantities,
   extractPricingEntitiesBySlug,
 } from './pricing';
-export { getDisplayTierByQuantity, getDisplayTiersByQuantity, getTierDescription } from './tiers';
+export {
+  computeCumulativeValue,
+  getDisplayTierByQuantity,
+  getDisplayTiersByQuantity,
+  getTierDescription,
+} from './tiers';
 export type { PriceTierDisplayMode, PricingDetails, Tax, TaxAmountBreakdown, TimeFrequency } from './types';
 export { isTaxInclusivePrice } from './utils';

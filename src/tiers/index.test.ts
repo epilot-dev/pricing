@@ -3,7 +3,12 @@ import { Currency } from 'dinero.js';
 import { PricingModel } from '../pricing';
 import { PriceTier } from '../types';
 
-import { getDisplayTierByQuantity, getDisplayTiersByQuantity, getTierDescription } from './index';
+import {
+  computeCumulativeValue,
+  getDisplayTierByQuantity,
+  getDisplayTiersByQuantity,
+  getTierDescription,
+} from './index';
 
 const baseTiers: PriceTier[] = [
   { up_to: 10, unit_amount: 1000, unit_amount_decimal: '10.00' },
@@ -214,6 +219,22 @@ describe('getTierDescription', () => {
       });
 
       expect(result?.replace(/\s+/g, ' ').trim()).toEqual(expected);
+    },
+  );
+});
+
+describe('computeCumulativeValue', () => {
+  it.each`
+    quantityToSelectTier | expected
+    ${1}                 | ${{ total: '€10.00', average: '€10.00/kWh', breakdown: [{ quantityUsed: '1 kWh', tierAmountDecimal: '€10.00', totalAmountDecimal: '€10.00' }] }}
+    ${2}                 | ${{ total: '€20.00', average: '€10.00/kWh', breakdown: [{ quantityUsed: '2 kWh', tierAmountDecimal: '€10.00', totalAmountDecimal: '€20.00' }] }}
+    ${5}                 | ${{ total: '€50.00', average: '€10.00/kWh', breakdown: [{ quantityUsed: '5 kWh', tierAmountDecimal: '€10.00', totalAmountDecimal: '€50.00' }] }}
+    ${15}                | ${{ total: '€145.00', average: '€9.67/kWh', breakdown: [{ quantityUsed: '10 kWh', tierAmountDecimal: '€10.00', totalAmountDecimal: '€100.00' }, { quantityUsed: '5 kWh', tierAmountDecimal: '€9.00', totalAmountDecimal: '€45.00' }] }}
+    ${30}                | ${{ total: '€270.00', average: '€9.00/kWh', breakdown: [{ quantityUsed: '10 kWh', tierAmountDecimal: '€10.00', totalAmountDecimal: '€100.00' }, { quantityUsed: '10 kWh', tierAmountDecimal: '€9.00', totalAmountDecimal: '€90.00' }, { quantityUsed: '10 kWh', tierAmountDecimal: '€8.00', totalAmountDecimal: '€80.00' }] }}
+  `(
+    'should compute cumulative value correctly when quantityToSelectTier=$quantityToSelectTier',
+    ({ quantityToSelectTier, expected }) => {
+      expect(computeCumulativeValue(baseTiers, quantityToSelectTier, 'kWh', 'en', 'EUR', t)).toEqual(expected);
     },
   );
 });

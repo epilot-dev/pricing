@@ -249,6 +249,7 @@ export const computeCompositePrice = (
 export const computeAggregatedAndPriceTotals: ComputeAggregatedAndPriceTotals = (priceItems) => {
   const initialPricingDetails: PricingDetails = {
     items: [],
+    unit_amount_gross: 0,
     amount_subtotal: 0,
     amount_total: 0,
     total_details: {
@@ -292,6 +293,7 @@ export const computeAggregatedAndPriceTotals: ComputeAggregatedAndPriceTotals = 
       )
         ? recomputeDetailTotals(details, price, priceItemToAppend)
         : {
+            unit_amount_gross: details.unit_amount_gross,
             amount_subtotal: details.amount_subtotal,
             amount_total: details.amount_total,
             total_details: details.total_details,
@@ -360,8 +362,11 @@ const recomputeDetailTotals: RecomputeDetailTotals = (details, price, priceItemT
   const recurrence = getPriceRecurrence(price, recurrences);
 
   const total = d(details.amount_total);
+  const unitAmountGross = d(details.unit_amount_gross);
   const subtotal = d(details.amount_subtotal);
   const totalTax = d(details?.total_details?.amount_tax);
+
+  const priceUnitAmountGross = d(priceItemToAppend.unit_amount_gross);
   const priceSubtotal = d(priceItemToAppend.amount_subtotal);
   const priceTotal = d(priceItemToAppend.amount_total);
   const priceTax = d(priceItemToAppend?.taxes?.[0]?.amount || 0.0);
@@ -395,20 +400,24 @@ const recomputeDetailTotals: RecomputeDetailTotals = (details, price, priceItemT
     recurrences.push({
       type: ['one_time', 'recurring'].includes(type) ? type : 'one_time',
       ...(price?.type === 'recurring' && { billing_period: price?.billing_period }),
+      unit_amount_gross: priceUnitAmountGross.getAmount(),
       amount_subtotal: priceSubtotal.getAmount(),
       amount_total: priceTotal.getAmount(),
       amount_tax: priceTax.getAmount(),
     });
   } else {
+    const unitAmountGrossAmount = d(recurrence.unit_amount_gross);
     const subTotalAmount = d(recurrence.amount_subtotal);
     const totalAmount = d(recurrence.amount_total);
     const taxAmount = d(recurrence.amount_tax);
+    recurrence.unit_amount_gross = unitAmountGrossAmount.add(priceUnitAmountGross).getAmount();
     recurrence.amount_subtotal = subTotalAmount.add(priceSubtotal).getAmount();
     recurrence.amount_total = totalAmount.add(priceTotal).getAmount();
     recurrence.amount_tax = taxAmount.add(priceTax).getAmount();
   }
 
   return {
+    unit_amount_gross: unitAmountGross.add(priceUnitAmountGross).getAmount(),
     amount_subtotal: subtotal.add(priceSubtotal).getAmount(),
     amount_total: total.add(priceTotal).getAmount(),
     total_details: {
@@ -427,6 +436,7 @@ const computeCompositePriceBreakDown = (compositePriceItem: CompositePriceItem) 
 const recomputeDetailTotalsFromCompositePrice = (details: PricingDetails, compositePriceItem: CompositePriceItem) => {
   const initialPricingDetails: PricingDetails = {
     items: [],
+    unit_amount_gross: 0,
     amount_subtotal: 0,
     amount_total: 0,
     total_details: {
@@ -447,6 +457,7 @@ const recomputeDetailTotalsFromCompositePrice = (details: PricingDetails, compos
     )
       ? recomputeDetailTotals(detailTotals, itemComponent._price, itemComponent)
       : {
+          unit_amount_gross: details?.unit_amount_gross || 0,
           amount_subtotal: details?.amount_subtotal || 0,
           amount_total: details?.amount_total || 0,
           total_details: details?.total_details || initialPricingDetails.total_details,
@@ -508,6 +519,8 @@ export const computePriceItem: ComputePriceItem = (priceItem, price, applicableT
         )
       : computePriceItemValues(unitAmountDecimal, currency, isTaxInclusive, unitAmountMultiplier, priceTax);
 
+  // console.log({ itemValues });
+
   return {
     ...priceItem,
     currency,
@@ -516,6 +529,7 @@ export const computePriceItem: ComputePriceItem = (priceItem, price, applicableT
     ...(Number.isInteger(itemValues.unitAmountNet) && { unit_amount_net: itemValues.unitAmountNet }),
     ...(price?.pricing_model === PricingModel.perUnit &&
       unitAmountDecimal && { unit_amount_decimal: unitAmountDecimal }),
+    unit_amount_gross: itemValues.unitAmountGross,
     amount_subtotal: itemValues.amountSubtotal,
     amount_total: itemValues.amountTotal,
     taxes: [
@@ -551,6 +565,7 @@ const convertPriceItemPrecision: PrecisionConverter = (priceItem, precision = 2)
   ...(typeof priceItem.unit_amount_net === 'number' && {
     unit_amount_net: d(priceItem.unit_amount_net).convertPrecision(precision).getAmount(),
   }),
+  unit_amount_gross: d(priceItem.unit_amount_gross).convertPrecision(precision).getAmount(),
   amount_subtotal: d(priceItem.amount_subtotal).convertPrecision(precision).getAmount(),
   amount_total: d(priceItem.amount_total).convertPrecision(precision).getAmount(),
   taxes: priceItem.taxes.map((tax) => ({
@@ -561,6 +576,7 @@ const convertPriceItemPrecision: PrecisionConverter = (priceItem, precision = 2)
 
 const convertBreakDownPrecision = (details: PricingDetails, precision: number) => {
   return {
+    unit_amount_gross: d(details.unit_amount_gross).convertPrecision(precision).getAmount(),
     amount_subtotal: d(details.amount_subtotal).convertPrecision(precision).getAmount(),
     amount_total: d(details.amount_total).convertPrecision(precision).getAmount(),
     total_details: {
@@ -575,6 +591,7 @@ const convertBreakDownPrecision = (details: PricingDetails, precision: number) =
         recurrences: details?.total_details?.breakdown?.recurrences.map((recurrence) => {
           return {
             ...recurrence,
+            unit_amount_gross: d(recurrence.unit_amount_gross).convertPrecision(precision).getAmount(),
             amount_subtotal: d(recurrence.amount_subtotal).convertPrecision(precision).getAmount(),
             amount_total: d(recurrence.amount_total).convertPrecision(precision).getAmount(),
             amount_tax: d(recurrence.amount_tax).convertPrecision(precision).getAmount(),

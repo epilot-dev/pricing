@@ -519,8 +519,6 @@ export const computePriceItem: ComputePriceItem = (priceItem, price, applicableT
         )
       : computePriceItemValues(unitAmountDecimal, currency, isTaxInclusive, unitAmountMultiplier, priceTax);
 
-  // console.log({ itemValues });
-
   return {
     ...priceItem,
     currency,

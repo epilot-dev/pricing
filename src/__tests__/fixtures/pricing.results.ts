@@ -370,6 +370,7 @@ export const computedCompositePrice: CompositePriceItem & { [key: string]: unkno
 export const resultsWhenPriceIsNontaxable = {
   amount_subtotal: 1000,
   amount_total: 1000,
+  unit_amount_gross: 1000,
   items: [
     {
       _price: {
@@ -404,6 +405,7 @@ export const resultsWhenPriceIsNontaxable = {
       quantity: 1,
       unit_amount: 1000,
       unit_amount_decimal: '10.00',
+      unit_amount_gross: 1000,
       unit_amount_net: 1000,
       taxes: [
         {
@@ -422,6 +424,7 @@ export const resultsWhenPriceIsNontaxable = {
           amount_subtotal: 1000,
           amount_tax: 0,
           amount_total: 1000,
+          unit_amount_gross: 1000,
           billing_period: 'yearly',
           type: 'recurring',
         },
@@ -453,6 +456,7 @@ export const resultsWhenNoPricesProvided = {
       unit_amount: 0,
       unit_amount_net: 0,
       unit_amount_decimal: '0.0',
+      unit_amount_gross: 0,
       _price: {
         pricing_model: 'per_unit',
       },
@@ -474,11 +478,13 @@ export const resultsWhenNoPricesProvided = {
           amount_subtotal: 0,
           amount_tax: 0,
           amount_total: 0,
+          unit_amount_gross: 0,
           type: 'one_time',
         },
       ],
     },
   },
+  unit_amount_gross: 0,
 };
 
 export const severalItemsPerRecurrenceTotals = {
@@ -1543,6 +1549,7 @@ export const compositePricesUnitAmountZeroResult = {
 export const priceWithDisplayOnRequest = {
   amount_subtotal: 0,
   amount_total: 0,
+  unit_amount_gross: 0,
   items: [
     {
       _price: {
@@ -1568,6 +1575,7 @@ export const priceWithDisplayOnRequest = {
       },
       amount_subtotal: 4546,
       amount_total: 5000,
+      unit_amount_gross: 5000,
       currency: 'EUR',
       description: 'Winter Lease',
       price_id: 'price#7',

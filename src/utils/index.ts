@@ -7,6 +7,7 @@ type GetTaxValue = (tax: Tax) => number;
 type PriceItemsTotals = {
   unitAmount?: number;
   unitAmountNet?: number;
+  unitAmountGross?: number;
   amountSubtotal: number;
   amountTotal: number;
   taxAmount: number;
@@ -89,6 +90,7 @@ export const computePriceItemValues = (
   return {
     unitAmount: unitAmount.getAmount(),
     unitAmountNet: unitAmountNet.getAmount(),
+    unitAmountGross: unitAmountGross.getAmount(),
     amountSubtotal: amountSubtotal.getAmount(),
     amountTotal: amountTotal.getAmount(),
     taxAmount: taxAmount.getAmount(),
@@ -154,6 +156,7 @@ export const computeTieredVolumePriceItemValues = (
     tier?.display_mode === 'on_request' ? 'show_as_on_request' : unchangedPriceDisplayInJourneys;
 
   return {
+    unitAmountGross: d(tierValues.unitAmountGross).getAmount(),
     amountSubtotal: d(tierValues.amountSubtotal).getAmount(),
     amountTotal: d(tierValues.amountTotal).getAmount(),
     taxAmount: d(tierValues.taxAmount).getAmount(),
@@ -191,6 +194,7 @@ export const computeTieredFlatFeePriceItemValues = (
     tier?.display_mode === 'on_request' ? 'show_as_on_request' : unchangedPriceDisplayInJourneys;
 
   return {
+    unitAmountGross: d(tierValues.unitAmountGross).getAmount(),
     amountSubtotal: d(tierValues.amountSubtotal).getAmount(),
     amountTotal: d(tierValues.amountTotal).getAmount(),
     taxAmount: d(tierValues.taxAmount).getAmount(),
@@ -228,13 +232,14 @@ export const computeTieredGraduatedPriceItemValues = (
         tier?.display_mode === 'on_request' ? 'show_as_on_request' : unchangedPriceDisplayInJourneys;
 
       return {
+        unitAmountGross: d(totals.unitAmountGross).add(d(tierValues.unitAmountGross)).getAmount(),
         amountSubtotal: d(totals.amountSubtotal).add(d(tierValues.amountSubtotal)).getAmount(),
         amountTotal: d(totals.amountTotal).add(d(tierValues.amountTotal)).getAmount(),
         taxAmount: d(totals.taxAmount).add(d(tierValues.taxAmount)).getAmount(),
         displayMode,
       };
     },
-    { amountSubtotal: 0, amountTotal: 0, taxAmount: 0 },
+    { unitAmountGross: 0, amountSubtotal: 0, amountTotal: 0, taxAmount: 0 },
   );
 
   /**

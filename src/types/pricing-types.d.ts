@@ -178,6 +178,10 @@ declare namespace Components {
        */
       readonly unit_amount?: number;
       /**
+       * The unit gross amount value.
+       */
+      readonly unit_amount_gross?: number;
+      /**
        * Total before any (discounts or) taxes are applied.
        */
       readonly amount_subtotal?: number;
@@ -282,6 +286,10 @@ declare namespace Components {
        */
       readonly _product?: {
         [name: string]: any;
+        /**
+         * The description for the product
+         */
+        description?: string;
         /**
          * The product code
          */
@@ -600,6 +608,10 @@ declare namespace Components {
        */
       readonly unit_amount?: number;
       /**
+       * The unit gross amount value.
+       */
+      readonly unit_amount_gross?: number;
+      /**
        * Total before any (discounts or) taxes are applied.
        */
       readonly amount_subtotal?: number;
@@ -709,6 +721,10 @@ declare namespace Components {
        */
       readonly _product?: {
         [name: string]: any;
+        /**
+         * The description for the product
+         */
+        description?: string;
         /**
          * The product code
          */
@@ -1500,6 +1516,10 @@ declare namespace Components {
        */
       readonly unit_amount?: number;
       /**
+       * The unit gross amount value.
+       */
+      readonly unit_amount_gross?: number;
+      /**
        * Total before any (discounts or) taxes are applied.
        */
       readonly amount_subtotal?: number;
@@ -1570,6 +1590,10 @@ declare namespace Components {
        * The unit amount value
        */
       unit_amount?: number;
+      /**
+       * The unit gross amount value.
+       */
+      unit_amount_gross?: number;
       unit_amount_currency?: Currency;
       /**
        * The unit amount in cents to be charged, represented as a decimal string with at most 12 decimal places.
@@ -1771,6 +1795,10 @@ declare namespace Components {
       readonly _product?: {
         [name: string]: any;
         /**
+         * The description for the product
+         */
+        description?: string;
+        /**
          * The product code
          */
         code?: string;
@@ -1879,6 +1907,10 @@ declare namespace Components {
        * Total of all items after (discounts and) taxes are applied.
        */
       amount_total?: number;
+      /**
+       * The unit gross amount value.
+       */
+      unit_amount_gross?: number;
       total_details?: TotalDetails;
     }
     /**
@@ -1890,6 +1922,10 @@ declare namespace Components {
      */
     export interface Product {
       [name: string]: any;
+      /**
+       * The description for the product
+       */
+      description?: string;
       /**
        * The product code
        */
@@ -1989,6 +2025,10 @@ declare namespace Components {
        */
       amount_total: number;
       /**
+       * The unit gross amount value.
+       */
+      unit_amount_gross?: number;
+      /**
        * Total of all items taxes, with same recurrence.
        */
       amount_tax?: number;
@@ -2013,6 +2053,10 @@ declare namespace Components {
        * Total of all items, with same recurrence, after (discounts and) taxes are applied.
        */
       amount_total: number;
+      /**
+       * The unit gross amount value.
+       */
+      unit_amount_gross?: number;
       /**
        * Total of all items taxes, with same recurrence.
        */

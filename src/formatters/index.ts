@@ -1,4 +1,4 @@
-import dinero, { Currency } from 'dinero.js';
+import dinero, { Currency, Dinero } from 'dinero.js';
 
 import { CURRENCIES_SUBUNITS, DEFAULT_CURRENCY, DEFAULT_SUBUNIT } from '../currencies';
 import { Price } from '../types';
@@ -10,14 +10,7 @@ import {
   DEFAULT_LOCALE,
   DEFAULT_SUBUNIT_FORMAT,
   GENERIC_UNIT_DISPLAY_LABEL,
-} from './constants';
-
-export {
-  DECIMAL_PRECISION,
-  DEFAULT_FORMAT,
-  DEFAULT_INTEGER_AMOUNT_PRECISION,
-  DEFAULT_LOCALE,
-  GENERIC_UNIT_DISPLAY_LABEL,
+  MAX_SUPPORTED_FORMAT_PRECISION,
 } from './constants';
 
 export type AmountFormatter = ({
@@ -42,6 +35,23 @@ export type AmountFormatterFromString = ({
   useRealPrecision,
 }: {
   decimalAmount: string;
+  precision?: number;
+  currency?: Currency;
+  format?: string;
+  locale?: string;
+  useRealPrecision?: boolean;
+  enableSubunitDisplay?: boolean;
+}) => string;
+
+export type AmountFormatterFromDinero = ({
+  decimalAmount,
+  precision,
+  currency,
+  format,
+  locale,
+  useRealPrecision,
+}: {
+  decimalAmount: Dinero;
   precision?: number;
   currency?: Currency;
   format?: string;
@@ -93,7 +103,7 @@ function formatWithSubunit(formattedDineroObject: string, subunit: { symbol: str
 export const getFormattedCurrencySubunit = (
   currency: Currency,
   locale: string,
-  amount: number,
+  amount: number | string,
 ): {
   symbol: string;
   subunit: string;
@@ -101,7 +111,8 @@ export const getFormattedCurrencySubunit = (
   const [language] = locale.split('-');
   const subunit = getCurrencySubunit(currency, locale, language);
 
-  if (amount === 1) {
+  const oneCentRegex = /^010*$/;
+  if (amount === 1 || (typeof amount === 'string' && oneCentRegex.test(amount))) {
     return subunit;
   }
 
@@ -165,7 +176,11 @@ function getPrecisionAndFormatFromStringAmount(
   if (useRealPrecision) {
     const [, decimalNumbers] = decimalAmount.split('.');
 
-    const amountPrecision = getPrecisionFromDecimalNumbersLength(decimalNumbers, shouldDisplayAsCents);
+    const precisionFromLength = getPrecisionFromDecimalNumbersLength(decimalNumbers, shouldDisplayAsCents);
+    const amountPrecision =
+      useRealPrecision && shouldDisplayAsCents
+        ? Math.min(precisionFromLength, MAX_SUPPORTED_FORMAT_PRECISION)
+        : precisionFromLength;
     const precisionToFormat = '0'.repeat(amountPrecision);
     const amountFormat = DEFAULT_FORMAT.replace('.00', `.${precisionToFormat}`);
 
@@ -218,12 +233,10 @@ export const formatAmountFromString: AmountFormatterFromString = ({
   );
 
   if (enableSubunitDisplay && shouldDisplayAsCents) {
-    const subunitInDecimals = Number(subunitFromAmount) / 100;
-
     const subunit = getFormattedCurrencySubunit(
       currency || DEFAULT_CURRENCY,
       locale || DEFAULT_LOCALE,
-      subunitInDecimals,
+      subunitFromAmount,
     );
 
     return formatWithSubunit(
@@ -241,6 +254,27 @@ export const formatAmountFromString: AmountFormatterFromString = ({
     .convertPrecision(precision ?? amountPrecision)
     .toFormat(format || amountFormat);
 };
+
+/**
+ * Adds a separator to a Dinero object string to have the correct decimal precision
+ * @param {Dinero} dineroObject - The Dinero object to be formatted
+ */
+export function addSeparatorToDineroString(dineroString: string) {
+  const leadingZerosRegex = /([0-9])0+$/g;
+  const length = dineroString.length;
+  const separator = '.';
+
+  if (length <= DECIMAL_PRECISION) {
+    const missingZeros = DECIMAL_PRECISION - length;
+
+    return `0${separator}${'0'.repeat(missingZeros)}${dineroString.replace(leadingZerosRegex, '$1')}`;
+  }
+
+  const decimalPart = dineroString.substring(length - DECIMAL_PRECISION, length);
+  const integerPart = dineroString.substring(0, length - DECIMAL_PRECISION);
+
+  return `${integerPart}${separator}${decimalPart.replace(leadingZerosRegex, '$1')}`;
+}
 
 /**
  * Convert an amount decimal and currency into a dinero object.
@@ -334,11 +368,8 @@ function getPrecisionFromDecimalNumbersLength(decimalNumbers: string, shouldDisp
     return precision || DEFAULT_INTEGER_AMOUNT_PRECISION;
   }
 
-  if (precision > 2) {
-    return precision - 2;
-  }
-
-  return precision;
+  // Removes the last 2 digits from the precision, since we want to display the amount as cents
+  return Math.max(precision - DEFAULT_INTEGER_AMOUNT_PRECISION, DEFAULT_INTEGER_AMOUNT_PRECISION);
 }
 
 /**

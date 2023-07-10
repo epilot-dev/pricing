@@ -177,10 +177,9 @@ function getPrecisionAndFormatFromStringAmount(
     const [, decimalNumbers] = decimalAmount.split('.');
 
     const precisionFromLength = getPrecisionFromDecimalNumbersLength(decimalNumbers, shouldDisplayAsCents);
-    const amountPrecision =
-      useRealPrecision && shouldDisplayAsCents
-        ? Math.min(precisionFromLength, MAX_SUPPORTED_FORMAT_PRECISION)
-        : precisionFromLength;
+    const amountPrecision = shouldDisplayAsCents
+      ? Math.min(precisionFromLength, MAX_SUPPORTED_FORMAT_PRECISION)
+      : precisionFromLength;
     const precisionToFormat = '0'.repeat(amountPrecision);
     const amountFormat = DEFAULT_FORMAT.replace('.00', `.${precisionToFormat}`);
 

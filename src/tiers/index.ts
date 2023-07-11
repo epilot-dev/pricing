@@ -1,7 +1,8 @@
 import { Currency, Dinero } from 'dinero.js';
 
 import { DEFAULT_CURRENCY } from '../currencies';
-import { DEFAULT_LOCALE, formatAmountFromString, toDinero } from '../formatters';
+import { addSeparatorToDineroString, formatAmountFromString, toDinero } from '../formatters';
+import { DEFAULT_LOCALE } from '../formatters/constants';
 import { PricingModel } from '../pricing';
 import { Price, PriceTier } from '../types';
 import { getQuantityForTier } from '../utils';
@@ -192,31 +193,33 @@ export const computeCumulativeValue = (
     const tierMinQuantity = index === 0 ? 0 : tiers[index - 1].up_to;
     const tierMaxQuantity = tier.up_to || Infinity;
     const graduatedQuantity = getQuantityForTier(tierMinQuantity, tierMaxQuantity, quantityToSelectTier);
-    const tierAmount = toDinero(tier.unit_amount_decimal).multiply(graduatedQuantity);
+    const tierAmount = toDinero(tier.unit_amount_decimal, formatOptions.currency).multiply(graduatedQuantity);
 
     breakdown.push({
       quantityUsed: `${graduatedQuantity} ${formattedUnit}`,
-      tierAmountDecimal: formatAmountFromString({
+      tierAmountDecimal: `${formatAmountFromString({
         decimalAmount: tier.unit_amount_decimal,
         ...formatOptions,
-      }),
+      })}/${formattedUnit}`,
       totalAmountDecimal: formatAmountFromString({
-        decimalAmount: tierAmount.toFormat('0.00'),
+        decimalAmount: addSeparatorToDineroString(tierAmount.getAmount().toString()),
         ...formatOptions,
       }),
     });
 
     return tierAmount.add(total);
-  }, toDinero('0'));
+  }, toDinero('0', formatOptions.currency));
 
   return {
     total: formatAmountFromString({
-      decimalAmount: total.toFormat('0.00'),
+      decimalAmount: addSeparatorToDineroString(total.getAmount().toString()),
       ...formatOptions,
     }),
     average: `${formatAmountFromString({
-      decimalAmount: total.divide(quantityToSelectTier).toFormat('0.00'),
+      decimalAmount: addSeparatorToDineroString(total.divide(quantityToSelectTier).getAmount().toString()),
       ...formatOptions,
+      precision: 2,
+      useRealPrecision: false,
     })}/${formattedUnit}`,
     breakdown,
   };

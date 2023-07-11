@@ -2,9 +2,7 @@ export type { Currency } from 'dinero.js';
 export { DEFAULT_CURRENCY } from './currencies';
 export {
   AmountFormatter,
-  DECIMAL_PRECISION,
   DineroConvertor,
-  GENERIC_UNIT_DISPLAY_LABEL,
   formatAmount,
   formatAmountFromString,
   formatPriceUnit,
@@ -14,6 +12,7 @@ export {
   d as toDineroFromInteger,
   toIntegerAmount,
 } from './formatters';
+export { DECIMAL_PRECISION, GENERIC_UNIT_DISPLAY_LABEL } from './formatters/constants';
 export {
   TimeFrequencyNormalizerMatrix,
   normalizePriceMappingInput,

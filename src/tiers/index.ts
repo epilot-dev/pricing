@@ -8,7 +8,7 @@ import { Price, PriceTier } from '../types';
 import { getQuantityForTier } from '../utils';
 
 const byInputQuantity = (tiers: PriceTier[], quantity: number) => (_: PriceTier, index: number) =>
-  Math.ceil(quantity) > (tiers[index - 1]?.up_to || 0);
+  quantity > (tiers[index - 1]?.up_to || 0);
 
 type CumulativePriceBreakdownItem = {
   quantityUsed: string;
@@ -196,7 +196,9 @@ export const computeCumulativeValue = (
     const tierAmount = toDinero(tier.unit_amount_decimal, formatOptions.currency).multiply(graduatedQuantity);
 
     breakdown.push({
-      quantityUsed: `${graduatedQuantity} ${formattedUnit}`,
+      quantityUsed: `${graduatedQuantity.toLocaleString(formatOptions.locale, {
+        maximumFractionDigits: 6,
+      })} ${formattedUnit}`,
       tierAmountDecimal: `${formatAmountFromString({
         decimalAmount: tier.unit_amount_decimal,
         ...formatOptions,

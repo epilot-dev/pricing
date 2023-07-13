@@ -46,7 +46,7 @@ type ArrayPrecisionConverter = (items: PriceItem[], precision?: number) => Price
 type PrecisionConverter = (priceItem: PriceItem, precision: number) => PriceItem;
 type ComputePriceItem = (
   priceItem: PriceItemDto,
-  price: Price,
+  price: Price | undefined,
   tax: Tax,
   quantity: number,
   priceMapping?: PriceInputMapping,
@@ -287,8 +287,8 @@ export const computeAggregatedAndPriceTotals: ComputeAggregatedAndPriceTotals = 
       const priceItemToAppend = computePriceItem(priceItem, price, tax, priceItem.quantity, priceMapping);
 
       const updatedTotals = isUnitAmountApproved(
-        priceItemToAppend?._price?.price_display_in_journeys ?? price.price_display_in_journeys,
         priceItem,
+        priceItemToAppend?._price?.price_display_in_journeys ?? price?.price_display_in_journeys,
         null,
       )
         ? recomputeDetailTotals(details, price, priceItemToAppend)
@@ -451,8 +451,8 @@ const recomputeDetailTotalsFromCompositePrice = (details: PricingDetails, compos
 
   return compositePriceItem?.item_components?.reduce((detailTotals, itemComponent: Price) => {
     const updatedTotals = isUnitAmountApproved(
-      itemComponent._price?.price_display_in_journeys,
       itemComponent,
+      itemComponent._price?.price_display_in_journeys,
       compositePriceItem,
     )
       ? recomputeDetailTotals(detailTotals, itemComponent._price, itemComponent)
@@ -539,9 +539,9 @@ export const computePriceItem: ComputePriceItem = (priceItem, price, applicableT
     _price: {
       ...price,
       ...(itemValues.displayMode && {
-        price_display_in_journeys: itemValues.displayMode ?? price.price_display_in_journeys,
+        price_display_in_journeys: itemValues.displayMode ?? price?.price_display_in_journeys,
         unchanged_price_display_in_journeys:
-          priceItem._price?.unchanged_price_display_in_journeys ?? price.price_display_in_journeys,
+          priceItem._price?.unchanged_price_display_in_journeys ?? price?.price_display_in_journeys,
       }),
     },
   };
@@ -652,13 +652,13 @@ const getPriceRecurrence = (price: Price, recurrences: RecurrenceAmount[]) => {
 };
 
 const isUnitAmountApproved = (
-  priceDisplayInJourneys: Price['price_display_in_journeys'],
   priceItem: PriceItem,
+  priceDisplayInJourneys?: Price['price_display_in_journeys'],
   parentPriceItem?: CompositePriceItem,
 ) => {
   if (parentPriceItem) {
     const parentHasHiddenPriceComponents = parentPriceItem.item_components.some(
-      (component) => component._price.price_display_in_journeys === 'show_as_on_request',
+      (component) => component._price?.price_display_in_journeys === 'show_as_on_request',
     );
     const parentPriceIsHiddenPrice = parentPriceItem._price?.price_display_in_journeys === 'show_as_on_request';
 

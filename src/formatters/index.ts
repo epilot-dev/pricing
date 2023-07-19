@@ -183,6 +183,12 @@ function getPrecisionAndFormatFromStringAmount(
     const precisionToFormat = '0'.repeat(amountPrecision);
     const amountFormat = DEFAULT_FORMAT.replace('.00', `.${precisionToFormat}`);
 
+    console.log({
+      amountPrecision,
+      amountFormat,
+      precisionFromLength,
+    });
+
     return {
       amountPrecision,
       amountFormat,
@@ -357,9 +363,11 @@ export const unitDisplayLabels: Record<Price['unit'], string> & {
  * getPrecisionFromDecimalNumbersLength('5005', true) // 2
  */
 function getPrecisionFromDecimalNumbersLength(decimalNumbers: string, shouldDisplayAsCents: boolean) {
-  const precision = decimalNumbers?.length;
+  const noZerosRegex = /[1-9]+/g;
+  const noDecimalNumbersPresent = !noZerosRegex.test(decimalNumbers);
+  const precision = decimalNumbers?.length ?? 0;
 
-  if (precision < 2) {
+  if (precision < 2 || noDecimalNumbersPresent) {
     return 2;
   }
 

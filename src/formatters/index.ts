@@ -183,12 +183,6 @@ function getPrecisionAndFormatFromStringAmount(
     const precisionToFormat = '0'.repeat(amountPrecision);
     const amountFormat = DEFAULT_FORMAT.replace('.00', `.${precisionToFormat}`);
 
-    console.log({
-      amountPrecision,
-      amountFormat,
-      precisionFromLength,
-    });
-
     return {
       amountPrecision,
       amountFormat,

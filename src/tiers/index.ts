@@ -95,7 +95,7 @@ export function getTierDescription(
   locale: string,
   currency: Currency | undefined,
   t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
-  options: { showStartsAt?: boolean; enableSubunitDisplay?: boolean; isUnitAmountApproved?: boolean } = {},
+  options: { showStartsAt?: boolean; enableSubunitDisplay?: boolean; shouldDisplayOnRequest?: boolean } = {},
 ): string {
   if (!pricingModel) {
     return;
@@ -105,7 +105,7 @@ export function getTierDescription(
     return;
   }
 
-  if (tier.display_mode === 'on_request' && !options.isUnitAmountApproved) {
+  if (tier.display_mode === 'on_request' && options.shouldDisplayOnRequest) {
     return t('show_as_on_request', {
       ns: '',
       defaultValue: 'Price on request',
@@ -170,7 +170,7 @@ export const computeCumulativeValue = (
   locale: string,
   currency: Currency | undefined,
   t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
-  options: { isUnitAmountApproved?: boolean } = {},
+  options: { shouldDisplayOnRequest?: boolean } = {},
 ) => {
   if (!tiers || !tiers.length || quantityToSelectTier <= 0) {
     return;
@@ -178,7 +178,7 @@ export const computeCumulativeValue = (
 
   const priceTiersForQuantity = getDisplayTiersByQuantity(tiers, quantityToSelectTier, PricingModel.tieredGraduated);
   const onRequestTier = priceTiersForQuantity.find((tier) => tier.display_mode === 'on_request');
-  if (onRequestTier && !options.isUnitAmountApproved) {
+  if (onRequestTier && options.shouldDisplayOnRequest) {
     return t('show_as_on_request', {
       ns: '',
       defaultValue: 'Price on request',

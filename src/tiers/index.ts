@@ -176,6 +176,14 @@ export const computeCumulativeValue = (
   }
 
   const priceTiersForQuantity = getDisplayTiersByQuantity(tiers, quantityToSelectTier, PricingModel.tieredGraduated);
+  const onRequestTier = priceTiersForQuantity.find((tier) => tier.display_mode === 'on_request');
+  if (onRequestTier) {
+    return t('show_as_on_request', {
+      ns: '',
+      defaultValue: 'Price on request',
+    });
+  }
+
   const formattedUnit = t(`selectvalues.Price.unit.${unit || 'unit'}`, {
     ns: 'entity',
     defaultValue: unit,

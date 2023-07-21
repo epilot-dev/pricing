@@ -262,11 +262,13 @@ export function addSeparatorToDineroString(dineroString: string) {
   const leadingZerosRegex = /([0-9])0+$/g;
   const length = dineroString.length;
   const separator = '.';
+  const isSubunit = length <= DECIMAL_PRECISION;
 
-  if (length <= DECIMAL_PRECISION) {
+  if (isSubunit) {
     const missingZeros = DECIMAL_PRECISION - length;
+    const integerPart = 0;
 
-    return `0${separator}${'0'.repeat(missingZeros)}${dineroString.replace(leadingZerosRegex, '$1')}`;
+    return `${integerPart}${separator}${'0'.repeat(missingZeros)}${dineroString.replace(leadingZerosRegex, '$1')}`;
   }
 
   const decimalPart = dineroString.substring(length - DECIMAL_PRECISION, length);

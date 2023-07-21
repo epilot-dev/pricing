@@ -357,9 +357,11 @@ export const unitDisplayLabels: Record<Price['unit'], string> & {
  * getPrecisionFromDecimalNumbersLength('5005', true) // 2
  */
 function getPrecisionFromDecimalNumbersLength(decimalNumbers: string, shouldDisplayAsCents: boolean) {
-  const precision = decimalNumbers?.length;
+  const noZerosRegex = /[1-9]+/g;
+  const noDecimalNumbersPresent = !noZerosRegex.test(decimalNumbers);
+  const precision = decimalNumbers?.length ?? 0;
 
-  if (precision < 2) {
+  if (precision < 2 || noDecimalNumbersPresent) {
     return 2;
   }
 

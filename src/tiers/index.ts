@@ -95,7 +95,7 @@ export function getTierDescription(
   locale: string,
   currency: Currency | undefined,
   t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
-  options: { showStartsAt?: boolean; enableSubunitDisplay?: boolean } = {},
+  options: { showStartsAt?: boolean; enableSubunitDisplay?: boolean; shouldDisplayOnRequest?: boolean } = {},
 ): string {
   if (!pricingModel) {
     return;
@@ -105,7 +105,7 @@ export function getTierDescription(
     return;
   }
 
-  if (tier.display_mode === 'on_request') {
+  if (tier.display_mode === 'on_request' && options.shouldDisplayOnRequest) {
     return t('show_as_on_request', {
       ns: '',
       defaultValue: 'Price on request',
@@ -170,12 +170,21 @@ export const computeCumulativeValue = (
   locale: string,
   currency: Currency | undefined,
   t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
+  options: { shouldDisplayOnRequest?: boolean } = {},
 ) => {
   if (!tiers || !tiers.length || quantityToSelectTier <= 0) {
     return;
   }
 
   const priceTiersForQuantity = getDisplayTiersByQuantity(tiers, quantityToSelectTier, PricingModel.tieredGraduated);
+  const onRequestTier = priceTiersForQuantity.find((tier) => tier.display_mode === 'on_request');
+  if (onRequestTier && options.shouldDisplayOnRequest) {
+    return t('show_as_on_request', {
+      ns: '',
+      defaultValue: 'Price on request',
+    });
+  }
+
   const formattedUnit = t(`selectvalues.Price.unit.${unit || 'unit'}`, {
     ns: 'entity',
     defaultValue: unit,

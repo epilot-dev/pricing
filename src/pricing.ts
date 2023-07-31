@@ -474,7 +474,7 @@ const recomputeDetailTotalsFromCompositePrice = (details: PricingDetails, compos
  * Computes all price item total amounts to integers with a decimal precision of DECIMAL_PRECISION.
  */
 export const computePriceItem: ComputePriceItem = (priceItem, price, applicableTax, quantity, priceMapping) => {
-  const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase();
+  const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase() as Currency;
   const priceItemDescription = priceItem?.description ?? price?.description;
 
   const unitAmountDecimal = priceItem?.unit_amount_decimal || price?.unit_amount_decimal || '0.0';

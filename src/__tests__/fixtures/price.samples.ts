@@ -2861,177 +2861,174 @@ export const compositePriceItemWithFlatFee: CompositePriceItemDto = {
 };
 
 export const priceComponentDisplayAsStartingPrice: CompositePriceItemDto = {
-  pricing_model: "per_unit",
+  pricing_model: 'per_unit',
   unit_amount: 0,
-  unit_amount_currency: "EUR",
-  unit_amount_decimal: "0.00",
+  unit_amount_currency: 'EUR',
+  unit_amount_decimal: '0.00',
   is_tax_inclusive: true,
-  price_display_in_journeys: "show_price",
+  price_display_in_journeys: 'show_price',
   active: true,
-  type: "one_time",
-  billing_period: "weekly",
-  billing_duration_unit: "months",
-  notice_time_unit: "months",
-  termination_time_unit: "months",
-  renewal_duration_unit: "months",
+  type: 'one_time',
+  billing_period: 'weekly',
+  billing_duration_unit: 'months',
+  notice_time_unit: 'months',
+  termination_time_unit: 'months',
+  renewal_duration_unit: 'months',
   is_composite_price: true,
-  _tags: [
-    "composite"
-  ],
-  _schema: "price",
-  _title: "Price 1",
-  description: "Price 1",
+  _tags: ['composite'],
+  _schema: 'price',
+  _title: 'Price 1',
+  description: 'Price 1',
   price_components: [
     {
-      _id: "42f221b9-d0ba-41ad-99b5-c53bc90ad413",
-      pricing_model: "per_unit",
+      _id: '42f221b9-d0ba-41ad-99b5-c53bc90ad413',
+      pricing_model: 'per_unit',
       unit_amount: 1800,
-      unit_amount_currency: "EUR",
-      unit_amount_decimal: "18",
+      unit_amount_currency: 'EUR',
+      unit_amount_decimal: '18',
       is_tax_inclusive: true,
-      price_display_in_journeys: "show_as_starting_price",
+      price_display_in_journeys: 'show_as_starting_price',
       active: true,
-      type: "one_time",
-      billing_period: "weekly",
-      billing_duration_unit: "months",
-      notice_time_unit: "months",
-      termination_time_unit: "months",
-      renewal_duration_unit: "months",
-      _slug: "price",
-      _schema: "price",
+      type: 'one_time',
+      billing_period: 'weekly',
+      billing_duration_unit: 'months',
+      notice_time_unit: 'months',
+      termination_time_unit: 'months',
+      renewal_duration_unit: 'months',
+      _slug: 'price',
+      _schema: 'price',
       _owners: [
         {
-          org_id: "739224",
-          user_id: "10009172"
-        }
+          org_id: '739224',
+          user_id: '10009172',
+        },
       ],
-      _title: "Comp 1",
+      _title: 'Comp 1',
       variable_price: true,
-      description: "Comp 1",
-      _org: "739224",
-      _created_at: "2023-06-15T13:23:38.625Z",
-      _updated_at: "2023-06-15T13:23:38.625Z",
+      description: 'Comp 1',
+      _org: '739224',
+      _created_at: '2023-06-15T13:23:38.625Z',
+      _updated_at: '2023-06-15T13:23:38.625Z',
       _acl: {},
       $relation: {
-        entity_id: "42f221b9-d0ba-41ad-99b5-c53bc90ad413",
-        _schema: "price",
+        entity_id: '42f221b9-d0ba-41ad-99b5-c53bc90ad413',
+        _schema: 'price',
       },
       blockMappingData: {
         numberInput: 123,
-        frequencyUnit: "one_time"
-      }
-    }
+        frequencyUnit: 'one_time',
+      },
+    },
   ],
-  _id: "4801495a-382c-4a8b-8bd3-a9c77f67caf2",
-  _org: "739224",
+  _id: '4801495a-382c-4a8b-8bd3-a9c77f67caf2',
+  _org: '739224',
   _owners: [
     {
-      org_id: "739224",
-      user_id: "10009172"
-    }
+      org_id: '739224',
+      user_id: '10009172',
+    },
   ],
-  _created_at: "2023-06-15T13:23:39.960Z",
-  _updated_at: "2023-06-15T13:23:39.960Z",
+  _created_at: '2023-06-15T13:23:39.960Z',
+  _updated_at: '2023-06-15T13:23:39.960Z',
   _acl: {},
   _relations: [
     {
-      entity_id: "d7fc4b74-a470-4fd8-aef4-c069789ee793",
-      _acl: {}
+      entity_id: 'd7fc4b74-a470-4fd8-aef4-c069789ee793',
+      _acl: {},
     },
     {
-      entity_id: "42f221b9-d0ba-41ad-99b5-c53bc90ad413",
-      _acl: {}
-    }
+      entity_id: '42f221b9-d0ba-41ad-99b5-c53bc90ad413',
+      _acl: {},
+    },
   ],
   _price: {
-    pricing_model: "per_unit",
+    pricing_model: 'per_unit',
     unit_amount: 0,
-    unit_amount_currency: "EUR",
-    unit_amount_decimal: "0.00",
+    unit_amount_currency: 'EUR',
+    unit_amount_decimal: '0.00',
     is_tax_inclusive: true,
-    price_display_in_journeys: "show_price",
+    price_display_in_journeys: 'show_price',
     active: true,
-    type: "one_time",
-    billing_period: "weekly",
-    billing_duration_unit: "months",
-    notice_time_unit: "months",
-    termination_time_unit: "months",
-    renewal_duration_unit: "months",
+    type: 'one_time',
+    billing_period: 'weekly',
+    billing_duration_unit: 'months',
+    notice_time_unit: 'months',
+    termination_time_unit: 'months',
+    renewal_duration_unit: 'months',
     is_composite_price: true,
-    _tags: [
-      "composite"
-    ],
-    _schema: "price",
-    _title: "Price 1",
-    description: "Price 1",
+    _tags: ['composite'],
+    _schema: 'price',
+    _title: 'Price 1',
+    description: 'Price 1',
     price_components: [
       {
-        _id: "42f221b9-d0ba-41ad-99b5-c53bc90ad413",
-        pricing_model: "per_unit",
+        _id: '42f221b9-d0ba-41ad-99b5-c53bc90ad413',
+        pricing_model: 'per_unit',
         unit_amount: 1800,
-        unit_amount_currency: "EUR",
-        unit_amount_decimal: "18",
+        unit_amount_currency: 'EUR',
+        unit_amount_decimal: '18',
         is_tax_inclusive: true,
-        price_display_in_journeys: "show_as_starting_price",
+        price_display_in_journeys: 'show_as_starting_price',
         active: true,
-        type: "one_time",
-        billing_period: "weekly",
-        billing_duration_unit: "months",
-        notice_time_unit: "months",
-        termination_time_unit: "months",
-        renewal_duration_unit: "months",
-        _slug: "price",
-        _schema: "price",
+        type: 'one_time',
+        billing_period: 'weekly',
+        billing_duration_unit: 'months',
+        notice_time_unit: 'months',
+        termination_time_unit: 'months',
+        renewal_duration_unit: 'months',
+        _slug: 'price',
+        _schema: 'price',
         _owners: [
           {
-            org_id: "739224",
-            user_id: "10009172"
-          }
+            org_id: '739224',
+            user_id: '10009172',
+          },
         ],
-        _title: "Comp 1",
+        _title: 'Comp 1',
         variable_price: true,
-        description: "Comp 1",
-        _org: "739224",
-        _created_at: "2023-06-15T13:23:38.625Z",
-        _updated_at: "2023-06-15T13:23:38.625Z",
+        description: 'Comp 1',
+        _org: '739224',
+        _created_at: '2023-06-15T13:23:38.625Z',
+        _updated_at: '2023-06-15T13:23:38.625Z',
         _acl: {},
         $relation: {
-          entity_id: "42f221b9-d0ba-41ad-99b5-c53bc90ad413",
-          _schema: "price",
+          entity_id: '42f221b9-d0ba-41ad-99b5-c53bc90ad413',
+          _schema: 'price',
         },
         blockMappingData: {
           numberInput: 1,
-          frequencyUnit: "one_time"
-        }
-      }
+          frequencyUnit: 'one_time',
+        },
+      },
     ],
-    _id: "4801495a-382c-4a8b-8bd3-a9c77f67caf2",
-    _org: "739224",
+    _id: '4801495a-382c-4a8b-8bd3-a9c77f67caf2',
+    _org: '739224',
     _owners: [
       {
-        org_id: "739224",
-        user_id: "10009172"
-      }
+        org_id: '739224',
+        user_id: '10009172',
+      },
     ],
-    _created_at: "2023-06-15T13:23:39.960Z",
-    _updated_at: "2023-06-15T13:23:39.960Z",
+    _created_at: '2023-06-15T13:23:39.960Z',
+    _updated_at: '2023-06-15T13:23:39.960Z',
     _acl: {},
     _relations: [
       {
-        entity_id: "d7fc4b74-a470-4fd8-aef4-c069789ee793",
-        _acl: {}
+        entity_id: 'd7fc4b74-a470-4fd8-aef4-c069789ee793',
+        _acl: {},
       },
       {
-        entity_id: "42f221b9-d0ba-41ad-99b5-c53bc90ad413",
-        _acl: {}
-      }
-    ]
+        entity_id: '42f221b9-d0ba-41ad-99b5-c53bc90ad413',
+        _acl: {},
+      },
+    ],
   },
   price_mappings: [
     {
-      price_id: "42f221b9-d0ba-41ad-99b5-c53bc90ad413",
+      price_id: '42f221b9-d0ba-41ad-99b5-c53bc90ad413',
       value: 1,
-      frequency_unit: "one_time"
-    }
-  ]
-} as CompositePriceItemDto
+      frequency_unit: 'one_time',
+    },
+  ],
+} as CompositePriceItemDto;
+

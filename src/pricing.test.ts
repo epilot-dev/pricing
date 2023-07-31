@@ -1849,9 +1849,98 @@ describe('computeAggregatedAndPriceTotals', () => {
     });
 
     describe('pricing_model = tiered_flat_fee', () => {
-      /**
-       * @todo Add missing unit tests for pricing_model = tiered_flat_fee when composite_price = true
-       */
+      it('should return the correct result when input mapping is 2', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithFlatFee,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-flat-fee', value: 2 },
+            ] as PriceInputMappings,
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toStrictEqual(
+          expect.objectContaining({
+            unit_amount_gross: 10000,
+            amount_subtotal: 9091,
+            amount_total: 10000,
+            total_details: expect.objectContaining({
+              amount_tax: 909,
+            }),
+            items: expect.arrayContaining([
+              expect.objectContaining({
+                unit_amount_gross: 10000,
+                amount_subtotal: 9091,
+                amount_total: 10000,
+              }),
+            ]),
+          }),
+        );
+      });
+
+      it('should return the correct result when input mapping is 10', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithFlatFee,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-flat-fee', value: 10 },
+            ] as PriceInputMappings,
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toStrictEqual(
+          expect.objectContaining({
+            unit_amount_gross: 8000,
+            amount_subtotal: 7273,
+            amount_total: 8000,
+            total_details: expect.objectContaining({
+              amount_tax: 727,
+            }),
+            items: expect.arrayContaining([
+              expect.objectContaining({
+                unit_amount_gross: 8000,
+                amount_subtotal: 7273,
+                amount_total: 8000,
+              }),
+            ]),
+          }),
+        );
+      });
+
+      it('should return the correct result when input mapping is 15', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithFlatFee,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-flat-fee', value: 15 },
+            ] as PriceInputMappings,
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toStrictEqual(
+          expect.objectContaining({
+            unit_amount_gross: 6000,
+            amount_subtotal: 5455,
+            amount_total: 6000,
+            total_details: expect.objectContaining({
+              amount_tax: 545,
+            }),
+            items: expect.arrayContaining([
+              expect.objectContaining({
+                unit_amount_gross: 6000,
+                amount_subtotal: 5455,
+                amount_total: 6000,
+              }),
+            ]),
+          }),
+        );
+      });
 
       it('should return the correct result when input mapping is 100', () => {
         const priceItems = [

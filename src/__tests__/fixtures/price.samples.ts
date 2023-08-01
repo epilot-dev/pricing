@@ -2487,6 +2487,34 @@ export const priceItemWithGraduatedTiersNoFlatFee: PriceItemDto = {
   pricing_model: 'tiered_graduated',
 };
 
+export const priceItemWithNegativePriceGraduatedTiersNoFlatFee: PriceItemDto = {
+  quantity: 1,
+  _price: {
+    _id: 'price#1-graduated-no-flat-fee',
+    is_composite_price: false,
+    pricing_model: 'tiered_graduated',
+    tiers: [
+      {
+        unit_amount: -1000,
+        unit_amount_decimal: '-10.00',
+        up_to: 10,
+      },
+      {
+        unit_amount: -800,
+        unit_amount_decimal: '-8.00',
+        up_to: 20,
+      },
+      {
+        unit_amount: -600,
+        unit_amount_decimal: '-6.00',
+      },
+    ],
+    is_tax_inclusive: true,
+  } as Price,
+  taxes: [{ tax: tax10percent }],
+  pricing_model: 'tiered_graduated',
+};
+
 export const priceItemWithVolumeTiersNoFlatFee: PriceItemDto = {
   quantity: 1,
   _price: {
@@ -2515,6 +2543,38 @@ export const priceItemWithVolumeTiersNoFlatFee: PriceItemDto = {
   pricing_model: 'tiered_volume',
 };
 
+export const priceItemWithNegativePriceVolumeTiersNoFlatFee: PriceItemDto = {
+  quantity: 1,
+  _price: {
+    _id: 'price#1-volume-no-flat-fee',
+    is_composite_price: false,
+    pricing_model: 'tiered_volume',
+    tiers: [
+      {
+        unit_amount: -1000,
+        unit_amount_decimal: '-10.00',
+        up_to: 10,
+      },
+      {
+        unit_amount: -800,
+        unit_amount_decimal: '-8.00',
+        up_to: 20,
+      },
+      {
+        unit_amount: -600,
+        unit_amount_decimal: '-6.00',
+      },
+    ],
+    is_tax_inclusive: true,
+  } as Price,
+  taxes: [{ tax: tax10percent }],
+  pricing_model: 'tiered_volume',
+};
+
+/**
+ * @deprecated Not being used anymore
+ * @todo Dispose of safely
+ */
 export const priceItemWithGraduatedTiersFlatFee: PriceItemDto = {
   quantity: 1,
   _price: {
@@ -2549,6 +2609,10 @@ export const priceItemWithGraduatedTiersFlatFee: PriceItemDto = {
   pricing_model: 'tiered_graduated',
 };
 
+/**
+ * @deprecated Not being used
+ * @todo Should be safely disposed of
+ */
 export const priceItemWithVolumeTiersFlatFee: PriceItemDto = {
   quantity: 1,
   _price: {
@@ -2762,6 +2826,41 @@ export const compositePriceItemWithTieredGraduatedComponent: CompositePriceItemD
   } as CompositePrice,
 };
 
+export const compositePriceItemWithNegativePriceTieredGraduatedComponent: CompositePriceItemDto = {
+  quantity: 1,
+  item_components: [
+    {
+      quantity: 1,
+      taxes: [{ tax: tax10percent }],
+      _price: {
+        _id: 'price#1-tiered-graduated',
+        pricing_model: 'tiered_graduated',
+        tiers: [
+          {
+            unit_amount: -1000,
+            unit_amount_decimal: '-10.00',
+            up_to: 10,
+          },
+          {
+            unit_amount: -800,
+            unit_amount_decimal: '-8.00',
+            up_to: 20,
+          },
+          {
+            unit_amount: -600,
+            unit_amount_decimal: '-6.00',
+          },
+        ],
+        is_tax_inclusive: true,
+      },
+      pricing_model: 'tiered_graduated',
+    },
+  ],
+  _price: {
+    is_composite_price: true,
+  } as CompositePrice,
+};
+
 export const compositePriceItemWithTieredVolumeComponent: CompositePriceItemDto = {
   quantity: 1,
   item_components: [
@@ -2785,6 +2884,41 @@ export const compositePriceItemWithTieredVolumeComponent: CompositePriceItemDto 
           {
             unit_amount: 600,
             unit_amount_decimal: '6.00',
+          },
+        ],
+        is_tax_inclusive: true,
+      },
+      pricing_model: 'tiered_volume',
+    },
+  ],
+  _price: {
+    is_composite_price: true,
+  } as CompositePrice,
+};
+
+export const compositePriceItemWithNegativePriceTieredVolumeComponent: CompositePriceItemDto = {
+  quantity: 1,
+  item_components: [
+    {
+      quantity: 1,
+      taxes: [{ tax: tax10percent }],
+      _price: {
+        _id: 'price#1-tiered-volume',
+        pricing_model: 'tiered_volume',
+        tiers: [
+          {
+            unit_amount: -1000,
+            unit_amount_decimal: '-10.00',
+            up_to: 10,
+          },
+          {
+            unit_amount: -800,
+            unit_amount_decimal: '-8.00',
+            up_to: 20,
+          },
+          {
+            unit_amount: -600,
+            unit_amount_decimal: '-6.00',
           },
         ],
         is_tax_inclusive: true,
@@ -2825,6 +2959,34 @@ export const priceItemWithFlatFeeTiers: PriceItemDto = {
   pricing_model: 'tiered_flatfee',
 };
 
+export const priceItemWithNegativePriceFlatFeeTiers: PriceItemDto = {
+  quantity: 1,
+  _price: {
+    _id: 'price#1-tiered-flat-fee',
+    is_composite_price: false,
+    pricing_model: 'tiered_flatfee',
+    tiers: [
+      {
+        flat_fee_amount: -10000,
+        flat_fee_amount_decimal: '-100.00',
+        up_to: 5,
+      },
+      {
+        flat_fee_amount: -8000,
+        flat_fee_amount_decimal: '-80.00',
+        up_to: 10,
+      },
+      {
+        flat_fee_amount: -6000,
+        flat_fee_amount_decimal: '-60.00',
+      },
+    ],
+    is_tax_inclusive: true,
+  } as Price,
+  taxes: [{ tax: tax10percent }],
+  pricing_model: 'tiered_flatfee',
+};
+
 export const compositePriceItemWithFlatFee: CompositePriceItemDto = {
   quantity: 1,
   item_components: [
@@ -2848,6 +3010,41 @@ export const compositePriceItemWithFlatFee: CompositePriceItemDto = {
           {
             flat_fee_amount: 6000,
             flat_fee_amount_decimal: '60.00',
+          },
+        ],
+        is_tax_inclusive: true,
+      },
+      pricing_model: 'tiered_flatfee',
+    },
+  ],
+  _price: {
+    is_composite_price: true,
+  } as CompositePrice,
+};
+
+export const compositePriceItemWithNegativePriceFlatFee: CompositePriceItemDto = {
+  quantity: 1,
+  item_components: [
+    {
+      quantity: 1,
+      taxes: [{ tax: tax10percent }],
+      _price: {
+        _id: 'price#1-tiered-flat-fee',
+        pricing_model: 'tiered_flatfee',
+        tiers: [
+          {
+            flat_fee_amount: -10000,
+            flat_fee_amount_decimal: '-100.00',
+            up_to: 5,
+          },
+          {
+            flat_fee_amount: -8000,
+            flat_fee_amount_decimal: '-80.00',
+            up_to: 10,
+          },
+          {
+            flat_fee_amount: -6000,
+            flat_fee_amount_decimal: '-60.00',
           },
         ],
         is_tax_inclusive: true,
@@ -3031,4 +3228,3 @@ export const priceComponentDisplayAsStartingPrice: CompositePriceItemDto = {
     },
   ],
 } as CompositePriceItemDto;
-

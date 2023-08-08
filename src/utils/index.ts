@@ -67,12 +67,12 @@ export const getQuantityForTier = (tierMinQuantity: number, tierMaxQuantity: num
 
 export const computePriceItemValues = (
   unitAmountDecimal: string,
-  currency: string,
+  currency: Currency,
   isTaxInclusive: boolean,
   unitAmountMultiplier: number,
   tax: Tax,
 ): PriceItemsTotals => {
-  const unitAmount = toDinero(unitAmountDecimal, currency as Currency);
+  const unitAmount = toDinero(unitAmountDecimal, currency);
   const taxRate = getTaxValue(tax);
 
   const unitAmountNet = isTaxInclusive ? unitAmount.divide(1 + taxRate) : unitAmount;
@@ -135,7 +135,7 @@ const getPriceTierForQuantity = (tiers: PriceTier[], quantity: number): PriceTie
 
 export const computeTieredVolumePriceItemValues = (
   tiers: PriceTier[],
-  currency: string,
+  currency: Currency,
   isTaxInclusive: boolean,
   quantityToSelectTier: number,
   tax: Tax,
@@ -166,7 +166,7 @@ export const computeTieredVolumePriceItemValues = (
 
 export const computeTieredFlatFeePriceItemValues = (
   tiers: PriceTier[],
-  currency: string,
+  currency: Currency,
   isTaxInclusive: boolean,
   quantityToSelectTier: number,
   tax: Tax,
@@ -204,7 +204,7 @@ export const computeTieredFlatFeePriceItemValues = (
 
 export const computeTieredGraduatedPriceItemValues = (
   tiers: PriceTier[],
-  currency: string,
+  currency: Currency,
   isTaxInclusive: boolean,
   quantityToSelectTier: number,
   tax: Tax,

@@ -28,7 +28,7 @@ export function getDisplayTierByQuantity(
   tiers: PriceTier[],
   quantity: number,
   pricingModel: PricingModel | Price['pricing_model'],
-): PriceTier {
+): PriceTier | undefined {
   if (!tiers || !tiers.length) {
     return;
   }
@@ -58,7 +58,7 @@ export function getDisplayTiersByQuantity(
   tiers: PriceTier[],
   quantity: number,
   pricingModel: PricingModel | Price['pricing_model'],
-): PriceTier[] {
+): PriceTier[] | undefined {
   if (!tiers || !tiers.length) {
     return;
   }
@@ -96,7 +96,7 @@ export function getTierDescription(
   currency: Currency | undefined,
   t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
   options: { showStartsAt?: boolean; enableSubunitDisplay?: boolean; shouldDisplayOnRequest?: boolean } = {},
-): string {
+): string | undefined {
   if (!pricingModel) {
     return;
   }
@@ -132,7 +132,7 @@ export function getTierDescription(
   const formatedAmountString =
     showUnitAmount &&
     formatAmountFromString({
-      decimalAmount: tier.unit_amount_decimal,
+      decimalAmount: tier.unit_amount_decimal!,
       currency: currency || DEFAULT_CURRENCY,
       locale,
       useRealPrecision: true,
@@ -177,7 +177,7 @@ export const computeCumulativeValue = (
   }
 
   const priceTiersForQuantity = getDisplayTiersByQuantity(tiers, quantityToSelectTier, PricingModel.tieredGraduated);
-  const onRequestTier = priceTiersForQuantity.find((tier) => tier.display_mode === 'on_request');
+  const onRequestTier = priceTiersForQuantity!.find((tier) => tier.display_mode === 'on_request');
   if (onRequestTier && options.shouldDisplayOnRequest) {
     return t('show_as_on_request', {
       ns: '',
@@ -198,18 +198,18 @@ export const computeCumulativeValue = (
 
   const breakdown: CumulativePriceBreakdownItem[] = [];
 
-  const total = priceTiersForQuantity.reduce((total: Dinero, tier: PriceTier, index: number) => {
+  const total = priceTiersForQuantity!.reduce((total: Dinero, tier: PriceTier, index: number) => {
     const tierMinQuantity = index === 0 ? 0 : tiers[index - 1].up_to;
     const tierMaxQuantity = tier.up_to || Infinity;
-    const graduatedQuantity = getQuantityForTier(tierMinQuantity, tierMaxQuantity, quantityToSelectTier);
-    const tierAmount = toDinero(tier.unit_amount_decimal, formatOptions.currency).multiply(graduatedQuantity);
+    const graduatedQuantity = getQuantityForTier(tierMinQuantity!, tierMaxQuantity, quantityToSelectTier);
+    const tierAmount = toDinero(tier.unit_amount_decimal!, formatOptions.currency).multiply(graduatedQuantity);
 
     breakdown.push({
       quantityUsed: `${graduatedQuantity.toLocaleString(formatOptions.locale, {
         maximumFractionDigits: 6,
       })} ${formattedUnit}`,
       tierAmountDecimal: `${formatAmountFromString({
-        decimalAmount: tier.unit_amount_decimal,
+        decimalAmount: tier.unit_amount_decimal!,
         ...formatOptions,
       })}/${formattedUnit}`,
       totalAmountDecimal: formatAmountFromString({

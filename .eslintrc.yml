@@ -1,13 +1,15 @@
 extends:
-  - "@epilot/eslint-config"
+  - '@epilot/eslint-config'
 ignorePatterns:
   - node_modules
   - dist
   - src/__tests__/fixtures/**
   - src/**/*.test.ts
 rules:
-  "@typescript-eslint/no-unused-vars-experimental": "off"
-  "prettier/prettier":
+  '@typescript-eslint/no-unused-vars-experimental': 'off'
+  '@typescript-eslint/no-non-null-assertion': 'warn'
+  '@typescript-eslint/no-non-null-asserted-optional-chain': 'warn'
+  'prettier/prettier':
     - error
     - printWidth: 120 # https://hackernoon.com/does-column-width-of-80-make-sense-in-2018-50c161fbdcf6
       trailingComma: all # better diffs, obviously
@@ -25,11 +27,11 @@ settings:
   import/resolver:
     node:
       extensions:
-        - ".js"
-        - ".jsx"
-        - ".ts"
-        - ".tsx"
-        - ".d.ts"
+        - '.js'
+        - '.jsx'
+        - '.ts'
+        - '.tsx'
+        - '.d.ts'
       paths:
         - src
 parserOptions:

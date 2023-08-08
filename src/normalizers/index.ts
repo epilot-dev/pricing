@@ -33,12 +33,12 @@ export const normalizePriceMappingInput: NormalizePriceMappingInput = (priceMapp
     return null;
   }
 
-  const safeValue = isNaN(priceMapping.value) ? 1 : priceMapping.value;
+  const safeValue = isNaN(priceMapping.value!) ? 1 : priceMapping.value;
   const isFrequencyUnitNormalizationNeeded = price.type !== 'one_time' && priceMapping.value;
 
   if (isFrequencyUnitNormalizationNeeded) {
     return normalizeTimeFrequencyToDinero(
-      safeValue,
+      safeValue!,
       priceMapping.frequency_unit as TimeFrequency,
       price.billing_period as TimeFrequency,
     );

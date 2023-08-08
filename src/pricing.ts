@@ -26,8 +26,12 @@ import {
   isTaxInclusivePrice,
 } from './utils';
 
-export const DEFAULT_INTEGER_AMOUNT_PRECISION = 2; // REMOVE
-export const BillingPeriods = new Set(['weekly', 'monthly', 'every_quarter', 'every_6_months', 'yearly']);
+/**
+ * @deprecated
+ * @todo Remove safely
+ */
+export const DEFAULT_INTEGER_AMOUNT_PRECISION = 2;
+export const BillingPeriods = new Set(['weekly', 'monthly', 'every_quarter', 'every_6_months', 'yearly'] as const);
 
 export const TaxRates = Object.freeze({
   standard: 0.19,
@@ -42,22 +46,7 @@ export enum PricingModel {
   tieredFlatFee = 'tiered_flatfee',
 }
 
-export type ComputeAggregatedAndPriceTotals = (priceItems: PriceItemsDto) => PricingDetails;
-
-type ArrayPrecisionConverter = (items: PriceItem[], precision?: number) => PriceItem[];
-type PrecisionConverter = (priceItem: PriceItem, precision: number) => PriceItem;
-type ComputePriceItem = (
-  priceItem: PriceItemDto,
-  price: Price | undefined,
-  tax: Tax,
-  quantity: number,
-  priceMapping?: PriceInputMapping,
-) => PriceItem;
-type RecomputeDetailTotals = (details: PricingDetails, price: Price, priceItemToAppend: PriceItem) => PricingDetails;
-
-type GetPriceComponents = (
-  priceItem: CompositePriceItemDto,
-) => (Price & { _itemRef?: PriceItemDto; frequency_unit?: string; number_input?: number })[];
+export type ComputeAggregatedAndPriceTotals = typeof computeAggregatedAndPriceTotals;
 
 export type RelationAttributeValue = {
   $relation: { entity_id: string; _schema: string; _tags: string[] }[];
@@ -85,7 +74,7 @@ export const computePriceComponent = (
   priceItemComponent: PriceItemDto,
   priceMappings: PriceInputMappings,
   parentQuantity: number,
-) => {
+): PriceItem => {
   const tax = priceItemComponent?.taxes?.[0]?.tax;
   const priceMapping = priceMappings?.find(({ price_id }) => priceItemComponent._price._id === price_id);
 
@@ -123,7 +112,9 @@ const isValidPrice = (priceComponent: Price): boolean => {
   return true;
 };
 
-const getPriceComponents: GetPriceComponents = (priceItem) => {
+const getPriceComponents = (
+  priceItem: CompositePriceItemDto,
+): (Price & { _itemRef?: PriceItemDto; frequency_unit?: string; number_input?: number })[] => {
   if (!Array.isArray(priceItem?.item_components)) {
     return Array.isArray(priceItem?._price?.price_components)
       ? priceItem._price.price_components.filter(isValidPrice)
@@ -248,7 +239,8 @@ export const computeCompositePrice = (
  *
  * This compute function computes both line items and aggregated totals.
  */
-export const computeAggregatedAndPriceTotals: ComputeAggregatedAndPriceTotals = (priceItems) => {
+
+export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): PricingDetails => {
   const initialPricingDetails: PricingDetails = {
     items: [],
     unit_amount_gross: 0,
@@ -341,7 +333,7 @@ export const computePriceDetails = (price: Price): PricingDetails => {
 /**
  * Computes all the pricing total amounts to integers with a decimal precision of DECIMAL_PRECISION.
  */
-const recomputeDetailTotals: RecomputeDetailTotals = (details, price, priceItemToAppend) => {
+const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemToAppend: PriceItem): PricingDetails => {
   const taxes = details?.total_details?.breakdown?.taxes || [];
   const itemTax =
     priceItemToAppend.taxes?.[0]?.tax ||
@@ -432,10 +424,13 @@ const recomputeDetailTotals: RecomputeDetailTotals = (details, price, priceItemT
   };
 };
 
-const computeCompositePriceBreakDown = (compositePriceItem: CompositePriceItem) =>
+const computeCompositePriceBreakDown = (compositePriceItem: CompositePriceItem): PricingDetails =>
   recomputeDetailTotalsFromCompositePrice(undefined, compositePriceItem);
 
-const recomputeDetailTotalsFromCompositePrice = (details: PricingDetails, compositePriceItem: CompositePriceItem) => {
+const recomputeDetailTotalsFromCompositePrice = (
+  details: PricingDetails,
+  compositePriceItem: CompositePriceItem,
+): PricingDetails => {
   const initialPricingDetails: PricingDetails = {
     items: [],
     unit_amount_gross: 0,
@@ -475,7 +470,13 @@ const recomputeDetailTotalsFromCompositePrice = (details: PricingDetails, compos
 /**
  * Computes all price item total amounts to integers with a decimal precision of DECIMAL_PRECISION.
  */
-export const computePriceItem: ComputePriceItem = (priceItem, price, applicableTax, quantity, priceMapping) => {
+export const computePriceItem = (
+  priceItem: PriceItemDto,
+  price: Price | undefined,
+  applicableTax: Tax,
+  quantity: number,
+  priceMapping?: PriceInputMapping,
+): PriceItem => {
   const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase() as Currency;
   const priceItemDescription = priceItem?.description ?? price?.description;
 
@@ -549,7 +550,7 @@ export const computePriceItem: ComputePriceItem = (priceItem, price, applicableT
   };
 };
 
-const convertPriceComponentsPrecision: ArrayPrecisionConverter = (items, precision = 2) =>
+const convertPriceComponentsPrecision = (items: PriceItem[], precision = 2): PriceItem[] =>
   items.map((component) => convertPriceItemPrecision(component, precision));
 
 /**
@@ -557,7 +558,7 @@ const convertPriceComponentsPrecision: ArrayPrecisionConverter = (items, precisi
  * e.g: 10.00 with precision DECIMAL_PRECISION, represented as 10(+12 zeros) with precision 2
  * would be 1000(only 2 zeros on the decimal component).
  */
-const convertPriceItemPrecision: PrecisionConverter = (priceItem, precision = 2) => ({
+const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceItem => ({
   ...priceItem,
   ...(typeof priceItem.unit_amount === 'number' && {
     unit_amount: d(priceItem.unit_amount).convertPrecision(precision).getAmount(),
@@ -574,7 +575,7 @@ const convertPriceItemPrecision: PrecisionConverter = (priceItem, precision = 2)
   })),
 });
 
-const convertBreakDownPrecision = (details: PricingDetails, precision: number) => {
+const convertBreakDownPrecision = (details: PricingDetails, precision: number): PricingDetails => {
   return {
     unit_amount_gross: d(details.unit_amount_gross).convertPrecision(precision).getAmount(),
     amount_subtotal: d(details.amount_subtotal).convertPrecision(precision).getAmount(),
@@ -607,7 +608,7 @@ const convertBreakDownPrecision = (details: PricingDetails, precision: number) =
  * e.g: 10.00 with precision DECIMAL_PRECISION, represented as 10(+12 zeros) with precision 2
  * would be 1000(only 2 zeros on the decimal component).
  */
-const convertPricingPrecision = (details: PricingDetails, precision: number) => ({
+const convertPricingPrecision = (details: PricingDetails, precision: number): PricingDetails => ({
   ...details,
   items: details.items.map((item) => {
     if ((item as CompositePriceItem).total_details) {

@@ -1,3 +1,5 @@
+import type { Currency } from 'dinero.js';
+
 import { DEFAULT_CURRENCY } from './currencies';
 import { d, toDinero } from './formatters';
 import { normalizePriceMappingInput } from './normalizers';

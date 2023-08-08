@@ -1,3 +1,5 @@
+import type { Currency } from 'dinero.js';
+
 import { DEFAULT_CURRENCY } from './currencies';
 import { d, toDinero } from './formatters';
 import { normalizePriceMappingInput } from './normalizers';
@@ -475,7 +477,7 @@ export const computePriceItem = (
   quantity: number,
   priceMapping?: PriceInputMapping,
 ): PriceItem => {
-  const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase();
+  const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase() as Currency;
   const priceItemDescription = priceItem?.description ?? price?.description;
 
   const unitAmountDecimal = priceItem?.unit_amount_decimal || price?.unit_amount_decimal || '0.0';

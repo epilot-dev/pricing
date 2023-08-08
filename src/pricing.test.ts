@@ -441,9 +441,93 @@ describe('computeAggregatedAndPriceTotals', () => {
           }),
         );
       });
+
+      it('should return the correct result when price is negative and bottom tier is matched', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithNegativePriceGraduatedTiersNoFlatFee,
+            price_mappings: [
+              {
+                frequency_unit: 'one_time',
+                price_id: samples.priceItemWithGraduatedTiersNoFlatFee._price?._id,
+                value: 2,
+              },
+            ] as PriceInputMappings,
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toStrictEqual(
+          expect.objectContaining({
+            unit_amount_gross: -1000,
+            amount_subtotal: -1818,
+            amount_total: -2000,
+            total_details: expect.objectContaining({
+              amount_tax: -182,
+            }),
+            items: expect.arrayContaining([
+              expect.objectContaining({
+                pricing_model: 'tiered_graduated',
+                unit_amount_gross: -1000,
+                amount_subtotal: -1818,
+                amount_total: -2000,
+              }),
+              expect.not.objectContaining({
+                unit_amount: undefined,
+                unit_amount_net: undefined,
+                unit_amount_decimal: undefined,
+                unit_amount_gross: undefined,
+              }),
+            ]),
+          }),
+        );
+      });
+
+      it('should return the correct result when price is negative and upper tier is matched', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithNegativePriceGraduatedTiersNoFlatFee,
+            price_mappings: [
+              {
+                frequency_unit: 'one_time',
+                price_id: samples.priceItemWithGraduatedTiersNoFlatFee._price?._id,
+                value: 50,
+              },
+            ] as PriceInputMappings,
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toStrictEqual(
+          expect.objectContaining({
+            unit_amount_gross: -2400,
+            amount_subtotal: -32727,
+            amount_total: -36000,
+            total_details: expect.objectContaining({
+              amount_tax: -3273,
+            }),
+            items: expect.arrayContaining([
+              expect.objectContaining({
+                pricing_model: 'tiered_graduated',
+                unit_amount_gross: -2400,
+                amount_subtotal: -32727,
+                amount_total: -36000,
+              }),
+              expect.not.objectContaining({
+                unit_amount: undefined,
+                unit_amount_net: undefined,
+                unit_amount_decimal: undefined,
+                unit_amount_gross: undefined,
+              }),
+            ]),
+          }),
+        );
+      });
     });
 
-    describe('pricing_model = volume_graduated', () => {
+    describe('pricing_model = tiered_volume', () => {
       it('should return the correct result when tiers are undefined', () => {
         const priceItems = [
           {
@@ -723,6 +807,78 @@ describe('computeAggregatedAndPriceTotals', () => {
                 amount_total: 60000,
                 amount_subtotal: 54545,
                 unit_amount_gross: 600,
+              }),
+            ]),
+          }),
+        );
+      });
+
+      it('should return the correct result when price is negative and bottom tier is matched', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithNegativePriceVolumeTiersNoFlatFee,
+            price_mappings: [
+              {
+                frequency_unit: 'yearly' as TimeFrequency,
+                price_id: samples.priceItemWithNegativePriceVolumeTiersNoFlatFee._price?._id,
+                value: 3,
+              },
+            ],
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toEqual(
+          expect.objectContaining({
+            unit_amount_gross: -1000,
+            amount_subtotal: -2727,
+            amount_total: -3000,
+            total_details: expect.objectContaining({
+              amount_tax: -273,
+            }),
+            items: expect.arrayContaining([
+              expect.objectContaining({
+                pricing_model: 'tiered_volume',
+                unit_amount_gross: -1000,
+                amount_subtotal: -2727,
+                amount_total: -3000,
+              }),
+            ]),
+          }),
+        );
+      });
+
+      it('should return the correct result when price is negative and upper tier is matched', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithNegativePriceVolumeTiersNoFlatFee,
+            price_mappings: [
+              {
+                frequency_unit: 'yearly' as TimeFrequency,
+                price_id: samples.priceItemWithNegativePriceVolumeTiersNoFlatFee._price?._id,
+                value: 100,
+              },
+            ],
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toEqual(
+          expect.objectContaining({
+            unit_amount_gross: -600,
+            amount_subtotal: -54545,
+            amount_total: -60000,
+            total_details: expect.objectContaining({
+              amount_tax: -5455,
+            }),
+            items: expect.arrayContaining([
+              expect.objectContaining({
+                pricing_model: 'tiered_volume',
+                unit_amount_gross: -600,
+                amount_subtotal: -54545,
+                amount_total: -60000,
               }),
             ]),
           }),
@@ -1059,10 +1215,41 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when input mapping is 100', () => {
+      it('should return the correct result when price is negative and bottom tier is matched', () => {
         const priceItems = [
           {
-            ...samples.compositePriceItemWithFlatFee,
+            ...samples.priceItemWithNegativePriceFlatFeeTiers,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-flat-fee', value: 3 },
+            ] as PriceInputMappings,
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toStrictEqual(
+          expect.objectContaining({
+            unit_amount_gross: -10000,
+            amount_subtotal: -9091,
+            amount_total: -10000,
+            total_details: expect.objectContaining({
+              amount_tax: -909,
+            }),
+            items: expect.arrayContaining([
+              expect.objectContaining({
+                unit_amount_gross: -10000,
+                amount_subtotal: -9091,
+                amount_total: -10000,
+              }),
+            ]),
+          }),
+        );
+      });
+
+      it('should return the correct result when price is negative and upper tier is matched', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithNegativePriceFlatFeeTiers,
             price_mappings: [
               { frequency_unit: 'one_time', price_id: 'price#1-tiered-flat-fee', value: 100 },
             ] as PriceInputMappings,
@@ -1073,17 +1260,17 @@ describe('computeAggregatedAndPriceTotals', () => {
 
         expect(result).toStrictEqual(
           expect.objectContaining({
-            amount_total: 6000,
-            amount_subtotal: 5455,
-            unit_amount_gross: 6000,
+            unit_amount_gross: -6000,
+            amount_subtotal: -5455,
+            amount_total: -6000,
             total_details: expect.objectContaining({
-              amount_tax: 545,
+              amount_tax: -545,
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
-                amount_total: 6000,
-                amount_subtotal: 5455,
-                unit_amount_gross: 6000,
+                unit_amount_gross: -6000,
+                amount_subtotal: -5455,
+                amount_total: -6000,
               }),
             ]),
           }),
@@ -1409,9 +1596,71 @@ describe('computeAggregatedAndPriceTotals', () => {
           }),
         );
       });
+
+      it('should return the correct result when price is negative and bottom tier is matched', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithNegativePriceTieredGraduatedComponent,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-graduated', value: 2 },
+            ] as PriceInputMappings,
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toStrictEqual(
+          expect.objectContaining({
+            unit_amount_gross: -1000,
+            amount_subtotal: -1818,
+            amount_total: -2000,
+            total_details: expect.objectContaining({
+              amount_tax: -182,
+            }),
+            items: expect.arrayContaining([
+              expect.objectContaining({
+                unit_amount_gross: -1000,
+                amount_subtotal: -1818,
+                amount_total: -2000,
+              }),
+            ]),
+          }),
+        );
+      });
+
+      it('should return the correct result when price is negative and upper tier is matched', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithNegativePriceTieredGraduatedComponent,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-graduated', value: 100 },
+            ] as PriceInputMappings,
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toStrictEqual(
+          expect.objectContaining({
+            amount_total: -66000,
+            amount_subtotal: -60000,
+            unit_amount_gross: -2400,
+            total_details: expect.objectContaining({
+              amount_tax: -6000,
+            }),
+            items: expect.arrayContaining([
+              expect.objectContaining({
+                amount_total: -66000,
+                amount_subtotal: -60000,
+                unit_amount_gross: -2400,
+              }),
+            ]),
+          }),
+        );
+      });
     });
 
-    describe('pricing_model = volume_graduated', () => {
+    describe('pricing_model = tiered_volume', () => {
       it('should return the correct result when input mapping is 2', () => {
         const priceItems = [
           {
@@ -1530,6 +1779,256 @@ describe('computeAggregatedAndPriceTotals', () => {
                 amount_total: 60000,
                 amount_subtotal: 54545,
                 unit_amount_gross: 600,
+              }),
+            ]),
+          }),
+        );
+      });
+
+      it('should return the correct result when price is negative and bottom tier is matched', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithNegativePriceTieredVolumeComponent,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-graduated', value: 3 },
+            ] as PriceInputMappings,
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toStrictEqual(
+          expect.objectContaining({
+            unit_amount_gross: -1000,
+            amount_subtotal: -909,
+            amount_total: -1000,
+            total_details: expect.objectContaining({
+              amount_tax: -91,
+            }),
+            items: expect.arrayContaining([
+              expect.objectContaining({
+                unit_amount_gross: -1000,
+                amount_subtotal: -909,
+                amount_total: -1000,
+              }),
+            ]),
+          }),
+        );
+      });
+
+      it('should return the correct result when price is negative and upper tier is matched', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithNegativePriceTieredVolumeComponent,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-volume', value: 100 },
+            ] as PriceInputMappings,
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toStrictEqual(
+          expect.objectContaining({
+            amount_total: -60000,
+            amount_subtotal: -54545,
+            unit_amount_gross: -600,
+            total_details: expect.objectContaining({
+              amount_tax: -5455,
+            }),
+            items: expect.arrayContaining([
+              expect.objectContaining({
+                amount_total: -60000,
+                amount_subtotal: -54545,
+                unit_amount_gross: -600,
+              }),
+            ]),
+          }),
+        );
+      });
+    });
+
+    describe('pricing_model = tiered_flat_fee', () => {
+      it('should return the correct result when input mapping is 2', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithFlatFee,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-flat-fee', value: 2 },
+            ] as PriceInputMappings,
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toStrictEqual(
+          expect.objectContaining({
+            unit_amount_gross: 10000,
+            amount_subtotal: 9091,
+            amount_total: 10000,
+            total_details: expect.objectContaining({
+              amount_tax: 909,
+            }),
+            items: expect.arrayContaining([
+              expect.objectContaining({
+                unit_amount_gross: 10000,
+                amount_subtotal: 9091,
+                amount_total: 10000,
+              }),
+            ]),
+          }),
+        );
+      });
+
+      it('should return the correct result when input mapping is 10', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithFlatFee,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-flat-fee', value: 10 },
+            ] as PriceInputMappings,
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toStrictEqual(
+          expect.objectContaining({
+            unit_amount_gross: 8000,
+            amount_subtotal: 7273,
+            amount_total: 8000,
+            total_details: expect.objectContaining({
+              amount_tax: 727,
+            }),
+            items: expect.arrayContaining([
+              expect.objectContaining({
+                unit_amount_gross: 8000,
+                amount_subtotal: 7273,
+                amount_total: 8000,
+              }),
+            ]),
+          }),
+        );
+      });
+
+      it('should return the correct result when input mapping is 15', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithFlatFee,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-flat-fee', value: 15 },
+            ] as PriceInputMappings,
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toStrictEqual(
+          expect.objectContaining({
+            unit_amount_gross: 6000,
+            amount_subtotal: 5455,
+            amount_total: 6000,
+            total_details: expect.objectContaining({
+              amount_tax: 545,
+            }),
+            items: expect.arrayContaining([
+              expect.objectContaining({
+                unit_amount_gross: 6000,
+                amount_subtotal: 5455,
+                amount_total: 6000,
+              }),
+            ]),
+          }),
+        );
+      });
+
+      it('should return the correct result when input mapping is 100', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithFlatFee,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-flat-fee', value: 100 },
+            ] as PriceInputMappings,
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toStrictEqual(
+          expect.objectContaining({
+            amount_total: 6000,
+            amount_subtotal: 5455,
+            unit_amount_gross: 6000,
+            total_details: expect.objectContaining({
+              amount_tax: 545,
+            }),
+            items: expect.arrayContaining([
+              expect.objectContaining({
+                amount_total: 6000,
+                amount_subtotal: 5455,
+                unit_amount_gross: 6000,
+              }),
+            ]),
+          }),
+        );
+      });
+
+      it('should return the correct result when price is negative and bottom tier is matched', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithNegativePriceFlatFee,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-flat-fee', value: 3 },
+            ] as PriceInputMappings,
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toStrictEqual(
+          expect.objectContaining({
+            unit_amount_gross: -10000,
+            amount_subtotal: -9091,
+            amount_total: -10000,
+            total_details: expect.objectContaining({
+              amount_tax: -909,
+            }),
+            items: expect.arrayContaining([
+              expect.objectContaining({
+                unit_amount_gross: -10000,
+                amount_subtotal: -9091,
+                amount_total: -10000,
+              }),
+            ]),
+          }),
+        );
+      });
+
+      it('should return the correct result when price is negative and upper tier is matched', () => {
+        const priceItems = [
+          {
+            ...samples.compositePriceItemWithNegativePriceFlatFee,
+            price_mappings: [
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-flat-fee', value: 100 },
+            ] as PriceInputMappings,
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toStrictEqual(
+          expect.objectContaining({
+            unit_amount_gross: -6000,
+            amount_subtotal: -5455,
+            amount_total: -6000,
+            total_details: expect.objectContaining({
+              amount_tax: -545,
+            }),
+            items: expect.arrayContaining([
+              expect.objectContaining({
+                unit_amount_gross: -6000,
+                amount_subtotal: -5455,
+                amount_total: -6000,
               }),
             ]),
           }),

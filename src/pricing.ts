@@ -92,7 +92,7 @@ export const computePriceComponent = (
   const safeParentQuantity = isNaN(parentQuantity) ? 1 : parentQuantity;
   const quantity = toDinero(String(safeQuantity)).multiply(safeParentQuantity).toUnit();
 
-  return computePriceItem(priceItemComponent, priceItemComponent._price, tax!, quantity, priceMapping);
+  return computePriceItem(priceItemComponent, priceItemComponent._price, tax, quantity, priceMapping);
 };
 
 const isValidPrice = (priceComponent: Price): boolean => {
@@ -286,7 +286,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
       const tax = priceItem.taxes?.[0]?.tax;
       const priceMapping = priceItem.price_mappings?.find(({ price_id }) => priceItem._price!._id === price_id);
 
-      const priceItemToAppend = computePriceItem(priceItem, price, tax!, priceItem.quantity!, priceMapping);
+      const priceItemToAppend = computePriceItem(priceItem, price, tax, priceItem.quantity!, priceMapping);
 
       const updatedTotals = isUnitAmountApproved(
         priceItem,
@@ -481,7 +481,7 @@ const recomputeDetailTotalsFromCompositePrice = (
 export const computePriceItem = (
   priceItem: PriceItemDto,
   price: Price | undefined,
-  applicableTax: Tax,
+  applicableTax: Tax | undefined,
   quantity: number,
   priceMapping?: PriceInputMapping,
 ): PriceItem => {
@@ -500,7 +500,7 @@ export const computePriceItem = (
   switch (price?.pricing_model) {
     case PricingModel.tieredVolume:
       itemValues = computeTieredVolumePriceItemValues(
-        price.tiers!,
+        price.tiers,
         currency,
         isTaxInclusive,
         quantityToSelectTier,
@@ -511,7 +511,7 @@ export const computePriceItem = (
       break;
     case PricingModel.tieredFlatFee:
       itemValues = computeTieredFlatFeePriceItemValues(
-        price.tiers!,
+        price.tiers,
         currency,
         isTaxInclusive,
         quantityToSelectTier,
@@ -523,7 +523,7 @@ export const computePriceItem = (
       break;
     case PricingModel.tieredGraduated:
       itemValues = computeTieredGraduatedPriceItemValues(
-        price.tiers!,
+        price.tiers,
         currency,
         isTaxInclusive,
         quantityToSelectTier,
@@ -648,13 +648,17 @@ const convertPricingPrecision = (details: PricingDetails, precision: number): Pr
 /**
  * Gets a price tax with the proper tax behavior override
  */
-export const getPriceTax = (applicableTax: Tax, price: Price, priceItemTaxes?: TaxAmountDto[]): Tax | undefined => {
+export const getPriceTax = (
+  applicableTax: Tax | null | undefined,
+  price: Price,
+  priceItemTaxes?: TaxAmountDto[],
+): Tax | undefined => {
   if (applicableTax) {
     return applicableTax;
   }
 
-  if (priceItemTaxes?.length! > 0) {
-    return priceItemTaxes![0]?.tax;
+  if (priceItemTaxes && priceItemTaxes.length > 0) {
+    return priceItemTaxes[0]?.tax;
   }
 
   const isNonTaxable = applicableTax === null;
@@ -663,7 +667,7 @@ export const getPriceTax = (applicableTax: Tax, price: Price, priceItemTaxes?: T
     return existingPriceTax;
   }
 
-  return applicableTax;
+  return applicableTax ?? undefined;
 };
 
 const getPriceRecurrence = (price: Price, recurrences: RecurrenceAmount[]) => {

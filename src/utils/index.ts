@@ -123,18 +123,18 @@ export const getPriceTiersForQuantity = (tiers: PriceTier[], quantity: number): 
   return [];
 };
 
-const getPriceTierForQuantity = (tiers: PriceTier[], quantity: number): PriceTier | null | undefined => {
-  const selectedTiers = tiers?.filter(byPriceTiersForQuantity(tiers, quantity));
+const getPriceTierForQuantity = (tiers: PriceTier[], quantity: number): PriceTier | null => {
+  const selectedTiers = tiers.filter(byPriceTiersForQuantity(tiers, quantity));
 
-  if (selectedTiers?.length) {
-    return selectedTiers.pop();
+  if (selectedTiers.length) {
+    return selectedTiers.pop() ?? null;
   }
 
   return null;
 };
 
 export const computeTieredVolumePriceItemValues = (
-  tiers: PriceTier[],
+  tiers: PriceTier[] = [],
   currency: Currency,
   isTaxInclusive: boolean,
   quantityToSelectTier: number,
@@ -165,7 +165,7 @@ export const computeTieredVolumePriceItemValues = (
 };
 
 export const computeTieredFlatFeePriceItemValues = (
-  tiers: PriceTier[],
+  tiers: PriceTier[] = [],
   currency: Currency,
   isTaxInclusive: boolean,
   quantityToSelectTier: number,
@@ -203,7 +203,7 @@ export const computeTieredFlatFeePriceItemValues = (
 };
 
 export const computeTieredGraduatedPriceItemValues = (
-  tiers: PriceTier[],
+  tiers: PriceTier[] = [],
   currency: Currency,
   isTaxInclusive: boolean,
   quantityToSelectTier: number,

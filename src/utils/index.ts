@@ -123,7 +123,7 @@ export const getPriceTiersForQuantity = (tiers: PriceTier[], quantity: number): 
   return [];
 };
 
-const getPriceTierForQuantity = (tiers: PriceTier[], quantity: number): PriceTier => {
+const getPriceTierForQuantity = (tiers: PriceTier[], quantity: number): PriceTier | null | undefined => {
   const selectedTiers = tiers?.filter(byPriceTiersForQuantity(tiers, quantity));
 
   if (selectedTiers?.length) {
@@ -145,7 +145,7 @@ export const computeTieredVolumePriceItemValues = (
   const tier = getPriceTierForQuantity(tiers, quantityToSelectTier);
 
   const tierValues = computePriceItemValues(
-    tier?.unit_amount_decimal,
+    tier?.unit_amount_decimal!,
     currency,
     isTaxInclusive,
     unitAmountMultiplier,
@@ -156,7 +156,7 @@ export const computeTieredVolumePriceItemValues = (
     tier?.display_mode === 'on_request' ? 'show_as_on_request' : unchangedPriceDisplayInJourneys;
 
   return {
-    unitAmountGross: d(tierValues.unitAmountGross).getAmount(),
+    unitAmountGross: d(tierValues.unitAmountGross!).getAmount(),
     amountSubtotal: d(tierValues.amountSubtotal).getAmount(),
     amountTotal: d(tierValues.amountTotal).getAmount(),
     taxAmount: d(tierValues.taxAmount).getAmount(),
@@ -183,7 +183,7 @@ export const computeTieredFlatFeePriceItemValues = (
   const quantityToMultiply = isUsingPriceMappingToSelectTier ? quantity : 1;
 
   const tierValues = computePriceItemValues(
-    tier?.flat_fee_amount_decimal,
+    tier?.flat_fee_amount_decimal!,
     currency,
     isTaxInclusive,
     quantityToMultiply,
@@ -194,7 +194,7 @@ export const computeTieredFlatFeePriceItemValues = (
     tier?.display_mode === 'on_request' ? 'show_as_on_request' : unchangedPriceDisplayInJourneys;
 
   return {
-    unitAmountGross: d(tierValues.unitAmountGross).getAmount(),
+    unitAmountGross: d(tierValues.unitAmountGross!).getAmount(),
     amountSubtotal: d(tierValues.amountSubtotal).getAmount(),
     amountTotal: d(tierValues.amountTotal).getAmount(),
     taxAmount: d(tierValues.taxAmount).getAmount(),
@@ -218,10 +218,10 @@ export const computeTieredGraduatedPriceItemValues = (
     (totals: PriceItemsTotals, tier: PriceTier, index: number) => {
       const tierMinQuantity = index === 0 ? 0 : tiers[index - 1].up_to;
       const tierMaxQuantity = tier.up_to || Infinity;
-      const graduatedQuantity = getQuantityForTier(tierMinQuantity, tierMaxQuantity, quantityToSelectTier);
+      const graduatedQuantity = getQuantityForTier(tierMinQuantity!, tierMaxQuantity, quantityToSelectTier);
 
       const tierValues = computePriceItemValues(
-        tier.unit_amount_decimal,
+        tier.unit_amount_decimal!,
         currency,
         isTaxInclusive,
         graduatedQuantity,
@@ -232,7 +232,7 @@ export const computeTieredGraduatedPriceItemValues = (
         tier?.display_mode === 'on_request' ? 'show_as_on_request' : unchangedPriceDisplayInJourneys;
 
       return {
-        unitAmountGross: d(totals.unitAmountGross).add(d(tierValues.unitAmountGross)).getAmount(),
+        unitAmountGross: d(totals.unitAmountGross!).add(d(tierValues.unitAmountGross!)).getAmount(),
         amountSubtotal: d(totals.amountSubtotal).add(d(tierValues.amountSubtotal)).getAmount(),
         amountTotal: d(totals.amountTotal).add(d(tierValues.amountTotal)).getAmount(),
         taxAmount: d(totals.taxAmount).add(d(tierValues.taxAmount)).getAmount(),

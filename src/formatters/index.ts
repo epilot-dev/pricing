@@ -66,7 +66,7 @@ export type FormatPriceUnit = (unit: Price['unit'], hideGenericUnitLabel?: boole
 const getCurrencySymbol = (currency: Currency, locale: string) => {
   return new Intl.NumberFormat(locale, { style: 'currency', currency })
     .formatToParts(1)
-    .find((part) => part.type === 'currency').value;
+    .find((part) => part.type === 'currency')!.value;
 };
 
 const getCurrencySubunit = (currency: Currency, locale: string, language: string) => {
@@ -79,7 +79,7 @@ const getCurrencySubunit = (currency: Currency, locale: string, language: string
     };
   }
 
-  const subunit = CURRENCIES_SUBUNITS[currency].subunit[language] || CURRENCIES_SUBUNITS[currency].subunit['default'];
+  const subunit = CURRENCIES_SUBUNITS[currency]!.subunit[language] || CURRENCIES_SUBUNITS[currency]!.subunit['default'];
 
   return {
     symbol: getCurrencySymbol(currency, locale),
@@ -313,11 +313,11 @@ export const formatPriceUnit: FormatPriceUnit = (unit, hideGenericUnitLabel) => 
     return unitDisplayLabels.none;
   }
 
-  if (!isPriceBuiltInUnit(unit)) {
+  if (!isPriceBuiltInUnit(unit!)) {
     return String(unit ?? '').trim();
   }
 
-  return unitDisplayLabels[unit];
+  return unitDisplayLabels[unit!];
 };
 
 /**
@@ -326,11 +326,11 @@ export const formatPriceUnit: FormatPriceUnit = (unit, hideGenericUnitLabel) => 
  * @param {Price['unit']} unit - the built-in unit code or user custom unit
  * @returns {boolean} true if the unit is a built-in unit
  */
-export const isPriceBuiltInUnit = (unit: string): unit is Price['unit'] => {
+export const isPriceBuiltInUnit = (unit: string): unit is NonNullable<Price['unit']> => {
   return unitDisplayLabels[unit] !== undefined;
 };
 
-export const unitDisplayLabels: Record<Price['unit'], string> & {
+export const unitDisplayLabels: Record<NonNullable<Price['unit']>, string> & {
   none: typeof GENERIC_UNIT_DISPLAY_LABEL;
 } = Object.freeze({
   none: GENERIC_UNIT_DISPLAY_LABEL,

@@ -67,6 +67,15 @@ export interface PricingEntitiesExtractResult {
   _tags: string[];
 }
 
+type PriceComponent = NonNullable<CompositePriceItemDto['item_components']>[number]['_price'] & {
+  _itemRef?: PriceItemDto;
+  /**
+   * @todo Verify whether these properties are ever set.
+   */
+  frequency_unit?: string;
+  number_input?: number;
+};
+
 export const isCompositePrice = (priceItem: PriceItemDto | CompositePriceItemDto): priceItem is CompositePriceItemDto =>
   Boolean(priceItem?.is_composite_price || priceItem?._price?.is_composite_price);
 
@@ -76,13 +85,13 @@ export const computePriceComponent = (
   parentQuantity: number,
 ): PriceItem => {
   const tax = priceItemComponent?.taxes?.[0]?.tax;
-  const priceMapping = priceMappings?.find(({ price_id }) => priceItemComponent._price._id === price_id);
+  const priceMapping = priceMappings?.find(({ price_id }) => priceItemComponent._price!._id === price_id);
 
-  const safeQuantity = isNaN(priceItemComponent?.quantity) ? 1 : priceItemComponent?.quantity;
+  const safeQuantity = isNaN(priceItemComponent?.quantity!) ? 1 : priceItemComponent?.quantity;
   const safeParentQuantity = isNaN(parentQuantity) ? 1 : parentQuantity;
   const quantity = toDinero(String(safeQuantity)).multiply(safeParentQuantity).toUnit();
 
-  return computePriceItem(priceItemComponent, priceItemComponent._price, tax, quantity, priceMapping);
+  return computePriceItem(priceItemComponent, priceItemComponent._price, tax!, quantity, priceMapping);
 };
 
 const isValidPrice = (priceComponent: Price): boolean => {
@@ -112,25 +121,23 @@ const isValidPrice = (priceComponent: Price): boolean => {
   return true;
 };
 
-const getPriceComponents = (
-  priceItem: CompositePriceItemDto,
-): (Price & { _itemRef?: PriceItemDto; frequency_unit?: string; number_input?: number })[] => {
+const getPriceComponents = (priceItem: CompositePriceItemDto): PriceComponent[] => {
   if (!Array.isArray(priceItem?.item_components)) {
     return Array.isArray(priceItem?._price?.price_components)
-      ? priceItem._price.price_components.filter(isValidPrice)
+      ? priceItem._price!.price_components.filter(isValidPrice)
       : [];
   }
 
-  const ensureComponentWithValidPrice = (itemComponent: PriceItemDto) => ({
+  const ensureComponentWithValidPrice = (itemComponent: PriceItemDto): PriceItemDto => ({
     ...itemComponent,
     unit_amount: Number.isInteger(itemComponent.unit_amount) ? itemComponent.unit_amount : 0,
     unit_amount_decimal:
       typeof itemComponent.unit_amount_decimal !== 'undefined' ? itemComponent.unit_amount_decimal : '0.0',
   });
 
-  return priceItem.item_components.map((itemComponent) => ({
+  return priceItem.item_components.map<PriceComponent>((itemComponent) => ({
     _itemRef: ensureComponentWithValidPrice(itemComponent),
-    ...itemComponent._price,
+    ...itemComponent._price!,
   }));
 };
 
@@ -201,7 +208,7 @@ export const computeCompositePrice = (
     const itemComponent: PriceItemDto = {
       ...existingItemComponent,
       pricing_model: existingItemComponent?.pricing_model || component.pricing_model,
-      quantity: isNaN(existingItemComponent?.quantity) ? 1 : existingItemComponent?.quantity,
+      quantity: isNaN(existingItemComponent?.quantity!) ? 1 : existingItemComponent?.quantity,
       type: existingItemComponent?.type || component.type,
       price_id: existingItemComponent?.price_id || component._id,
       product_id: existingItemComponent?.product_id || priceItem.product_id,
@@ -219,14 +226,14 @@ export const computeCompositePrice = (
   }, []);
 
   const computedItemComponents = itemComponents.map((priceRelation) =>
-    computePriceComponent(priceRelation, priceItem.price_mappings, priceItem.quantity),
+    computePriceComponent(priceRelation, priceItem.price_mappings!, priceItem.quantity!),
   );
 
   const itemDescription = priceItem?.description ?? compositePrice?.description ?? null;
 
   return {
     ...priceItem,
-    currency: priceItem._price.unit_amount_currency || DEFAULT_CURRENCY,
+    currency: priceItem._price!.unit_amount_currency || DEFAULT_CURRENCY,
     ...(itemDescription && { description: itemDescription }),
     item_components: [...computedItemComponents],
   };
@@ -258,34 +265,34 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
   const priceDetails = priceItems.reduce((details, priceItem) => {
     if (isCompositePrice(priceItem)) {
       const price = priceItem._price;
-      const compositePriceItemToAppend = computeCompositePrice(priceItem, price);
+      const compositePriceItemToAppend = computeCompositePrice(priceItem, price!);
       const itemBreakdown = computeCompositePriceBreakDown(compositePriceItemToAppend);
       const updatedTotals = recomputeDetailTotalsFromCompositePrice(details, compositePriceItemToAppend);
 
       return {
         ...updatedTotals,
         items: [
-          ...details.items,
+          ...details.items!,
           {
             ...compositePriceItemToAppend,
             ...itemBreakdown,
-            item_components: convertPriceComponentsPrecision(compositePriceItemToAppend.item_components, 2),
+            item_components: convertPriceComponentsPrecision(compositePriceItemToAppend.item_components!, 2),
           },
         ],
       };
     } else {
       const price = priceItem._price;
       const tax = priceItem.taxes?.[0]?.tax;
-      const priceMapping = priceItem.price_mappings?.find(({ price_id }) => priceItem._price._id === price_id);
+      const priceMapping = priceItem.price_mappings?.find(({ price_id }) => priceItem._price!._id === price_id);
 
-      const priceItemToAppend = computePriceItem(priceItem, price, tax, priceItem.quantity, priceMapping);
+      const priceItemToAppend = computePriceItem(priceItem, price, tax!, priceItem.quantity!, priceMapping);
 
       const updatedTotals = isUnitAmountApproved(
         priceItem,
         priceItemToAppend?._price?.price_display_in_journeys ?? price?.price_display_in_journeys,
-        null,
+        null!,
       )
-        ? recomputeDetailTotals(details, price, priceItemToAppend)
+        ? recomputeDetailTotals(details, price!, priceItemToAppend)
         : {
             unit_amount_gross: details.unit_amount_gross,
             amount_subtotal: details.amount_subtotal,
@@ -295,7 +302,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
 
       return {
         ...updatedTotals,
-        items: [...details.items, convertPriceItemPrecision(priceItemToAppend, 2)],
+        items: [...details.items!, convertPriceItemPrecision(priceItemToAppend, 2)],
       };
     }
   }, initialPricingDetails);
@@ -338,7 +345,7 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
   const itemTax =
     priceItemToAppend.taxes?.[0]?.tax ||
     ({
-      rate: +priceItemToAppend.taxes?.[0]?.rateValue,
+      rate: +priceItemToAppend.taxes?.[0]?.rateValue!,
     } as Partial<Tax>);
 
   /**
@@ -349,20 +356,20 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
     (item) =>
       (item.tax?._id && itemTax?._id && item.tax?._id === itemTax?._id) ||
       item.tax?.rate === itemTax?.rate ||
-      item.tax.rate === itemRateValue,
+      item.tax!.rate === itemRateValue,
   );
 
-  const recurrences = [...details?.total_details?.breakdown?.recurrences] || [];
+  const recurrences = [...details?.total_details?.breakdown?.recurrences!] || [];
   const recurrence = getPriceRecurrence(price, recurrences);
 
-  const total = d(details.amount_total);
-  const unitAmountGross = d(details.unit_amount_gross);
-  const subtotal = d(details.amount_subtotal);
-  const totalTax = d(details?.total_details?.amount_tax);
+  const total = d(details.amount_total!);
+  const unitAmountGross = d(details.unit_amount_gross!);
+  const subtotal = d(details.amount_subtotal!);
+  const totalTax = d(details?.total_details?.amount_tax!);
 
-  const priceUnitAmountGross = d(priceItemToAppend.unit_amount_gross);
-  const priceSubtotal = d(priceItemToAppend.amount_subtotal);
-  const priceTotal = d(priceItemToAppend.amount_total);
+  const priceUnitAmountGross = d(priceItemToAppend.unit_amount_gross!);
+  const priceSubtotal = d(priceItemToAppend.amount_subtotal!);
+  const priceTotal = d(priceItemToAppend.amount_total!);
   const priceTax = d(priceItemToAppend?.taxes?.[0]?.amount || 0.0);
 
   if (!tax) {
@@ -376,15 +383,15 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
         amount: priceTax.getAmount(),
       });
   } else {
-    tax.amount = d(tax.amount).add(priceTax).getAmount();
+    tax.amount = d(tax.amount!).add(priceTax).getAmount();
 
     // Populates missing data in deprecated taxes
     if (!tax?.tax?._id && itemTax?._id) {
-      tax.tax._id = itemTax._id;
+      tax.tax!._id = itemTax._id;
     }
 
     if (!tax?.tax?.type && itemTax?.type) {
-      tax.tax.type = itemTax.type;
+      tax.tax!.type = itemTax.type;
     }
   }
 
@@ -392,7 +399,7 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
     const type = price?.type || priceItemToAppend?.type;
 
     recurrences.push({
-      type: ['one_time', 'recurring'].includes(type) ? type : 'one_time',
+      type: ['one_time', 'recurring'].includes(type!) ? type : 'one_time',
       ...(price?.type === 'recurring' && { billing_period: price?.billing_period }),
       unit_amount_gross: priceUnitAmountGross.getAmount(),
       amount_subtotal: priceSubtotal.getAmount(),
@@ -400,10 +407,10 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
       amount_tax: priceTax.getAmount(),
     });
   } else {
-    const unitAmountGrossAmount = d(recurrence.unit_amount_gross);
+    const unitAmountGrossAmount = d(recurrence.unit_amount_gross!);
     const subTotalAmount = d(recurrence.amount_subtotal);
     const totalAmount = d(recurrence.amount_total);
-    const taxAmount = d(recurrence.amount_tax);
+    const taxAmount = d(recurrence.amount_tax!);
     recurrence.unit_amount_gross = unitAmountGrossAmount.add(priceUnitAmountGross).getAmount();
     recurrence.amount_subtotal = subTotalAmount.add(priceSubtotal).getAmount();
     recurrence.amount_total = totalAmount.add(priceTotal).getAmount();
@@ -424,13 +431,13 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
   };
 };
 
-const computeCompositePriceBreakDown = (compositePriceItem: CompositePriceItem): PricingDetails =>
+const computeCompositePriceBreakDown = (compositePriceItem: CompositePriceItem): PricingDetails | undefined =>
   recomputeDetailTotalsFromCompositePrice(undefined, compositePriceItem);
 
 const recomputeDetailTotalsFromCompositePrice = (
-  details: PricingDetails,
+  details: PricingDetails | undefined,
   compositePriceItem: CompositePriceItem,
-): PricingDetails => {
+): PricingDetails | undefined => {
   const initialPricingDetails: PricingDetails = {
     items: [],
     unit_amount_gross: 0,
@@ -481,46 +488,46 @@ export const computePriceItem = (
   const priceItemDescription = priceItem?.description ?? price?.description;
 
   const unitAmountDecimal = priceItem?.unit_amount_decimal || price?.unit_amount_decimal || '0.0';
-  const priceTax = getPriceTax(applicableTax, price, priceItem?.taxes);
-  const isTaxInclusive = isTaxInclusivePrice(price);
+  const priceTax = getPriceTax(applicableTax, price!, priceItem?.taxes);
+  const isTaxInclusive = isTaxInclusivePrice(price!);
 
   const { safeQuantity, quantityToSelectTier, unitAmountMultiplier, isUsingPriceMappingToSelectTier } =
-    computeQuantities(price, quantity, priceMapping);
+    computeQuantities(price!, quantity, priceMapping);
 
   const itemValues =
     price?.pricing_model === PricingModel.tieredVolume
       ? computeTieredVolumePriceItemValues(
-          price.tiers,
+          price.tiers!,
           currency,
           isTaxInclusive,
           quantityToSelectTier,
-          priceTax,
-          unitAmountMultiplier,
+          priceTax!,
+          unitAmountMultiplier!,
           priceItem._price?.unchanged_price_display_in_journeys,
         )
       : price?.pricing_model === PricingModel.tieredFlatFee
       ? computeTieredFlatFeePriceItemValues(
-          price.tiers,
+          price.tiers!,
           currency,
           isTaxInclusive,
           quantityToSelectTier,
-          priceTax,
-          safeQuantity,
+          priceTax!,
+          safeQuantity!,
           isUsingPriceMappingToSelectTier,
           priceItem._price?.unchanged_price_display_in_journeys,
         )
       : price?.pricing_model === PricingModel.tieredGraduated
       ? computeTieredGraduatedPriceItemValues(
-          price.tiers,
+          price.tiers!,
           currency,
           isTaxInclusive,
           quantityToSelectTier,
-          priceTax,
-          safeQuantity,
+          priceTax!,
+          safeQuantity!,
           isUsingPriceMappingToSelectTier,
           priceItem._price?.unchanged_price_display_in_journeys,
         )
-      : computePriceItemValues(unitAmountDecimal, currency, isTaxInclusive, unitAmountMultiplier, priceTax);
+      : computePriceItemValues(unitAmountDecimal, currency, isTaxInclusive, unitAmountMultiplier!, priceTax!);
 
   return {
     ...priceItem,
@@ -566,36 +573,36 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
   ...(typeof priceItem.unit_amount_net === 'number' && {
     unit_amount_net: d(priceItem.unit_amount_net).convertPrecision(precision).getAmount(),
   }),
-  unit_amount_gross: d(priceItem.unit_amount_gross).convertPrecision(precision).getAmount(),
-  amount_subtotal: d(priceItem.amount_subtotal).convertPrecision(precision).getAmount(),
-  amount_total: d(priceItem.amount_total).convertPrecision(precision).getAmount(),
-  taxes: priceItem.taxes.map((tax) => ({
+  unit_amount_gross: d(priceItem.unit_amount_gross!).convertPrecision(precision).getAmount(),
+  amount_subtotal: d(priceItem.amount_subtotal!).convertPrecision(precision).getAmount(),
+  amount_total: d(priceItem.amount_total!).convertPrecision(precision).getAmount(),
+  taxes: priceItem.taxes!.map((tax) => ({
     ...tax,
-    amount: d(tax.amount).convertPrecision(precision).getAmount(),
+    amount: d(tax.amount!).convertPrecision(precision).getAmount(),
   })),
 });
 
 const convertBreakDownPrecision = (details: PricingDetails, precision: number): PricingDetails => {
   return {
-    unit_amount_gross: d(details.unit_amount_gross).convertPrecision(precision).getAmount(),
-    amount_subtotal: d(details.amount_subtotal).convertPrecision(precision).getAmount(),
-    amount_total: d(details.amount_total).convertPrecision(precision).getAmount(),
+    unit_amount_gross: d(details.unit_amount_gross!).convertPrecision(precision).getAmount(),
+    amount_subtotal: d(details.amount_subtotal!).convertPrecision(precision).getAmount(),
+    amount_total: d(details.amount_total!).convertPrecision(precision).getAmount(),
     total_details: {
       ...details?.total_details,
-      amount_tax: d(details?.total_details?.amount_tax).convertPrecision(precision).getAmount(),
+      amount_tax: d(details?.total_details?.amount_tax!).convertPrecision(precision).getAmount(),
       breakdown: {
         ...details?.total_details?.breakdown,
-        taxes: details?.total_details?.breakdown?.taxes.map((tax) => ({
+        taxes: details?.total_details?.breakdown?.taxes!.map((tax) => ({
           ...tax,
-          amount: d(tax.amount).convertPrecision(precision).getAmount(),
+          amount: d(tax.amount!).convertPrecision(precision).getAmount(),
         })),
-        recurrences: details?.total_details?.breakdown?.recurrences.map((recurrence) => {
+        recurrences: details?.total_details?.breakdown?.recurrences!.map((recurrence) => {
           return {
             ...recurrence,
-            unit_amount_gross: d(recurrence.unit_amount_gross).convertPrecision(precision).getAmount(),
+            unit_amount_gross: d(recurrence.unit_amount_gross!).convertPrecision(precision).getAmount(),
             amount_subtotal: d(recurrence.amount_subtotal).convertPrecision(precision).getAmount(),
             amount_total: d(recurrence.amount_total).convertPrecision(precision).getAmount(),
-            amount_tax: d(recurrence.amount_tax).convertPrecision(precision).getAmount(),
+            amount_tax: d(recurrence.amount_tax!).convertPrecision(precision).getAmount(),
           };
         }),
       },
@@ -610,7 +617,7 @@ const convertBreakDownPrecision = (details: PricingDetails, precision: number): 
  */
 const convertPricingPrecision = (details: PricingDetails, precision: number): PricingDetails => ({
   ...details,
-  items: details.items.map((item) => {
+  items: details.items!.map((item) => {
     if ((item as CompositePriceItem).total_details) {
       return {
         ...item,
@@ -631,8 +638,8 @@ export const getPriceTax = (applicableTax: Tax, price: Price, priceItemTaxes?: T
     return applicableTax;
   }
 
-  if (priceItemTaxes?.length > 0) {
-    return priceItemTaxes[0]?.tax;
+  if (priceItemTaxes?.length! > 0) {
+    return priceItemTaxes![0]?.tax;
   }
 
   const isNonTaxable = applicableTax === null;
@@ -660,7 +667,7 @@ const isUnitAmountApproved = (
   parentPriceItem?: CompositePriceItem,
 ) => {
   if (parentPriceItem) {
-    const parentHasHiddenPriceComponents = parentPriceItem.item_components.some(
+    const parentHasHiddenPriceComponents = parentPriceItem.item_components!.some(
       (component) => component._price?.price_display_in_journeys === 'show_as_on_request',
     );
     const parentPriceIsHiddenPrice = parentPriceItem._price?.price_display_in_journeys === 'show_as_on_request';
@@ -676,11 +683,11 @@ const isUnitAmountApproved = (
 };
 
 export const computeQuantities = (price: Price, quantity?: number, priceMapping?: PriceInputMapping) => {
-  const safeQuantity = isNaN(quantity) ? 1 : quantity;
-  const normalizedPriceMappingInput = normalizePriceMappingInput(priceMapping, price);
+  const safeQuantity = isNaN(quantity!) ? 1 : quantity;
+  const normalizedPriceMappingInput = normalizePriceMappingInput(priceMapping!, price);
   const quantityToSelectTier = normalizedPriceMappingInput ? normalizedPriceMappingInput.toUnit() : 1;
   const unitAmountMultiplier = normalizedPriceMappingInput
-    ? normalizedPriceMappingInput.multiply(safeQuantity).toUnit()
+    ? normalizedPriceMappingInput.multiply(safeQuantity!).toUnit()
     : safeQuantity;
 
   return {

@@ -4,7 +4,7 @@ import { d, toDinero } from '../formatters';
 import { Price, PriceTier, Tax } from '../types';
 
 type GetTaxValue = (tax: Tax) => number;
-type PriceItemsTotals = {
+export type PriceItemsTotals = {
   unitAmount?: number;
   unitAmountNet?: number;
   unitAmountGross?: number;

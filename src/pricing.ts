@@ -345,7 +345,7 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
   const itemTax =
     priceItemToAppend.taxes?.[0]?.tax ||
     ({
-      rate: +priceItemToAppend.taxes?.[0]?.rateValue!,
+      rate: Number(priceItemToAppend.taxes?.[0]?.rateValue),
     } as Partial<Tax>);
 
   /**

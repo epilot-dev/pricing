@@ -359,7 +359,7 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
       item.tax!.rate === itemRateValue,
   );
 
-  const recurrences = [...details?.total_details?.breakdown?.recurrences!] || [];
+  const recurrences = [...(details?.total_details?.breakdown?.recurrences ?? [])];
   const recurrence = getPriceRecurrence(price, recurrences);
 
   const total = d(details.amount_total!);

@@ -76,7 +76,9 @@ type PriceComponent = NonNullable<CompositePriceItemDto['item_components']>[numb
   number_input?: number;
 };
 
-export const isCompositePrice = (priceItem: PriceItemDto | CompositePriceItemDto): priceItem is CompositePriceItemDto =>
+export const isCompositePrice = (
+  priceItem: PriceItemDto | CompositePriceItemDto | PriceItem | CompositePriceItem,
+): priceItem is CompositePriceItemDto | CompositePriceItem =>
   Boolean(priceItem?.is_composite_price || priceItem?._price?.is_composite_price);
 
 export const computePriceComponent = (
@@ -270,14 +272,16 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
         discountItem._price?.type === 'recurring' ? discountItem._price?.billing_period : 'one_time';
       const currency = (discountItem._price?.unit_amount_currency || DEFAULT_CURRENCY) as Currency;
 
-      discountsPerRecurrency[billingPeriod] = d(discountsPerRecurrency[billingPeriod] || 0, currency)
-        .add(toDinero(discountItem._price?.unit_amount_decimal, currency))
+      discountsPerRecurrency[billingPeriod] = d(
+        d(discountsPerRecurrency[billingPeriod] || 0, currency)
+          .add(toDinero(discountItem._price?.unit_amount_decimal, currency))
+          .getAmount(),
+      )
+        .convertPrecision(2)
         .getAmount();
 
       return discountsPerRecurrency;
     }, {});
-
-  console.log({ discounts });
 
   const priceDetails = priceItems.reduce((details, priceItem) => {
     if (isCompositePrice(priceItem)) {
@@ -304,18 +308,19 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
 
       const priceItemToAppend = computePriceItem(priceItem, price, tax!, priceItem.quantity!, priceMapping);
 
-      const updatedTotals = isUnitAmountApproved(
-        priceItem,
-        priceItemToAppend?._price?.price_display_in_journeys ?? price?.price_display_in_journeys,
-        null!,
-      )
-        ? recomputeDetailTotals(details, price!, priceItemToAppend)
-        : {
-            unit_amount_gross: details.unit_amount_gross,
-            amount_subtotal: details.amount_subtotal,
-            amount_total: details.amount_total,
-            total_details: details.total_details,
-          };
+      const updatedTotals =
+        isUnitAmountApproved(
+          priceItem,
+          priceItemToAppend?._price?.price_display_in_journeys ?? price?.price_display_in_journeys,
+          null!,
+        ) && (price?.unit_amount || 0) > 0
+          ? recomputeDetailTotals(details, price!, priceItemToAppend)
+          : {
+              unit_amount_gross: details.unit_amount_gross,
+              amount_subtotal: details.amount_subtotal,
+              amount_total: details.amount_total,
+              total_details: details.total_details,
+            };
 
       return {
         ...updatedTotals,
@@ -325,7 +330,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
   }, initialPricingDetails);
 
   if (discounts) {
-    const detailsAfterDiscounts = applyDiscounts(priceDetails, discounts);
+    const detailsAfterDiscounts = applyDiscounts(convertPricingPrecision(priceDetails, 2), discounts);
 
     return convertPricingPrecision(detailsAfterDiscounts, 2);
   }
@@ -333,7 +338,50 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
   return convertPricingPrecision(priceDetails, 2);
 };
 
-export const applyDiscounts = (priceDetails: PricingDetails, discounts: { [key: string]: number }) => {};
+export const applyDiscounts = (priceDetails: PricingDetails, discounts: { [key: string]: number }): PricingDetails => {
+  const items = priceDetails.items?.map((item) => {
+    if (item._price?.unit_amount < 0) {
+      return item;
+    }
+
+    if (isCompositePrice(item)) {
+      // To Do ...
+    } else {
+      const recurrenceDiscount = discounts[item._price?.billing_period || 'one_time'];
+      const { amount_subtotal: recurrenceSubTotal } =
+        priceDetails.total_details?.breakdown?.recurrences?.find((recurrence) => {
+          return recurrence.billing_period === item._price?.billing_period;
+        }) || {};
+
+      const proportion = d(item.amount_subtotal || 0)
+        .divide(recurrenceSubTotal || 0)
+        .getAmount();
+
+      const proportionalDiscount = d(proportion).multiply(recurrenceDiscount).getAmount();
+
+      const amountSubtotal = d(item.amount_subtotal || 0)
+        .add(d(proportionalDiscount))
+        .getAmount();
+
+      const amountTotal = d(amountSubtotal).multiply(1.19).getAmount();
+
+      if (proportionalDiscount) {
+        return {
+          ...item,
+          amount_subtotal: amountSubtotal,
+          amount_total: amountTotal,
+        };
+      }
+
+      return item;
+    }
+  }) as any;
+
+  return {
+    ...priceDetails,
+    items,
+  };
+};
 
 /**
  * Computes the pricing details for a given PriceItem in isolation.

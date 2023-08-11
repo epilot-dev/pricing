@@ -262,6 +262,23 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
       },
     },
   };
+
+  const discounts = priceItems
+    .filter((priceItem) => priceItem._price?.unit_amount < 0)
+    .reduce((discountsPerRecurrency: { [key: string]: number }, discountItem) => {
+      const billingPeriod =
+        discountItem._price?.type === 'recurring' ? discountItem._price?.billing_period : 'one_time';
+      const currency = (discountItem._price?.unit_amount_currency || DEFAULT_CURRENCY) as Currency;
+
+      discountsPerRecurrency[billingPeriod] = d(discountsPerRecurrency[billingPeriod] || 0, currency)
+        .add(toDinero(discountItem._price?.unit_amount_decimal, currency))
+        .getAmount();
+
+      return discountsPerRecurrency;
+    }, {});
+
+  console.log({ discounts });
+
   const priceDetails = priceItems.reduce((details, priceItem) => {
     if (isCompositePrice(priceItem)) {
       const price = priceItem._price;
@@ -307,8 +324,16 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
     }
   }, initialPricingDetails);
 
+  if (discounts) {
+    const detailsAfterDiscounts = applyDiscounts(priceDetails, discounts);
+
+    return convertPricingPrecision(detailsAfterDiscounts, 2);
+  }
+
   return convertPricingPrecision(priceDetails, 2);
 };
+
+export const applyDiscounts = (priceDetails: PricingDetails, discounts: { [key: string]: number }) => {};
 
 /**
  * Computes the pricing details for a given PriceItem in isolation.

@@ -1,5 +1,6 @@
 import * as samples from './__tests__/fixtures/price.samples';
 import * as results from './__tests__/fixtures/pricing.results';
+import { tax19percent } from './__tests__/fixtures/tax.samples';
 import {
   computeAggregatedAndPriceTotals,
   computeCompositePrice,
@@ -19,6 +20,132 @@ import {
 } from './types';
 
 describe('computeAggregatedAndPriceTotals', () => {
+  describe('when there are price discounts (negative prices)', () => {
+    it.only('should not consider discounts in gross totals', () => {
+      const priceItems: PriceItemDto[] = [
+        {
+          quantity: 1,
+          taxes: [
+            {
+              tax: tax19percent,
+            },
+          ],
+          _price: {
+            unit_amount: 10000,
+            unit_amount_currency: 'EUR',
+            unit_amount_decimal: '100.00',
+            type: 'one_time',
+            tax: [tax19percent],
+            is_tax_inclusive: true,
+            billing_scheme: 'per_unit',
+            pricing_model: 'per_unit',
+          },
+          pricing_model: 'per_unit',
+        },
+        {
+          quantity: 1,
+          _price: {
+            unit_amount: -500,
+            type: 'one_time',
+            unit_amount_currency: 'EUR',
+            unit_amount_decimal: '-5.00',
+            pricing_model: 'per_unit',
+          },
+          pricing_model: 'per_unit',
+        },
+      ];
+
+      expect(computeAggregatedAndPriceTotals(priceItems)).toStrictEqual({
+        amount_subtotal: 7903,
+        amount_total: 9405,
+        items: [
+          {
+            _price: {
+              billing_scheme: 'per_unit',
+              is_tax_inclusive: true,
+              pricing_model: 'per_unit',
+              tax: [
+                {
+                  _created_at: '2022-06-29T20:26:19.020Z',
+                  _id: '19',
+                  _org: '739224',
+                  _schema: 'tax',
+                  _title: '',
+                  _updated_at: '2022-06-29T20:26:19.020Z',
+                  rate: 19,
+                  type: 'VAT',
+                },
+              ],
+              type: 'one_time',
+              unit_amount: 10000,
+              unit_amount_currency: 'EUR',
+              unit_amount_decimal: '100.00',
+            },
+            amount_subtotal: 8403,
+            amount_total: 10000,
+            currency: 'EUR',
+            pricing_model: 'per_unit',
+            quantity: 1,
+            taxes: [
+              {
+                amount: 1597,
+                tax: {
+                  _created_at: '2022-06-29T20:26:19.020Z',
+                  _id: '19',
+                  _org: '739224',
+                  _schema: 'tax',
+                  _title: '',
+                  _updated_at: '2022-06-29T20:26:19.020Z',
+                  rate: 19,
+                  type: 'VAT',
+                },
+              },
+            ],
+            unit_amount: 10000,
+            unit_amount_decimal: '100.00',
+            unit_amount_gross: 10000,
+            unit_amount_net: 8403,
+          },
+          {
+            _price: {
+              pricing_model: 'per_unit',
+              unit_amount: -500,
+              unit_amount_currency: 'EUR',
+              unit_amount_decimal: '-5.00',
+            },
+            amount_subtotal: -500,
+            amount_total: -500,
+            currency: 'EUR',
+            pricing_model: 'per_unit',
+            quantity: 1,
+            taxes: [{ amount: 0, rate: 'nontaxable', rateValue: 0 }],
+            unit_amount: -500,
+            unit_amount_decimal: '-5.00',
+            unit_amount_gross: -500,
+            unit_amount_net: -500,
+          },
+        ],
+        total_details: {
+          amount_tax: 1597,
+          breakdown: {
+            recurrences: [
+              {
+                amount_subtotal: 7903,
+                amount_tax: 1597,
+                amount_total: 9500,
+                type: 'one_time',
+                unit_amount_gross: 9500,
+              },
+            ],
+            taxes: [
+              { amount: 1597, tax: { _id: '19', rate: 19, type: 'VAT' } },
+            ],
+          },
+        }
+      });
+    });
+  });
+
   describe('when is_composite_price = false', () => {
     it('should return the right result when there is one item per recurrence', () => {
       const priceItems: PriceItemDto[] = [

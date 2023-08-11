@@ -2036,109 +2036,109 @@ describe('computeAggregatedAndPriceTotals', () => {
       });
     });
   });
+});
 
-  describe('extractPricingEntitiesBySlug', () => {
-    it('should return the pricing relations without duplicates', () => {
-      const priceItems = [
-        samples.priceItem1,
-        samples.priceItem2,
-        samples.priceItem3,
-        samples.priceItem4,
-        samples.priceItem5,
-        samples.compositePrice,
-      ];
+describe('computeCompositePrice', () => {
+  it.each([samples.nonComputedCompositePrice])('computes the composite price correctly #1', (compositePrice) => {
+    const result = computeCompositePrice(
+      compositePrice as CompositePriceItemDto,
+      compositePrice._price as CompositePrice,
+    );
 
-      const result = extractPricingEntitiesBySlug(priceItems);
+    expect(result).toStrictEqual(results.computedCompositePrice);
+  });
+  it.each([samples.fullCompositePrice])('computes the composite price correctly #2', (compositePrice) => {
+    const result = computeCompositePrice(
+      compositePrice as CompositePriceItemDto,
+      compositePrice._price as CompositePrice,
+    );
 
-      expect(result).toStrictEqual({
-        price: {
-          $relation: [
-            { _schema: 'price', _tags: [], entity_id: 'price#1' },
-            { _schema: 'price', _tags: [], entity_id: 'price#2' },
-            { _schema: 'price', _tags: [], entity_id: 'price#3' },
-            { _schema: 'price', _tags: [], entity_id: 'price#4' },
-          ],
-        },
-        product: {
-          $relation: [
-            { _schema: 'product', _tags: [], entity_id: 'prod-id#12324' },
-            { _schema: 'product', _tags: [], entity_id: 'prod-id#1234' },
-          ],
-        },
-        _tags: ['product-tag-1', 'product-tag-2', 'price-tag-1', 'price-tag-2', 'composite'],
-      });
-    });
+    expect(result).toStrictEqual(results.computedCompositePrice);
+  });
+});
 
-    it('should return no relations with the pricing slugs when there is no data', () => {
-      expect(extractPricingEntitiesBySlug([])).toStrictEqual({
-        price: { $relation: [] },
-        product: { $relation: [] },
-        _tags: [],
-      });
+describe('computePriceItemDetails', () => {
+  it('computes the pricing details for a simple price', () => {
+    const result = computePriceItemDetails(samples.priceItem1);
+
+    expect(result).toStrictEqual(results.priceDetailsForOnePrice);
+  });
+
+  it('computes the pricing details for a composite price', () => {
+    const result = computePriceItemDetails(samples.compositePrice);
+
+    expect(result).toStrictEqual(results.priceDetailsForCompositePrice);
+  });
+
+  it('computes the pricing details for a composite price that one component has changed its tax', () => {
+    const result = computePriceItemDetails(samples.compositePriceWithTaxChanges);
+
+    expect(result).toStrictEqual(results.priceDetailsForCompositePriceWithTaxChanges);
+  });
+});
+
+describe('computePriceDetails', () => {
+  it('computes the pricing details for a simple price', () => {
+    const result = computePriceDetails(samples.priceItem1._price as Price);
+
+    expect(result).toStrictEqual(results.resultsForSimplePrice);
+  });
+
+  it('computes the pricing details for a composite price', () => {
+    const result = computePriceDetails(samples.compositePrice._price as Price);
+
+    expect(result).toStrictEqual(results.resultsWithCompositePrices);
+  });
+});
+
+describe('handleCompositePrices', () => {
+  it('should identify composite price correctly', () => {
+    const result1 = isCompositePrice(samples.compositePrice._price as CompositePrice);
+    const result2 = isCompositePrice(samples.priceItem._price as Price);
+    const result3 = isCompositePrice(samples.priceItem1._price as Price);
+    expect(result1).toBe(true);
+    expect(result2).toBe(false);
+    expect(result3).toBe(false);
+  });
+});
+
+describe('extractPricingEntitiesBySlug', () => {
+  it('should return the pricing relations without duplicates', () => {
+    const priceItems = [
+      samples.priceItem1,
+      samples.priceItem2,
+      samples.priceItem3,
+      samples.priceItem4,
+      samples.priceItem5,
+      samples.compositePrice,
+    ];
+
+    const result = extractPricingEntitiesBySlug(priceItems);
+
+    expect(result).toStrictEqual({
+      price: {
+        $relation: [
+          { _schema: 'price', _tags: [], entity_id: 'price#1' },
+          { _schema: 'price', _tags: [], entity_id: 'price#2' },
+          { _schema: 'price', _tags: [], entity_id: 'price#3' },
+          { _schema: 'price', _tags: [], entity_id: 'price#4' },
+        ],
+      },
+      product: {
+        $relation: [
+          { _schema: 'product', _tags: [], entity_id: 'prod-id#12324' },
+          { _schema: 'product', _tags: [], entity_id: 'prod-id#1234' },
+        ],
+      },
+      _tags: ['product-tag-1', 'product-tag-2', 'price-tag-1', 'price-tag-2', 'composite'],
     });
   });
 
-  describe('computeCompositePrice', () => {
-    it.each([samples.nonComputedCompositePrice])('computes the composite price correctly #1', (compositePrice) => {
-      const result = computeCompositePrice(
-        compositePrice as CompositePriceItemDto,
-        compositePrice._price as CompositePrice,
-      );
-
-      expect(result).toStrictEqual(results.computedCompositePrice);
-    });
-    it.each([samples.fullCompositePrice])('computes the composite price correctly #2', (compositePrice) => {
-      const result = computeCompositePrice(
-        compositePrice as CompositePriceItemDto,
-        compositePrice._price as CompositePrice,
-      );
-
-      expect(result).toStrictEqual(results.computedCompositePrice);
-    });
-  });
-
-  describe('handleCompositePrices', () => {
-    it('should identify composite price correctly', () => {
-      const result1 = isCompositePrice(samples.compositePrice._price as CompositePrice);
-      const result2 = isCompositePrice(samples.priceItem._price as Price);
-      const result3 = isCompositePrice(samples.priceItem1._price as Price);
-      expect(result1).toBe(true);
-      expect(result2).toBe(false);
-      expect(result3).toBe(false);
-    });
-  });
-
-  describe('computePriceItemDetails', () => {
-    it('computes the pricing details for a simple price', () => {
-      const result = computePriceItemDetails(samples.priceItem1);
-
-      expect(result).toStrictEqual(results.priceDetailsForOnePrice);
-    });
-
-    it('computes the pricing details for a composite price', () => {
-      const result = computePriceItemDetails(samples.compositePrice);
-
-      expect(result).toStrictEqual(results.priceDetailsForCompositePrice);
-    });
-
-    it('computes the pricing details for a composite price that one component has changed its tax', () => {
-      const result = computePriceItemDetails(samples.compositePriceWithTaxChanges);
-
-      expect(result).toStrictEqual(results.priceDetailsForCompositePriceWithTaxChanges);
-    });
-  });
-
-  describe('computePriceDetails', () => {
-    it('computes the pricing details for a simple price', () => {
-      const result = computePriceDetails(samples.priceItem1._price as Price);
-
-      expect(result).toStrictEqual(results.resultsForSimplePrice);
-    });
-
-    it('computes the pricing details for a composite price', () => {
-      const result = computePriceDetails(samples.compositePrice._price as Price);
-
-      expect(result).toStrictEqual(results.resultsWithCompositePrices);
+  it('should return no relations with the pricing slugs when there is no data', () => {
+    expect(extractPricingEntitiesBySlug([])).toStrictEqual({
+      price: { $relation: [] },
+      product: { $relation: [] },
+      _tags: [],
     });
   });
 });

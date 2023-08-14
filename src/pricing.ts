@@ -276,9 +276,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
         d(discountsPerRecurrency[billingPeriod] || 0, currency)
           .add(toDinero(discountItem._price?.unit_amount_decimal, currency))
           .getAmount(),
-      )
-        .convertPrecision(2)
-        .getAmount();
+      ).getAmount();
 
       return discountsPerRecurrency;
     }, {});
@@ -362,16 +360,23 @@ export const applyDiscounts = (priceDetails: PricingDetails, discounts: { [key: 
         .getAmount();
 
       const proportionalDiscount = d(proportion).multiply(recurrenceDiscount).getAmount();
-
+      console.log('proportionalDiscount', proportionalDiscount);
       const amountSubtotal = d(item.amount_subtotal || 0)
         .add(d(proportionalDiscount))
         .getAmount();
 
       const amountTotal = d(amountSubtotal).multiply(1.19).getAmount();
 
+      const updatedItem = {
+        ...item,
+        amount_subtotal: amountSubtotal,
+        amount_total: amountTotal,
+      };
+
       const updatedTotals =
-        isUnitAmountApproved(item, item?._price?.price_display_in_journeys, null!) && (item?.unit_amount || 0) > 0
-          ? recomputeDetailTotals(_details, item!, item)
+        isUnitAmountApproved(updatedItem, updatedItem?._price?.price_display_in_journeys, null!) &&
+        (updatedItem?.unit_amount || 0) > 0
+          ? recomputeDetailTotals(_details, updatedItem!, updatedItem)
           : {
               unit_amount_gross: _details.unit_amount_gross,
               amount_subtotal: _details.amount_subtotal,
@@ -381,14 +386,7 @@ export const applyDiscounts = (priceDetails: PricingDetails, discounts: { [key: 
 
       return {
         ...updatedTotals,
-        items: [
-          ..._details.items!,
-          {
-            ...item,
-            amount_subtotal: amountSubtotal,
-            amount_total: amountTotal,
-          },
-        ],
+        items: [..._details.items!, updatedItem],
       };
 
       return _details;

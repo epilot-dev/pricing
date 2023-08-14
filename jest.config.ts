@@ -18,7 +18,7 @@ const config: Config.InitialOptions = {
   },
   maxWorkers: '50%',
   verbose: true,
-  silent: true,
+  silent: false,
   forceExit: true,
   coverageDirectory: '<rootDir>/coverage/',
 };

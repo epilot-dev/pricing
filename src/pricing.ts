@@ -241,6 +241,21 @@ export const computeCompositePrice = (
   };
 };
 
+const initialPricingDetails: PricingDetails = {
+  items: [],
+  unit_amount_gross: 0,
+  amount_subtotal: 0,
+  amount_total: 0,
+  total_details: {
+    amount_shipping: 0,
+    amount_tax: 0,
+    breakdown: {
+      taxes: [],
+      recurrences: [],
+    },
+  },
+};
+
 /**
  * Computes all the integer amounts for the price items using the string decimal representation defined on prices unit_amount field.
  * All totals are computed with a decimal precision of DECIMAL_PRECISION.
@@ -250,21 +265,6 @@ export const computeCompositePrice = (
  */
 
 export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): PricingDetails => {
-  const initialPricingDetails: PricingDetails = {
-    items: [],
-    unit_amount_gross: 0,
-    amount_subtotal: 0,
-    amount_total: 0,
-    total_details: {
-      amount_shipping: 0,
-      amount_tax: 0,
-      breakdown: {
-        taxes: [],
-        recurrences: [],
-      },
-    },
-  };
-
   const discounts = priceItems
     .filter((priceItem) => priceItem._price?.unit_amount < 0)
     .reduce((discountsPerRecurrency: { [key: string]: number }, discountItem) => {
@@ -332,6 +332,8 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
   if (discounts) {
     const detailsAfterDiscounts = applyDiscounts(convertPricingPrecision(priceDetails, 2), discounts);
 
+    console.log('detailsAfterDiscounts', JSON.stringify(convertPricingPrecision(detailsAfterDiscounts, 2), null, 2));
+
     return convertPricingPrecision(detailsAfterDiscounts, 2);
   }
 
@@ -339,13 +341,17 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
 };
 
 export const applyDiscounts = (priceDetails: PricingDetails, discounts: { [key: string]: number }): PricingDetails => {
-  const items = priceDetails.items?.map((item) => {
+  const items = priceDetails.items?.reduce((_details, item) => {
     if (item._price?.unit_amount < 0) {
-      return item;
+      return {
+        ..._details,
+        items: [..._details.items!, item],
+      };
     }
 
     if (isCompositePrice(item)) {
       // To Do ...
+      return _details;
     } else {
       const recurrenceDiscount = discounts[item._price?.billing_period || 'one_time'];
       const { amount_subtotal: recurrenceSubTotal } =
@@ -365,22 +371,35 @@ export const applyDiscounts = (priceDetails: PricingDetails, discounts: { [key: 
 
       const amountTotal = d(amountSubtotal).multiply(1.19).getAmount();
 
+      const updatedTotals =
+        isUnitAmountApproved(item, item?._price?.price_display_in_journeys, null!) && (item?.unit_amount || 0) > 0
+          ? recomputeDetailTotals(_details, item!, item)
+          : {
+              unit_amount_gross: _details.unit_amount_gross,
+              amount_subtotal: _details.amount_subtotal,
+              amount_total: _details.amount_total,
+              total_details: _details.total_details,
+            };
+
       if (proportionalDiscount) {
         return {
-          ...item,
-          amount_subtotal: amountSubtotal,
-          amount_total: amountTotal,
+          ...updatedTotals,
+          items: [
+            ..._details.items!,
+            {
+              ...item,
+              amount_subtotal: amountSubtotal,
+              amount_total: amountTotal,
+            },
+          ],
         };
       }
 
-      return item;
+      return _details;
     }
-  }) as any;
+  }, initialPricingDetails) as any;
 
-  return {
-    ...priceDetails,
-    items,
-  };
+  return items;
 };
 
 /**
@@ -414,6 +433,7 @@ export const computePriceDetails = (price: Price): PricingDetails => {
  * Computes all the pricing total amounts to integers with a decimal precision of DECIMAL_PRECISION.
  */
 const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemToAppend: PriceItem): PricingDetails => {
+  console.log({ priceItemToAppend });
   const taxes = details?.total_details?.breakdown?.taxes || [];
   const itemTax =
     priceItemToAppend.taxes?.[0]?.tax ||
@@ -469,6 +489,7 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
   }
 
   if (!recurrence) {
+    console.log('Here!', priceSubtotal.getAmount());
     const type = price?.type || priceItemToAppend?.type;
 
     recurrences.push({

@@ -324,15 +324,13 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
 
       return {
         ...updatedTotals,
-        items: [...details.items!, convertPriceItemPrecision(priceItemToAppend, 2)],
+        items: [...details.items!, priceItemToAppend],
       };
     }
   }, initialPricingDetails);
 
   if (discounts) {
-    const detailsAfterDiscounts = applyDiscounts(convertPricingPrecision(priceDetails, 2), discounts);
-
-    console.log('detailsAfterDiscounts', JSON.stringify(convertPricingPrecision(detailsAfterDiscounts, 2), null, 2));
+    const detailsAfterDiscounts = applyDiscounts(priceDetails, discounts);
 
     return convertPricingPrecision(detailsAfterDiscounts, 2);
   }
@@ -381,19 +379,17 @@ export const applyDiscounts = (priceDetails: PricingDetails, discounts: { [key: 
               total_details: _details.total_details,
             };
 
-      if (proportionalDiscount) {
-        return {
-          ...updatedTotals,
-          items: [
-            ..._details.items!,
-            {
-              ...item,
-              amount_subtotal: amountSubtotal,
-              amount_total: amountTotal,
-            },
-          ],
-        };
-      }
+      return {
+        ...updatedTotals,
+        items: [
+          ..._details.items!,
+          {
+            ...item,
+            amount_subtotal: amountSubtotal,
+            amount_total: amountTotal,
+          },
+        ],
+      };
 
       return _details;
     }
@@ -433,7 +429,6 @@ export const computePriceDetails = (price: Price): PricingDetails => {
  * Computes all the pricing total amounts to integers with a decimal precision of DECIMAL_PRECISION.
  */
 const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemToAppend: PriceItem): PricingDetails => {
-  console.log({ priceItemToAppend });
   const taxes = details?.total_details?.breakdown?.taxes || [];
   const itemTax =
     priceItemToAppend.taxes?.[0]?.tax ||
@@ -489,7 +484,6 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
   }
 
   if (!recurrence) {
-    console.log('Here!', priceSubtotal.getAmount());
     const type = price?.type || priceItemToAppend?.type;
 
     recurrences.push({

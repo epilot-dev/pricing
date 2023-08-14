@@ -55,7 +55,10 @@ describe('computeAggregatedAndPriceTotals', () => {
         },
       ];
 
-      expect(computeAggregatedAndPriceTotals(priceItems)).toStrictEqual({
+      const result = computeAggregatedAndPriceTotals(priceItems)
+      console.log(JSON.stringify(result, null, 2))
+      
+      expect(result).toStrictEqual({
         amount_subtotal: 7903,
         amount_total: 9405,
         items: [

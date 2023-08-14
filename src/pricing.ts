@@ -337,61 +337,71 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
 };
 
 export const applyDiscounts = (priceDetails: PricingDetails, discounts: { [key: string]: number }): PricingDetails => {
-  const items = priceDetails.items?.reduce((_details, item) => {
-    if (item._price?.unit_amount < 0) {
-      return {
-        ..._details,
-        items: [..._details.items!, item],
-      };
-    }
+  const items = priceDetails.items?.reduce(
+    (_details, item, index) => {
+      if (item._price?.unit_amount < 0 && !isCompositePrice(item)) {
+        return {
+          ..._details,
+          items: [..._details.items!, convertPriceItemPrecision(item, 2)],
+        };
+      }
 
-    if (isCompositePrice(item)) {
-      // To Do ...
-      return _details;
-    } else {
-      const recurrenceDiscount = discounts[item._price?.billing_period || 'one_time'];
-      const { amount_subtotal: recurrenceSubTotal } =
-        priceDetails.total_details?.breakdown?.recurrences?.find((recurrence) => {
-          return recurrence.billing_period === item._price?.billing_period;
-        }) || {};
+      if (isCompositePrice(item)) {
+        // To Do ...
+        return _details;
+      } else {
+        const recurrenceDiscount = discounts[item._price?.billing_period || 'one_time'];
+        const { amount_subtotal: recurrenceSubTotal } =
+          priceDetails.total_details?.breakdown?.recurrences?.find((recurrence) => {
+            return recurrence.billing_period === item._price?.billing_period;
+          }) || {};
 
-      const proportion = d(item.amount_subtotal || 0)
-        .divide(recurrenceSubTotal || 0)
-        .getAmount();
+        const proportion = d(item.amount_subtotal || 0)
+          .divide(recurrenceSubTotal || 0)
+          .getAmount();
 
-      const proportionalDiscount = d(proportion).multiply(recurrenceDiscount).getAmount();
-      console.log('proportionalDiscount', proportionalDiscount);
-      const amountSubtotal = d(item.amount_subtotal || 0)
-        .add(d(proportionalDiscount))
-        .getAmount();
+        const proportionalDiscount = d(proportion).multiply(recurrenceDiscount).getAmount();
+        const amountSubtotal = d(item.amount_subtotal || 0).add(d(proportionalDiscount));
+        const amountTotal = amountSubtotal.multiply(1.19);
 
-      const amountTotal = d(amountSubtotal).multiply(1.19).getAmount();
+        const updatedItem = {
+          ...item,
+          amount_subtotal: amountSubtotal.getAmount(),
+          amount_total: amountTotal.getAmount(),
+        };
 
-      const updatedItem = {
-        ...item,
-        amount_subtotal: amountSubtotal,
-        amount_total: amountTotal,
-      };
+        const updatedTotals =
+          isUnitAmountApproved(updatedItem, updatedItem?._price?.price_display_in_journeys, null!) &&
+          (updatedItem?.unit_amount || 0) > 0
+            ? recomputeDetailTotals(_details, updatedItem!, updatedItem)
+            : {
+                unit_amount_gross: _details.unit_amount_gross,
+                amount_subtotal: _details.amount_subtotal,
+                amount_total: _details.amount_total,
+                total_details: _details.total_details,
+              };
 
-      const updatedTotals =
-        isUnitAmountApproved(updatedItem, updatedItem?._price?.price_display_in_journeys, null!) &&
-        (updatedItem?.unit_amount || 0) > 0
-          ? recomputeDetailTotals(_details, updatedItem!, updatedItem)
-          : {
-              unit_amount_gross: _details.unit_amount_gross,
-              amount_subtotal: _details.amount_subtotal,
-              amount_total: _details.amount_total,
-              total_details: _details.total_details,
-            };
-
-      return {
-        ...updatedTotals,
-        items: [..._details.items!, updatedItem],
-      };
-
-      return _details;
-    }
-  }, initialPricingDetails) as any;
+        return {
+          ...updatedTotals,
+          items: [..._details.items!, convertPriceItemPrecision(updatedItem, 2)],
+        };
+      }
+    },
+    {
+      items: [],
+      unit_amount_gross: 0,
+      amount_subtotal: 0,
+      amount_total: 0,
+      total_details: {
+        amount_shipping: 0,
+        amount_tax: 0,
+        breakdown: {
+          taxes: [],
+          recurrences: [],
+        },
+      },
+    } as any,
+  ) as any;
 
   return items;
 };
@@ -449,7 +459,6 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
   const recurrence = getPriceRecurrence(price, recurrences);
 
   const total = d(details.amount_total!);
-  const unitAmountGross = d(details.unit_amount_gross!);
   const subtotal = d(details.amount_subtotal!);
   const totalTax = d(details?.total_details?.amount_tax!);
 
@@ -504,7 +513,6 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
   }
 
   return {
-    unit_amount_gross: unitAmountGross.add(priceUnitAmountGross).getAmount(),
     amount_subtotal: subtotal.add(priceSubtotal).getAmount(),
     amount_total: total.add(priceTotal).getAmount(),
     total_details: {
@@ -526,7 +534,6 @@ const recomputeDetailTotalsFromCompositePrice = (
 ): PricingDetails | undefined => {
   const initialPricingDetails: PricingDetails = {
     items: [],
-    unit_amount_gross: 0,
     amount_subtotal: 0,
     amount_total: 0,
     total_details: {
@@ -547,7 +554,6 @@ const recomputeDetailTotalsFromCompositePrice = (
     )
       ? recomputeDetailTotals(detailTotals, itemComponent._price, itemComponent)
       : {
-          unit_amount_gross: details?.unit_amount_gross || 0,
           amount_subtotal: details?.amount_subtotal || 0,
           amount_total: details?.amount_total || 0,
           total_details: details?.total_details || initialPricingDetails.total_details,
@@ -670,7 +676,6 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
 
 const convertBreakDownPrecision = (details: PricingDetails, precision: number): PricingDetails => {
   return {
-    unit_amount_gross: d(details.unit_amount_gross!).convertPrecision(precision).getAmount(),
     amount_subtotal: d(details.amount_subtotal!).convertPrecision(precision).getAmount(),
     amount_total: d(details.amount_total!).convertPrecision(precision).getAmount(),
     total_details: {

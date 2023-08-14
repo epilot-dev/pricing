@@ -56,7 +56,6 @@ describe('computeAggregatedAndPriceTotals', () => {
       ];
 
       const result = computeAggregatedAndPriceTotals(priceItems)
-      // console.log(JSON.stringify(result, null, 2))
 
       expect(result).toStrictEqual({
         amount_subtotal: 7903,
@@ -115,6 +114,7 @@ describe('computeAggregatedAndPriceTotals', () => {
               unit_amount: -500,
               unit_amount_currency: 'EUR',
               unit_amount_decimal: '-5.00',
+              type: "one_time",
             },
             amount_subtotal: -500,
             amount_total: -500,
@@ -135,9 +135,9 @@ describe('computeAggregatedAndPriceTotals', () => {
               {
                 amount_subtotal: 7903,
                 amount_tax: 1597,
-                amount_total: 9500,
+                amount_total: 9405,
                 type: 'one_time',
-                unit_amount_gross: 9500,
+                unit_amount_gross: 10000,
               },
             ],
             taxes: [

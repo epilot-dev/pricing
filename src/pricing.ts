@@ -25,6 +25,7 @@ import {
   computeTieredVolumePriceItemValues,
   isTaxInclusivePrice,
 } from './utils';
+import { applyDiscounts, getDiscounts } from './utils/discounts';
 
 /**
  * @deprecated
@@ -265,21 +266,7 @@ const initialPricingDetails: PricingDetails = {
  */
 
 export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): PricingDetails => {
-  const discounts = priceItems
-    .filter((priceItem) => priceItem._price?.unit_amount < 0)
-    .reduce((discountsPerRecurrency: { [key: string]: number }, discountItem) => {
-      const billingPeriod =
-        discountItem._price?.type === 'recurring' ? discountItem._price?.billing_period : 'one_time';
-      const currency = (discountItem._price?.unit_amount_currency || DEFAULT_CURRENCY) as Currency;
-
-      discountsPerRecurrency[billingPeriod] = d(
-        d(discountsPerRecurrency[billingPeriod] || 0, currency)
-          .add(toDinero(discountItem._price?.unit_amount_decimal, currency))
-          .getAmount(),
-      ).getAmount();
-
-      return discountsPerRecurrency;
-    }, {});
+  const discounts = getDiscounts(priceItems);
 
   const priceDetails = priceItems.reduce((details, priceItem) => {
     if (isCompositePrice(priceItem)) {
@@ -322,7 +309,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
 
       return {
         ...updatedTotals,
-        items: [...details.items!, priceItemToAppend],
+        items: [...details.items!, discounts ? priceItemToAppend : convertPriceItemPrecision(priceItemToAppend, 2)],
       };
     }
   }, initialPricingDetails);
@@ -334,76 +321,6 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
   }
 
   return convertPricingPrecision(priceDetails, 2);
-};
-
-export const applyDiscounts = (priceDetails: PricingDetails, discounts: { [key: string]: number }): PricingDetails => {
-  const items = priceDetails.items?.reduce(
-    (_details, item, index) => {
-      if (item._price?.unit_amount < 0 && !isCompositePrice(item)) {
-        return {
-          ..._details,
-          items: [..._details.items!, convertPriceItemPrecision(item, 2)],
-        };
-      }
-
-      if (isCompositePrice(item)) {
-        // To Do ...
-        return _details;
-      } else {
-        const recurrenceDiscount = discounts[item._price?.billing_period || 'one_time'];
-        const { amount_subtotal: recurrenceSubTotal } =
-          priceDetails.total_details?.breakdown?.recurrences?.find((recurrence) => {
-            return recurrence.billing_period === item._price?.billing_period;
-          }) || {};
-
-        const proportion = d(item.amount_subtotal || 0)
-          .divide(recurrenceSubTotal || 0)
-          .getAmount();
-
-        const proportionalDiscount = d(proportion).multiply(recurrenceDiscount).getAmount();
-        const amountSubtotal = d(item.amount_subtotal || 0).add(d(proportionalDiscount));
-        const amountTotal = amountSubtotal.multiply(1.19);
-
-        const updatedItem = {
-          ...item,
-          amount_subtotal: amountSubtotal.getAmount(),
-          amount_total: amountTotal.getAmount(),
-        };
-
-        const updatedTotals =
-          isUnitAmountApproved(updatedItem, updatedItem?._price?.price_display_in_journeys, null!) &&
-          (updatedItem?.unit_amount || 0) > 0
-            ? recomputeDetailTotals(_details, updatedItem!, updatedItem)
-            : {
-                unit_amount_gross: _details.unit_amount_gross,
-                amount_subtotal: _details.amount_subtotal,
-                amount_total: _details.amount_total,
-                total_details: _details.total_details,
-              };
-
-        return {
-          ...updatedTotals,
-          items: [..._details.items!, convertPriceItemPrecision(updatedItem, 2)],
-        };
-      }
-    },
-    {
-      items: [],
-      unit_amount_gross: 0,
-      amount_subtotal: 0,
-      amount_total: 0,
-      total_details: {
-        amount_shipping: 0,
-        amount_tax: 0,
-        breakdown: {
-          taxes: [],
-          recurrences: [],
-        },
-      },
-    } as any,
-  ) as any;
-
-  return items;
 };
 
 /**
@@ -436,7 +353,11 @@ export const computePriceDetails = (price: Price): PricingDetails => {
 /**
  * Computes all the pricing total amounts to integers with a decimal precision of DECIMAL_PRECISION.
  */
-const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemToAppend: PriceItem): PricingDetails => {
+export const recomputeDetailTotals = (
+  details: PricingDetails,
+  price: Price,
+  priceItemToAppend: PriceItem,
+): PricingDetails => {
   const taxes = details?.total_details?.breakdown?.taxes || [];
   const itemTax =
     priceItemToAppend.taxes?.[0]?.tax ||
@@ -657,7 +578,7 @@ const convertPriceComponentsPrecision = (items: PriceItem[], precision = 2): Pri
  * e.g: 10.00 with precision DECIMAL_PRECISION, represented as 10(+12 zeros) with precision 2
  * would be 1000(only 2 zeros on the decimal component).
  */
-const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceItem => ({
+export const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceItem => ({
   ...priceItem,
   ...(typeof priceItem.unit_amount === 'number' && {
     unit_amount: d(priceItem.unit_amount).convertPrecision(precision).getAmount(),
@@ -752,7 +673,7 @@ const getPriceRecurrence = (price: Price, recurrences: RecurrenceAmount[]) => {
   return recurrences.find((recurrenceItem) => recurrenceItem.type === 'one_time');
 };
 
-const isUnitAmountApproved = (
+export const isUnitAmountApproved = (
   priceItem: PriceItem,
   priceDisplayInJourneys?: Price['price_display_in_journeys'],
   parentPriceItem?: CompositePriceItem,

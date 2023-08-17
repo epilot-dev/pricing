@@ -1,6 +1,7 @@
 import type { Currency } from 'dinero.js';
 
 import { DEFAULT_CURRENCY } from './currencies';
+import { applyDiscounts, getDiscounts } from './discounts';
 import { d, toDinero } from './formatters';
 import { normalizePriceMappingInput } from './normalizers';
 import type {
@@ -25,7 +26,6 @@ import {
   computeTieredVolumePriceItemValues,
   isTaxInclusivePrice,
 } from './utils';
-import { applyDiscounts, getDiscounts } from './utils/discounts';
 
 /**
  * @deprecated
@@ -77,9 +77,7 @@ type PriceComponent = NonNullable<CompositePriceItemDto['item_components']>[numb
   number_input?: number;
 };
 
-export const isCompositePrice = (
-  priceItem: PriceItemDto | CompositePriceItemDto | PriceItem | CompositePriceItem,
-): priceItem is CompositePriceItemDto | CompositePriceItem =>
+export const isCompositePrice = (priceItem: PriceItemDto | CompositePriceItemDto): priceItem is CompositePriceItemDto =>
   Boolean(priceItem?.is_composite_price || priceItem?._price?.is_composite_price);
 
 export const computePriceComponent = (
@@ -242,21 +240,6 @@ export const computeCompositePrice = (
   };
 };
 
-const initialPricingDetails: PricingDetails = {
-  items: [],
-  unit_amount_gross: 0,
-  amount_subtotal: 0,
-  amount_total: 0,
-  total_details: {
-    amount_shipping: 0,
-    amount_tax: 0,
-    breakdown: {
-      taxes: [],
-      recurrences: [],
-    },
-  },
-};
-
 /**
  * Computes all the integer amounts for the price items using the string decimal representation defined on prices unit_amount field.
  * All totals are computed with a decimal precision of DECIMAL_PRECISION.
@@ -266,6 +249,20 @@ const initialPricingDetails: PricingDetails = {
  */
 
 export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): PricingDetails => {
+  const initialPricingDetails: PricingDetails = {
+    items: [],
+    amount_subtotal: 0,
+    amount_total: 0,
+    total_details: {
+      amount_shipping: 0,
+      amount_tax: 0,
+      breakdown: {
+        taxes: [],
+        recurrences: [],
+      },
+    },
+  };
+
   const discounts = getDiscounts(priceItems);
 
   const priceDetails = priceItems.reduce((details, priceItem) => {
@@ -293,19 +290,17 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
 
       const priceItemToAppend = computePriceItem(priceItem, price, tax!, priceItem.quantity!, priceMapping);
 
-      const updatedTotals =
-        isUnitAmountApproved(
-          priceItem,
-          priceItemToAppend?._price?.price_display_in_journeys ?? price?.price_display_in_journeys,
-          null!,
-        ) && (price?.unit_amount || 0) > 0
-          ? recomputeDetailTotals(details, price!, priceItemToAppend)
-          : {
-              unit_amount_gross: details.unit_amount_gross,
-              amount_subtotal: details.amount_subtotal,
-              amount_total: details.amount_total,
-              total_details: details.total_details,
-            };
+      const updatedTotals = isUnitAmountApproved(
+        priceItem,
+        priceItemToAppend?._price?.price_display_in_journeys ?? price?.price_display_in_journeys,
+        null!,
+      )
+        ? recomputeDetailTotals(details, price!, priceItemToAppend)
+        : {
+            amount_subtotal: details.amount_subtotal,
+            amount_total: details.amount_total,
+            total_details: details.total_details,
+          };
 
       return {
         ...updatedTotals,
@@ -455,6 +450,7 @@ const recomputeDetailTotalsFromCompositePrice = (
 ): PricingDetails | undefined => {
   const initialPricingDetails: PricingDetails = {
     items: [],
+    unit_amount_gross: 0,
     amount_subtotal: 0,
     amount_total: 0,
     total_details: {
@@ -475,6 +471,7 @@ const recomputeDetailTotalsFromCompositePrice = (
     )
       ? recomputeDetailTotals(detailTotals, itemComponent._price, itemComponent)
       : {
+          unit_amount_gross: details?.unit_amount_gross || 0,
           amount_subtotal: details?.amount_subtotal || 0,
           amount_total: details?.amount_total || 0,
           total_details: details?.total_details || initialPricingDetails.total_details,

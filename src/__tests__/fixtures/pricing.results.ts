@@ -373,7 +373,6 @@ export const computedCompositePrice: CompositePriceItem & { [key: string]: unkno
 export const resultsWhenPriceIsNontaxable = {
   amount_subtotal: 1000,
   amount_total: 1000,
-  unit_amount_gross: 1000,
   items: [
     {
       _price: {
@@ -486,8 +485,7 @@ export const resultsWhenNoPricesProvided = {
         },
       ],
     },
-  },
-  unit_amount_gross: 0,
+  }
 };
 
 export const severalItemsPerRecurrenceTotals = {
@@ -1195,8 +1193,7 @@ export const severalItemsPerRecurrenceTotals = {
           amount_total: 50000,
           pricing_model: 'per_unit',
         },
-      ],
-      unit_amount_gross: 51114,
+      ]
     },
   ],
   amount_subtotal: 736609,
@@ -1257,7 +1254,6 @@ export const severalItemsPerRecurrenceTotals = {
       ],
     },
   },
-  unit_amount_gross: 222088,
 };
 
 export const compositePricesUnitAmountZeroResult = {
@@ -1570,7 +1566,6 @@ export const compositePricesUnitAmountZeroResult = {
 export const priceWithDisplayOnRequest = {
   amount_subtotal: 0,
   amount_total: 0,
-  unit_amount_gross: 0,
   items: [
     {
       _price: {
@@ -3959,7 +3954,6 @@ export const priceDetailsForCompositePrice = {
       ],
       amount_subtotal: 43031,
       amount_total: 51114,
-      unit_amount_gross: 51114,
       total_details: {
         amount_tax: 8083,
         breakdown: {
@@ -3988,8 +3982,7 @@ export const priceDetailsForCompositePrice = {
         },
       },
     },
-  ],
-  unit_amount_gross: 51114,
+  ]
 };
 
 export const priceDetailsForCompositePriceWithTaxChanges = {
@@ -4286,7 +4279,6 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
       currency: 'EUR',
       amount_subtotal: 27,
       amount_total: 30,
-      unit_amount_gross: 30,
       total_details: {
         amount_tax: 3,
         breakdown: {
@@ -4308,8 +4300,7 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
         },
       },
     },
-  ],
-  unit_amount_gross: 30,
+  ]
 };
 
 export const resultsWithCompositePrices = {
@@ -4319,7 +4310,6 @@ export const resultsWithCompositePrices = {
     {
       amount_subtotal: 43031,
       amount_total: 51114,
-      unit_amount_gross: 51114,
       _price: {
         _created_at: '2022-06-15T09:17:08.343Z',
         _id: 'price#4',
@@ -4733,8 +4723,7 @@ export const resultsWithCompositePrices = {
         { amount: 7983, tax: { _id: '19', rate: 19, type: 'VAT' } },
       ],
     },
-  },
-  unit_amount_gross: 51114,
+  }
 };
 
 export const resultsForSimplePrice = {
@@ -4803,8 +4792,7 @@ export const resultsForSimplePrice = {
       ],
       taxes: [{ amount: 12605, tax: { _id: '19', rate: 19, type: 'VAT' } }],
     },
-  },
-  unit_amount_gross: 78946,
+  }
 };
 
 export const oneItemPerRecurrenceTotals = {
@@ -4966,7 +4954,6 @@ export const oneItemPerRecurrenceTotals = {
       ],
     },
   },
-  unit_amount_gross: 92210,
 };
 
 export const resultCompositePriceWithTotalDetails = {
@@ -5382,6 +5369,5 @@ export const resultCompositePriceWithTotalDetails = {
         { amount: 15966, tax: { _id: '19', rate: 19, type: 'VAT' } },
       ],
     },
-  },
-  unit_amount_gross: 51114,
+  }
 };

@@ -1,9 +1,9 @@
 import { Currency } from 'dinero.js';
 
-import { DEFAULT_CURRENCY } from '../currencies';
-import { d, toDinero } from '../formatters';
-import { isCompositePrice, isUnitAmountApproved, convertPriceItemPrecision, recomputeDetailTotals } from '../pricing';
-import { PriceItemsDto, PricingDetails } from '../types';
+import { DEFAULT_CURRENCY } from './currencies';
+import { d, toDinero } from './formatters';
+import { isCompositePrice, isUnitAmountApproved, convertPriceItemPrecision, recomputeDetailTotals } from './pricing';
+import { PriceItemsDto, PricingDetails } from './types';
 
 export function getDiscounts(priceItems: PriceItemsDto): { [key: string]: number } | undefined {
   const discounts = priceItems
@@ -27,6 +27,11 @@ export function getDiscounts(priceItems: PriceItemsDto): { [key: string]: number
   }
 }
 
+/**
+ * Applies the discounts computing logic assuming displayed prices are NET.
+ * In such a case, we don't care about the final user display value, and taxes are added on top of
+ * the net prices minus the discount.
+ */
 export function applyDiscounts(priceDetails: PricingDetails, discounts: { [key: string]: number }): PricingDetails {
   const items = priceDetails.items?.reduce(
     (_details, item, index) => {
@@ -38,7 +43,9 @@ export function applyDiscounts(priceDetails: PricingDetails, discounts: { [key: 
       }
 
       if (isCompositePrice(item)) {
-        // To Do ...
+        /**
+         * TODO: Composite Prices with discounts are not supported yet.
+         */
         return _details;
       } else {
         const recurrenceDiscount = discounts[item._price?.billing_period || 'one_time'];

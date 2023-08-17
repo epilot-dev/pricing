@@ -31,6 +31,25 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(computeAggregatedAndPriceTotals(priceItems)).toStrictEqual(results.oneItemPerRecurrenceTotals);
     });
 
+    it('should return 0 when number input is 0', () => {
+      const priceItems: PriceItemDto[] = [samples.simplePriceWithNumberInputEqualsToZero];
+      expect(computeAggregatedAndPriceTotals(priceItems)).toStrictEqual(
+        expect.objectContaining({
+          amount_subtotal: 0,
+          amount_total: 0,
+          total_details: expect.objectContaining({
+            amount_tax: 0,
+          }),
+          items: expect.arrayContaining([
+            expect.objectContaining({
+              amount_subtotal: 0,
+              amount_total: 0,
+            }),
+          ]),
+        }),
+      );
+    });
+
     it('should return the right result when there are several items per recurrence', () => {
       const priceItems = [
         samples.priceItem1,
@@ -1280,6 +1299,25 @@ describe('computeAggregatedAndPriceTotals', () => {
   });
 
   describe('when is_composite_price = true', () => {
+    it('should return 0 when number input is 0', () => {
+      const priceItems: CompositePriceItemDto[] = [samples.compositePriceWithNumberInputEqualsToZero];
+      expect(computeAggregatedAndPriceTotals(priceItems)).toStrictEqual(
+        expect.objectContaining({
+          amount_subtotal: 0,
+          amount_total: 0,
+          total_details: expect.objectContaining({
+            amount_tax: 0,
+          }),
+          items: expect.arrayContaining([
+            expect.objectContaining({
+              amount_subtotal: 0,
+              amount_total: 0,
+            }),
+          ]),
+        }),
+      );
+    });
+
     it('should return the right result when there is one composite price with display mode "On Request"', () => {
       const priceItems = [samples.compositePriceWithOnRequest];
 

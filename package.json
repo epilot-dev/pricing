@@ -15,6 +15,7 @@
   "scripts": {
     "start": "mkdir -p dist && cp -r src/types dist/types && webpack --watch",
     "test": "jest",
+    "test:watch": "jest --watch",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
     "gen-docs": "rm -rf docs && typedoc --plugin typedoc-plugin-markdown --out docs src && echo '{ \"label\": \"Pricing Library\", \"position\": 0 }' > docs/_category_.json",
@@ -26,6 +27,13 @@
     "lint": "esw src --ext js,ts,tsx --cache --color",
     "lint:watch": "esw src --ext js,ts,tsx --cache --color --watch",
     "prepublishOnly": "npm run build"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "arrowParens": "always",
+    "semi": true
   },
   "husky": {
     "hooks": {

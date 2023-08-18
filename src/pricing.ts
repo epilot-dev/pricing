@@ -1,7 +1,6 @@
 import type { Currency } from 'dinero.js';
 
 import { DEFAULT_CURRENCY } from './currencies';
-import { applyDiscounts, getDiscounts } from './discounts';
 import { d, toDinero } from './formatters';
 import { normalizePriceMappingInput } from './normalizers';
 import type {
@@ -263,8 +262,6 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
     },
   };
 
-  const discounts = getDiscounts(priceItems);
-
   const priceDetails = priceItems.reduce((details, priceItem) => {
     if (isCompositePrice(priceItem)) {
       const price = priceItem._price;
@@ -304,16 +301,10 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
 
       return {
         ...updatedTotals,
-        items: [...details.items!, discounts ? priceItemToAppend : convertPriceItemPrecision(priceItemToAppend, 2)],
+        items: [...details.items!, convertPriceItemPrecision(priceItemToAppend, 2)],
       };
     }
   }, initialPricingDetails);
-
-  if (discounts) {
-    const detailsAfterDiscounts = applyDiscounts(priceDetails, discounts);
-
-    return convertPricingPrecision(detailsAfterDiscounts, 2);
-  }
 
   return convertPricingPrecision(priceDetails, 2);
 };

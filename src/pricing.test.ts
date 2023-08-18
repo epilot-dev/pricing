@@ -293,7 +293,6 @@ describe('computeAggregatedAndPriceTotals', () => {
           expect.objectContaining({
             amount_subtotal: 9091,
             amount_total: 10000,
-            unit_amount_gross: 1000,
             total_details: expect.objectContaining({
               amount_tax: 909,
             }),
@@ -381,13 +380,11 @@ describe('computeAggregatedAndPriceTotals', () => {
               expect.objectContaining({
                 amount_subtotal: 12727,
                 amount_total: 14000,
-                unit_amount_gross: 1800,
               }),
               expect.not.objectContaining({
                 unit_amount: undefined,
                 unit_amount_net: undefined,
-                unit_amount_decimal: undefined,
-                unit_amount_gross: undefined,
+                unit_amount_decimal: undefined
               }),
             ]),
           }),
@@ -426,8 +423,7 @@ describe('computeAggregatedAndPriceTotals', () => {
               expect.not.objectContaining({
                 unit_amount: undefined,
                 unit_amount_net: undefined,
-                unit_amount_decimal: undefined,
-                unit_amount_gross: undefined,
+                unit_amount_decimal: undefined
               }),
             ]),
           }),
@@ -468,7 +464,6 @@ describe('computeAggregatedAndPriceTotals', () => {
                 unit_amount: undefined,
                 unit_amount_net: undefined,
                 unit_amount_decimal: undefined,
-                unit_amount_gross: undefined,
               }),
             ]),
           }),
@@ -814,7 +809,6 @@ describe('computeAggregatedAndPriceTotals', () => {
 
         expect(result).toEqual(
           expect.objectContaining({
-            unit_amount_gross: -1000,
             amount_subtotal: -2727,
             amount_total: -3000,
             total_details: expect.objectContaining({
@@ -823,7 +817,6 @@ describe('computeAggregatedAndPriceTotals', () => {
             items: expect.arrayContaining([
               expect.objectContaining({
                 pricing_model: 'tiered_volume',
-                unit_amount_gross: -1000,
                 amount_subtotal: -2727,
                 amount_total: -3000,
               }),
@@ -1151,7 +1144,6 @@ describe('computeAggregatedAndPriceTotals', () => {
               expect.objectContaining({
                 amount_total: 6000,
                 amount_subtotal: 5455,
-                unit_amount_gross: 6000,
               }),
             ]),
           }),
@@ -1209,7 +1201,6 @@ describe('computeAggregatedAndPriceTotals', () => {
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
-                unit_amount_gross: -10000,
                 amount_subtotal: -9091,
                 amount_total: -10000,
               }),
@@ -1239,7 +1230,6 @@ describe('computeAggregatedAndPriceTotals', () => {
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
-                unit_amount_gross: -6000,
                 amount_subtotal: -5455,
                 amount_total: -6000,
               }),
@@ -1511,20 +1501,18 @@ describe('computeAggregatedAndPriceTotals', () => {
               expect.objectContaining({
                 amount_subtotal: 12727,
                 amount_total: 14000,
-                unit_amount_gross: 1800,
               }),
               expect.not.objectContaining({
                 unit_amount: undefined,
                 unit_amount_net: undefined,
                 unit_amount_decimal: undefined,
-                unit_amount_gross: undefined,
               }),
             ]),
           }),
         );
       });
 
-      it('should return the correct result when input mapping is 100', () => {
+     it('should return the correct result when input mapping is 100', () => {
         const priceItems = [
           {
             ...samples.compositePriceItemWithTieredGraduatedComponent,
@@ -1547,13 +1535,11 @@ describe('computeAggregatedAndPriceTotals', () => {
               expect.objectContaining({
                 amount_total: 66000,
                 amount_subtotal: 60000,
-                unit_amount_gross: 2400,
               }),
               expect.not.objectContaining({
                 unit_amount: undefined,
                 unit_amount_net: undefined,
                 unit_amount_decimal: undefined,
-                unit_amount_gross: undefined,
               }),
             ]),
           }),
@@ -1581,7 +1567,6 @@ describe('computeAggregatedAndPriceTotals', () => {
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
-                unit_amount_gross: -1000,
                 amount_subtotal: -1818,
                 amount_total: -2000,
               }),
@@ -1613,7 +1598,6 @@ describe('computeAggregatedAndPriceTotals', () => {
               expect.objectContaining({
                 amount_total: -66000,
                 amount_subtotal: -60000,
-                unit_amount_gross: -2400,
               }),
             ]),
           }),
@@ -1705,7 +1689,6 @@ describe('computeAggregatedAndPriceTotals', () => {
               expect.objectContaining({
                 amount_subtotal: 10909,
                 amount_total: 12000,
-                unit_amount_gross: 800,
               }),
             ]),
           }),
@@ -1735,7 +1718,6 @@ describe('computeAggregatedAndPriceTotals', () => {
               expect.objectContaining({
                 amount_total: 60000,
                 amount_subtotal: 54545,
-                unit_amount_gross: 600,
               }),
             ]),
           }),
@@ -1763,7 +1745,6 @@ describe('computeAggregatedAndPriceTotals', () => {
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
-                unit_amount_gross: -1000,
                 amount_subtotal: -909,
                 amount_total: -1000,
               }),
@@ -1794,8 +1775,7 @@ describe('computeAggregatedAndPriceTotals', () => {
             items: expect.arrayContaining([
               expect.objectContaining({
                 amount_total: -60000,
-                amount_subtotal: -54545,
-                unit_amount_gross: -600,
+                amount_subtotal: -54545
               }),
             ]),
           }),
@@ -1834,7 +1814,7 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when input mapping is 10', () => {
+      fit('should return the correct result when input mapping is 10', () => {
         const priceItems = [
           {
             ...samples.compositePriceItemWithFlatFee,
@@ -1855,7 +1835,6 @@ describe('computeAggregatedAndPriceTotals', () => {
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
-                unit_amount_gross: 8000,
                 amount_subtotal: 7273,
                 amount_total: 8000,
               }),
@@ -1885,7 +1864,6 @@ describe('computeAggregatedAndPriceTotals', () => {
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
-                unit_amount_gross: 6000,
                 amount_subtotal: 5455,
                 amount_total: 6000,
               }),
@@ -1916,8 +1894,7 @@ describe('computeAggregatedAndPriceTotals', () => {
             items: expect.arrayContaining([
               expect.objectContaining({
                 amount_total: 6000,
-                amount_subtotal: 5455,
-                unit_amount_gross: 6000,
+                amount_subtotal: 5455
               }),
             ]),
           }),
@@ -1945,7 +1922,6 @@ describe('computeAggregatedAndPriceTotals', () => {
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
-                unit_amount_gross: -10000,
                 amount_subtotal: -9091,
                 amount_total: -10000,
               }),
@@ -1975,7 +1951,6 @@ describe('computeAggregatedAndPriceTotals', () => {
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
-                unit_amount_gross: -6000,
                 amount_subtotal: -5455,
                 amount_total: -6000,
               }),

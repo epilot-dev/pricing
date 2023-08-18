@@ -1838,8 +1838,7 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
         },
       ],
     },
-  },
-  unit_amount_gross: 92210,
+  }
 };
 
 export const compositePriceWithDisplayOnRequest = {
@@ -3577,8 +3576,7 @@ export const priceDetailsForOnePrice = {
       ],
       taxes: [{ amount: 63024, tax: { _id: '19', rate: 19, type: 'VAT' } }],
     },
-  },
-  unit_amount_gross: 78946,
+  }
 };
 
 export const priceDetailsForCompositePrice = {

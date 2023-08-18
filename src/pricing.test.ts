@@ -86,9 +86,7 @@ describe('computeAggregatedAndPriceTotals', () => {
 
       const result = computeAggregatedAndPriceTotals(priceItems);
 
-      expect(result).toEqual(
-        expect.objectContaining({ amount_subtotal: 0, amount_total: 0 }),
-      );
+      expect(result).toEqual(expect.objectContaining({ amount_subtotal: 0, amount_total: 0 }));
     });
 
     it('should return the right result when there is one simple price with display mode "On Request"', () => {
@@ -403,7 +401,7 @@ describe('computeAggregatedAndPriceTotals', () => {
               expect.not.objectContaining({
                 unit_amount: undefined,
                 unit_amount_net: undefined,
-                unit_amount_decimal: undefined
+                unit_amount_decimal: undefined,
               }),
             ]),
           }),
@@ -442,7 +440,7 @@ describe('computeAggregatedAndPriceTotals', () => {
               expect.not.objectContaining({
                 unit_amount: undefined,
                 unit_amount_net: undefined,
-                unit_amount_decimal: undefined
+                unit_amount_decimal: undefined,
               }),
             ]),
           }),
@@ -1544,7 +1542,7 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-     it('should return the correct result when input mapping is 100', () => {
+      it('should return the correct result when input mapping is 100', () => {
         const priceItems = [
           {
             ...samples.compositePriceItemWithTieredGraduatedComponent,
@@ -1660,7 +1658,7 @@ describe('computeAggregatedAndPriceTotals', () => {
             items: expect.arrayContaining([
               expect.objectContaining({
                 amount_subtotal: 1818,
-                amount_total: 2000
+                amount_total: 2000,
               }),
             ]),
           }),
@@ -1805,7 +1803,7 @@ describe('computeAggregatedAndPriceTotals', () => {
             items: expect.arrayContaining([
               expect.objectContaining({
                 amount_total: -60000,
-                amount_subtotal: -54545
+                amount_subtotal: -54545,
               }),
             ]),
           }),
@@ -1923,7 +1921,7 @@ describe('computeAggregatedAndPriceTotals', () => {
             items: expect.arrayContaining([
               expect.objectContaining({
                 amount_total: 6000,
-                amount_subtotal: 5455
+                amount_subtotal: 5455,
               }),
             ]),
           }),

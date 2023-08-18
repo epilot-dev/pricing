@@ -29,7 +29,7 @@ type NormalizePriceMappingInput = (priceMapping: PriceInputMapping, price: Price
  * @returns The normalized quantity
  */
 export const normalizePriceMappingInput: NormalizePriceMappingInput = (priceMapping, price) => {
-  if (!price || !priceMapping || (!priceMapping.value && !priceMapping.frequency_unit)) {
+  if (!price || !priceMapping || (typeof priceMapping.value !== 'number' && !priceMapping.frequency_unit)) {
     return null;
   }
 

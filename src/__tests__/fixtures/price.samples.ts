@@ -3229,7 +3229,7 @@ export const priceComponentDisplayAsStartingPrice: CompositePriceItemDto = {
   ],
 } as CompositePriceItemDto;
 
-export const simplePriceWithNumberInputEqualsToZero = {
+export const simplePriceWithNumberInputEqualsToZero: PriceItemDto = {
   description: 'JJ Price',
   pricing_model: 'per_unit',
   unit_amount_currency: 'EUR',
@@ -3272,15 +3272,6 @@ export const simplePriceWithNumberInputEqualsToZero = {
     active: true,
     variable_price: true,
     type: 'one_time',
-    billing_period: null,
-    billing_duration_amount: null,
-    billing_duration_unit: null,
-    notice_time_amount: null,
-    notice_time_unit: null,
-    termination_time_amount: null,
-    termination_time_unit: null,
-    renewal_duration_amount: null,
-    renewal_duration_unit: null,
     price_components: null,
     _tags: [],
     _schema: 'price',
@@ -3295,7 +3286,7 @@ export const simplePriceWithNumberInputEqualsToZero = {
     blockMappingData: { numberInput: 0 },
   },
   price_mappings: [{ price_id: 'ab995a3a-e739-4bc9-8900-86ebb2ca6248', value: 0 }],
-} as any;
+} as PriceItemDto;
 
 export const compositePriceWithNumberInputEqualsToZero: CompositePriceItemDto = {
   unit_amount: 0,

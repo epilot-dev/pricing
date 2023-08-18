@@ -458,7 +458,6 @@ const recomputeDetailTotalsFromCompositePrice = (
     )
       ? recomputeDetailTotals(detailTotals, itemComponent._price, itemComponent)
       : {
-          unit_amount_gross: details?.unit_amount_gross || 0,
           amount_subtotal: details?.amount_subtotal || 0,
           amount_total: details?.amount_total || 0,
           total_details: details?.total_details || initialPricingDetails.total_details,

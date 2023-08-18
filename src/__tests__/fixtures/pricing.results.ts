@@ -1538,7 +1538,6 @@ export const compositePricesUnitAmountZeroResult = {
           ],
         },
       },
-      unit_amount_gross: 1069,
     },
   ],
   total_details: {
@@ -1560,7 +1559,6 @@ export const compositePricesUnitAmountZeroResult = {
       ],
     },
   },
-  unit_amount_gross: 1069,
 };
 
 export const priceWithDisplayOnRequest = {
@@ -2078,7 +2076,6 @@ export const compositePriceWithDisplayOnRequest = {
           taxes: [] as any,
         },
       },
-      unit_amount_gross: 0,
     },
   ],
   amount_subtotal: 0,
@@ -2091,7 +2088,6 @@ export const compositePriceWithDisplayOnRequest = {
       recurrences: [] as any,
     },
   },
-  unit_amount_gross: 0,
 };
 
 export const compositePriceWithDisplayOnRequestAndOthers = {
@@ -2778,7 +2774,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           pricing_model: 'per_unit',
         },
       ],
-      unit_amount_gross: 51114,
     },
     {
       amount_subtotal: 0,
@@ -3027,12 +3022,10 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           taxes: [] as Tax[],
         },
       },
-      unit_amount_gross: 0,
     },
   ],
   amount_subtotal: 736609,
   amount_total: 872926,
-
   total_details: {
     amount_tax: 136317,
     breakdown: {
@@ -3068,7 +3061,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
       ],
     },
   },
-  unit_amount_gross: 222088,
 };
 
 export const resultCompositePriceQuantity2 = {
@@ -3472,7 +3464,6 @@ export const resultCompositePriceQuantity2 = {
           ],
         },
       },
-      unit_amount_gross: 51114,
     },
   ],
   total_details: {
@@ -3496,7 +3487,6 @@ export const resultCompositePriceQuantity2 = {
       ],
     },
   },
-  unit_amount_gross: 51114,
 };
 
 export const priceDetailsForOnePrice = {
@@ -5344,7 +5334,6 @@ export const resultCompositePriceWithTotalDetails = {
           ],
         },
       },
-      unit_amount_gross: 51114,
     },
   ],
   total_details: {

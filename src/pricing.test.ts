@@ -19,7 +19,7 @@ import {
 } from './types';
 
 describe('computeAggregatedAndPriceTotals', () => {
-  describe('when is_composite_price = false', () => {
+  describe('when computing Simple Prices (is_composite_price = false)', () => {
     it('should return the right result when there is one item per recurrence', () => {
       const priceItems: PriceItemDto[] = [
         samples.priceItem1,
@@ -1298,7 +1298,7 @@ describe('computeAggregatedAndPriceTotals', () => {
     });
   });
 
-  describe('when is_composite_price = true', () => {
+  describe('when computing with Composite Prices (is_composite_price = true)', () => {
     it('should return 0 when number input is 0', () => {
       const priceItems: CompositePriceItemDto[] = [samples.compositePriceWithNumberInputEqualsToZero];
       expect(computeAggregatedAndPriceTotals(priceItems)).toStrictEqual(
@@ -1409,7 +1409,7 @@ describe('computeAggregatedAndPriceTotals', () => {
       });
     });
 
-    describe('when computing custom items', () => {
+    describe('when computing individual adjustments', () => {
       it('should compute prices correctly when computing a composite price item with a custom item inside', () => {
         const priceItems = [samples.compositePriceWithCustomItem];
 
@@ -2074,7 +2074,9 @@ describe('computeAggregatedAndPriceTotals', () => {
       });
     });
   });
+});
 
+describe('Utility Functions', () => {
   describe('extractPricingEntitiesBySlug', () => {
     it('should return the pricing relations without duplicates', () => {
       const priceItems = [
@@ -2179,4 +2181,4 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(result).toStrictEqual(results.resultsWithCompositePrices);
     });
   });
-});
+})

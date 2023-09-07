@@ -3,7 +3,8 @@ import { Currency } from 'dinero.js';
 import { d, toDinero } from '../formatters';
 import { Price, PriceTier, Tax } from '../types';
 
-type GetTaxValue = (tax: Tax) => number;
+type GetTaxValue = (tax?: Tax) => number;
+
 type PriceItemsTotals = {
   unitAmount?: number;
   unitAmountNet?: number;
@@ -70,7 +71,7 @@ export const computePriceItemValues = (
   currency: Currency,
   isTaxInclusive: boolean,
   unitAmountMultiplier: number,
-  tax: Tax,
+  tax?: Tax,
 ): PriceItemsTotals => {
   const unitAmount = toDinero(unitAmountDecimal, currency);
   const taxRate = getTaxValue(tax);
@@ -138,7 +139,7 @@ export const computeTieredVolumePriceItemValues = (
   currency: Currency,
   isTaxInclusive: boolean,
   quantityToSelectTier: number,
-  tax: Tax,
+  tax: Tax | undefined,
   unitAmountMultiplier: number,
   unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'],
 ): PriceItemsTotals => {

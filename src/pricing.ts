@@ -543,7 +543,7 @@ export const computePriceItem = (
     taxes: [
       {
         ...(priceTax ? { tax: priceTax } : { rate: 'nontaxable', rateValue: 0 }),
-        amount: itemValues.taxAmount,
+        amount: Number(itemValues.unitAmount) < 0 ? 0 : itemValues.taxAmount,
       },
     ],
     _price: {

@@ -86,7 +86,7 @@ export const computePriceItemValues = (
 
   const amountSubtotal = unitAmountNet.multiply(unitAmountMultiplier);
   const amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
-  const taxAmount = unitTaxAmount.multiply(unitAmountMultiplier);
+  const taxAmount = Number(unitAmount) < 0 ? d(0) : unitTaxAmount.multiply(unitAmountMultiplier);
 
   return {
     unitAmount: unitAmount.getAmount(),
@@ -160,7 +160,7 @@ export const computeTieredVolumePriceItemValues = (
     unitAmountGross: d(tierValues.unitAmountGross!).getAmount(),
     amountSubtotal: d(tierValues.amountSubtotal).getAmount(),
     amountTotal: d(tierValues.amountTotal).getAmount(),
-    taxAmount: d(tierValues.taxAmount).getAmount(),
+    taxAmount: Number(tierValues.unitAmount) < 0 ? 0 : d(tierValues.taxAmount).getAmount(),
     displayMode,
   };
 };
@@ -198,7 +198,7 @@ export const computeTieredFlatFeePriceItemValues = (
     unitAmountGross: d(tierValues.unitAmountGross!).getAmount(),
     amountSubtotal: d(tierValues.amountSubtotal).getAmount(),
     amountTotal: d(tierValues.amountTotal).getAmount(),
-    taxAmount: d(tierValues.taxAmount).getAmount(),
+    taxAmount: Number(tierValues.unitAmount) < 0 ? 0 : d(tierValues.taxAmount).getAmount(),
     displayMode,
   };
 };
@@ -236,7 +236,7 @@ export const computeTieredGraduatedPriceItemValues = (
         unitAmountGross: d(totals.unitAmountGross!).add(d(tierValues.unitAmountGross!)).getAmount(),
         amountSubtotal: d(totals.amountSubtotal).add(d(tierValues.amountSubtotal)).getAmount(),
         amountTotal: d(totals.amountTotal).add(d(tierValues.amountTotal)).getAmount(),
-        taxAmount: d(totals.taxAmount).add(d(tierValues.taxAmount)).getAmount(),
+        taxAmount: Number(tierValues.unitAmount) < 0 ? 0 : d(totals.taxAmount).add(d(tierValues.taxAmount)).getAmount(),
         displayMode,
       };
     },

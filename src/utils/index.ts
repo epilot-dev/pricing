@@ -3,7 +3,7 @@ import { Currency } from 'dinero.js';
 import { d, toDinero } from '../formatters';
 import { Price, PriceTier, Tax } from '../types';
 
-type GetTaxValue = (tax: Tax) => number;
+type GetTaxValue = (tax?: Tax) => number;
 type PriceItemsTotals = {
   unitAmount?: number;
   unitAmountNet?: number;
@@ -70,7 +70,7 @@ export const computePriceItemValues = (
   currency: Currency,
   isTaxInclusive: boolean,
   unitAmountMultiplier: number,
-  tax: Tax,
+  tax?: Tax,
 ): PriceItemsTotals => {
   const unitAmount = toDinero(unitAmountDecimal, currency);
   const taxRate = getTaxValue(tax);
@@ -85,7 +85,7 @@ export const computePriceItemValues = (
 
   const amountSubtotal = unitAmountNet.multiply(unitAmountMultiplier);
   const amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
-  const taxAmount = unitTaxAmount.multiply(unitAmountMultiplier);
+  const taxAmount = Number(unitAmount) < 0 ? d(0) : unitTaxAmount.multiply(unitAmountMultiplier);
 
   return {
     unitAmount: unitAmount.getAmount(),
@@ -138,7 +138,7 @@ export const computeTieredVolumePriceItemValues = (
   currency: Currency,
   isTaxInclusive: boolean,
   quantityToSelectTier: number,
-  tax: Tax,
+  tax: Tax | undefined,
   unitAmountMultiplier: number,
   unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'],
 ): PriceItemsTotals => {
@@ -159,7 +159,7 @@ export const computeTieredVolumePriceItemValues = (
     unitAmountGross: d(tierValues.unitAmountGross!).getAmount(),
     amountSubtotal: d(tierValues.amountSubtotal).getAmount(),
     amountTotal: d(tierValues.amountTotal).getAmount(),
-    taxAmount: d(tierValues.taxAmount).getAmount(),
+    taxAmount: Number(tierValues.unitAmount) < 0 ? 0 : d(tierValues.taxAmount).getAmount(),
     displayMode,
   };
 };
@@ -197,7 +197,7 @@ export const computeTieredFlatFeePriceItemValues = (
     unitAmountGross: d(tierValues.unitAmountGross!).getAmount(),
     amountSubtotal: d(tierValues.amountSubtotal).getAmount(),
     amountTotal: d(tierValues.amountTotal).getAmount(),
-    taxAmount: d(tierValues.taxAmount).getAmount(),
+    taxAmount: Number(tierValues.unitAmount) < 0 ? 0 : d(tierValues.taxAmount).getAmount(),
     displayMode,
   };
 };
@@ -235,7 +235,7 @@ export const computeTieredGraduatedPriceItemValues = (
         unitAmountGross: d(totals.unitAmountGross!).add(d(tierValues.unitAmountGross!)).getAmount(),
         amountSubtotal: d(totals.amountSubtotal).add(d(tierValues.amountSubtotal)).getAmount(),
         amountTotal: d(totals.amountTotal).add(d(tierValues.amountTotal)).getAmount(),
-        taxAmount: d(totals.taxAmount).add(d(tierValues.taxAmount)).getAmount(),
+        taxAmount: Number(tierValues.unitAmount) < 0 ? 0 : d(totals.taxAmount).add(d(tierValues.taxAmount)).getAmount(),
         displayMode,
       };
     },

@@ -483,7 +483,7 @@ describe('computeAggregatedAndPriceTotals', () => {
             amount_subtotal: -1818,
             amount_total: -2000,
             total_details: expect.objectContaining({
-              amount_tax: -182,
+              amount_tax: 0,
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
@@ -525,7 +525,7 @@ describe('computeAggregatedAndPriceTotals', () => {
             amount_subtotal: -32727,
             amount_total: -36000,
             total_details: expect.objectContaining({
-              amount_tax: -3273,
+              amount_tax: 0,
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
@@ -854,7 +854,7 @@ describe('computeAggregatedAndPriceTotals', () => {
             amount_subtotal: -2727,
             amount_total: -3000,
             total_details: expect.objectContaining({
-              amount_tax: -273,
+              amount_tax: 0,
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
@@ -890,7 +890,7 @@ describe('computeAggregatedAndPriceTotals', () => {
             amount_subtotal: -54545,
             amount_total: -60000,
             total_details: expect.objectContaining({
-              amount_tax: -5455,
+              amount_tax: 0,
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
@@ -1252,7 +1252,7 @@ describe('computeAggregatedAndPriceTotals', () => {
             amount_subtotal: -9091,
             amount_total: -10000,
             total_details: expect.objectContaining({
-              amount_tax: -909,
+              amount_tax: 0,
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
@@ -1283,7 +1283,7 @@ describe('computeAggregatedAndPriceTotals', () => {
             amount_subtotal: -5455,
             amount_total: -6000,
             total_details: expect.objectContaining({
-              amount_tax: -545,
+              amount_tax: 0,
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
@@ -1294,6 +1294,175 @@ describe('computeAggregatedAndPriceTotals', () => {
             ]),
           }),
         );
+      });
+    });
+
+    describe('Negative Prices', () => {
+      it('should compute taxes as zero when dealing with simple negative prices, even if a tax is specified', () => {
+        const priceItems: PriceItemDto[] = [
+          {
+            ...samples.priceItem1,
+            _price: {
+              ...(samples.priceItem1._price as Price),
+              is_tax_inclusive: true,
+            },
+            unit_amount: -10000,
+            unit_amount_decimal: '-100.00',
+            quantity: 1,
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toEqual(
+          expect.objectContaining({
+            amount_subtotal: -8403,
+            amount_total: -10000,
+          }),
+        );
+
+        expect(result.total_details).toEqual(
+          expect.objectContaining({
+            amount_tax: 0,
+          }),
+        );
+
+        expect(result.total_details?.breakdown).toEqual(
+          expect.objectContaining({
+            recurrences: [
+              expect.objectContaining({
+                amount_subtotal: -8403,
+                amount_tax: 0,
+                amount_total: -10000,
+                type: 'one_time',
+              }),
+            ],
+            taxes: [{ amount: 0, tax: { _id: '19', rate: 19, type: 'VAT' } }],
+          }),
+        );
+
+        expect(result.items?.[0]).toEqual(
+          expect.objectContaining({
+            _price: expect.any(Object),
+            _product: expect.any(Object),
+            amount_subtotal: -8403,
+            amount_total: -10000,
+            taxes: [
+              {
+                amount: 0,
+                tax: expect.objectContaining({
+                  _id: '19',
+                  rate: 19,
+                }),
+              },
+            ],
+            unit_amount: -10000,
+            unit_amount_decimal: '-100.00',
+            unit_amount_gross: -10000,
+            unit_amount_net: -8403,
+          }),
+        );
+      });
+
+      it('should compute taxes as zero when dealing with a composite with negative price components, even if a tax is specified', () => {
+        const priceItems: CompositePriceItemDto[] = [
+          {
+            ...samples.compositePriceItemWithNegativePriceFlatFee,
+            quantity: 1,
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toEqual(
+          expect.objectContaining({
+            amount_subtotal: -9091,
+            amount_total: -10000,
+          }),
+        );
+
+        expect(result.total_details).toEqual(
+          expect.objectContaining({
+            amount_tax: 0,
+          }),
+        );
+
+        expect(result.total_details?.breakdown).toEqual(
+          expect.objectContaining({
+            recurrences: [
+              expect.objectContaining({
+                amount_subtotal: -9091,
+                amount_tax: 0,
+                amount_total: -10000,
+                type: 'one_time',
+              }),
+            ],
+            taxes: [{ amount: 0, tax: { _id: '10', rate: 10, type: 'VAT' } }],
+          }),
+        );
+
+        expect(result.items?.[0]).toEqual(expect.objectContaining({
+          _price: { is_composite_price: true },
+          amount_subtotal: -9091,
+          amount_total: -10000,
+          item_components: [
+            {
+              _price: {
+                _id: 'price#1-tiered-flat-fee',
+                is_tax_inclusive: true,
+                pricing_model: 'tiered_flatfee',
+                tiers: [
+                  { flat_fee_amount: -10000, flat_fee_amount_decimal: '-100.00', up_to: 5 },
+                  { flat_fee_amount: -8000, flat_fee_amount_decimal: '-80.00', up_to: 10 },
+                  { flat_fee_amount: -6000, flat_fee_amount_decimal: '-60.00' },
+                ],
+              },
+              _product: undefined,
+              amount_subtotal: -9091,
+              amount_total: -10000,
+              currency: 'EUR',
+              price_id: 'price#1-tiered-flat-fee',
+              pricing_model: 'tiered_flatfee',
+              product_id: undefined,
+              quantity: 1,
+              taxes: [
+                {
+                  amount: 0,
+                  tax: {
+                    _created_at: '2022-06-29T20:26:19.020Z',
+                    _id: '10',
+                    _org: '739224',
+                    _schema: 'tax',
+                    _title: '',
+                    _updated_at: '2022-06-29T20:26:19.020Z',
+                    rate: 10,
+                    type: 'VAT',
+                  },
+                },
+              ],
+              type: undefined,
+              unit_amount: 0,
+              unit_amount_decimal: '0.0',
+              unit_amount_gross: -10000,
+            },
+          ],
+          quantity: 1,
+          total_details: {
+            amount_tax: 0,
+            breakdown: {
+              recurrences: [
+                {
+                  amount_subtotal: -9091,
+                  amount_tax: 0,
+                  amount_total: -10000,
+                  type: 'one_time',
+                  unit_amount_gross: -10000,
+                },
+              ],
+              taxes: [{ amount: 0, tax: { _id: '10', rate: 10, type: 'VAT' } }],
+            },
+          }
+        }));
       });
     });
   });
@@ -1653,7 +1822,7 @@ describe('computeAggregatedAndPriceTotals', () => {
             amount_subtotal: -1818,
             amount_total: -2000,
             total_details: expect.objectContaining({
-              amount_tax: -182,
+              amount_tax: 0,
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
@@ -1684,7 +1853,7 @@ describe('computeAggregatedAndPriceTotals', () => {
             amount_subtotal: -60000,
             unit_amount_gross: -2400,
             total_details: expect.objectContaining({
-              amount_tax: -6000,
+              amount_tax: 0,
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
@@ -1841,7 +2010,7 @@ describe('computeAggregatedAndPriceTotals', () => {
             amount_subtotal: -909,
             amount_total: -1000,
             total_details: expect.objectContaining({
-              amount_tax: -91,
+              amount_tax: 0,
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
@@ -1872,7 +2041,7 @@ describe('computeAggregatedAndPriceTotals', () => {
             amount_subtotal: -54545,
             unit_amount_gross: -600,
             total_details: expect.objectContaining({
-              amount_tax: -5455,
+              amount_tax: 0,
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
@@ -2029,7 +2198,7 @@ describe('computeAggregatedAndPriceTotals', () => {
             amount_subtotal: -9091,
             amount_total: -10000,
             total_details: expect.objectContaining({
-              amount_tax: -909,
+              amount_tax: 0,
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
@@ -2060,7 +2229,7 @@ describe('computeAggregatedAndPriceTotals', () => {
             amount_subtotal: -5455,
             amount_total: -6000,
             total_details: expect.objectContaining({
-              amount_tax: -545,
+              amount_tax: 0,
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
@@ -2181,4 +2350,4 @@ describe('Utility Functions', () => {
       expect(result).toStrictEqual(results.resultsWithCompositePrices);
     });
   });
-})
+});

@@ -21,7 +21,7 @@
     "gen-docs": "rm -rf docs && typedoc --plugin typedoc-plugin-markdown --out docs src && echo '{ \"label\": \"Pricing Library\", \"position\": 0 }' > docs/_category_.json",
     "clean": "rm -rf dist",
     "bundle-definition": "webpack --mode=production",
-    "build": "npm run clean && tsc && mkdir -p dist && cp -r src/types dist/types && npm run bundle-definition",
+    "build": "npm run clean && tsc && mkdir -p dist && cp -r src/types dist/types && npm run bundle-definition && npm run gen-docs",
     "typegen": "echo '/* eslint-disable */\n/**\n * DO NOT MODIFY - GENERATED TYPES FROM OPENAPI\n **/' > src/types/pricing-types.d.ts && typegen ../../lambda/ApiHandlerFunction/openapi.yml >> src/types/pricing-types.d.ts",
     "prepare": "npm run build",
     "lint": "esw src --ext js,ts,tsx --cache --color",

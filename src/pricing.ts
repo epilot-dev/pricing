@@ -501,7 +501,7 @@ export const computePriceItem = (
           currency,
           isTaxInclusive,
           quantityToSelectTier,
-          priceTax!,
+          priceTax,
           unitAmountMultiplier!,
           priceItem._price?.unchanged_price_display_in_journeys,
         )
@@ -633,17 +633,22 @@ const convertPricingPrecision = (details: PricingDetails, precision: number): Pr
 /**
  * Gets a price tax with the proper tax behavior override
  */
-export const getPriceTax = (applicableTax: Tax, price: Price, priceItemTaxes?: TaxAmountDto[]): Tax | undefined => {
+export const getPriceTax = (
+  applicableTax: Tax | undefined,
+  price?: Price,
+  priceItemTaxes?: TaxAmountDto[],
+): Tax | undefined => {
   if (applicableTax) {
     return applicableTax;
   }
 
-  if (priceItemTaxes?.length! > 0) {
-    return priceItemTaxes![0]?.tax;
+  if (Array.isArray(priceItemTaxes) && priceItemTaxes.length > 0) {
+    return priceItemTaxes[0].tax;
   }
 
   const isNonTaxable = applicableTax === null;
   const existingPriceTax = Array.isArray(price?.tax) && price?.tax?.[0];
+
   if (!isNonTaxable && existingPriceTax) {
     return existingPriceTax;
   }

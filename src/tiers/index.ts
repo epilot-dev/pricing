@@ -225,6 +225,12 @@ export const computeCumulativeValue = (
     total: formatAmountFromString({
       decimalAmount: addSeparatorToDineroString(total.getAmount().toString()),
       ...formatOptions,
+      precision: 2,
+      useRealPrecision: false,
+    }),
+    totalWithPrecision: formatAmountFromString({
+      decimalAmount: addSeparatorToDineroString(total.getAmount().toString()),
+      ...formatOptions,
     }),
     average: `${formatAmountFromString({
       decimalAmount: addSeparatorToDineroString(

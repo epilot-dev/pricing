@@ -30,7 +30,78 @@ describe('computeAggregatedAndPriceTotals', () => {
 
       expect(computeAggregatedAndPriceTotals(priceItems)).toStrictEqual(results.oneItemPerRecurrenceTotals);
     });
+    it('should return the result with the righ recurrence currency #1', () => {
+      // given
+      const priceItems: PriceItemDto[] = [
+        samples.priceItem1InCHF,
+        samples.priceItem1,
+        samples.priceItem2InCHF,
+        samples.priceItem2
+      ];
 
+      // when
+      const results = computeAggregatedAndPriceTotals(priceItems)
+
+      // then
+      expect(results?.total_details?.breakdown?.recurrences).toStrictEqual(expect.arrayContaining([
+        {
+          type: "one_time",
+          unit_amount_gross: 157891,
+          amount_subtotal: 663409,
+          amount_total: 789456,
+          amount_tax: 126048,
+          currency: "CHF"
+        }]
+    ))
+      expect(results?.total_details?.breakdown?.recurrences).toStrictEqual(expect.arrayContaining([
+        {
+          amount_subtotal: 5791, 
+          amount_tax: 1100, 
+          amount_total: 6891,
+          billing_period: "monthly", 
+          currency: "CHF",
+          type: "recurring", 
+          unit_amount_gross: 6891
+        }
+      ]
+      ));
+    });
+    it('should return the result with the righ recurrence currency #2', () => {
+      // given
+      const priceItems: PriceItemDto[] = [
+        samples.priceItem1,
+        samples.priceItem1InCHF,
+        samples.priceItem2,
+        samples.priceItem2InCHF
+      ];
+
+      // when
+      const results = computeAggregatedAndPriceTotals(priceItems)
+
+      // then
+      expect(results?.total_details?.breakdown?.recurrences).toStrictEqual(expect.arrayContaining([
+        {
+          type: "one_time",
+          unit_amount_gross: 157891,
+          amount_subtotal: 663409,
+          amount_total: 789456,
+          amount_tax: 126048,
+          currency: "EUR"
+        }]
+    ))
+      expect(results?.total_details?.breakdown?.recurrences).toStrictEqual(expect.arrayContaining([
+        {
+          amount_subtotal: 5791, 
+          amount_tax: 1100, 
+          amount_total: 6891,
+          billing_period: "monthly", 
+          currency: "EUR",
+          type: "recurring", 
+          unit_amount_gross: 6891
+        }
+      ]
+      ));
+    });
     it('should return 0 when number input is 0', () => {
       const priceItems: PriceItemDto[] = [samples.simplePriceWithNumberInputEqualsToZero];
       expect(computeAggregatedAndPriceTotals(priceItems)).toStrictEqual(
@@ -119,6 +190,7 @@ describe('computeAggregatedAndPriceTotals', () => {
                   unit_amount_gross: 5000,
                   type: 'recurring',
                   billing_period: 'yearly',
+                  currency: 'EUR',
                 },
               ],
             }),
@@ -1342,6 +1414,54 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(result).toEqual(results.compositePriceWithDisplayOnRequestAndOthers);
     });
 
+    it('should return the result with the righ recurrence currency #1', () => {
+      const priceItems = [
+        samples.priceItem1,
+        samples.priceItem2,
+        samples.compositePriceInCHF,
+      ];
+
+      const result = computeAggregatedAndPriceTotals(priceItems);
+
+      expect(result.total_details?.breakdown?.recurrences).toStrictEqual(expect.arrayContaining(
+        [
+          {
+            type: "recurring",
+            billing_period: "monthly",
+            unit_amount_gross: 4515,
+            amount_subtotal: 3867,
+            amount_total: 4515,
+            amount_tax: 647,
+            currency: "EUR"
+          }
+        ]
+      ))
+      expect(result.total_details?.breakdown?.recurrences?.length).toBe(2);
+    });
+    it('should return the result with the righ recurrence currency #2', () => {
+      const priceItems = [
+        samples.compositePriceInCHF,
+        samples.priceItem1,
+        samples.priceItem2,
+      ];
+
+      const result = computeAggregatedAndPriceTotals(priceItems);
+
+      expect(result.total_details?.breakdown?.recurrences).toStrictEqual(expect.arrayContaining(
+        [
+          {
+            type: "recurring",
+            billing_period: "monthly",
+            unit_amount_gross: 4515,
+            amount_subtotal: 3867,
+            amount_total: 4515,
+            amount_tax: 647,
+            currency: "CHF"
+          }
+        ]
+      ))
+      expect(result.total_details?.breakdown?.recurrences?.length).toBe(2);
+    });
     it('should return the right result when there is one component with display mode "Show as starting price"', () => {
       const priceItems = [samples.priceComponentDisplayAsStartingPrice];
 
@@ -1361,6 +1481,7 @@ describe('computeAggregatedAndPriceTotals', () => {
                   amount_total: 1800,
                   unit_amount_gross: 1800,
                   type: 'one_time',
+                  currency: 'EUR',
                 },
               ],
             }),

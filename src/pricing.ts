@@ -405,6 +405,7 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
       amount_subtotal: priceSubtotal.getAmount(),
       amount_total: priceTotal.getAmount(),
       amount_tax: priceTax.getAmount(),
+      currency: priceItemToAppend.currency,
     });
   } else {
     const unitAmountGrossAmount = d(recurrence.unit_amount_gross!);

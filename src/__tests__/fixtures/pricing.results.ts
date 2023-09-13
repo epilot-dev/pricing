@@ -430,6 +430,7 @@ export const resultsWhenPriceIsNontaxable = {
           unit_amount_gross: 1000,
           billing_period: 'yearly',
           type: 'recurring',
+          currency: 'EUR',
         },
       ],
       taxes: [
@@ -483,6 +484,7 @@ export const resultsWhenNoPricesProvided = {
           amount_total: 0,
           unit_amount_gross: 0,
           type: 'one_time',
+          currency: 'EUR',
         },
       ],
     },
@@ -840,6 +842,7 @@ export const severalItemsPerRecurrenceTotals = {
               amount_total: 1114,
               amount_tax: 100,
               unit_amount_gross: 1114,
+              currency: 'EUR',
             },
             {
               type: 'one_time',
@@ -847,6 +850,7 @@ export const severalItemsPerRecurrenceTotals = {
               amount_total: 50000,
               amount_tax: 7983,
               unit_amount_gross: 50000,
+              currency: 'EUR',
             },
           ],
         },
@@ -1237,6 +1241,7 @@ export const severalItemsPerRecurrenceTotals = {
           amount_total: 839456,
           amount_tax: 134031,
           unit_amount_gross: 207891,
+          currency: "EUR"
         },
         {
           type: 'recurring',
@@ -1245,6 +1250,7 @@ export const severalItemsPerRecurrenceTotals = {
           amount_total: 4560,
           amount_tax: 650,
           unit_amount_gross: 4560,
+          currency: "EUR"
         },
         {
           type: 'recurring',
@@ -1253,6 +1259,7 @@ export const severalItemsPerRecurrenceTotals = {
           amount_total: 28910,
           amount_tax: 1636,
           unit_amount_gross: 9637,
+          currency: "EUR"
         },
       ],
     },
@@ -1534,6 +1541,7 @@ export const compositePricesUnitAmountZeroResult = {
               unit_amount_gross: 1069,
               billing_period: 'monthly',
               type: 'recurring',
+              currency: 'EUR',
             },
           ],
           taxes: [
@@ -1556,6 +1564,7 @@ export const compositePricesUnitAmountZeroResult = {
           unit_amount_gross: 1069,
           billing_period: 'monthly',
           type: 'recurring',
+          currency: 'EUR',
         },
       ],
       taxes: [
@@ -1824,6 +1833,7 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
           amount_tax: 63024,
           unit_amount_gross: 78946,
           type: 'one_time',
+          currency: 'EUR',
         },
         {
           amount_subtotal: 2895,
@@ -1832,6 +1842,7 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
           amount_tax: 550,
           type: 'recurring',
           unit_amount_gross: 3446,
+          currency: 'EUR',
         },
         {
           amount_subtotal: 27274,
@@ -1840,6 +1851,7 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
           billing_period: 'yearly',
           type: 'recurring',
           unit_amount_gross: 9819,
+          currency: 'EUR',
         },
       ],
     },
@@ -2428,6 +2440,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
               amount_total: 1114,
               unit_amount_gross: 1114,
               amount_tax: 100,
+              currency: 'EUR',
             },
             {
               type: 'one_time',
@@ -2435,6 +2448,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
               amount_total: 50000,
               unit_amount_gross: 50000,
               amount_tax: 7983,
+              currency: 'EUR',
             },
           ],
         },
@@ -3054,6 +3068,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           amount_total: 839456,
           unit_amount_gross: 207891,
           amount_tax: 134031,
+          currency: 'EUR',
         },
         {
           type: 'recurring',
@@ -3062,6 +3077,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           amount_total: 4560,
           unit_amount_gross: 4560,
           amount_tax: 650,
+          currency: 'EUR',
         },
         {
           type: 'recurring',
@@ -3070,6 +3086,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           amount_total: 28910,
           unit_amount_gross: 9637,
           amount_tax: 1636,
+          currency: 'EUR',
         },
       ],
     },
@@ -3462,6 +3479,7 @@ export const resultCompositePriceQuantity2 = {
               unit_amount_gross: 1114,
               billing_period: 'monthly',
               type: 'recurring',
+              currency: 'EUR',
             },
             {
               amount_subtotal: 84034,
@@ -3469,6 +3487,7 @@ export const resultCompositePriceQuantity2 = {
               amount_total: 100000,
               unit_amount_gross: 50000,
               type: 'one_time',
+              currency: 'EUR',
             },
           ],
           taxes: [
@@ -3492,8 +3511,9 @@ export const resultCompositePriceQuantity2 = {
           unit_amount_gross: 1114,
           billing_period: 'monthly',
           type: 'recurring',
+          currency: 'EUR',
         },
-        { amount_subtotal: 84034, amount_tax: 15966, amount_total: 100000, unit_amount_gross: 50000, type: 'one_time' },
+        { amount_subtotal: 84034, amount_tax: 15966, amount_total: 100000, unit_amount_gross: 50000, type: 'one_time', currency: 'EUR', },
       ],
       taxes: [
         { amount: 194, tax: { _id: '10', rate: 10, type: 'VAT' } },
@@ -3578,6 +3598,7 @@ export const priceDetailsForOnePrice = {
           amount_total: 394728,
           unit_amount_gross: 78946,
           type: 'one_time',
+          currency: 'EUR',
         },
       ],
       taxes: [{ amount: 63024, tax: { _id: '19', rate: 19, type: 'VAT' } }],
@@ -3605,8 +3626,9 @@ export const priceDetailsForCompositePrice = {
           amount_total: 1114,
           unit_amount_gross: 1114,
           amount_tax: 100,
+          currency: 'EUR',
         },
-        { type: 'one_time', amount_subtotal: 42017, amount_total: 50000, unit_amount_gross: 50000, amount_tax: 7983 },
+        { type: 'one_time', amount_subtotal: 42017, amount_total: 50000, unit_amount_gross: 50000, amount_tax: 7983, currency: 'EUR', },
       ],
     },
   },
@@ -3976,6 +3998,7 @@ export const priceDetailsForCompositePrice = {
               amount_total: 1114,
               unit_amount_gross: 1114,
               amount_tax: 100,
+              currency: 'EUR'
             },
             {
               type: 'one_time',
@@ -3983,6 +4006,7 @@ export const priceDetailsForCompositePrice = {
               amount_total: 50000,
               unit_amount_gross: 50000,
               amount_tax: 7983,
+              currency: 'EUR'
             },
           ],
         },
@@ -4003,7 +4027,7 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
         { tax: { _id: '79cac814-18c8-4047-ae45-1d0828598a18', type: 'Custom', rate: 19 }, amount: 3 },
       ],
       recurrences: [
-        { type: 'one_time', amount_subtotal: 10, amount_total: 10, unit_amount_gross: 10, amount_tax: 0 },
+        { type: 'one_time', amount_subtotal: 10, amount_total: 10, unit_amount_gross: 10, amount_tax: 0, currency: 'EUR' },
         {
           type: 'recurring',
           billing_period: 'monthly',
@@ -4011,6 +4035,7 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
           amount_total: 20,
           unit_amount_gross: 20,
           amount_tax: 3,
+          currency: 'EUR'
         },
       ],
     },
@@ -4295,7 +4320,7 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
             { tax: { _id: '79cac814-18c8-4047-ae45-1d0828598a18', type: 'Custom', rate: 19 }, amount: 3 },
           ],
           recurrences: [
-            { type: 'one_time', amount_subtotal: 10, amount_total: 10, unit_amount_gross: 10, amount_tax: 0 },
+            { type: 'one_time', amount_subtotal: 10, amount_total: 10, unit_amount_gross: 10, amount_tax: 0, currency: 'EUR' },
             {
               type: 'recurring',
               billing_period: 'monthly',
@@ -4303,6 +4328,7 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
               amount_total: 20,
               unit_amount_gross: 20,
               amount_tax: 3,
+              currency: 'EUR'
             },
           ],
         },
@@ -4674,6 +4700,7 @@ export const resultsWithCompositePrices = {
               unit_amount_gross: 1114,
               billing_period: 'monthly',
               type: 'recurring',
+              currency: 'EUR'
             },
             {
               amount_subtotal: 42017,
@@ -4681,6 +4708,7 @@ export const resultsWithCompositePrices = {
               amount_total: 50000,
               unit_amount_gross: 50000,
               type: 'one_time',
+              currency: 'EUR'
             },
           ],
           taxes: [
@@ -4724,8 +4752,9 @@ export const resultsWithCompositePrices = {
           unit_amount_gross: 1114,
           billing_period: 'monthly',
           type: 'recurring',
+          currency: 'EUR'
         },
-        { amount_subtotal: 42017, amount_tax: 7983, amount_total: 50000, unit_amount_gross: 50000, type: 'one_time' },
+        { amount_subtotal: 42017, amount_tax: 7983, amount_total: 50000, unit_amount_gross: 50000, type: 'one_time', currency: 'EUR' },
       ],
       taxes: [
         { amount: 97, tax: { _id: '10', rate: 10, type: 'VAT' } },
@@ -4799,7 +4828,7 @@ export const resultsForSimplePrice = {
     amount_tax: 12605,
     breakdown: {
       recurrences: [
-        { amount_subtotal: 66341, amount_tax: 12605, amount_total: 78946, unit_amount_gross: 78946, type: 'one_time' },
+        { amount_subtotal: 66341, amount_tax: 12605, amount_total: 78946, unit_amount_gross: 78946, type: 'one_time', currency: 'EUR' },
       ],
       taxes: [{ amount: 12605, tax: { _id: '19', rate: 19, type: 'VAT' } }],
     },
@@ -4946,6 +4975,7 @@ export const oneItemPerRecurrenceTotals = {
           amount_tax: 63024,
           type: 'one_time',
           unit_amount_gross: 78946,
+          currency: 'EUR',
         },
         {
           amount_subtotal: 2895,
@@ -4954,6 +4984,7 @@ export const oneItemPerRecurrenceTotals = {
           amount_tax: 550,
           type: 'recurring',
           unit_amount_gross: 3446,
+          currency: 'EUR',
         },
         {
           amount_subtotal: 27274,
@@ -4962,6 +4993,7 @@ export const oneItemPerRecurrenceTotals = {
           billing_period: 'yearly',
           type: 'recurring',
           unit_amount_gross: 9819,
+          currency: 'EUR',
         },
       ],
     },
@@ -5343,6 +5375,7 @@ export const resultCompositePriceWithTotalDetails = {
               unit_amount_gross: 1114,
               billing_period: 'monthly',
               type: 'recurring',
+              currency: 'EUR',
             },
             {
               amount_subtotal: 84034,
@@ -5350,6 +5383,7 @@ export const resultCompositePriceWithTotalDetails = {
               amount_total: 100000,
               unit_amount_gross: 50000,
               type: 'one_time',
+              currency: 'EUR',
             },
           ],
           taxes: [
@@ -5373,8 +5407,9 @@ export const resultCompositePriceWithTotalDetails = {
           unit_amount_gross: 1114,
           billing_period: 'monthly',
           type: 'recurring',
+          currency: 'EUR',
         },
-        { amount_subtotal: 84034, amount_tax: 15966, amount_total: 100000, unit_amount_gross: 50000, type: 'one_time' },
+        { amount_subtotal: 84034, amount_tax: 15966, amount_total: 100000, unit_amount_gross: 50000, type: 'one_time',  currency: 'EUR' },
       ],
       taxes: [
         { amount: 194, tax: { _id: '10', rate: 10, type: 'VAT' } },

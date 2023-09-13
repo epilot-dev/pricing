@@ -10,6 +10,99 @@ import {
 
 import { tax10percent, tax19percent, tax6percent } from './tax.samples';
 
+
+export const priceOnRequestItem1: PriceItemDto = {
+  quantity: 5,
+  product_id: 'prod-id#12324',
+  price_id: 'price#1',
+  taxes: [
+    {
+      tax: tax19percent,
+    },
+  ],
+  _price: {
+    _id: 'price#1',
+    unit_amount: 1000,
+    unit_amount_currency: 'CHF',
+    unit_amount_decimal: '10.00',
+    type: 'one_time',
+    tax: [tax19percent],
+    is_tax_inclusive: true,
+    description: 'Winter Sale',
+    billing_scheme: 'per_unit',
+    _title: 'Winter Sale',
+    pricing_model: 'per_unit',
+    price_display_in_journeys: "show_as_on_request"
+  },
+  _product: {
+    _tags: ['product-tag-1', 'product-tag-2'],
+  },
+  pricing_model: 'per_unit',
+};
+
+export const priceItem1InCHF: PriceItemDto = {
+  quantity: 5,
+  product_id: 'prod-id#12324',
+  price_id: 'price#1',
+  taxes: [
+    {
+      tax: tax19percent,
+    },
+  ],
+  _price: {
+    _id: 'price#1',
+    unit_amount: 78946,
+    unit_amount_currency: 'CHF',
+    unit_amount_decimal: '789.456224456678',
+    type: 'one_time',
+    tax: [tax19percent],
+    is_tax_inclusive: true,
+    description: 'Winter Sale',
+    billing_scheme: 'per_unit',
+    _title: 'Winter Sale',
+    pricing_model: 'per_unit',
+  },
+  _product: {
+    _tags: ['product-tag-1', 'product-tag-2'],
+  },
+  pricing_model: 'per_unit',
+};
+
+export const priceItem2InCHF: PriceItemDto = {
+  quantity: 1,
+  taxes: [
+    {
+      tax: tax19percent,
+    },
+  ],
+  product_id: 'prod-id#12324',
+  price_id: 'price#2',
+  _price: {
+    _id: 'price#2',
+    unit_amount: 3447,
+    unit_amount_currency: 'CHF',
+    unit_amount_decimal: '34.456224456678',
+    type: 'recurring',
+    billing_period: 'monthly',
+    billing_duration_amount: 1,
+    billing_duration_unit: 'years',
+    notice_time_amount: 1,
+    notice_time_unit: 'months',
+    termination_time_amount: 2,
+    termination_time_unit: 'weeks',
+    renewal_duration_amount: 1,
+    renewal_duration_unit: 'years',
+    tax: [tax19percent],
+    sales_tax: 'standard',
+    is_tax_inclusive: true,
+    description: 'Winter Lease',
+    _title: 'Winter Lease',
+    pricing_model: 'per_unit',
+  },
+  _product: {},
+  pricing_model: 'per_unit',
+};
+
 export const priceItem1: PriceItemDto = {
   quantity: 5,
   product_id: 'prod-id#12324',
@@ -308,6 +401,58 @@ export const compositePrice: CompositePriceItemDto = {
   },
   _product: {},
 };
+
+export const compositePriceInCHF: CompositePriceItemDto = {
+  price_id: 'price#4',
+  product_id: 'prod-id#1234',
+  quantity: 1,
+  description: 'Eletricity Pack 1',
+  _price: {
+    unit_amount_currency: 'CHF',
+    sales_tax: 'standard',
+    active: true,
+    type: 'one_time',
+    is_composite_price: true,
+    _tags: ['composite'],
+    _schema: 'price',
+    _title: 'Eletricity Pack 1',
+    description: 'Eletricity Pack 1',
+    price_components: [
+      {
+        _id: 'price#4-comp#1',
+        unit_amount: 1069,
+        unit_amount_currency: 'CHF',
+        unit_amount_decimal: '10.69',
+        active: true,
+        variable: false,
+        price_display_in_journeys: 'show_price',
+        type: 'recurring',
+        billing_period: 'monthly',
+        billing_duration_unit: 'months',
+        notice_time_unit: 'months',
+        termination_time_unit: 'months',
+        renewal_duration_unit: 'months',
+        _schema: 'price',
+        _title: 'Base price per month',
+        description: 'Base price per month',
+        tax: [tax10percent],
+        is_tax_inclusive: true,
+        _org: '739224',
+        _created_at: '2022-06-15T09:17:06.510Z',
+        _updated_at: '2022-06-17T11:48:20.104Z',
+        pricing_model: 'per_unit',
+      }
+    ],
+    _id: 'price#4',
+    _org: '739224',
+    _created_at: '2022-06-15T09:17:08.343Z',
+    _updated_at: '2022-06-29T20:35:50.185Z',
+    variable: true,
+    price_display_in_journeys: 'show_price',
+  },
+  _product: {},
+};
+
 
 export const compositePriceWithCustomItem: CompositePriceItemDto = {
   price_id: 'price#4',

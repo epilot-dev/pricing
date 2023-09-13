@@ -261,8 +261,9 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
         recurrences: [],
       },
     },
+    currency: DEFAULT_CURRENCY,
   };
-  const priceDetails = priceItems.reduce((details, priceItem) => {
+  const priceDetails: PricingDetails = priceItems.reduce((details, priceItem) => {
     if (isCompositePrice(priceItem)) {
       const price = priceItem._price;
       const compositePriceItemToAppend = computeCompositePrice(priceItem, price!);
@@ -279,7 +280,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
             item_components: convertPriceComponentsPrecision(compositePriceItemToAppend.item_components!, 2),
           },
         ],
-      };
+      } as PricingDetails;
     } else {
       const price = priceItem._price;
       const tax = priceItem.taxes?.[0]?.tax;
@@ -303,9 +304,11 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
       return {
         ...updatedTotals,
         items: [...details.items!, convertPriceItemPrecision(priceItemToAppend, 2)],
-      };
+      } as PricingDetails;
     }
   }, initialPricingDetails);
+
+  priceDetails.currency = (priceDetails?.items?.[0]?.currency as Currency) || DEFAULT_CURRENCY;
 
   return convertPricingPrecision(priceDetails, 2);
 };

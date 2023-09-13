@@ -585,7 +585,7 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
   })),
 });
 
-const convertBreakDownPrecision = (details: PricingDetails, precision: number): PricingDetails => {
+const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem, precision: number): PricingDetails => {
   return {
     unit_amount_gross: d(details.unit_amount_gross!).convertPrecision(precision).getAmount(),
     amount_subtotal: d(details.amount_subtotal!).convertPrecision(precision).getAmount(),

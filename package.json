@@ -1,6 +1,6 @@
 {
   "name": "@epilot/pricing",
-  "version": "4.13.0",
+  "version": "4.15.0",
   "description": "Pricing Library",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -54,7 +54,7 @@
   "author": "epilot GmbH",
   "license": "UNLICENSED",
   "dependencies": {
-    "@epilot/pricing-client": "^3.11.3-0",
+    "@epilot/pricing-client": "^3.13.0",
     "@types/dinero.js": "^1.9.0",
     "dinero.js": "^1.9.1"
   },

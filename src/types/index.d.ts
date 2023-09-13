@@ -1,5 +1,5 @@
 import { Components } from '@epilot/pricing-client';
-import type { Dinero } from 'dinero.js';
+import type { Currency, Dinero } from 'dinero.js';
 
 export type Price = Components.Schemas.Price;
 export type PriceItem = Components.Schemas.PriceItem;

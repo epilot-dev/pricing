@@ -1418,6 +1418,7 @@ describe('computeAggregatedAndPriceTotals', () => {
         expect((result.items?.[0] as CompositePriceItemDto | undefined)?.item_components?.length).toEqual(4);
         expect(result).toEqual({
           amount_subtotal: 53031,
+          currency: 'EUR',
           amount_total: 61114,
           unit_amount_gross: 52114,
           total_details: expect.anything(),

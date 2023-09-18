@@ -172,7 +172,7 @@ export const computeCumulativeValue = (
   t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
   options: { shouldDisplayOnRequest?: boolean } = {},
 ) => {
-  if (!tiers || !tiers.length || quantityToSelectTier <= 0) {
+  if (!tiers || !tiers.length || quantityToSelectTier < 0) {
     return;
   }
 
@@ -225,9 +225,20 @@ export const computeCumulativeValue = (
     total: formatAmountFromString({
       decimalAmount: addSeparatorToDineroString(total.getAmount().toString()),
       ...formatOptions,
+      precision: 2,
+      useRealPrecision: false,
+    }),
+    totalWithPrecision: formatAmountFromString({
+      decimalAmount: addSeparatorToDineroString(total.getAmount().toString()),
+      ...formatOptions,
     }),
     average: `${formatAmountFromString({
-      decimalAmount: addSeparatorToDineroString(total.divide(quantityToSelectTier).getAmount().toString()),
+      decimalAmount: addSeparatorToDineroString(
+        total
+          .divide(quantityToSelectTier || 1)
+          .getAmount()
+          .toString(),
+      ),
       ...formatOptions,
       precision: 2,
       useRealPrecision: false,

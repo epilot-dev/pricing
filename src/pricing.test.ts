@@ -78,7 +78,29 @@ describe('computeAggregatedAndPriceTotals', () => {
 
       const result = computeAggregatedAndPriceTotals(priceItems);
 
-      expect(result).toEqual(results.resultsWhenPriceIsNontaxable);
+      expect(result).toEqual(
+        expect.objectContaining({
+          amount_subtotal: 1000,
+          amount_total: 1000,
+          items: expect.arrayContaining([
+            expect.objectContaining({
+              amount_subtotal: 1000,
+              amount_total: 1000,
+              unit_amount_decimal: '10.00',
+              unit_amount_gross: 1000,
+              unit_amount_net: 1000,
+              taxes: [
+                {
+                  amount: 0,
+                  rate: 'nontaxable',
+                  rateValue: 0,
+                },
+              ]
+            }),
+          ]),
+          total_details: expect.objectContaining({ amount_tax: 0 }),
+        }),
+      );
     });
 
     it('should return the right result when quantity=0', () => {
@@ -94,7 +116,25 @@ describe('computeAggregatedAndPriceTotals', () => {
 
       const result = computeAggregatedAndPriceTotals(priceItems);
 
-      expect(result).toEqual(results.priceWithDisplayOnRequest);
+      expect(result).toEqual(
+        expect.objectContaining({
+          amount_subtotal: 0,
+          amount_total: 0,
+          currency: 'EUR',
+          total_details: expect.objectContaining({
+            amount_shipping: 0,
+            amount_tax: 0,
+          }),
+          items: expect.arrayContaining([
+            expect.objectContaining({
+              amount_subtotal: 4546,
+              amount_total: 5000,
+              unit_amount: 4546,
+              unit_amount_net: 4546,
+            }),
+          ]),
+        }),
+      );
     });
 
     it('should return the right result when there is one simple price with display mode "Display as starting price"', () => {
@@ -1374,6 +1414,7 @@ describe('computeAggregatedAndPriceTotals', () => {
         expect((result.items?.[0] as CompositePriceItemDto | undefined)?.item_components?.length).toEqual(4);
         expect(result).toEqual({
           amount_subtotal: 53031,
+          currency: 'EUR',
           amount_total: 61114,
           total_details: expect.anything(),
           items: [

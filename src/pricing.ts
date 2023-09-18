@@ -260,9 +260,9 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
         recurrences: [],
       },
     },
+    currency: DEFAULT_CURRENCY,
   };
-
-  const priceDetails = priceItems.reduce((details, priceItem) => {
+  const priceDetails: PricingDetails = priceItems.reduce((details, priceItem) => {
     if (isCompositePrice(priceItem)) {
       const price = priceItem._price;
       const compositePriceItemToAppend = computeCompositePrice(priceItem, price!);
@@ -279,7 +279,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
             item_components: convertPriceComponentsPrecision(compositePriceItemToAppend.item_components!, 2),
           },
         ],
-      };
+      } as PricingDetails;
     } else {
       const price = priceItem._price;
       const tax = priceItem.taxes?.[0]?.tax;
@@ -302,9 +302,11 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
       return {
         ...updatedTotals,
         items: [...details.items!, convertPriceItemPrecision(priceItemToAppend, 2)],
-      };
+      } as PricingDetails;
     }
   }, initialPricingDetails);
+
+  priceDetails.currency = (priceDetails?.items?.[0]?.currency as Currency) || DEFAULT_CURRENCY;
 
   return convertPricingPrecision(priceDetails, 2);
 };
@@ -497,7 +499,7 @@ export const computePriceItem = (
           currency,
           isTaxInclusive,
           quantityToSelectTier,
-          priceTax!,
+          priceTax,
           unitAmountMultiplier!,
           priceItem._price?.unchanged_price_display_in_journeys,
         )
@@ -578,7 +580,7 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
   })),
 });
 
-const convertBreakDownPrecision = (details: PricingDetails, precision: number): PricingDetails => {
+const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem, precision: number): PricingDetails => {
   return {
     amount_subtotal: d(details.amount_subtotal!).convertPrecision(precision).getAmount(),
     amount_total: d(details.amount_total!).convertPrecision(precision).getAmount(),
@@ -628,17 +630,22 @@ const convertPricingPrecision = (details: PricingDetails, precision: number): Pr
 /**
  * Gets a price tax with the proper tax behavior override
  */
-export const getPriceTax = (applicableTax: Tax, price: Price, priceItemTaxes?: TaxAmountDto[]): Tax | undefined => {
+export const getPriceTax = (
+  applicableTax: Tax | undefined,
+  price?: Price,
+  priceItemTaxes?: TaxAmountDto[],
+): Tax | undefined => {
   if (applicableTax) {
     return applicableTax;
   }
 
-  if (priceItemTaxes?.length! > 0) {
-    return priceItemTaxes![0]?.tax;
+  if (Array.isArray(priceItemTaxes) && priceItemTaxes.length > 0) {
+    return priceItemTaxes[0].tax;
   }
 
   const isNonTaxable = applicableTax === null;
   const existingPriceTax = Array.isArray(price?.tax) && price?.tax?.[0];
+
   if (!isNonTaxable && existingPriceTax) {
     return existingPriceTax;
   }

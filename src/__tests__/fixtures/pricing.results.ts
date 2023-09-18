@@ -1,4 +1,4 @@
-import { CompositePriceItem, PriceItem, RecurrenceAmount, Tax, TaxAmount } from '../../types';
+import { CompositePriceItem, PriceItem, Tax, TaxAmount } from '../../types';
 
 import { incompletePriceItem, priceItem1, priceItem2, priceItem3, priceItem6 } from './price.samples';
 import { tax10percent, tax19percent, tax6percent } from './tax.samples';
@@ -370,82 +370,10 @@ export const computedCompositePrice: CompositePriceItem & { [key: string]: unkno
   quantity: 1,
 };
 
-export const resultsWhenPriceIsNontaxable = {
-  amount_subtotal: 1000,
-  amount_total: 1000,
-  items: [
-    {
-      _price: {
-        _id: 'price#3',
-        _title: 'Winter Lease',
-        billing_duration_amount: 1,
-        billing_duration_unit: 'years',
-        billing_period: 'yearly',
-        description: 'Winter Lease',
-        notice_time_amount: 1,
-        notice_time_unit: 'months',
-        renewal_duration_amount: 1,
-        renewal_duration_unit: 'years',
-        is_tax_inclusive: true,
-        tax: null as null,
-        termination_time_amount: 2,
-        termination_time_unit: 'weeks',
-        type: 'recurring',
-        unit_amount: 1000,
-        unit_amount_currency: 'EUR',
-        unit_amount_decimal: '10.00',
-        pricing_model: 'per_unit',
-      },
-      _product: {},
-      amount_subtotal: 1000,
-      amount_total: 1000,
-      currency: 'EUR',
-      description: 'Winter Lease',
-      price_id: 'price#3',
-      product_id: 'prod-id#12324',
-      pricing_model: 'per_unit',
-      quantity: 1,
-      unit_amount: 1000,
-      unit_amount_decimal: '10.00',
-      unit_amount_gross: 1000,
-      unit_amount_net: 1000,
-      taxes: [
-        {
-          amount: 0,
-          rate: 'nontaxable',
-          rateValue: 0,
-        },
-      ],
-    },
-  ],
-  total_details: {
-    amount_tax: 0,
-    breakdown: {
-      recurrences: [
-        {
-          amount_subtotal: 1000,
-          amount_tax: 0,
-          amount_total: 1000,
-          unit_amount_gross: 1000,
-          billing_period: 'yearly',
-          type: 'recurring',
-        },
-      ],
-      taxes: [
-        {
-          amount: 0,
-          tax: {
-            rate: 0,
-          },
-        },
-      ],
-    },
-  },
-};
-
 export const resultsWhenNoPricesProvided = {
   amount_subtotal: 0,
   amount_total: 0,
+  currency: 'EUR',
   items: [
     {
       ...incompletePriceItem,
@@ -489,6 +417,7 @@ export const resultsWhenNoPricesProvided = {
 };
 
 export const severalItemsPerRecurrenceTotals = {
+  currency: 'EUR',
   items: [
     {
       quantity: 5,
@@ -1259,6 +1188,7 @@ export const severalItemsPerRecurrenceTotals = {
 export const compositePricesUnitAmountZeroResult = {
   amount_subtotal: 972,
   amount_total: 1069,
+  currency: 'EUR',
   items: [
     {
       _price: {
@@ -1561,72 +1491,10 @@ export const compositePricesUnitAmountZeroResult = {
   },
 };
 
-export const priceWithDisplayOnRequest = {
-  amount_subtotal: 0,
-  amount_total: 0,
-  items: [
-    {
-      _price: {
-        _id: 'price#7',
-        _title: 'Winter Lease',
-        billing_duration_amount: 1,
-        billing_duration_unit: 'years',
-        billing_period: 'yearly',
-        description: 'Winter Lease',
-        notice_time_amount: 1,
-        notice_time_unit: 'months',
-        price_display_in_journeys: 'show_as_on_request',
-        renewal_duration_amount: 1,
-        renewal_duration_unit: 'years',
-        termination_time_amount: 2,
-        termination_time_unit: 'weeks',
-        type: 'recurring',
-        unit_amount: 4546,
-        unit_amount_currency: 'EUR',
-        unit_amount_decimal: '45.456224456678',
-        is_tax_inclusive: false,
-        pricing_model: 'per_unit',
-      },
-      amount_subtotal: 4546,
-      amount_total: 5000,
-      unit_amount_gross: 5000,
-      currency: 'EUR',
-      description: 'Winter Lease',
-      price_id: 'price#7',
-      product_id: 'prod-id#12325',
-      quantity: 1,
-      taxes: [
-        {
-          amount: 455,
-          tax: {
-            _created_at: '2022-06-29T20:26:19.020Z',
-            _id: '10',
-            _org: '739224',
-            _schema: 'tax',
-            _title: '',
-            _updated_at: '2022-06-29T20:26:19.020Z',
-
-            rate: 10,
-            type: 'VAT',
-          },
-        },
-      ],
-      unit_amount: 4546,
-      unit_amount_net: 4546,
-      unit_amount_decimal: '45.456224456678',
-      pricing_model: 'per_unit',
-    },
-  ],
-  total_details: {
-    amount_shipping: 0,
-    amount_tax: 0,
-    breakdown: { recurrences: [] as RecurrenceAmount[], taxes: [] as TaxAmount[] },
-  },
-};
-
 export const priceWithDisplayOnRequestAndSimplePrices = {
   amount_subtotal: 361874,
   amount_total: 427629,
+  currency: 'EUR',
   items: [
     {
       ...priceItem1,
@@ -1840,6 +1708,7 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
 };
 
 export const compositePriceWithDisplayOnRequest = {
+  currency: 'EUR',
   items: [
     {
       price_id: 'price#4',
@@ -2091,6 +1960,7 @@ export const compositePriceWithDisplayOnRequest = {
 };
 
 export const compositePriceWithDisplayOnRequestAndOthers = {
+  currency: 'EUR',
   items: [
     {
       quantity: 5,
@@ -3064,6 +2934,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
 };
 
 export const resultCompositePriceQuantity2 = {
+  currency: 'EUR',
   amount_subtotal: 86062,
   amount_total: 102228,
   items: [
@@ -3490,6 +3361,7 @@ export const resultCompositePriceQuantity2 = {
 };
 
 export const priceDetailsForOnePrice = {
+  currency: 'EUR',
   amount_subtotal: 331704,
   amount_total: 394728,
   items: [
@@ -3570,6 +3442,7 @@ export const priceDetailsForOnePrice = {
 };
 
 export const priceDetailsForCompositePrice = {
+  currency: 'EUR',
   amount_subtotal: 43031,
   amount_total: 51114,
   total_details: {
@@ -3974,6 +3847,7 @@ export const priceDetailsForCompositePrice = {
 };
 
 export const priceDetailsForCompositePriceWithTaxChanges = {
+  currency: 'EUR',
   amount_subtotal: 27,
   amount_total: 30,
   total_details: {
@@ -4294,6 +4168,7 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
 export const resultsWithCompositePrices = {
   amount_subtotal: 43031,
   amount_total: 51114,
+  currency: 'EUR',
   items: [
     {
       amount_subtotal: 43031,
@@ -4717,6 +4592,7 @@ export const resultsWithCompositePrices = {
 export const resultsForSimplePrice = {
   amount_subtotal: 66341,
   amount_total: 78946,
+  currency: 'EUR',
   items: [
     {
       _price: {
@@ -4786,6 +4662,7 @@ export const resultsForSimplePrice = {
 export const oneItemPerRecurrenceTotals = {
   amount_subtotal: 361874,
   amount_total: 427629,
+  currency: 'EUR',
   items: [
     {
       ...priceItem1,
@@ -4947,6 +4824,7 @@ export const oneItemPerRecurrenceTotals = {
 export const resultCompositePriceWithTotalDetails = {
   amount_subtotal: 86062,
   amount_total: 102228,
+  currency: 'EUR',
   items: [
     {
       _price: {

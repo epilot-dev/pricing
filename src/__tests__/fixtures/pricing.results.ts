@@ -1,4 +1,4 @@
-import { CompositePriceItem, PriceItem, RecurrenceAmount, Tax, TaxAmount } from '../../types';
+import { CompositePriceItem, PriceItem, Tax, TaxAmount } from '../../types';
 
 import { incompletePriceItem, priceItem1, priceItem2, priceItem3, priceItem6 } from './price.samples';
 import { tax10percent, tax19percent, tax6percent } from './tax.samples';
@@ -370,81 +370,6 @@ export const computedCompositePrice: CompositePriceItem & { [key: string]: unkno
   quantity: 1,
 };
 
-export const resultsWhenPriceIsNontaxable = {
-  amount_subtotal: 1000,
-  amount_total: 1000,
-  unit_amount_gross: 1000,
-  currency: 'EUR',
-  items: [
-    {
-      _price: {
-        _id: 'price#3',
-        _title: 'Winter Lease',
-        billing_duration_amount: 1,
-        billing_duration_unit: 'years',
-        billing_period: 'yearly',
-        description: 'Winter Lease',
-        notice_time_amount: 1,
-        notice_time_unit: 'months',
-        renewal_duration_amount: 1,
-        renewal_duration_unit: 'years',
-        is_tax_inclusive: true,
-        tax: null as null,
-        termination_time_amount: 2,
-        termination_time_unit: 'weeks',
-        type: 'recurring',
-        unit_amount: 1000,
-        unit_amount_currency: 'EUR',
-        unit_amount_decimal: '10.00',
-        pricing_model: 'per_unit',
-      },
-      _product: {},
-      amount_subtotal: 1000,
-      amount_total: 1000,
-      currency: 'EUR',
-      description: 'Winter Lease',
-      price_id: 'price#3',
-      product_id: 'prod-id#12324',
-      pricing_model: 'per_unit',
-      quantity: 1,
-      unit_amount: 1000,
-      unit_amount_decimal: '10.00',
-      unit_amount_gross: 1000,
-      unit_amount_net: 1000,
-      taxes: [
-        {
-          amount: 0,
-          rate: 'nontaxable',
-          rateValue: 0,
-        },
-      ],
-    },
-  ],
-  total_details: {
-    amount_tax: 0,
-    breakdown: {
-      recurrences: [
-        {
-          amount_subtotal: 1000,
-          amount_tax: 0,
-          amount_total: 1000,
-          unit_amount_gross: 1000,
-          billing_period: 'yearly',
-          type: 'recurring',
-        },
-      ],
-      taxes: [
-        {
-          amount: 0,
-          tax: {
-            rate: 0,
-          },
-        },
-      ],
-    },
-  },
-};
-
 export const resultsWhenNoPricesProvided = {
   amount_subtotal: 0,
   amount_total: 0,
@@ -488,8 +413,7 @@ export const resultsWhenNoPricesProvided = {
         },
       ],
     },
-  },
-  unit_amount_gross: 0,
+  }
 };
 
 export const severalItemsPerRecurrenceTotals = {
@@ -1198,8 +1122,7 @@ export const severalItemsPerRecurrenceTotals = {
           amount_total: 50000,
           pricing_model: 'per_unit',
         },
-      ],
-      unit_amount_gross: 51114,
+      ]
     },
   ],
   amount_subtotal: 736609,
@@ -1260,7 +1183,6 @@ export const severalItemsPerRecurrenceTotals = {
       ],
     },
   },
-  unit_amount_gross: 222088,
 };
 
 export const compositePricesUnitAmountZeroResult = {
@@ -1546,7 +1468,6 @@ export const compositePricesUnitAmountZeroResult = {
           ],
         },
       },
-      unit_amount_gross: 1069,
     },
   ],
   total_details: {
@@ -1567,72 +1488,6 @@ export const compositePricesUnitAmountZeroResult = {
         { amount: 0, tax: { _id: '6', rate: 6, type: 'VAT' } },
       ],
     },
-  },
-  unit_amount_gross: 1069,
-};
-
-export const priceWithDisplayOnRequest = {
-  amount_subtotal: 0,
-  amount_total: 0,
-  unit_amount_gross: 0,
-  currency: 'EUR',
-  items: [
-    {
-      _price: {
-        _id: 'price#7',
-        _title: 'Winter Lease',
-        billing_duration_amount: 1,
-        billing_duration_unit: 'years',
-        billing_period: 'yearly',
-        description: 'Winter Lease',
-        notice_time_amount: 1,
-        notice_time_unit: 'months',
-        price_display_in_journeys: 'show_as_on_request',
-        renewal_duration_amount: 1,
-        renewal_duration_unit: 'years',
-        termination_time_amount: 2,
-        termination_time_unit: 'weeks',
-        type: 'recurring',
-        unit_amount: 4546,
-        unit_amount_currency: 'EUR',
-        unit_amount_decimal: '45.456224456678',
-        is_tax_inclusive: false,
-        pricing_model: 'per_unit',
-      },
-      amount_subtotal: 4546,
-      amount_total: 5000,
-      unit_amount_gross: 5000,
-      currency: 'EUR',
-      description: 'Winter Lease',
-      price_id: 'price#7',
-      product_id: 'prod-id#12325',
-      quantity: 1,
-      taxes: [
-        {
-          amount: 455,
-          tax: {
-            _created_at: '2022-06-29T20:26:19.020Z',
-            _id: '10',
-            _org: '739224',
-            _schema: 'tax',
-            _title: '',
-            _updated_at: '2022-06-29T20:26:19.020Z',
-
-            rate: 10,
-            type: 'VAT',
-          },
-        },
-      ],
-      unit_amount: 4546,
-      unit_amount_net: 4546,
-      unit_amount_decimal: '45.456224456678',
-      pricing_model: 'per_unit',
-    },
-  ],
-  total_details: {
-    amount_shipping: 0,
-    amount_tax: 0,
-    breakdown: { recurrences: [] as RecurrenceAmount[], taxes: [] as TaxAmount[] },
   },
 };
 
@@ -1849,8 +1704,7 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
         },
       ],
     },
-  },
-  unit_amount_gross: 92210,
+  }
 };
 
 export const compositePriceWithDisplayOnRequest = {
@@ -2091,7 +1945,6 @@ export const compositePriceWithDisplayOnRequest = {
           taxes: [] as any,
         },
       },
-      unit_amount_gross: 0,
     },
   ],
   amount_subtotal: 0,
@@ -2104,7 +1957,6 @@ export const compositePriceWithDisplayOnRequest = {
       recurrences: [] as any,
     },
   },
-  unit_amount_gross: 0,
 };
 
 export const compositePriceWithDisplayOnRequestAndOthers = {
@@ -2792,7 +2644,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           pricing_model: 'per_unit',
         },
       ],
-      unit_amount_gross: 51114,
     },
     {
       amount_subtotal: 0,
@@ -3041,12 +2892,10 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           taxes: [] as Tax[],
         },
       },
-      unit_amount_gross: 0,
     },
   ],
   amount_subtotal: 736609,
   amount_total: 872926,
-
   total_details: {
     amount_tax: 136317,
     breakdown: {
@@ -3082,7 +2931,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
       ],
     },
   },
-  unit_amount_gross: 222088,
 };
 
 export const resultCompositePriceQuantity2 = {
@@ -3487,7 +3335,6 @@ export const resultCompositePriceQuantity2 = {
           ],
         },
       },
-      unit_amount_gross: 51114,
     },
   ],
   total_details: {
@@ -3511,7 +3358,6 @@ export const resultCompositePriceQuantity2 = {
       ],
     },
   },
-  unit_amount_gross: 51114,
 };
 
 export const priceDetailsForOnePrice = {
@@ -3592,8 +3438,7 @@ export const priceDetailsForOnePrice = {
       ],
       taxes: [{ amount: 63024, tax: { _id: '19', rate: 19, type: 'VAT' } }],
     },
-  },
-  unit_amount_gross: 78946,
+  }
 };
 
 export const priceDetailsForCompositePrice = {
@@ -3970,7 +3815,6 @@ export const priceDetailsForCompositePrice = {
       ],
       amount_subtotal: 43031,
       amount_total: 51114,
-      unit_amount_gross: 51114,
       total_details: {
         amount_tax: 8083,
         breakdown: {
@@ -3999,8 +3843,7 @@ export const priceDetailsForCompositePrice = {
         },
       },
     },
-  ],
-  unit_amount_gross: 51114,
+  ]
 };
 
 export const priceDetailsForCompositePriceWithTaxChanges = {
@@ -4298,7 +4141,6 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
       currency: 'EUR',
       amount_subtotal: 27,
       amount_total: 30,
-      unit_amount_gross: 30,
       total_details: {
         amount_tax: 3,
         breakdown: {
@@ -4320,8 +4162,7 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
         },
       },
     },
-  ],
-  unit_amount_gross: 30,
+  ]
 };
 
 export const resultsWithCompositePrices = {
@@ -4332,7 +4173,6 @@ export const resultsWithCompositePrices = {
     {
       amount_subtotal: 43031,
       amount_total: 51114,
-      unit_amount_gross: 51114,
       _price: {
         _created_at: '2022-06-15T09:17:08.343Z',
         _id: 'price#4',
@@ -4746,8 +4586,7 @@ export const resultsWithCompositePrices = {
         { amount: 7983, tax: { _id: '19', rate: 19, type: 'VAT' } },
       ],
     },
-  },
-  unit_amount_gross: 51114,
+  }
 };
 
 export const resultsForSimplePrice = {
@@ -4817,8 +4656,7 @@ export const resultsForSimplePrice = {
       ],
       taxes: [{ amount: 12605, tax: { _id: '19', rate: 19, type: 'VAT' } }],
     },
-  },
-  unit_amount_gross: 78946,
+  }
 };
 
 export const oneItemPerRecurrenceTotals = {
@@ -4981,7 +4819,6 @@ export const oneItemPerRecurrenceTotals = {
       ],
     },
   },
-  unit_amount_gross: 92210,
 };
 
 export const resultCompositePriceWithTotalDetails = {
@@ -5375,7 +5212,6 @@ export const resultCompositePriceWithTotalDetails = {
           ],
         },
       },
-      unit_amount_gross: 51114,
     },
   ],
   total_details: {
@@ -5398,6 +5234,5 @@ export const resultCompositePriceWithTotalDetails = {
         { amount: 15966, tax: { _id: '19', rate: 19, type: 'VAT' } },
       ],
     },
-  },
-  unit_amount_gross: 51114,
+  }
 };

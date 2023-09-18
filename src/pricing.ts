@@ -250,7 +250,6 @@ export const computeCompositePrice = (
 export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): PricingDetails => {
   const initialPricingDetails: PricingDetails = {
     items: [],
-    unit_amount_gross: 0,
     amount_subtotal: 0,
     amount_total: 0,
     total_details: {
@@ -295,7 +294,6 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
       )
         ? recomputeDetailTotals(details, price!, priceItemToAppend)
         : {
-            unit_amount_gross: details.unit_amount_gross,
             amount_subtotal: details.amount_subtotal,
             amount_total: details.amount_total,
             total_details: details.total_details,
@@ -366,7 +364,6 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
   const recurrence = getPriceRecurrence(price, recurrences);
 
   const total = d(details.amount_total!);
-  const unitAmountGross = d(details.unit_amount_gross!);
   const subtotal = d(details.amount_subtotal!);
   const totalTax = d(details?.total_details?.amount_tax!);
 
@@ -421,7 +418,6 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
   }
 
   return {
-    unit_amount_gross: unitAmountGross.add(priceUnitAmountGross).getAmount(),
     amount_subtotal: subtotal.add(priceSubtotal).getAmount(),
     amount_total: total.add(priceTotal).getAmount(),
     total_details: {
@@ -464,7 +460,6 @@ const recomputeDetailTotalsFromCompositePrice = (
     )
       ? recomputeDetailTotals(detailTotals, itemComponent._price, itemComponent)
       : {
-          unit_amount_gross: details?.unit_amount_gross || 0,
           amount_subtotal: details?.amount_subtotal || 0,
           amount_total: details?.amount_total || 0,
           total_details: details?.total_details || initialPricingDetails.total_details,
@@ -587,7 +582,6 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
 
 const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem, precision: number): PricingDetails => {
   return {
-    unit_amount_gross: d(details.unit_amount_gross!).convertPrecision(precision).getAmount(),
     amount_subtotal: d(details.amount_subtotal!).convertPrecision(precision).getAmount(),
     amount_total: d(details.amount_total!).convertPrecision(precision).getAmount(),
     total_details: {

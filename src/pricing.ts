@@ -439,7 +439,6 @@ const recomputeDetailTotalsFromCompositePrice = (
 ): PricingDetails | undefined => {
   const initialPricingDetails: PricingDetails = {
     items: [],
-    unit_amount_gross: 0,
     amount_subtotal: 0,
     amount_total: 0,
     total_details: {

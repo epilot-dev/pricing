@@ -170,7 +170,7 @@ export const computeCumulativeValue = (
   locale: string,
   currency: Currency | undefined,
   t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
-  options: { shouldDisplayOnRequest?: boolean } = {},
+  options: { showStartsAt?: boolean; shouldDisplayOnRequest?: boolean } = {},
 ) => {
   if (!tiers || !tiers.length || quantityToSelectTier < 0) {
     return;
@@ -221,17 +221,28 @@ export const computeCumulativeValue = (
     return tierAmount.add(total);
   }, toDinero('0', formatOptions.currency));
 
+  const startsAt =
+    options.showStartsAt &&
+    t('starts_at', {
+      ns: 'entity',
+      defaultValue: 'Starts at',
+    });
+
   return {
-    total: formatAmountFromString({
-      decimalAmount: addSeparatorToDineroString(total.getAmount().toString()),
-      ...formatOptions,
-      precision: 2,
-      useRealPrecision: false,
-    }),
-    totalWithPrecision: formatAmountFromString({
-      decimalAmount: addSeparatorToDineroString(total.getAmount().toString()),
-      ...formatOptions,
-    }),
+    total:
+      (startsAt ? `${startsAt} ` : '') +
+      formatAmountFromString({
+        decimalAmount: addSeparatorToDineroString(total.getAmount().toString()),
+        ...formatOptions,
+        precision: 2,
+        useRealPrecision: false,
+      }),
+    totalWithPrecision:
+      (startsAt ? `${startsAt} ` : '') +
+      formatAmountFromString({
+        decimalAmount: addSeparatorToDineroString(total.getAmount().toString()),
+        ...formatOptions,
+      }),
     average: `${formatAmountFromString({
       decimalAmount: addSeparatorToDineroString(
         total

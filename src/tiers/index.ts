@@ -5,7 +5,7 @@ import { addSeparatorToDineroString, formatAmountFromString, toDinero } from '..
 import { DEFAULT_LOCALE } from '../formatters/constants';
 import { PricingModel } from '../pricing';
 import { Price, PriceTier } from '../types';
-import { getQuantityForTier } from '../utils';
+import { getQuantityForTier, isNotPieceUnit } from '../utils';
 
 const byInputQuantity = (tiers: PriceTier[], quantity: number) => (_: PriceTier, index: number) =>
   quantity > (tiers[index - 1]?.up_to || 0);
@@ -151,6 +151,7 @@ export function getTierDescription(
 
   const formatedUnitString =
     showUnitAmount &&
+    isNotPieceUnit(unit) &&
     `/${t(`selectvalues.Price.unit.${unit || 'unit'}`, {
       ns: 'entity',
     })}`;
@@ -185,10 +186,13 @@ export const computeCumulativeValue = (
     });
   }
 
-  const formattedUnit = t(`selectvalues.Price.unit.${unit || 'unit'}`, {
-    ns: 'entity',
-    defaultValue: unit,
-  });
+  const formattedUnit = isNotPieceUnit(unit)
+    ? t(`selectvalues.Price.unit.${unit || 'unit'}`, {
+        ns: 'entity',
+        defaultValue: unit,
+      })
+    : '';
+
   const formatOptions = {
     currency: currency || DEFAULT_CURRENCY,
     locale: locale || DEFAULT_LOCALE,
@@ -211,7 +215,7 @@ export const computeCumulativeValue = (
       tierAmountDecimal: `${formatAmountFromString({
         decimalAmount: tier.unit_amount_decimal!,
         ...formatOptions,
-      })}/${formattedUnit}`,
+      })}${formattedUnit ? `/${formattedUnit}` : ''}`,
       totalAmountDecimal: formatAmountFromString({
         decimalAmount: addSeparatorToDineroString(tierAmount.getAmount().toString()),
         ...formatOptions,
@@ -253,7 +257,7 @@ export const computeCumulativeValue = (
       ...formatOptions,
       precision: 2,
       useRealPrecision: false,
-    })}/${formattedUnit}`,
+    })}${formattedUnit ? `/${formattedUnit}` : ''}`,
     breakdown,
   };
 };

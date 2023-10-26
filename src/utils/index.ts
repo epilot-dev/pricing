@@ -256,3 +256,5 @@ export const computeTieredGraduatedPriceItemValues = (
     taxAmount: d(totals.taxAmount).multiply(quantityToMultiply).getAmount(),
   };
 };
+
+export const isNotPieceUnit = (unit: string | undefined) => unit !== undefined && unit !== 'unit';

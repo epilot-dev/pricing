@@ -568,25 +568,23 @@ const convertPriceComponentsPrecision = (items: PriceItem[], precision = 2): Pri
  * e.g: 10.00 with precision DECIMAL_PRECISION, represented as 10(+12 zeros) with precision 2
  * would be 1000(only 2 zeros on the decimal component).
  */
-const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceItem => {
-  return {
-    ...priceItem,
-    ...(typeof priceItem.unit_amount === 'number' && {
-      unit_amount: d(priceItem.unit_amount).convertPrecision(precision).getAmount(),
-    }),
-    ...(typeof priceItem.unit_amount_net === 'number' && {
-      unit_amount_net: d(priceItem.unit_amount_net).convertPrecision(precision).getAmount(),
-    }),
-    unit_amount_gross: d(priceItem.unit_amount_gross!).convertPrecision(precision).getAmount(),
-    amount_subtotal: d(priceItem.amount_subtotal!).convertPrecision(precision).getAmount(),
-    amount_total: d(priceItem.amount_total!).convertPrecision(precision).getAmount(),
-    amount_tax: d(priceItem.amount_tax!).convertPrecision(precision).getAmount(),
-    taxes: priceItem.taxes!.map((tax) => ({
-      ...tax,
-      amount: d(tax.amount!).convertPrecision(precision).getAmount(),
-    })),
-  };
-};
+const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceItem => ({
+  ...priceItem,
+  ...(typeof priceItem.unit_amount === 'number' && {
+    unit_amount: d(priceItem.unit_amount).convertPrecision(precision).getAmount(),
+  }),
+  ...(typeof priceItem.unit_amount_net === 'number' && {
+    unit_amount_net: d(priceItem.unit_amount_net).convertPrecision(precision).getAmount(),
+  }),
+  unit_amount_gross: d(priceItem.unit_amount_gross!).convertPrecision(precision).getAmount(),
+  amount_subtotal: d(priceItem.amount_subtotal!).convertPrecision(precision).getAmount(),
+  amount_total: d(priceItem.amount_total!).convertPrecision(precision).getAmount(),
+  amount_tax: d(priceItem.amount_tax!).convertPrecision(precision).getAmount(),
+  taxes: priceItem.taxes!.map((tax) => ({
+    ...tax,
+    amount: d(tax.amount!).convertPrecision(precision).getAmount(),
+  })),
+});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isPricingDetails = (details: any): details is PricingDetails => details.amount_tax !== undefined;

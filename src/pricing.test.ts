@@ -95,7 +95,7 @@ describe('computeAggregatedAndPriceTotals', () => {
                   rate: 'nontaxable',
                   rateValue: 0,
                 },
-              ]
+              ],
             }),
           ]),
           total_details: expect.objectContaining({ amount_tax: 0 }),
@@ -1416,6 +1416,7 @@ describe('computeAggregatedAndPriceTotals', () => {
           amount_subtotal: 53031,
           currency: 'EUR',
           amount_total: 61114,
+          amount_tax: 8083,
           total_details: expect.anything(),
           items: [
             {
@@ -1458,6 +1459,7 @@ describe('computeAggregatedAndPriceTotals', () => {
               currency: 'EUR',
               amount_subtotal: 53031,
               amount_total: 61114,
+              amount_tax: 8083,
               total_details: expect.anything(),
             },
           ],

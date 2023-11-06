@@ -373,6 +373,7 @@ export const computedCompositePrice: CompositePriceItem & { [key: string]: unkno
 export const resultsWhenNoPricesProvided = {
   amount_subtotal: 0,
   amount_total: 0,
+  amount_tax: 0,
   currency: 'EUR',
   items: [
     {
@@ -413,7 +414,7 @@ export const resultsWhenNoPricesProvided = {
         },
       ],
     },
-  }
+  },
 };
 
 export const severalItemsPerRecurrenceTotals = {
@@ -730,6 +731,7 @@ export const severalItemsPerRecurrenceTotals = {
     {
       amount_subtotal: 43031,
       amount_total: 51114,
+      amount_tax: 8083,
       total_details: {
         amount_tax: 8083,
         breakdown: {
@@ -1122,11 +1124,12 @@ export const severalItemsPerRecurrenceTotals = {
           amount_total: 50000,
           pricing_model: 'per_unit',
         },
-      ]
+      ],
     },
   ],
   amount_subtotal: 736609,
   amount_total: 872926,
+  amount_tax: 136317,
   total_details: {
     amount_tax: 136317,
     breakdown: {
@@ -1188,6 +1191,7 @@ export const severalItemsPerRecurrenceTotals = {
 export const compositePricesUnitAmountZeroResult = {
   amount_subtotal: 972,
   amount_total: 1069,
+  amount_tax: 97,
   currency: 'EUR',
   items: [
     {
@@ -1296,6 +1300,7 @@ export const compositePricesUnitAmountZeroResult = {
       _product: {},
       amount_subtotal: 972,
       amount_total: 1069,
+      amount_tax: 97,
       currency: 'EUR',
       description: 'Eletricity Pack 1',
       item_components: [
@@ -1494,6 +1499,7 @@ export const compositePricesUnitAmountZeroResult = {
 export const priceWithDisplayOnRequestAndSimplePrices = {
   amount_subtotal: 361874,
   amount_total: 427629,
+  amount_tax: 65756,
   currency: 'EUR',
   items: [
     {
@@ -1704,7 +1710,7 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
         },
       ],
     },
-  }
+  },
 };
 
 export const compositePriceWithDisplayOnRequest = {
@@ -1799,6 +1805,7 @@ export const compositePriceWithDisplayOnRequest = {
       _product: {},
       amount_subtotal: 0,
       amount_total: 0,
+      amount_tax: 0,
       item_components: [
         {
           quantity: 1,
@@ -1949,6 +1956,7 @@ export const compositePriceWithDisplayOnRequest = {
   ],
   amount_subtotal: 0,
   amount_total: 0,
+  amount_tax: 0,
   total_details: {
     amount_shipping: 0,
     amount_tax: 0,
@@ -2065,6 +2073,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
       unit_amount_gross: 3446,
       amount_subtotal: 2895,
       amount_total: 3446,
+
       taxes: [
         {
           amount: 550,
@@ -2146,6 +2155,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
       unit_amount_gross: 4818,
       amount_subtotal: 13637,
       amount_total: 14455,
+
       pricing_model: 'per_unit',
     },
     {
@@ -2272,6 +2282,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
     {
       amount_subtotal: 43031,
       amount_total: 51114,
+      amount_tax: 8083,
       total_details: {
         amount_tax: 8083,
         breakdown: {
@@ -2648,6 +2659,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
     {
       amount_subtotal: 0,
       amount_total: 0,
+      amount_tax: 0,
       price_id: 'price#4',
       product_id: 'prod-id#1234',
       quantity: 1,
@@ -2896,6 +2908,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
   ],
   amount_subtotal: 736609,
   amount_total: 872926,
+  amount_tax: 136317,
   total_details: {
     amount_tax: 136317,
     breakdown: {
@@ -2937,10 +2950,12 @@ export const resultCompositePriceQuantity2 = {
   currency: 'EUR',
   amount_subtotal: 86062,
   amount_total: 102228,
+  amount_tax: 16166,
   items: [
     {
       amount_subtotal: 86062,
       amount_total: 102228,
+      amount_tax: 16166,
       _price: {
         _created_at: '2022-06-15T09:17:08.343Z',
         _id: 'price#4',
@@ -3133,6 +3148,7 @@ export const resultCompositePriceQuantity2 = {
           _product: {},
           amount_subtotal: 1944,
           amount_total: 2138,
+
           currency: 'EUR',
           description: 'Base price per month',
           price_id: 'price#4-comp#1',
@@ -3364,6 +3380,7 @@ export const priceDetailsForOnePrice = {
   currency: 'EUR',
   amount_subtotal: 331704,
   amount_total: 394728,
+  amount_tax: 63024,
   items: [
     {
       _price: {
@@ -3438,13 +3455,14 @@ export const priceDetailsForOnePrice = {
       ],
       taxes: [{ amount: 63024, tax: { _id: '19', rate: 19, type: 'VAT' } }],
     },
-  }
+  },
 };
 
 export const priceDetailsForCompositePrice = {
   currency: 'EUR',
   amount_subtotal: 43031,
   amount_total: 51114,
+  amount_tax: 8083,
   total_details: {
     amount_tax: 8083,
     breakdown: {
@@ -3815,6 +3833,7 @@ export const priceDetailsForCompositePrice = {
       ],
       amount_subtotal: 43031,
       amount_total: 51114,
+      amount_tax: 8083,
       total_details: {
         amount_tax: 8083,
         breakdown: {
@@ -3843,13 +3862,14 @@ export const priceDetailsForCompositePrice = {
         },
       },
     },
-  ]
+  ],
 };
 
 export const priceDetailsForCompositePriceWithTaxChanges = {
   currency: 'EUR',
   amount_subtotal: 27,
   amount_total: 30,
+  amount_tax: 3,
   total_details: {
     amount_tax: 3,
     breakdown: {
@@ -4141,6 +4161,7 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
       currency: 'EUR',
       amount_subtotal: 27,
       amount_total: 30,
+      amount_tax: 3,
       total_details: {
         amount_tax: 3,
         breakdown: {
@@ -4162,17 +4183,19 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
         },
       },
     },
-  ]
+  ],
 };
 
 export const resultsWithCompositePrices = {
   amount_subtotal: 43031,
   amount_total: 51114,
+  amount_tax: 8083,
   currency: 'EUR',
   items: [
     {
       amount_subtotal: 43031,
       amount_total: 51114,
+      amount_tax: 8083,
       _price: {
         _created_at: '2022-06-15T09:17:08.343Z',
         _id: 'price#4',
@@ -4586,12 +4609,13 @@ export const resultsWithCompositePrices = {
         { amount: 7983, tax: { _id: '19', rate: 19, type: 'VAT' } },
       ],
     },
-  }
+  },
 };
 
 export const resultsForSimplePrice = {
   amount_subtotal: 66341,
   amount_total: 78946,
+  amount_tax: 12605,
   currency: 'EUR',
   items: [
     {
@@ -4656,12 +4680,13 @@ export const resultsForSimplePrice = {
       ],
       taxes: [{ amount: 12605, tax: { _id: '19', rate: 19, type: 'VAT' } }],
     },
-  }
+  },
 };
 
 export const oneItemPerRecurrenceTotals = {
   amount_subtotal: 361874,
   amount_total: 427629,
+  amount_tax: 65756,
   currency: 'EUR',
   items: [
     {
@@ -4824,6 +4849,7 @@ export const oneItemPerRecurrenceTotals = {
 export const resultCompositePriceWithTotalDetails = {
   amount_subtotal: 86062,
   amount_total: 102228,
+  amount_tax: 16166,
   currency: 'EUR',
   items: [
     {
@@ -4966,6 +4992,7 @@ export const resultCompositePriceWithTotalDetails = {
       _product: {},
       amount_subtotal: 86062,
       amount_total: 102228,
+      amount_tax: 16166,
       currency: 'EUR',
       description: 'Eletricity Pack 1',
       item_components: [
@@ -5234,5 +5261,5 @@ export const resultCompositePriceWithTotalDetails = {
         { amount: 15966, tax: { _id: '19', rate: 19, type: 'VAT' } },
       ],
     },
-  }
+  },
 };

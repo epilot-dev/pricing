@@ -542,6 +542,7 @@ export const computePriceItem = (
     unit_amount_gross: itemValues.unitAmountGross,
     amount_subtotal: itemValues.amountSubtotal,
     amount_total: itemValues.amountTotal,
+    amount_tax: itemValues.taxAmount,
     taxes: [
       {
         ...(priceTax ? { tax: priceTax } : { rate: 'nontaxable', rateValue: 0 }),
@@ -579,6 +580,7 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
     unit_amount_gross: d(priceItem.unit_amount_gross!).convertPrecision(precision).getAmount(),
     amount_subtotal: d(priceItem.amount_subtotal!).convertPrecision(precision).getAmount(),
     amount_total: d(priceItem.amount_total!).convertPrecision(precision).getAmount(),
+    amount_tax: d(priceItem.amount_tax!).convertPrecision(precision).getAmount(),
     taxes: priceItem.taxes!.map((tax) => ({
       ...tax,
       amount: d(tax.amount!).convertPrecision(precision).getAmount(),

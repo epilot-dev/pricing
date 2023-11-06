@@ -1439,6 +1439,7 @@ describe('computeAggregatedAndPriceTotals', () => {
                   unit_amount_net: 1000,
                   amount_subtotal: 10000,
                   amount_total: 10000,
+                  amount_tax: 0,
                   product_id: 'prod-id#1234',
                   price_id: undefined,
                   taxes: [

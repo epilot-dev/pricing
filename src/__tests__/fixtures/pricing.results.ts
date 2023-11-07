@@ -194,6 +194,7 @@ export const computedCompositePrice: CompositePriceItem & { [key: string]: unkno
       amount_subtotal: 9718181818182,
       type: 'recurring',
       amount_total: 10690000000000,
+      amount_tax: 971818181818,
       currency: 'EUR',
       description: 'Base price per month',
       price_id: 'price#4-comp#1',
@@ -266,6 +267,7 @@ export const computedCompositePrice: CompositePriceItem & { [key: string]: unkno
       },
       _product: {},
       amount_subtotal: 424528301887,
+      amount_tax: 25471698113,
       amount_total: 450000000000,
       type: 'recurring',
       currency: 'EUR',
@@ -336,6 +338,7 @@ export const computedCompositePrice: CompositePriceItem & { [key: string]: unkno
       _product: {},
       amount_subtotal: 420168067226891,
       unit_amount_gross: 500000000000000,
+      amount_tax: 79831932773109,
       amount_total: 500000000000000,
       type: 'one_time',
       currency: 'EUR',
@@ -373,12 +376,14 @@ export const computedCompositePrice: CompositePriceItem & { [key: string]: unkno
 export const resultsWhenNoPricesProvided = {
   amount_subtotal: 0,
   amount_total: 0,
+  amount_tax: 0,
   currency: 'EUR',
   items: [
     {
       ...incompletePriceItem,
       amount_subtotal: 0,
       amount_total: 0,
+      amount_tax: 0,
       currency: 'EUR',
       price_id: 'price#1',
       product_id: 'prod-id#12324',
@@ -413,7 +418,7 @@ export const resultsWhenNoPricesProvided = {
         },
       ],
     },
-  }
+  },
 };
 
 export const severalItemsPerRecurrenceTotals = {
@@ -475,6 +480,7 @@ export const severalItemsPerRecurrenceTotals = {
       unit_amount_gross: 78946,
       unit_amount_net: 66341,
       amount_subtotal: 331704,
+      amount_tax: 63024,
       amount_total: 394728,
     },
     {
@@ -523,6 +529,7 @@ export const severalItemsPerRecurrenceTotals = {
       unit_amount_decimal: '34.456224456678',
       unit_amount_gross: 3446,
       amount_subtotal: 2895,
+      amount_tax: 550,
       amount_total: 3446,
       taxes: [
         {
@@ -604,6 +611,7 @@ export const severalItemsPerRecurrenceTotals = {
       unit_amount_decimal: '45.456224456678',
       unit_amount_gross: 4818,
       amount_subtotal: 13637,
+      amount_tax: 818,
       amount_total: 14455,
       pricing_model: 'per_unit',
     },
@@ -660,6 +668,7 @@ export const severalItemsPerRecurrenceTotals = {
       unit_amount_gross: 78946,
       unit_amount_net: 66341,
       amount_subtotal: 331704,
+      amount_tax: 63024,
       amount_total: 394728,
       pricing_model: 'per_unit',
     },
@@ -724,12 +733,14 @@ export const severalItemsPerRecurrenceTotals = {
       unit_amount_decimal: '45.456224456678',
       unit_amount_gross: 4818,
       amount_subtotal: 13637,
+      amount_tax: 818,
       amount_total: 14455,
       pricing_model: 'per_unit',
     },
     {
       amount_subtotal: 43031,
       amount_total: 51114,
+      amount_tax: 8083,
       total_details: {
         amount_tax: 8083,
         breakdown: {
@@ -978,6 +989,7 @@ export const severalItemsPerRecurrenceTotals = {
           unit_amount: 1069,
           unit_amount_net: 972,
           amount_subtotal: 972,
+          amount_tax: 97,
           amount_total: 1069,
           unit_amount_decimal: '10.69',
           unit_amount_gross: 1069,
@@ -1049,6 +1061,7 @@ export const severalItemsPerRecurrenceTotals = {
           unit_amount_net: 42,
           amount_subtotal: 42,
           amount_total: 45,
+          amount_tax: 3,
           unit_amount_decimal: '0.45',
           unit_amount_gross: 45,
           pricing_model: 'per_unit',
@@ -1119,14 +1132,16 @@ export const severalItemsPerRecurrenceTotals = {
           unit_amount_decimal: '500.00',
           unit_amount_gross: 50000,
           amount_subtotal: 42017,
+          amount_tax: 7983,
           amount_total: 50000,
           pricing_model: 'per_unit',
         },
-      ]
+      ],
     },
   ],
   amount_subtotal: 736609,
   amount_total: 872926,
+  amount_tax: 136317,
   total_details: {
     amount_tax: 136317,
     breakdown: {
@@ -1188,6 +1203,7 @@ export const severalItemsPerRecurrenceTotals = {
 export const compositePricesUnitAmountZeroResult = {
   amount_subtotal: 972,
   amount_total: 1069,
+  amount_tax: 97,
   currency: 'EUR',
   items: [
     {
@@ -1296,6 +1312,7 @@ export const compositePricesUnitAmountZeroResult = {
       _product: {},
       amount_subtotal: 972,
       amount_total: 1069,
+      amount_tax: 97,
       currency: 'EUR',
       description: 'Eletricity Pack 1',
       item_components: [
@@ -1343,6 +1360,7 @@ export const compositePricesUnitAmountZeroResult = {
           _product: {},
           amount_subtotal: 972,
           amount_total: 1069,
+          amount_tax: 97,
           currency: 'EUR',
           description: 'Base price per month',
           price_id: 'price#4-comp#1',
@@ -1417,6 +1435,7 @@ export const compositePricesUnitAmountZeroResult = {
           _product: {},
           amount_subtotal: 0,
           amount_total: 0,
+          amount_tax: 0,
           currency: 'EUR',
           description: 'Energy price per kWh',
           price_id: 'price#4-comp#2',
@@ -1494,11 +1513,13 @@ export const compositePricesUnitAmountZeroResult = {
 export const priceWithDisplayOnRequestAndSimplePrices = {
   amount_subtotal: 361874,
   amount_total: 427629,
+  amount_tax: 65756,
   currency: 'EUR',
   items: [
     {
       ...priceItem1,
       amount_subtotal: 331704,
+      amount_tax: 63024,
       amount_total: 394728,
       currency: 'EUR',
       description: 'Winter Sale',
@@ -1528,6 +1549,7 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
     {
       ...priceItem2,
       amount_subtotal: 2895,
+      amount_tax: 550,
       amount_total: 3446,
       currency: 'EUR',
       description: 'Winter Lease',
@@ -1557,6 +1579,7 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
     {
       ...priceItem3,
       amount_subtotal: 13637,
+      amount_tax: 818,
       amount_total: 14455,
       currency: 'EUR',
       description: 'Winter Lease',
@@ -1587,6 +1610,7 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
       ...priceItem6,
       amount_subtotal: 13637,
       amount_total: 15001,
+      amount_tax: 1364,
       currency: 'EUR',
       description: 'Winter Lease',
       price_id: 'price#6',
@@ -1620,6 +1644,7 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
         pricing_model: 'per_unit',
       },
       amount_subtotal: 4546,
+      amount_tax: 455,
       amount_total: 5000,
       currency: 'EUR',
       description: 'Winter Lease',
@@ -1704,7 +1729,7 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
         },
       ],
     },
-  }
+  },
 };
 
 export const compositePriceWithDisplayOnRequest = {
@@ -1799,6 +1824,7 @@ export const compositePriceWithDisplayOnRequest = {
       _product: {},
       amount_subtotal: 0,
       amount_total: 0,
+      amount_tax: 0,
       item_components: [
         {
           quantity: 1,
@@ -1865,6 +1891,7 @@ export const compositePriceWithDisplayOnRequest = {
           unit_amount_decimal: '10.69',
           unit_amount_gross: 1069,
           amount_subtotal: 972,
+          amount_tax: 97,
           amount_total: 1069,
           pricing_model: 'per_unit',
         },
@@ -1933,6 +1960,7 @@ export const compositePriceWithDisplayOnRequest = {
           unit_amount_decimal: '10.69',
           unit_amount_gross: 1069,
           amount_subtotal: 972,
+          amount_tax: 97,
           amount_total: 1069,
           pricing_model: 'per_unit',
         },
@@ -1949,6 +1977,7 @@ export const compositePriceWithDisplayOnRequest = {
   ],
   amount_subtotal: 0,
   amount_total: 0,
+  amount_tax: 0,
   total_details: {
     amount_shipping: 0,
     amount_tax: 0,
@@ -2015,6 +2044,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
       unit_amount_decimal: '789.456224456678',
       unit_amount_gross: 78946,
       amount_subtotal: 331704,
+      amount_tax: 63024,
       amount_total: 394728,
       pricing_model: 'per_unit',
     },
@@ -2064,7 +2094,9 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
       unit_amount_decimal: '34.456224456678',
       unit_amount_gross: 3446,
       amount_subtotal: 2895,
+      amount_tax: 550,
       amount_total: 3446,
+
       taxes: [
         {
           amount: 550,
@@ -2146,6 +2178,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
       unit_amount_gross: 4818,
       amount_subtotal: 13637,
       amount_total: 14455,
+      amount_tax: 818,
       pricing_model: 'per_unit',
     },
     {
@@ -2202,6 +2235,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
       unit_amount_decimal: '789.456224456678',
       unit_amount_gross: 78946,
       amount_subtotal: 331704,
+      amount_tax: 63024,
       amount_total: 394728,
       pricing_model: 'per_unit',
     },
@@ -2266,12 +2300,14 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
       unit_amount_decimal: '45.456224456678',
       unit_amount_gross: 4818,
       amount_subtotal: 13637,
+      amount_tax: 818,
       amount_total: 14455,
       pricing_model: 'per_unit',
     },
     {
       amount_subtotal: 43031,
       amount_total: 51114,
+      amount_tax: 8083,
       total_details: {
         amount_tax: 8083,
         breakdown: {
@@ -2501,6 +2537,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           unit_amount_decimal: '10.69',
           unit_amount_gross: 1069,
           amount_subtotal: 972,
+          amount_tax: 97,
           amount_total: 1069,
           pricing_model: 'per_unit',
         },
@@ -2572,6 +2609,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           unit_amount_gross: 45,
           amount_subtotal: 42,
           amount_total: 45,
+          amount_tax: 3,
           pricing_model: 'per_unit',
         },
         {
@@ -2640,6 +2678,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           unit_amount_decimal: '500.00',
           unit_amount_gross: 50000,
           amount_subtotal: 42017,
+          amount_tax: 7983,
           amount_total: 50000,
           pricing_model: 'per_unit',
         },
@@ -2648,6 +2687,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
     {
       amount_subtotal: 0,
       amount_total: 0,
+      amount_tax: 0,
       price_id: 'price#4',
       product_id: 'prod-id#1234',
       quantity: 1,
@@ -2812,6 +2852,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           unit_amount_gross: 1069,
           unit_amount_net: 972,
           amount_subtotal: 972,
+          amount_tax: 97,
           amount_total: 1069,
           pricing_model: 'per_unit',
         },
@@ -2880,6 +2921,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           unit_amount_gross: 1069,
           unit_amount_net: 972,
           amount_subtotal: 972,
+          amount_tax: 97,
           amount_total: 1069,
           pricing_model: 'per_unit',
         },
@@ -2896,6 +2938,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
   ],
   amount_subtotal: 736609,
   amount_total: 872926,
+  amount_tax: 136317,
   total_details: {
     amount_tax: 136317,
     breakdown: {
@@ -2937,10 +2980,12 @@ export const resultCompositePriceQuantity2 = {
   currency: 'EUR',
   amount_subtotal: 86062,
   amount_total: 102228,
+  amount_tax: 16166,
   items: [
     {
       amount_subtotal: 86062,
       amount_total: 102228,
+      amount_tax: 16166,
       _price: {
         _created_at: '2022-06-15T09:17:08.343Z',
         _id: 'price#4',
@@ -3133,6 +3178,7 @@ export const resultCompositePriceQuantity2 = {
           _product: {},
           amount_subtotal: 1944,
           amount_total: 2138,
+          amount_tax: 194,
           currency: 'EUR',
           description: 'Base price per month',
           price_id: 'price#4-comp#1',
@@ -3206,6 +3252,7 @@ export const resultCompositePriceQuantity2 = {
           },
           _product: {},
           amount_subtotal: 85,
+          amount_tax: 5,
           amount_total: 90,
           currency: 'EUR',
           description: 'Energy price per kWh',
@@ -3275,6 +3322,7 @@ export const resultCompositePriceQuantity2 = {
           },
           _product: {},
           amount_subtotal: 84034,
+          amount_tax: 15966,
           amount_total: 100000,
           currency: 'EUR',
           description: 'Wallbox 11 kW',
@@ -3364,6 +3412,7 @@ export const priceDetailsForOnePrice = {
   currency: 'EUR',
   amount_subtotal: 331704,
   amount_total: 394728,
+  amount_tax: 63024,
   items: [
     {
       _price: {
@@ -3396,6 +3445,7 @@ export const priceDetailsForOnePrice = {
       },
       amount_subtotal: 331704,
       amount_total: 394728,
+      amount_tax: 63024,
       currency: 'EUR',
       description: 'Winter Sale',
       price_id: 'price#1',
@@ -3438,13 +3488,14 @@ export const priceDetailsForOnePrice = {
       ],
       taxes: [{ amount: 63024, tax: { _id: '19', rate: 19, type: 'VAT' } }],
     },
-  }
+  },
 };
 
 export const priceDetailsForCompositePrice = {
   currency: 'EUR',
   amount_subtotal: 43031,
   amount_total: 51114,
+  amount_tax: 8083,
   total_details: {
     amount_tax: 8083,
     breakdown: {
@@ -3668,6 +3719,7 @@ export const priceDetailsForCompositePrice = {
           unit_amount: 1069,
           unit_amount_net: 972,
           amount_subtotal: 972,
+          amount_tax: 97,
           amount_total: 1069,
           unit_amount_decimal: '10.69',
           unit_amount_gross: 1069,
@@ -3739,6 +3791,7 @@ export const priceDetailsForCompositePrice = {
           unit_amount_net: 42,
           amount_subtotal: 42,
           amount_total: 45,
+          amount_tax: 3,
           unit_amount_decimal: '0.45',
           unit_amount_gross: 45,
           pricing_model: 'per_unit',
@@ -3807,6 +3860,7 @@ export const priceDetailsForCompositePrice = {
           unit_amount: 50000,
           unit_amount_net: 42017,
           amount_subtotal: 42017,
+          amount_tax: 7983,
           amount_total: 50000,
           unit_amount_decimal: '500.00',
           unit_amount_gross: 50000,
@@ -3815,6 +3869,7 @@ export const priceDetailsForCompositePrice = {
       ],
       amount_subtotal: 43031,
       amount_total: 51114,
+      amount_tax: 8083,
       total_details: {
         amount_tax: 8083,
         breakdown: {
@@ -3843,13 +3898,14 @@ export const priceDetailsForCompositePrice = {
         },
       },
     },
-  ]
+  ],
 };
 
 export const priceDetailsForCompositePriceWithTaxChanges = {
   currency: 'EUR',
   amount_subtotal: 27,
   amount_total: 30,
+  amount_tax: 3,
   total_details: {
     amount_tax: 3,
     breakdown: {
@@ -3951,6 +4007,7 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
           unit_amount_net: 10,
           amount_subtotal: 10,
           amount_total: 10,
+          amount_tax: 0,
           pricing_model: 'per_unit',
         },
         {
@@ -4038,6 +4095,7 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
           currency: 'EUR',
           unit_amount_net: 17,
           amount_subtotal: 17,
+          amount_tax: 3,
           amount_total: 20,
           unit_amount_gross: 20,
           pricing_model: 'per_unit',
@@ -4141,6 +4199,7 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
       currency: 'EUR',
       amount_subtotal: 27,
       amount_total: 30,
+      amount_tax: 3,
       total_details: {
         amount_tax: 3,
         breakdown: {
@@ -4162,17 +4221,19 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
         },
       },
     },
-  ]
+  ],
 };
 
 export const resultsWithCompositePrices = {
   amount_subtotal: 43031,
   amount_total: 51114,
+  amount_tax: 8083,
   currency: 'EUR',
   items: [
     {
       amount_subtotal: 43031,
       amount_total: 51114,
+      amount_tax: 8083,
       _price: {
         _created_at: '2022-06-15T09:17:08.343Z',
         _id: 'price#4',
@@ -4345,6 +4406,7 @@ export const resultsWithCompositePrices = {
           },
           _product: undefined as undefined | string,
           amount_subtotal: 972,
+          amount_tax: 97,
           amount_total: 1069,
           currency: 'EUR',
           description: 'Base price per month',
@@ -4416,6 +4478,7 @@ export const resultsWithCompositePrices = {
           _product: undefined as undefined | string,
           amount_subtotal: 42,
           amount_total: 45,
+          amount_tax: 3,
           currency: 'EUR',
           description: 'Energy price per kWh',
           price_id: 'price#4-comp#2',
@@ -4485,6 +4548,7 @@ export const resultsWithCompositePrices = {
           _product: undefined as undefined | string,
           amount_subtotal: 42017,
           amount_total: 50000,
+          amount_tax: 7983,
           currency: 'EUR',
           description: 'Wallbox 11 kW',
           price_id: 'price#4-comp#3',
@@ -4586,12 +4650,13 @@ export const resultsWithCompositePrices = {
         { amount: 7983, tax: { _id: '19', rate: 19, type: 'VAT' } },
       ],
     },
-  }
+  },
 };
 
 export const resultsForSimplePrice = {
   amount_subtotal: 66341,
   amount_total: 78946,
+  amount_tax: 12605,
   currency: 'EUR',
   items: [
     {
@@ -4622,6 +4687,7 @@ export const resultsForSimplePrice = {
       },
       amount_subtotal: 66341,
       amount_total: 78946,
+      amount_tax: 12605,
       currency: 'EUR',
       description: 'Winter Sale',
       quantity: 1,
@@ -4656,17 +4722,19 @@ export const resultsForSimplePrice = {
       ],
       taxes: [{ amount: 12605, tax: { _id: '19', rate: 19, type: 'VAT' } }],
     },
-  }
+  },
 };
 
 export const oneItemPerRecurrenceTotals = {
   amount_subtotal: 361874,
   amount_total: 427629,
+  amount_tax: 65756,
   currency: 'EUR',
   items: [
     {
       ...priceItem1,
       amount_subtotal: 331704,
+      amount_tax: 63024,
       amount_total: 394728,
       currency: 'EUR',
       description: 'Winter Sale',
@@ -4695,6 +4763,7 @@ export const oneItemPerRecurrenceTotals = {
     {
       ...priceItem2,
       amount_subtotal: 2895,
+      amount_tax: 550,
       amount_total: 3446,
       currency: 'EUR',
       description: 'Winter Lease',
@@ -4723,6 +4792,7 @@ export const oneItemPerRecurrenceTotals = {
     {
       ...priceItem3,
       amount_subtotal: 13637,
+      amount_tax: 818,
       amount_total: 14455,
       currency: 'EUR',
       description: 'Winter Lease',
@@ -4751,6 +4821,7 @@ export const oneItemPerRecurrenceTotals = {
     {
       ...priceItem6,
       amount_subtotal: 13637,
+      amount_tax: 1364,
       amount_total: 15001,
       currency: 'EUR',
       description: 'Winter Lease',
@@ -4824,6 +4895,7 @@ export const oneItemPerRecurrenceTotals = {
 export const resultCompositePriceWithTotalDetails = {
   amount_subtotal: 86062,
   amount_total: 102228,
+  amount_tax: 16166,
   currency: 'EUR',
   items: [
     {
@@ -4966,6 +5038,7 @@ export const resultCompositePriceWithTotalDetails = {
       _product: {},
       amount_subtotal: 86062,
       amount_total: 102228,
+      amount_tax: 16166,
       currency: 'EUR',
       description: 'Eletricity Pack 1',
       item_components: [
@@ -5011,6 +5084,7 @@ export const resultCompositePriceWithTotalDetails = {
           },
           _product: {},
           amount_subtotal: 1944,
+          amount_tax: 194,
           amount_total: 2138,
           currency: 'EUR',
           description: 'Base price per month',
@@ -5084,6 +5158,7 @@ export const resultCompositePriceWithTotalDetails = {
           },
           _product: {},
           amount_subtotal: 85,
+          amount_tax: 5,
           amount_total: 90,
           currency: 'EUR',
           description: 'Energy price per kWh',
@@ -5152,6 +5227,7 @@ export const resultCompositePriceWithTotalDetails = {
           },
           _product: {},
           amount_subtotal: 84034,
+          amount_tax: 15966,
           amount_total: 100000,
           currency: 'EUR',
           description: 'Wallbox 11 kW',
@@ -5234,5 +5310,5 @@ export const resultCompositePriceWithTotalDetails = {
         { amount: 15966, tax: { _id: '19', rate: 19, type: 'VAT' } },
       ],
     },
-  }
+  },
 };

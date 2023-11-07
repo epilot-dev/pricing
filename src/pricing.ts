@@ -252,6 +252,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
     items: [],
     amount_subtotal: 0,
     amount_total: 0,
+    amount_tax: 0,
     total_details: {
       amount_shipping: 0,
       amount_tax: 0,
@@ -262,6 +263,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
     },
     currency: DEFAULT_CURRENCY,
   };
+
   const priceDetails: PricingDetails = priceItems.reduce((details, priceItem) => {
     if (isCompositePrice(priceItem)) {
       const price = priceItem._price;
@@ -296,6 +298,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
         : {
             amount_subtotal: details.amount_subtotal,
             amount_total: details.amount_total,
+            amount_tax: details.amount_tax,
             total_details: details.total_details,
           };
 
@@ -420,6 +423,7 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
   return {
     amount_subtotal: subtotal.add(priceSubtotal).getAmount(),
     amount_total: total.add(priceTotal).getAmount(),
+    amount_tax: totalTax.add(priceTax).getAmount(),
     total_details: {
       amount_tax: totalTax.add(priceTax).getAmount(),
       breakdown: {
@@ -461,6 +465,7 @@ const recomputeDetailTotalsFromCompositePrice = (
       : {
           amount_subtotal: details?.amount_subtotal || 0,
           amount_total: details?.amount_total || 0,
+          amount_tax: details?.amount_tax || 0,
           total_details: details?.total_details || initialPricingDetails.total_details,
         };
 
@@ -537,6 +542,7 @@ export const computePriceItem = (
     unit_amount_gross: itemValues.unitAmountGross,
     amount_subtotal: itemValues.amountSubtotal,
     amount_total: itemValues.amountTotal,
+    amount_tax: itemValues.taxAmount,
     taxes: [
       {
         ...(priceTax ? { tax: priceTax } : { rate: 'nontaxable', rateValue: 0 }),
@@ -573,16 +579,21 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
   unit_amount_gross: d(priceItem.unit_amount_gross!).convertPrecision(precision).getAmount(),
   amount_subtotal: d(priceItem.amount_subtotal!).convertPrecision(precision).getAmount(),
   amount_total: d(priceItem.amount_total!).convertPrecision(precision).getAmount(),
+  amount_tax: d(priceItem.amount_tax!).convertPrecision(precision).getAmount(),
   taxes: priceItem.taxes!.map((tax) => ({
     ...tax,
     amount: d(tax.amount!).convertPrecision(precision).getAmount(),
   })),
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isPricingDetails = (details: any): details is PricingDetails => details.amount_tax !== undefined;
+
 const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem, precision: number): PricingDetails => {
   return {
     amount_subtotal: d(details.amount_subtotal!).convertPrecision(precision).getAmount(),
     amount_total: d(details.amount_total!).convertPrecision(precision).getAmount(),
+    ...(isPricingDetails(details) && { amount_tax: d(details.amount_tax!).convertPrecision(precision).getAmount() }),
     total_details: {
       ...details?.total_details,
       amount_tax: d(details?.total_details?.amount_tax!).convertPrecision(precision).getAmount(),

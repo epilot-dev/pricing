@@ -477,35 +477,44 @@ const recomputeDetailTotalsFromCompositePrice = (
   }, details || initialPricingDetails);
 };
 
-const WHITELISTED_PRICE_KEYS: Set<keyof Price> = new Set([
-  '_id',
-  '_title',
-  'pricing_model',
-  'unit_amount',
-  'unit_amount_currency',
-  'unit_amount_decimal',
-  'is_tax_inclusive',
-  'active',
-  'type',
-  'billing_period',
-  'billing_duration_amount',
-  'billing_duration_unit',
-  'notice_time_amount',
-  'notice_time_unit',
-  'termination_time_unit',
-  'termination_time_amount',
-  'renewal_duration_amount',
-  'renewal_duration_unit',
-  '_tags',
-  'description',
-  'price_components',
-  'tax',
-  'sales_tax',
-  'price_display_in_journeys',
-  'unit',
-  'variable_price',
-  'is_composite_price',
-  'tiers',
+const BLACK_PRICE_KEYS: Set<keyof Price> = new Set([
+  // '_id',
+  // '_title',
+  // 'pricing_model',
+  // 'unit_amount',
+  // 'unit_amount_currency',
+  // 'unit_amount_decimal',
+  // 'is_tax_inclusive',
+  // 'active',
+  // 'type',
+  // 'billing_period',
+  // 'billing_duration_amount',
+  // 'billing_duration_unit',
+  // 'notice_time_amount',
+  // 'notice_time_unit',
+  // 'termination_time_unit',
+  // 'termination_time_amount',
+  // 'renewal_duration_amount',
+  // 'renewal_duration_unit',
+  // '_tags',
+  // 'description',
+  // 'price_components',
+  // 'tax',
+  // 'sales_tax',
+  // 'price_display_in_journeys',
+  // 'unit',
+  // 'variable_price',
+  // 'is_composite_price',
+  // 'tiers',
+  '_org',
+  '_schema',
+  '_created_at',
+  '_updated_at',
+  '_owners',
+  '_acl',
+  '_acl_sync',
+  '_viewers',
+  '_relations',
 ]);
 
 /**
@@ -518,7 +527,7 @@ export const getMappedPricing = (price: Price): Price => {
   const mappedPricing: Price = {} as Price;
 
   for (const key in price) {
-    if (WHITELISTED_PRICE_KEYS.has(key) && price[key] !== '') {
+    if (!BLACK_PRICE_KEYS.has(key) && price[key] !== '') {
       mappedPricing[key] = price[key];
     }
 

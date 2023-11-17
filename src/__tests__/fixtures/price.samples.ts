@@ -294,7 +294,6 @@ export const compositePrice: CompositePriceItemDto = {
         termination_time_unit: 'months',
         renewal_duration_unit: 'months',
         description: 'Wallbox 11 kW',
-        package_units: '2',
       },
     ],
     _id: 'price#4',
@@ -477,7 +476,6 @@ export const compositePriceWithCustomItem: CompositePriceItemDto = {
         termination_time_unit: 'months',
         renewal_duration_unit: 'months',
         description: 'Wallbox 11 kW',
-        package_units: '2',
       },
       _product: {},
       taxes: [
@@ -585,7 +583,7 @@ export const compositePriceWithCustomItem: CompositePriceItemDto = {
         termination_time_unit: 'months',
         renewal_duration_unit: 'months',
         description: 'Wallbox 11 kW',
-        package_units: '2',
+        
       },
     ],
     _id: 'price#4',
@@ -952,7 +950,7 @@ export const compositePriceWithComponentOverrides: CompositePriceItemDto = {
         termination_time_unit: 'months',
         renewal_duration_unit: 'months',
         description: 'Wallbox 11 kW',
-        package_units: '2',
+        
       },
       {
         _id: 'price#4-comp#4',
@@ -1170,7 +1168,7 @@ export const compositePriceWithComponentOverrides: CompositePriceItemDto = {
         termination_time_unit: 'months',
         renewal_duration_unit: 'months',
         description: 'Wallbox 11 kW',
-        package_units: '2',
+        
         $relation: {
           entity_id: '583fb57a-7549-4624-82d6-342d5e6542f7',
           _schema: 'price',
@@ -1549,7 +1547,7 @@ export const nonComputedCompositePrice: CompositePriceItem & { [key: string]: un
         billing_period: 'weekly',
         description: 'Wallbox 11 kW',
         notice_time_unit: 'months',
-        package_units: '2',
+        
         price_display_in_journeys: 'show_price',
         renewal_duration_unit: 'months',
         sales_tax: 'standard',
@@ -1744,7 +1742,7 @@ export const compositePriceQuantity2: CompositePriceItemDto = {
         termination_time_unit: 'months',
         renewal_duration_unit: 'months',
         description: 'Wallbox 11 kW',
-        package_units: '2',
+        
       },
       {
         _id: 'price#4-comp#6',
@@ -1956,7 +1954,7 @@ export const fullCompositePrice: CompositePriceItem & { [key: string]: unknown }
         billing_period: 'weekly',
         description: 'Wallbox 11 kW',
         notice_time_unit: 'months',
-        package_units: '2',
+        
         price_display_in_journeys: 'show_price',
         pricing_model: 'per_unit',
         renewal_duration_unit: 'months',
@@ -2149,7 +2147,7 @@ export const fullCompositePrice: CompositePriceItem & { [key: string]: unknown }
         billing_period: 'weekly',
         description: 'Wallbox 11 kW',
         notice_time_unit: 'months',
-        package_units: '2',
+        
         price_display_in_journeys: 'show_price',
         pricing_model: 'per_unit',
         renewal_duration_unit: 'months',
@@ -2443,7 +2441,7 @@ export const compositePriceWithTotalDetails: CompositePriceItemDto = {
         termination_time_unit: 'months',
         renewal_duration_unit: 'months',
         description: 'Wallbox 11 kW',
-        package_units: '2',
+        
       },
     ],
     _id: 'price#4',

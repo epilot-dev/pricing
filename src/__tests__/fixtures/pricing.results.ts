@@ -1450,7 +1450,6 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
       unit_amount_gross: 78946,
     },
     {
-      // !@todo diogo - porque é que estamos a inserir pedaços dos samples nos results?
       ...priceItem2,
       amount_subtotal: 2895,
       amount_tax: 550,

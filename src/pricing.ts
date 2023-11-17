@@ -212,7 +212,7 @@ export const computeCompositePrice = (
       type: existingItemComponent?.type || component.type,
       price_id: existingItemComponent?.price_id || component._id,
       product_id: existingItemComponent?.product_id || priceItem.product_id,
-      _price: existingItemComponent?._price || existingPrice,
+      _price: getMappedPricing(existingItemComponent?._price || existingPrice),
       _product: existingItemComponent?._product || priceItem._product,
       taxes: existingItemComponent?.taxes || [
         {
@@ -233,6 +233,7 @@ export const computeCompositePrice = (
 
   return {
     ...priceItem,
+    _price: getMappedPricing(priceItem._price! as Price),
     currency: priceItem._price!.unit_amount_currency || DEFAULT_CURRENCY,
     ...(itemDescription && { description: itemDescription }),
     item_components: [...computedItemComponents],
@@ -476,6 +477,60 @@ const recomputeDetailTotalsFromCompositePrice = (
   }, details || initialPricingDetails);
 };
 
+const WHITELISTED_PRICE_KEYS: Set<keyof Price> = new Set([
+  '_id',
+  '_title',
+  'pricing_model',
+  'unit_amount',
+  'unit_amount_currency',
+  'unit_amount_decimal',
+  'is_tax_inclusive',
+  'active',
+  'type',
+  'billing_period',
+  'billing_duration_amount',
+  'billing_duration_unit',
+  'notice_time_amount',
+  'notice_time_unit',
+  'termination_time_unit',
+  'termination_time_amount',
+  'renewal_duration_amount',
+  'renewal_duration_unit',
+  '_tags',
+  'description',
+  'price_components',
+  'tax',
+  'sales_tax',
+  'price_display_in_journeys',
+  'unit',
+  'variable_price',
+  'is_composite_price',
+  'tiers',
+]);
+
+/**
+ * Maps the whitelisted keys from the _price that we want available, avoiding having unnecessary data in the metadata.
+ *
+ *? @todo We should define _price as not being an optional key in PriceItemDto since there is no case where is optional
+ *? Additionally, we should also define the _product as a separate interface to avoid `PriceItemDto['_product']` type definitions.
+ */
+export const getMappedPricing = (price: Price): Price => {
+  const mappedPricing: Price = {} as Price;
+
+  for (const key in price) {
+    if (WHITELISTED_PRICE_KEYS.has(key) && price[key] !== '') {
+      mappedPricing[key] = price[key];
+    }
+
+    // Checks if price has price_components and if so iterates over them to extract whitelisted keys
+    if (key === 'price_components' && price[key]) {
+      mappedPricing[key] = price[key].map((el: Price) => getMappedPricing(el));
+    }
+  }
+
+  return mappedPricing;
+};
+
 /**
  * Computes all price item total amounts to integers with a decimal precision of DECIMAL_PRECISION.
  */
@@ -550,7 +605,7 @@ export const computePriceItem = (
       },
     ],
     _price: {
-      ...price,
+      ...getMappedPricing(price!),
       ...(itemValues.displayMode && {
         price_display_in_journeys: itemValues.displayMode ?? price?.price_display_in_journeys,
         unchanged_price_display_in_journeys:

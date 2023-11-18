@@ -477,7 +477,7 @@ const recomputeDetailTotalsFromCompositePrice = (
   }, details || initialPricingDetails);
 };
 
-const BLACK_LISTED_KEYS: Set<keyof Price> = new Set([
+export const ENTITY_FIELDS_EXCLUSION_LIST: Set<keyof Price> = new Set([
   '_org',
   '_schema',
   '_created_at',
@@ -496,21 +496,25 @@ const BLACK_LISTED_KEYS: Set<keyof Price> = new Set([
 
 /**
  * Maps the whitelisted keys from the _price that we want available, avoiding having unnecessary data in the metadata.
- *
- *? @todo We should define _price as not being an optional key in PriceItemDto since there is no case where is optional
- *? Additionally, we should also define the _product as a separate interface to avoid `PriceItemDto['_product']` type definitions.
  */
 export const getMappedPricing = (price: Price): Price => {
+  /**
+   *? @todo We should define _price as not being an optional key in PriceItemDto since there is no case where is optional
+   *? Additionally, we should also define the _product as a separate interface to avoid `PriceItemDto['_product']` type definitions.
+   */
+
   const mappedPricing: Price = {} as Price;
 
   for (const key in price) {
-    if (!BLACK_LISTED_KEYS.has(key) && price[key] !== '') {
-      mappedPricing[key] = price[key];
+    const currValue = price[key];
+
+    if (!ENTITY_FIELDS_EXCLUSION_LIST.has(key) && currValue !== '') {
+      mappedPricing[key] = currValue;
     }
 
     // Checks if price has price_components and if so iterates over them to extract whitelisted keys
-    if (key === 'price_components' && price[key]) {
-      mappedPricing[key] = price[key].map((el: Price) => getMappedPricing(el));
+    if (key === 'price_components' && currValue && Array.isArray(currValue)) {
+      mappedPricing[key] = currValue.map((el: Price) => getMappedPricing(el));
     }
   }
 

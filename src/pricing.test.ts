@@ -7,7 +7,7 @@ import {
   computePriceDetails,
   computePriceItemDetails,
   extractPricingEntitiesBySlug,
-  getMappedPricing,
+  mapToPriceSnapshot,
   isCompositePrice,
 } from './pricing';
 import {
@@ -2142,13 +2142,13 @@ describe('extractPricingEntitiesBySlug', () => {
 
 describe('mapPricing', () => {
   it('should return an empty object if price is falsy', () => {
-    const result = getMappedPricing(null as unknown as Price);
+    const result = mapToPriceSnapshot(null as unknown as Price);
 
     expect(result).toStrictEqual({});
   });
 
   it('should exclude keys defined in the exclusion list', () => {
-    const result = getMappedPricing(samples.compositePrice as Price);
+    const result = mapToPriceSnapshot(samples.compositePrice as Price);
 
     expect(result).not.toHaveProperty(Array.from(ENTITY_FIELDS_EXCLUSION_LIST));
   });
@@ -2159,7 +2159,7 @@ describe('mapPricing', () => {
       price_components: undefined,
     };
 
-    const result = getMappedPricing(priceItem1 as unknown as Price);
+    const result = mapToPriceSnapshot(priceItem1 as unknown as Price);
 
     expect(result).toStrictEqual(expect.objectContaining({ price_components: undefined }));
   });

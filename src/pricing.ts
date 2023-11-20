@@ -212,7 +212,7 @@ export const computeCompositePrice = (
       type: existingItemComponent?.type || component.type,
       price_id: existingItemComponent?.price_id || component._id,
       product_id: existingItemComponent?.product_id || priceItem.product_id,
-      _price: getMappedPricing(existingItemComponent?._price || existingPrice),
+      _price: mapToPriceSnapshot(existingItemComponent?._price || existingPrice),
       _product: existingItemComponent?._product || priceItem._product,
       taxes: existingItemComponent?.taxes || [
         {
@@ -233,7 +233,7 @@ export const computeCompositePrice = (
 
   return {
     ...priceItem,
-    _price: getMappedPricing(priceItem._price! as Price),
+    _price: mapToPriceSnapshot(priceItem._price! as Price),
     currency: priceItem._price!.unit_amount_currency || DEFAULT_CURRENCY,
     ...(itemDescription && { description: itemDescription }),
     item_components: [...computedItemComponents],
@@ -495,9 +495,9 @@ export const ENTITY_FIELDS_EXCLUSION_LIST: Set<keyof Price> = new Set([
 ]);
 
 /**
- * Maps the whitelisted keys from the _price that we want available, avoiding having unnecessary data in the metadata.
+ * Converts a Price entity into a PriceDTO without all fields present on the entity fields exclusion list.
  */
-export const getMappedPricing = (price: Price): Price => {
+export const mapToPriceSnapshot = (price: Price): Price => {
   /**
    *? @todo We should define _price as not being an optional key in PriceItemDto since there is no case where is optional
    *? Additionally, we should also define the _product as a separate interface to avoid `PriceItemDto['_product']` type definitions.
@@ -514,7 +514,7 @@ export const getMappedPricing = (price: Price): Price => {
 
     // Checks if price has price_components and if so iterates over them to extract whitelisted keys
     if (key === 'price_components' && currValue && Array.isArray(currValue)) {
-      mappedPricing[key] = currValue.map((el: Price) => getMappedPricing(el));
+      mappedPricing[key] = currValue.map((el: Price) => mapToPriceSnapshot(el));
     }
   }
 
@@ -595,7 +595,7 @@ export const computePriceItem = (
       },
     ],
     _price: {
-      ...getMappedPricing(price!),
+      ...mapToPriceSnapshot(price!),
       ...(itemValues.displayMode && {
         price_display_in_journeys: itemValues.displayMode ?? price?.price_display_in_journeys,
         unchanged_price_display_in_journeys:

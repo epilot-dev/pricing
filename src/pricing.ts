@@ -213,7 +213,7 @@ export const computeCompositePrice = (
       price_id: existingItemComponent?.price_id || component._id,
       product_id: existingItemComponent?.product_id || priceItem.product_id,
       _price: mapToPriceSnapshot(existingItemComponent?._price || existingPrice),
-      _product: existingItemComponent?._product || priceItem._product,
+      _product: mapToProductSnapshot(existingItemComponent?._product || priceItem._product),
       taxes: existingItemComponent?.taxes || [
         {
           ...itemTaxRate,
@@ -233,6 +233,7 @@ export const computeCompositePrice = (
 
   return {
     ...priceItem,
+    ...(priceItem?._product && { _product: mapToProductSnapshot(priceItem._product!) }),
     _price: mapToPriceSnapshot(priceItem._price! as Price),
     currency: priceItem._price!.unit_amount_currency || DEFAULT_CURRENCY,
     ...(itemDescription && { description: itemDescription }),
@@ -508,7 +509,7 @@ export const mapToPriceSnapshot = (price: Price): Price => {
   for (const key in price) {
     const currValue = price[key];
 
-    if (!ENTITY_FIELDS_EXCLUSION_LIST.has(key) && currValue !== '') {
+    if (!ENTITY_FIELDS_EXCLUSION_LIST.has(key)) {
       mappedPricing[key] = currValue;
     }
 
@@ -519,6 +520,25 @@ export const mapToPriceSnapshot = (price: Price): Price => {
   }
 
   return mappedPricing;
+};
+
+/**
+ * Converts a Product entity into a ProductDTO without all fields present on the entity fields exclusion list.
+ */
+export const mapToProductSnapshot = (product: PriceItemDto['_product']): PriceItemDto['_product'] | undefined => {
+  if (!product) return undefined;
+
+  const mappedProduct = {} as NonNullable<PriceItemDto['_product']>;
+
+  for (const key in product) {
+    const currValue = product[key];
+
+    if (!ENTITY_FIELDS_EXCLUSION_LIST.has(key)) {
+      mappedProduct[key] = currValue;
+    }
+  }
+
+  return mappedProduct;
 };
 
 /**
@@ -594,6 +614,7 @@ export const computePriceItem = (
         amount: itemValues.taxAmount,
       },
     ],
+    ...(priceItem?._product && { _product: mapToProductSnapshot(priceItem._product) }),
     _price: {
       ...mapToPriceSnapshot(price!),
       ...(itemValues.displayMode && {

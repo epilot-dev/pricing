@@ -14,6 +14,7 @@ import type {
   PriceItemDto,
   PriceItemsDto,
   PricingDetails,
+  Product,
   RecurrenceAmount,
   Tax,
   TaxAmountDto,
@@ -280,6 +281,9 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
           {
             ...compositePriceItemToAppend,
             ...itemBreakdown,
+            // ! @diogo ver isto que aqui pode não ser um sitio porreiro.
+            amount_subtotal_decimal: d(itemBreakdown!.amount_subtotal!).toUnit().toString(),
+            amount_total_decimal: d(itemBreakdown!.amount_total!).toUnit().toString(),
             item_components: convertPriceComponentsPrecision(compositePriceItemToAppend.item_components!, 2),
           },
         ],
@@ -501,7 +505,6 @@ export const ENTITY_FIELDS_EXCLUSION_LIST: Set<keyof Price> = new Set([
 export const mapToPriceSnapshot = (price: Price): Price => {
   /**
    *? @todo We should define _price as not being an optional key in PriceItemDto since there is no case where is optional
-   *? Additionally, we should also define the _product as a separate interface to avoid `PriceItemDto['_product']` type definitions.
    */
 
   const mappedPricing: Price = {} as Price;
@@ -525,10 +528,10 @@ export const mapToPriceSnapshot = (price: Price): Price => {
 /**
  * Converts a Product entity into a ProductDTO without all fields present on the entity fields exclusion list.
  */
-export const mapToProductSnapshot = (product: PriceItemDto['_product']): PriceItemDto['_product'] | undefined => {
+export const mapToProductSnapshot = (product?: Product): Product | undefined => {
   if (!product) return undefined;
 
-  const mappedProduct = {} as NonNullable<PriceItemDto['_product']>;
+  const mappedProduct = {} as NonNullable<Product>;
 
   for (const key in product) {
     const currValue = product[key];
@@ -644,7 +647,9 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
   }),
   unit_amount_gross: d(priceItem.unit_amount_gross!).convertPrecision(precision).getAmount(),
   amount_subtotal: d(priceItem.amount_subtotal!).convertPrecision(precision).getAmount(),
+  amount_subtotal_decimal: d(priceItem.amount_subtotal!).toUnit().toString(),
   amount_total: d(priceItem.amount_total!).convertPrecision(precision).getAmount(),
+  amount_total_decimal: d(priceItem.amount_total!).toUnit().toString(),
   amount_tax: d(priceItem.amount_tax!).convertPrecision(precision).getAmount(),
   taxes: priceItem.taxes!.map((tax) => ({
     ...tax,

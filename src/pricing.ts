@@ -281,7 +281,6 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
           {
             ...compositePriceItemToAppend,
             ...itemBreakdown,
-            // ! @diogo ver isto que aqui pode não ser um sitio porreiro.
             amount_subtotal_decimal: d(itemBreakdown!.amount_subtotal!).toUnit().toString(),
             amount_total_decimal: d(itemBreakdown!.amount_total!).toUnit().toString(),
             item_components: convertPriceComponentsPrecision(compositePriceItemToAppend.item_components!, 2),

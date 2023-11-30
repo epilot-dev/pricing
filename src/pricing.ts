@@ -281,10 +281,10 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
           {
             ...compositePriceItemToAppend,
             ...itemBreakdown,
-            ...(itemBreakdown?.amount_subtotal && {
+            ...(typeof itemBreakdown?.amount_subtotal === 'number' && {
               amount_subtotal_decimal: d(itemBreakdown.amount_subtotal).toUnit().toString(),
             }),
-            ...(itemBreakdown?.amount_total && {
+            ...(typeof itemBreakdown?.amount_total === 'number' && {
               amount_total_decimal: d(itemBreakdown.amount_total).toUnit().toString(),
             }),
             item_components: convertPriceComponentsPrecision(compositePriceItemToAppend.item_components!, 2),

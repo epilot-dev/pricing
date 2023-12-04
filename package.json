@@ -54,7 +54,7 @@
   "author": "epilot GmbH",
   "license": "UNLICENSED",
   "dependencies": {
-    "@epilot/pricing-client": "^3.15.1",
+    "@epilot/pricing-client": "^3.15.3",
     "@types/dinero.js": "^1.9.0",
     "dinero.js": "^1.9.1"
   },

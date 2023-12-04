@@ -416,6 +416,8 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
       unit_amount_gross: priceUnitAmountGross.getAmount(),
       amount_subtotal: priceSubtotal.getAmount(),
       amount_total: priceTotal.getAmount(),
+      amount_subtotal_decimal: priceSubtotal.toUnit().toString(),
+      amount_total_decimal: priceTotal.toUnit().toString(),
       amount_tax: priceTax.getAmount(),
     });
   } else {
@@ -426,6 +428,8 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
     recurrence.unit_amount_gross = unitAmountGrossAmount.add(priceUnitAmountGross).getAmount();
     recurrence.amount_subtotal = subTotalAmount.add(priceSubtotal).getAmount();
     recurrence.amount_total = totalAmount.add(priceTotal).getAmount();
+    recurrence.amount_subtotal_decimal = subTotalAmount.add(priceSubtotal).toUnit().toString();
+    recurrence.amount_total_decimal = totalAmount.add(priceTotal).toUnit().toString();
     recurrence.amount_tax = taxAmount.add(priceTax).getAmount();
   }
 

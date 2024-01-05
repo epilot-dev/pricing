@@ -499,6 +499,7 @@ const recomputeDetailTotalsFromCompositePrice = (
       breakdown: {
         taxes: [],
         recurrences: [],
+        recurrencesByTax: [],
       },
     },
   };
@@ -723,6 +724,19 @@ const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem,
             amount_subtotal: d(recurrence.amount_subtotal).convertPrecision(precision).getAmount(),
             amount_total: d(recurrence.amount_total).convertPrecision(precision).getAmount(),
             amount_tax: d(recurrence.amount_tax!).convertPrecision(precision).getAmount(),
+          };
+        }),
+        recurrencesByTax: details?.total_details?.breakdown?.recurrencesByTax!.map((recurrence) => {
+          return {
+            ...recurrence,
+            unit_amount_gross: d(recurrence.unit_amount_gross!).convertPrecision(precision).getAmount(),
+            amount_subtotal: d(recurrence.amount_subtotal).convertPrecision(precision).getAmount(),
+            amount_total: d(recurrence.amount_total).convertPrecision(precision).getAmount(),
+            amount_tax: d(recurrence.amount_tax!).convertPrecision(precision).getAmount(),
+            tax: {
+              ...recurrence.tax,
+              amount: d(recurrence.tax?.amount!).convertPrecision(precision).getAmount(),
+            },
           };
         }),
       },

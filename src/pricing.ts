@@ -16,8 +16,8 @@ import type {
   PricingDetails,
   Product,
   RecurrenceAmount,
+  RecurrenceAmountWithTax,
   Tax,
-  TaxAmountBreakdown,
   TaxAmountDto,
 } from './types';
 import {
@@ -800,12 +800,7 @@ const getPriceRecurrence = (price: Price, recurrences: RecurrenceAmount[]) => {
   return recurrences.find((recurrenceItem) => recurrenceItem.type === 'one_time');
 };
 
-// TODO: update on lib
-const getPriceRecurrenceByTax = (
-  price: Price,
-  recurrencesByTax: (RecurrenceAmount & { tax?: TaxAmountBreakdown })[],
-  taxRate?: number,
-) => {
+const getPriceRecurrenceByTax = (price: Price, recurrencesByTax: RecurrenceAmountWithTax[], taxRate?: number) => {
   if (price?.type === 'recurring') {
     return recurrencesByTax.find(
       (recurrenceItem) =>

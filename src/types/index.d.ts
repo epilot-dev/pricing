@@ -19,6 +19,7 @@ export type EntityItem = Components.Schemas.EntityItem;
 export type EntityRelation = Components.Schemas.EntityRelation;
 export type TaxAmountBreakdown = Components.Schemas.TaxAmountBreakdown;
 export type RecurrenceAmount = Components.Schemas.RecurrenceAmount;
+export type RecurrenceAmountWithTax = Components.Schemas.RecurrenceAmountWithTax;
 export type BillingPeriod = Components.Schemas.BillingPeriod;
 export type PriceInputMappings = Components.Schemas.PriceInputMappings;
 export type PriceInputMapping = Components.Schemas.PriceInputMapping;

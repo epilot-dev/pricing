@@ -7,8 +7,8 @@ import {
   computePriceDetails,
   computePriceItemDetails,
   extractPricingEntitiesBySlug,
-  mapToPriceSnapshot,
   isCompositePrice,
+  mapToPriceSnapshot,
   mapToProductSnapshot,
 } from './pricing';
 import {

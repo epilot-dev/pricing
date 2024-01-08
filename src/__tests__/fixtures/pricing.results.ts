@@ -377,6 +377,7 @@ export const resultsWhenNoPricesProvided = {
       ],
       recurrencesByTax: [
         {
+          amount_subtotal: 0,
           amount_tax: 0,
           amount_total: 0,
           tax: {
@@ -764,6 +765,7 @@ export const severalItemsPerRecurrenceTotals = {
           ],
           recurrencesByTax: [
             {
+              amount_subtotal: 972,
               amount_tax: 97,
               amount_total: 1069,
               billing_period: 'monthly',
@@ -778,6 +780,7 @@ export const severalItemsPerRecurrenceTotals = {
               type: 'recurring',
             },
             {
+              amount_subtotal: 42,
               amount_tax: 3,
               amount_total: 45,
               billing_period: 'monthly',
@@ -792,6 +795,7 @@ export const severalItemsPerRecurrenceTotals = {
               type: 'recurring',
             },
             {
+              amount_subtotal: 42017,
               amount_tax: 7983,
               amount_total: 50000,
               tax: {
@@ -803,6 +807,7 @@ export const severalItemsPerRecurrenceTotals = {
                 },
               },
               type: 'one_time',
+              unit_amount_gross: 50000,
             },
           ],
           recurrences: [
@@ -1183,6 +1188,7 @@ export const severalItemsPerRecurrenceTotals = {
       ],
       recurrencesByTax: [
         {
+          amount_subtotal: 705425,
           amount_tax: 134031,
           amount_total: 839456,
           tax: {
@@ -1196,6 +1202,7 @@ export const severalItemsPerRecurrenceTotals = {
           type: 'one_time',
         },
         {
+          amount_subtotal: 2895,
           amount_tax: 550,
           amount_total: 3446,
           billing_period: 'monthly',
@@ -1210,6 +1217,7 @@ export const severalItemsPerRecurrenceTotals = {
           type: 'recurring',
         },
         {
+          amount_subtotal: 27274,
           amount_tax: 1636,
           amount_total: 28910,
           billing_period: 'yearly',
@@ -1224,6 +1232,7 @@ export const severalItemsPerRecurrenceTotals = {
           type: 'recurring',
         },
         {
+          amount_subtotal: 972,
           amount_tax: 97,
           amount_total: 1069,
           billing_period: 'monthly',
@@ -1238,6 +1247,7 @@ export const severalItemsPerRecurrenceTotals = {
           type: 'recurring',
         },
         {
+          amount_subtotal: 42,
           amount_tax: 3,
           amount_total: 45,
           billing_period: 'monthly',
@@ -1553,6 +1563,7 @@ export const compositePricesUnitAmountZeroResult = {
           ],
           recurrencesByTax: [
             {
+              amount_subtotal: 972,
               amount_tax: 97,
               amount_total: 1069,
               billing_period: 'monthly',
@@ -1567,6 +1578,7 @@ export const compositePricesUnitAmountZeroResult = {
               type: 'recurring',
             },
             {
+              amount_subtotal: 0,
               amount_tax: 0,
               amount_total: 0,
               billing_period: 'monthly',
@@ -1606,6 +1618,7 @@ export const compositePricesUnitAmountZeroResult = {
       ],
       recurrencesByTax: [
         {
+          amount_subtotal: 972,
           amount_tax: 97,
           amount_total: 1069,
           billing_period: 'monthly',
@@ -1620,6 +1633,7 @@ export const compositePricesUnitAmountZeroResult = {
           type: 'recurring',
         },
         {
+          amount_subtotal: 0,
           amount_tax: 0,
           amount_total: 0,
           billing_period: 'monthly',
@@ -1847,6 +1861,7 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
       ],
       recurrencesByTax: [
         {
+          amount_subtotal: 331704,
           amount_tax: 63024,
           amount_total: 394728,
           tax: {
@@ -1860,6 +1875,7 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
           type: 'one_time',
         },
         {
+          amount_subtotal: 2895,
           amount_tax: 550,
           amount_total: 3446,
           billing_period: 'monthly',
@@ -1874,6 +1890,7 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
           type: 'recurring',
         },
         {
+          amount_subtotal: 13637,
           amount_tax: 818,
           amount_total: 14455,
           billing_period: 'yearly',
@@ -1888,6 +1905,7 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
           type: 'recurring',
         },
         {
+          amount_subtotal: 13637,
           amount_tax: 1364,
           amount_total: 15001,
           billing_period: 'yearly',
@@ -2513,6 +2531,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           ],
           recurrencesByTax: [
             {
+              amount_subtotal: 972,
               amount_tax: 97,
               amount_total: 1069,
               billing_period: 'monthly',
@@ -2527,6 +2546,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
               type: 'recurring',
             },
             {
+              amount_subtotal: 42,
               amount_tax: 3,
               amount_total: 45,
               billing_period: 'monthly',
@@ -2541,6 +2561,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
               type: 'recurring',
             },
             {
+              amount_subtotal: 42017,
               amount_tax: 7983,
               amount_total: 50000,
               tax: {
@@ -3144,6 +3165,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
       ],
       recurrencesByTax: [
         {
+          amount_subtotal: 705425,
           amount_tax: 134031,
           amount_total: 839456,
           tax: {
@@ -3157,6 +3179,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           type: 'one_time',
         },
         {
+          amount_subtotal: 2895,
           amount_tax: 550,
           amount_total: 3446,
           billing_period: 'monthly',
@@ -3171,6 +3194,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           type: 'recurring',
         },
         {
+          amount_subtotal: 27274,
           amount_tax: 1636,
           amount_total: 28910,
           billing_period: 'yearly',
@@ -3185,6 +3209,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           type: 'recurring',
         },
         {
+          amount_subtotal: 972,
           amount_tax: 97,
           amount_total: 1069,
           billing_period: 'monthly',
@@ -3199,6 +3224,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           type: 'recurring',
         },
         {
+          amount_subtotal: 42,
           amount_tax: 3,
           amount_total: 45,
           billing_period: 'monthly',
@@ -3624,6 +3650,7 @@ export const resultCompositePriceQuantity2 = {
           ],
           recurrencesByTax: [
             {
+              amount_subtotal: 1944,
               amount_tax: 194,
               amount_total: 2138,
               billing_period: 'monthly',
@@ -3638,6 +3665,7 @@ export const resultCompositePriceQuantity2 = {
               type: 'recurring',
             },
             {
+              amount_subtotal: 85,
               amount_tax: 5,
               amount_total: 90,
               billing_period: 'monthly',
@@ -3652,6 +3680,7 @@ export const resultCompositePriceQuantity2 = {
               type: 'recurring',
             },
             {
+              amount_subtotal: 84034,
               amount_tax: 15966,
               amount_total: 100000,
               tax: {
@@ -3700,6 +3729,7 @@ export const resultCompositePriceQuantity2 = {
       ],
       recurrencesByTax: [
         {
+          amount_subtotal: 1944,
           amount_tax: 194,
           amount_total: 2138,
           billing_period: 'monthly',
@@ -3714,6 +3744,7 @@ export const resultCompositePriceQuantity2 = {
           type: 'recurring',
         },
         {
+          amount_subtotal: 85,
           amount_tax: 5,
           amount_total: 90,
           billing_period: 'monthly',
@@ -3728,6 +3759,7 @@ export const resultCompositePriceQuantity2 = {
           type: 'recurring',
         },
         {
+          amount_subtotal: 84034,
           amount_tax: 15966,
           amount_total: 100000,
           tax: {
@@ -3833,6 +3865,7 @@ export const priceDetailsForOnePrice = {
       ],
       recurrencesByTax: [
         {
+          amount_subtotal: 331704,
           amount_tax: 63024,
           amount_total: 394728,
           tax: {
@@ -3887,6 +3920,7 @@ export const priceDetailsForCompositePrice = {
       ],
       recurrencesByTax: [
         {
+          amount_subtotal: 972,
           amount_tax: 97,
           amount_total: 1069,
           billing_period: 'monthly',
@@ -3901,6 +3935,7 @@ export const priceDetailsForCompositePrice = {
           type: 'recurring',
         },
         {
+          amount_subtotal: 42,
           amount_tax: 3,
           amount_total: 45,
           billing_period: 'monthly',
@@ -3915,6 +3950,7 @@ export const priceDetailsForCompositePrice = {
           type: 'recurring',
         },
         {
+          amount_subtotal: 42017,
           amount_tax: 7983,
           amount_total: 50000,
           tax: {
@@ -4286,6 +4322,7 @@ export const priceDetailsForCompositePrice = {
           ],
           recurrencesByTax: [
             {
+              amount_subtotal: 972,
               amount_tax: 97,
               amount_total: 1069,
               billing_period: 'monthly',
@@ -4300,6 +4337,7 @@ export const priceDetailsForCompositePrice = {
               type: 'recurring',
             },
             {
+              amount_subtotal: 42,
               amount_tax: 3,
               amount_total: 45,
               billing_period: 'monthly',
@@ -4314,6 +4352,7 @@ export const priceDetailsForCompositePrice = {
               type: 'recurring',
             },
             {
+              amount_subtotal: 42017,
               amount_tax: 7983,
               amount_total: 50000,
               tax: {
@@ -4368,6 +4407,7 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
       ],
       recurrencesByTax: [
         {
+          amount_subtotal: 10,
           amount_tax: 0,
           amount_total: 10,
           tax: {
@@ -4379,6 +4419,7 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
           type: 'one_time',
         },
         {
+          amount_subtotal: 17,
           amount_tax: 3,
           amount_total: 20,
           billing_period: 'monthly',
@@ -4664,6 +4705,7 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
           ],
           recurrencesByTax: [
             {
+              amount_subtotal: 10,
               amount_tax: 0,
               amount_total: 10,
               tax: {
@@ -4675,6 +4717,7 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
               type: 'one_time',
             },
             {
+              amount_subtotal: 17,
               amount_tax: 3,
               amount_total: 20,
               billing_period: 'monthly',
@@ -5050,6 +5093,7 @@ export const resultsWithCompositePrices = {
           ],
           recurrencesByTax: [
             {
+              amount_subtotal: 972,
               amount_tax: 97,
               amount_total: 1069,
               billing_period: 'monthly',
@@ -5064,6 +5108,7 @@ export const resultsWithCompositePrices = {
               type: 'recurring',
             },
             {
+              amount_subtotal: 42,
               amount_tax: 3,
               amount_total: 45,
               billing_period: 'monthly',
@@ -5078,6 +5123,7 @@ export const resultsWithCompositePrices = {
               type: 'recurring',
             },
             {
+              amount_subtotal: 42017,
               amount_tax: 7983,
               amount_total: 50000,
               tax: {
@@ -5147,6 +5193,7 @@ export const resultsWithCompositePrices = {
       ],
       recurrencesByTax: [
         {
+          amount_subtotal: 972,
           amount_tax: 97,
           amount_total: 1069,
           billing_period: 'monthly',
@@ -5161,6 +5208,7 @@ export const resultsWithCompositePrices = {
           type: 'recurring',
         },
         {
+          amount_subtotal: 42,
           amount_tax: 3,
           amount_total: 45,
           billing_period: 'monthly',
@@ -5175,6 +5223,7 @@ export const resultsWithCompositePrices = {
           type: 'recurring',
         },
         {
+          amount_subtotal: 42017,
           amount_tax: 7983,
           amount_total: 50000,
           tax: {
@@ -5275,6 +5324,7 @@ export const resultsForSimplePrice = {
       ],
       recurrencesByTax: [
         {
+          amount_subtotal: 66341,
           amount_tax: 12605,
           amount_total: 78946,
           tax: {
@@ -5441,6 +5491,7 @@ export const oneItemPerRecurrenceTotals = {
       ],
       recurrencesByTax: [
         {
+          amount_subtotal: 331704,
           amount_tax: 63024,
           amount_total: 394728,
           tax: {
@@ -5454,6 +5505,7 @@ export const oneItemPerRecurrenceTotals = {
           type: 'one_time',
         },
         {
+          amount_subtotal: 2895,
           amount_tax: 550,
           amount_total: 3446,
           billing_period: 'monthly',
@@ -5468,6 +5520,7 @@ export const oneItemPerRecurrenceTotals = {
           type: 'recurring',
         },
         {
+          amount_subtotal: 13637,
           amount_tax: 818,
           amount_total: 14455,
           billing_period: 'yearly',
@@ -5482,6 +5535,7 @@ export const oneItemPerRecurrenceTotals = {
           type: 'recurring',
         },
         {
+          amount_subtotal: 13637,
           amount_tax: 1364,
           amount_total: 15001,
           billing_period: 'yearly',
@@ -5899,6 +5953,7 @@ export const resultCompositePriceWithTotalDetails = {
           ],
           recurrencesByTax: [
             {
+              amount_subtotal: 1944,
               amount_tax: 194,
               amount_total: 2138,
               billing_period: 'monthly',
@@ -5913,6 +5968,7 @@ export const resultCompositePriceWithTotalDetails = {
               type: 'recurring',
             },
             {
+              amount_subtotal: 85,
               amount_tax: 5,
               amount_total: 90,
               billing_period: 'monthly',
@@ -5927,6 +5983,7 @@ export const resultCompositePriceWithTotalDetails = {
               type: 'recurring',
             },
             {
+              amount_subtotal: 84034,
               amount_tax: 15966,
               amount_total: 100000,
               tax: {
@@ -5975,6 +6032,7 @@ export const resultCompositePriceWithTotalDetails = {
       ],
       recurrencesByTax: [
         {
+          amount_subtotal: 1944,
           amount_tax: 194,
           amount_total: 2138,
           billing_period: 'monthly',
@@ -5989,6 +6047,7 @@ export const resultCompositePriceWithTotalDetails = {
           type: 'recurring',
         },
         {
+          amount_subtotal: 85,
           amount_tax: 5,
           amount_total: 90,
           billing_period: 'monthly',
@@ -6003,6 +6062,7 @@ export const resultCompositePriceWithTotalDetails = {
           type: 'recurring',
         },
         {
+          amount_subtotal: 84034,
           amount_tax: 15966,
           amount_total: 100000,
           tax: {

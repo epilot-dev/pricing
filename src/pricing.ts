@@ -447,13 +447,16 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
       type: ['one_time', 'recurring'].includes(type!) ? type : 'one_time',
       ...(price?.type === 'recurring' && { billing_period: price?.billing_period }),
       amount_total: priceTotal.getAmount(),
+      amount_subtotal: priceSubtotal.getAmount(),
       amount_tax: priceTax.getAmount(),
       tax: recurrenceTax,
     });
   } else {
     const totalAmount = d(recurrenceByTax.amount_total);
+    const subTotalAmount = d(recurrenceByTax.amount_subtotal);
     const taxAmount = d(recurrenceByTax.amount_tax!);
     recurrenceByTax.amount_total = totalAmount.add(priceTotal).getAmount();
+    recurrenceByTax.amount_subtotal = subTotalAmount.add(priceSubtotal).getAmount();
     recurrenceByTax.amount_tax = taxAmount.add(priceTax).getAmount();
   }
 
@@ -720,6 +723,7 @@ const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem,
           return {
             ...recurrence,
             amount_total: d(recurrence.amount_total).convertPrecision(precision).getAmount(),
+            amount_subtotal: d(recurrence.amount_subtotal).convertPrecision(precision).getAmount(),
             amount_tax: d(recurrence.amount_tax!).convertPrecision(precision).getAmount(),
             tax: {
               ...recurrence.tax,

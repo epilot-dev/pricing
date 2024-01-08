@@ -446,24 +446,14 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
     recurrencesByTax.push({
       type: ['one_time', 'recurring'].includes(type!) ? type : 'one_time',
       ...(price?.type === 'recurring' && { billing_period: price?.billing_period }),
-      unit_amount_gross: priceUnitAmountGross.getAmount(),
-      amount_subtotal: priceSubtotal.getAmount(),
       amount_total: priceTotal.getAmount(),
-      amount_subtotal_decimal: priceSubtotal.toUnit().toString(),
-      amount_total_decimal: priceTotal.toUnit().toString(),
       amount_tax: priceTax.getAmount(),
       tax: recurrenceTax,
     });
   } else {
-    const unitAmountGrossAmount = d(recurrenceByTax.unit_amount_gross!);
-    const subTotalAmount = d(recurrenceByTax.amount_subtotal);
     const totalAmount = d(recurrenceByTax.amount_total);
     const taxAmount = d(recurrenceByTax.amount_tax!);
-    recurrenceByTax.unit_amount_gross = unitAmountGrossAmount.add(priceUnitAmountGross).getAmount();
-    recurrenceByTax.amount_subtotal = subTotalAmount.add(priceSubtotal).getAmount();
     recurrenceByTax.amount_total = totalAmount.add(priceTotal).getAmount();
-    recurrenceByTax.amount_subtotal_decimal = subTotalAmount.add(priceSubtotal).toUnit().toString();
-    recurrenceByTax.amount_total_decimal = totalAmount.add(priceTotal).toUnit().toString();
     recurrenceByTax.amount_tax = taxAmount.add(priceTax).getAmount();
   }
 
@@ -729,8 +719,6 @@ const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem,
         recurrencesByTax: details?.total_details?.breakdown?.recurrencesByTax!.map((recurrence) => {
           return {
             ...recurrence,
-            unit_amount_gross: d(recurrence.unit_amount_gross!).convertPrecision(precision).getAmount(),
-            amount_subtotal: d(recurrence.amount_subtotal).convertPrecision(precision).getAmount(),
             amount_total: d(recurrence.amount_total).convertPrecision(precision).getAmount(),
             amount_tax: d(recurrence.amount_tax!).convertPrecision(precision).getAmount(),
             tax: {

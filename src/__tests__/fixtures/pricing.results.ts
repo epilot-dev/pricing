@@ -807,7 +807,6 @@ export const severalItemsPerRecurrenceTotals = {
                 },
               },
               type: 'one_time',
-              unit_amount_gross: 50000,
             },
           ],
           recurrences: [

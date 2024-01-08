@@ -375,6 +375,19 @@ export const resultsWhenNoPricesProvided = {
           },
         },
       ],
+      recurrencesByTax: [
+        {
+          amount_tax: 0,
+          amount_total: 0,
+          tax: {
+            amount: 0,
+            tax: {
+              rate: 0,
+            },
+          },
+          type: 'one_time',
+        },
+      ],
       recurrences: [
         {
           amount_subtotal: 0,
@@ -747,6 +760,49 @@ export const severalItemsPerRecurrenceTotals = {
                 rate: 19,
               },
               amount: 7983,
+            },
+          ],
+          recurrencesByTax: [
+            {
+              amount_tax: 97,
+              amount_total: 1069,
+              billing_period: 'monthly',
+              tax: {
+                amount: 97,
+                tax: {
+                  _id: '10',
+                  rate: 10,
+                  type: 'VAT',
+                },
+              },
+              type: 'recurring',
+            },
+            {
+              amount_tax: 3,
+              amount_total: 45,
+              billing_period: 'monthly',
+              tax: {
+                amount: 3,
+                tax: {
+                  _id: '6',
+                  rate: 6,
+                  type: 'VAT',
+                },
+              },
+              type: 'recurring',
+            },
+            {
+              amount_tax: 7983,
+              amount_total: 50000,
+              tax: {
+                amount: 7983,
+                tax: {
+                  _id: '19',
+                  rate: 19,
+                  type: 'VAT',
+                },
+              },
+              type: 'one_time',
             },
           ],
           recurrences: [
@@ -1125,6 +1181,77 @@ export const severalItemsPerRecurrenceTotals = {
           amount: 97,
         },
       ],
+      recurrencesByTax: [
+        {
+          amount_tax: 134031,
+          amount_total: 839456,
+          tax: {
+            amount: 134581,
+            tax: {
+              _id: '19',
+              rate: 19,
+              type: 'VAT',
+            },
+          },
+          type: 'one_time',
+        },
+        {
+          amount_tax: 550,
+          amount_total: 3446,
+          billing_period: 'monthly',
+          tax: {
+            amount: 134581,
+            tax: {
+              _id: '19',
+              rate: 19,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
+        {
+          amount_tax: 1636,
+          amount_total: 28910,
+          billing_period: 'yearly',
+          tax: {
+            amount: 1639,
+            tax: {
+              _id: '6',
+              rate: 6,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
+        {
+          amount_tax: 97,
+          amount_total: 1069,
+          billing_period: 'monthly',
+          tax: {
+            amount: 97,
+            tax: {
+              _id: '10',
+              rate: 10,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
+        {
+          amount_tax: 3,
+          amount_total: 45,
+          billing_period: 'monthly',
+          tax: {
+            amount: 1639,
+            tax: {
+              _id: '6',
+              rate: 6,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
+      ],
       recurrences: [
         {
           type: 'one_time',
@@ -1424,6 +1551,36 @@ export const compositePricesUnitAmountZeroResult = {
               amount_subtotal_decimal: '9.718181818182',
             },
           ],
+          recurrencesByTax: [
+            {
+              amount_tax: 97,
+              amount_total: 1069,
+              billing_period: 'monthly',
+              tax: {
+                amount: 97,
+                tax: {
+                  _id: '10',
+                  rate: 10,
+                  type: 'VAT',
+                },
+              },
+              type: 'recurring',
+            },
+            {
+              amount_tax: 0,
+              amount_total: 0,
+              billing_period: 'monthly',
+              tax: {
+                amount: 0,
+                tax: {
+                  _id: '6',
+                  rate: 6,
+                  type: 'VAT',
+                },
+              },
+              type: 'recurring',
+            },
+          ],
           taxes: [
             { amount: 97, tax: { _id: '10', rate: 10, type: 'VAT' } },
             { amount: 0, tax: { _id: '6', rate: 6, type: 'VAT' } },
@@ -1445,6 +1602,36 @@ export const compositePricesUnitAmountZeroResult = {
           type: 'recurring',
           amount_total_decimal: '10.69',
           amount_subtotal_decimal: '9.718181818182',
+        },
+      ],
+      recurrencesByTax: [
+        {
+          amount_tax: 97,
+          amount_total: 1069,
+          billing_period: 'monthly',
+          tax: {
+            amount: 97,
+            tax: {
+              _id: '10',
+              rate: 10,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
+        {
+          amount_tax: 0,
+          amount_total: 0,
+          billing_period: 'monthly',
+          tax: {
+            amount: 0,
+            tax: {
+              _id: '6',
+              rate: 6,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
         },
       ],
       taxes: [
@@ -1656,6 +1843,63 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
             rate: tax10percent.rate,
             type: tax10percent.type,
           },
+        },
+      ],
+      recurrencesByTax: [
+        {
+          amount_tax: 63024,
+          amount_total: 394728,
+          tax: {
+            amount: 63574,
+            tax: {
+              _id: '19',
+              rate: 19,
+              type: 'VAT',
+            },
+          },
+          type: 'one_time',
+        },
+        {
+          amount_tax: 550,
+          amount_total: 3446,
+          billing_period: 'monthly',
+          tax: {
+            amount: 63574,
+            tax: {
+              _id: '19',
+              rate: 19,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
+        {
+          amount_tax: 818,
+          amount_total: 14455,
+          billing_period: 'yearly',
+          tax: {
+            amount: 818,
+            tax: {
+              _id: '6',
+              rate: 6,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
+        {
+          amount_tax: 1364,
+          amount_total: 15001,
+          billing_period: 'yearly',
+          tax: {
+            amount: 1364,
+            tax: {
+              _id: '10',
+              rate: 10,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
         },
       ],
       recurrences: [
@@ -1913,6 +2157,7 @@ export const compositePriceWithDisplayOnRequest = {
         breakdown: {
           recurrences: [] as any,
           taxes: [] as any,
+          recurrencesByTax: [] as any,
         },
       },
     },
@@ -1926,6 +2171,7 @@ export const compositePriceWithDisplayOnRequest = {
     breakdown: {
       taxes: [] as any,
       recurrences: [] as any,
+      recurrencesByTax: [] as any,
     },
   },
 };
@@ -2264,6 +2510,49 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
             { tax: { _id: '10', type: 'VAT', rate: 10 }, amount: 97 },
             { tax: { _id: '6', type: 'VAT', rate: 6 }, amount: 3 },
             { tax: { _id: '19', type: 'VAT', rate: 19 }, amount: 7983 },
+          ],
+          recurrencesByTax: [
+            {
+              amount_tax: 97,
+              amount_total: 1069,
+              billing_period: 'monthly',
+              tax: {
+                amount: 97,
+                tax: {
+                  _id: '10',
+                  rate: 10,
+                  type: 'VAT',
+                },
+              },
+              type: 'recurring',
+            },
+            {
+              amount_tax: 3,
+              amount_total: 45,
+              billing_period: 'monthly',
+              tax: {
+                amount: 3,
+                tax: {
+                  _id: '6',
+                  rate: 6,
+                  type: 'VAT',
+                },
+              },
+              type: 'recurring',
+            },
+            {
+              amount_tax: 7983,
+              amount_total: 50000,
+              tax: {
+                amount: 7983,
+                tax: {
+                  _id: '19',
+                  rate: 19,
+                  type: 'VAT',
+                },
+              },
+              type: 'one_time',
+            },
           ],
           recurrences: [
             {
@@ -2837,6 +3126,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
         breakdown: {
           recurrences: [] as any,
           taxes: [] as Tax[],
+          recurrencesByTax: [] as any,
         },
       },
     },
@@ -2851,6 +3141,77 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
         { tax: { _id: '19', type: 'VAT', rate: 19 }, amount: 134581 },
         { tax: { _id: '6', type: 'VAT', rate: 6 }, amount: 1639 },
         { tax: { _id: '10', type: 'VAT', rate: 10 }, amount: 97 },
+      ],
+      recurrencesByTax: [
+        {
+          amount_tax: 134031,
+          amount_total: 839456,
+          tax: {
+            amount: 134581,
+            tax: {
+              _id: '19',
+              rate: 19,
+              type: 'VAT',
+            },
+          },
+          type: 'one_time',
+        },
+        {
+          amount_tax: 550,
+          amount_total: 3446,
+          billing_period: 'monthly',
+          tax: {
+            amount: 134581,
+            tax: {
+              _id: '19',
+              rate: 19,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
+        {
+          amount_tax: 1636,
+          amount_total: 28910,
+          billing_period: 'yearly',
+          tax: {
+            amount: 1639,
+            tax: {
+              _id: '6',
+              rate: 6,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
+        {
+          amount_tax: 97,
+          amount_total: 1069,
+          billing_period: 'monthly',
+          tax: {
+            amount: 97,
+            tax: {
+              _id: '10',
+              rate: 10,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
+        {
+          amount_tax: 3,
+          amount_total: 45,
+          billing_period: 'monthly',
+          tax: {
+            amount: 1639,
+            tax: {
+              _id: '6',
+              rate: 6,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
       ],
       recurrences: [
         {
@@ -3261,6 +3622,49 @@ export const resultCompositePriceQuantity2 = {
               amount_subtotal_decimal: '840.336134453782',
             },
           ],
+          recurrencesByTax: [
+            {
+              amount_tax: 194,
+              amount_total: 2138,
+              billing_period: 'monthly',
+              tax: {
+                amount: 194,
+                tax: {
+                  _id: '10',
+                  rate: 10,
+                  type: 'VAT',
+                },
+              },
+              type: 'recurring',
+            },
+            {
+              amount_tax: 5,
+              amount_total: 90,
+              billing_period: 'monthly',
+              tax: {
+                amount: 5,
+                tax: {
+                  _id: '6',
+                  rate: 6,
+                  type: 'VAT',
+                },
+              },
+              type: 'recurring',
+            },
+            {
+              amount_tax: 15966,
+              amount_total: 100000,
+              tax: {
+                amount: 15966,
+                tax: {
+                  _id: '19',
+                  rate: 19,
+                  type: 'VAT',
+                },
+              },
+              type: 'one_time',
+            },
+          ],
           taxes: [
             { amount: 194, tax: { _id: '10', rate: 10, type: 'VAT' } },
             { amount: 5, tax: { _id: '6', rate: 6, type: 'VAT' } },
@@ -3292,6 +3696,49 @@ export const resultCompositePriceQuantity2 = {
           type: 'one_time',
           amount_total_decimal: '1000',
           amount_subtotal_decimal: '840.336134453782',
+        },
+      ],
+      recurrencesByTax: [
+        {
+          amount_tax: 194,
+          amount_total: 2138,
+          billing_period: 'monthly',
+          tax: {
+            amount: 194,
+            tax: {
+              _id: '10',
+              rate: 10,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
+        {
+          amount_tax: 5,
+          amount_total: 90,
+          billing_period: 'monthly',
+          tax: {
+            amount: 5,
+            tax: {
+              _id: '6',
+              rate: 6,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
+        {
+          amount_tax: 15966,
+          amount_total: 100000,
+          tax: {
+            amount: 15966,
+            tax: {
+              _id: '19',
+              rate: 19,
+              type: 'VAT',
+            },
+          },
+          type: 'one_time',
         },
       ],
       taxes: [
@@ -3384,6 +3831,21 @@ export const priceDetailsForOnePrice = {
           amount_total_decimal: '3947.28112228339',
         },
       ],
+      recurrencesByTax: [
+        {
+          amount_tax: 63024,
+          amount_total: 394728,
+          tax: {
+            amount: 63024,
+            tax: {
+              _id: '19',
+              rate: 19,
+              type: 'VAT',
+            },
+          },
+          type: 'one_time',
+        },
+      ],
       taxes: [{ amount: 63024, tax: { _id: '19', rate: 19, type: 'VAT' } }],
     },
   },
@@ -3421,6 +3883,49 @@ export const priceDetailsForCompositePrice = {
           amount_tax: 7983,
           amount_subtotal_decimal: '420.168067226891',
           amount_total_decimal: '500',
+        },
+      ],
+      recurrencesByTax: [
+        {
+          amount_tax: 97,
+          amount_total: 1069,
+          billing_period: 'monthly',
+          tax: {
+            amount: 97,
+            tax: {
+              _id: '10',
+              rate: 10,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
+        {
+          amount_tax: 3,
+          amount_total: 45,
+          billing_period: 'monthly',
+          tax: {
+            amount: 3,
+            tax: {
+              _id: '6',
+              rate: 6,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
+        {
+          amount_tax: 7983,
+          amount_total: 50000,
+          tax: {
+            amount: 7983,
+            tax: {
+              _id: '19',
+              rate: 19,
+              type: 'VAT',
+            },
+          },
+          type: 'one_time',
         },
       ],
     },
@@ -3779,6 +4284,49 @@ export const priceDetailsForCompositePrice = {
               amount_subtotal_decimal: '420.168067226891',
             },
           ],
+          recurrencesByTax: [
+            {
+              amount_tax: 97,
+              amount_total: 1069,
+              billing_period: 'monthly',
+              tax: {
+                amount: 97,
+                tax: {
+                  _id: '10',
+                  rate: 10,
+                  type: 'VAT',
+                },
+              },
+              type: 'recurring',
+            },
+            {
+              amount_tax: 3,
+              amount_total: 45,
+              billing_period: 'monthly',
+              tax: {
+                amount: 3,
+                tax: {
+                  _id: '6',
+                  rate: 6,
+                  type: 'VAT',
+                },
+              },
+              type: 'recurring',
+            },
+            {
+              amount_tax: 7983,
+              amount_total: 50000,
+              tax: {
+                amount: 7983,
+                tax: {
+                  _id: '19',
+                  rate: 19,
+                  type: 'VAT',
+                },
+              },
+              type: 'one_time',
+            },
+          ],
         },
       },
     },
@@ -3816,6 +4364,33 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
           amount_tax: 3,
           amount_subtotal_decimal: '0.168067226891',
           amount_total_decimal: '0.2',
+        },
+      ],
+      recurrencesByTax: [
+        {
+          amount_tax: 0,
+          amount_total: 10,
+          tax: {
+            amount: 0,
+            tax: {
+              rate: 0,
+            },
+          },
+          type: 'one_time',
+        },
+        {
+          amount_tax: 3,
+          amount_total: 20,
+          billing_period: 'monthly',
+          tax: {
+            amount: 3,
+            tax: {
+              _id: '79cac814-18c8-4047-ae45-1d0828598a18',
+              rate: 19,
+              type: 'Custom',
+            },
+          },
+          type: 'recurring',
         },
       ],
     },
@@ -4085,6 +4660,33 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
               amount_tax: 3,
               amount_subtotal_decimal: '0.168067226891',
               amount_total_decimal: '0.2',
+            },
+          ],
+          recurrencesByTax: [
+            {
+              amount_tax: 0,
+              amount_total: 10,
+              tax: {
+                amount: 0,
+                tax: {
+                  rate: 0,
+                },
+              },
+              type: 'one_time',
+            },
+            {
+              amount_tax: 3,
+              amount_total: 20,
+              billing_period: 'monthly',
+              tax: {
+                amount: 3,
+                tax: {
+                  _id: '79cac814-18c8-4047-ae45-1d0828598a18',
+                  rate: 19,
+                  type: 'Custom',
+                },
+              },
+              type: 'recurring',
             },
           ],
         },
@@ -4446,6 +5048,49 @@ export const resultsWithCompositePrices = {
               type: 'one_time',
             },
           ],
+          recurrencesByTax: [
+            {
+              amount_tax: 97,
+              amount_total: 1069,
+              billing_period: 'monthly',
+              tax: {
+                amount: 97,
+                tax: {
+                  _id: '10',
+                  rate: 10,
+                  type: 'VAT',
+                },
+              },
+              type: 'recurring',
+            },
+            {
+              amount_tax: 3,
+              amount_total: 45,
+              billing_period: 'monthly',
+              tax: {
+                amount: 3,
+                tax: {
+                  _id: '6',
+                  rate: 6,
+                  type: 'VAT',
+                },
+              },
+              type: 'recurring',
+            },
+            {
+              amount_tax: 7983,
+              amount_total: 50000,
+              tax: {
+                amount: 7983,
+                tax: {
+                  _id: '19',
+                  rate: 19,
+                  type: 'VAT',
+                },
+              },
+              type: 'one_time',
+            },
+          ],
           taxes: [
             {
               amount: 97,
@@ -4498,6 +5143,49 @@ export const resultsWithCompositePrices = {
           type: 'one_time',
           amount_subtotal_decimal: '420.168067226891',
           amount_total_decimal: '500',
+        },
+      ],
+      recurrencesByTax: [
+        {
+          amount_tax: 97,
+          amount_total: 1069,
+          billing_period: 'monthly',
+          tax: {
+            amount: 97,
+            tax: {
+              _id: '10',
+              rate: 10,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
+        {
+          amount_tax: 3,
+          amount_total: 45,
+          billing_period: 'monthly',
+          tax: {
+            amount: 3,
+            tax: {
+              _id: '6',
+              rate: 6,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
+        {
+          amount_tax: 7983,
+          amount_total: 50000,
+          tax: {
+            amount: 7983,
+            tax: {
+              _id: '19',
+              rate: 19,
+              type: 'VAT',
+            },
+          },
+          type: 'one_time',
         },
       ],
       taxes: [
@@ -4583,6 +5271,21 @@ export const resultsForSimplePrice = {
           type: 'one_time',
           amount_subtotal_decimal: '663.408591980402',
           amount_total_decimal: '789.456224456678',
+        },
+      ],
+      recurrencesByTax: [
+        {
+          amount_tax: 12605,
+          amount_total: 78946,
+          tax: {
+            amount: 12605,
+            tax: {
+              _id: '19',
+              rate: 19,
+              type: 'VAT',
+            },
+          },
+          type: 'one_time',
         },
       ],
       taxes: [{ amount: 12605, tax: { _id: '19', rate: 19, type: 'VAT' } }],
@@ -4734,6 +5437,63 @@ export const oneItemPerRecurrenceTotals = {
             rate: tax10percent.rate,
             type: tax10percent.type,
           },
+        },
+      ],
+      recurrencesByTax: [
+        {
+          amount_tax: 63024,
+          amount_total: 394728,
+          tax: {
+            amount: 63574,
+            tax: {
+              _id: '19',
+              rate: 19,
+              type: 'VAT',
+            },
+          },
+          type: 'one_time',
+        },
+        {
+          amount_tax: 550,
+          amount_total: 3446,
+          billing_period: 'monthly',
+          tax: {
+            amount: 63574,
+            tax: {
+              _id: '19',
+              rate: 19,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
+        {
+          amount_tax: 818,
+          amount_total: 14455,
+          billing_period: 'yearly',
+          tax: {
+            amount: 818,
+            tax: {
+              _id: '6',
+              rate: 6,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
+        {
+          amount_tax: 1364,
+          amount_total: 15001,
+          billing_period: 'yearly',
+          tax: {
+            amount: 1364,
+            tax: {
+              _id: '10',
+              rate: 10,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
         },
       ],
       recurrences: [
@@ -5137,6 +5897,49 @@ export const resultCompositePriceWithTotalDetails = {
               type: 'one_time',
             },
           ],
+          recurrencesByTax: [
+            {
+              amount_tax: 194,
+              amount_total: 2138,
+              billing_period: 'monthly',
+              tax: {
+                amount: 194,
+                tax: {
+                  _id: '10',
+                  rate: 10,
+                  type: 'VAT',
+                },
+              },
+              type: 'recurring',
+            },
+            {
+              amount_tax: 5,
+              amount_total: 90,
+              billing_period: 'monthly',
+              tax: {
+                amount: 5,
+                tax: {
+                  _id: '6',
+                  rate: 6,
+                  type: 'VAT',
+                },
+              },
+              type: 'recurring',
+            },
+            {
+              amount_tax: 15966,
+              amount_total: 100000,
+              tax: {
+                amount: 15966,
+                tax: {
+                  _id: '19',
+                  rate: 19,
+                  type: 'VAT',
+                },
+              },
+              type: 'one_time',
+            },
+          ],
           taxes: [
             { amount: 194, tax: { _id: '10', rate: 10, type: 'VAT' } },
             { amount: 5, tax: { _id: '6', rate: 6, type: 'VAT' } },
@@ -5168,6 +5971,49 @@ export const resultCompositePriceWithTotalDetails = {
           type: 'one_time',
           amount_subtotal_decimal: '840.336134453782',
           amount_total_decimal: '1000',
+        },
+      ],
+      recurrencesByTax: [
+        {
+          amount_tax: 194,
+          amount_total: 2138,
+          billing_period: 'monthly',
+          tax: {
+            amount: 194,
+            tax: {
+              _id: '10',
+              rate: 10,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
+        {
+          amount_tax: 5,
+          amount_total: 90,
+          billing_period: 'monthly',
+          tax: {
+            amount: 5,
+            tax: {
+              _id: '6',
+              rate: 6,
+              type: 'VAT',
+            },
+          },
+          type: 'recurring',
+        },
+        {
+          amount_tax: 15966,
+          amount_total: 100000,
+          tax: {
+            amount: 15966,
+            tax: {
+              _id: '19',
+              rate: 19,
+              type: 'VAT',
+            },
+          },
+          type: 'one_time',
         },
       ],
       taxes: [

@@ -1,5 +1,5 @@
 import { Components } from '@epilot/pricing-client';
-import type { Currency, Dinero } from 'dinero.js';
+import type { Dinero } from 'dinero.js';
 
 export type Price = Components.Schemas.Price;
 export type PriceItem = Components.Schemas.PriceItem;
@@ -17,8 +17,9 @@ export type CompositePriceItemDto = Components.Schemas.CompositePriceItemDto;
 export type CompositePriceItem = Components.Schemas.CompositePriceItem;
 export type EntityItem = Components.Schemas.EntityItem;
 export type EntityRelation = Components.Schemas.EntityRelation;
-export type RecurrenceAmount = Components.Schemas.RecurrenceAmount;
 export type TaxAmountBreakdown = Components.Schemas.TaxAmountBreakdown;
+export type RecurrenceAmount = Components.Schemas.RecurrenceAmount;
+export type RecurrenceAmountWithTax = Components.Schemas.RecurrenceAmountWithTax;
 export type BillingPeriod = Components.Schemas.BillingPeriod;
 export type PriceInputMappings = Components.Schemas.PriceInputMappings;
 export type PriceInputMapping = Components.Schemas.PriceInputMapping;

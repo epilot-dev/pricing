@@ -16,6 +16,7 @@ import type {
   PricingDetails,
   Product,
   RecurrenceAmount,
+  RecurrenceAmountWithTax,
   Tax,
   TaxAmountDto,
 } from './types';
@@ -262,6 +263,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
       breakdown: {
         taxes: [],
         recurrences: [],
+        recurrencesByTax: [],
       },
     },
     currency: DEFAULT_CURRENCY,
@@ -375,6 +377,9 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
   const recurrences = [...details?.total_details?.breakdown?.recurrences!] || [];
   const recurrence = getPriceRecurrence(price, recurrences);
 
+  const recurrencesByTax = [...details?.total_details?.breakdown?.recurrencesByTax!] || [];
+  const recurrenceByTax = getPriceRecurrenceByTax(price, recurrencesByTax, tax?.tax?.rate ?? itemTax?.rate);
+
   const total = d(details.amount_total!);
   const subtotal = d(details.amount_subtotal!);
   const totalTax = d(details?.total_details?.amount_tax!);
@@ -433,6 +438,25 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
     recurrence.amount_tax = taxAmount.add(priceTax).getAmount();
   }
 
+  const recurrenceTax = !tax && itemTax ? taxes.at(-1) : tax;
+
+  if (!recurrenceByTax) {
+    const type = price?.type || priceItemToAppend?.type;
+
+    recurrencesByTax.push({
+      type: ['one_time', 'recurring'].includes(type!) ? type : 'one_time',
+      ...(price?.type === 'recurring' && { billing_period: price?.billing_period }),
+      amount_total: priceTotal.getAmount(),
+      amount_tax: priceTax.getAmount(),
+      tax: recurrenceTax,
+    });
+  } else {
+    const totalAmount = d(recurrenceByTax.amount_total);
+    const taxAmount = d(recurrenceByTax.amount_tax!);
+    recurrenceByTax.amount_total = totalAmount.add(priceTotal).getAmount();
+    recurrenceByTax.amount_tax = taxAmount.add(priceTax).getAmount();
+  }
+
   return {
     amount_subtotal: subtotal.add(priceSubtotal).getAmount(),
     amount_total: total.add(priceTotal).getAmount(),
@@ -442,6 +466,7 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
       breakdown: {
         taxes,
         recurrences,
+        recurrencesByTax,
       },
     },
   };
@@ -464,6 +489,7 @@ const recomputeDetailTotalsFromCompositePrice = (
       breakdown: {
         taxes: [],
         recurrences: [],
+        recurrencesByTax: [],
       },
     },
   };
@@ -690,6 +716,17 @@ const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem,
             amount_tax: d(recurrence.amount_tax!).convertPrecision(precision).getAmount(),
           };
         }),
+        recurrencesByTax: details?.total_details?.breakdown?.recurrencesByTax!.map((recurrence) => {
+          return {
+            ...recurrence,
+            amount_total: d(recurrence.amount_total).convertPrecision(precision).getAmount(),
+            amount_tax: d(recurrence.amount_tax!).convertPrecision(precision).getAmount(),
+            tax: {
+              ...recurrence.tax,
+              amount: d(recurrence.tax?.amount!).convertPrecision(precision).getAmount(),
+            },
+          };
+        }),
       },
     },
   };
@@ -749,6 +786,21 @@ const getPriceRecurrence = (price: Price, recurrences: RecurrenceAmount[]) => {
   }
 
   return recurrences.find((recurrenceItem) => recurrenceItem.type === 'one_time');
+};
+
+const getPriceRecurrenceByTax = (price: Price, recurrencesByTax: RecurrenceAmountWithTax[], taxRate?: number) => {
+  if (price?.type === 'recurring') {
+    return recurrencesByTax.find(
+      (recurrenceItem) =>
+        recurrenceItem.type === price.type &&
+        recurrenceItem.billing_period === price.billing_period &&
+        (!taxRate || recurrenceItem.tax?.tax?.rate === taxRate),
+    );
+  }
+
+  return recurrencesByTax.find(
+    (recurrenceItem) => recurrenceItem.type === 'one_time' && (!taxRate || recurrenceItem.tax?.tax?.rate === taxRate),
+  );
 };
 
 const isUnitAmountApproved = (

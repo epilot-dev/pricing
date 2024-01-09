@@ -106,6 +106,50 @@ describe('computeAggregatedAndPriceTotals', () => {
       );
     });
 
+    it('should return the right result when multiple prices are nontaxable', () => {
+      const priceItems = [samples.priceItemNonTaxable, samples.priceItemNonTaxable2];
+
+      const result = computeAggregatedAndPriceTotals(priceItems);
+
+      expect(result).toEqual(
+        expect.objectContaining({
+          amount_subtotal: 3000,
+          amount_total: 3000,
+          items: expect.arrayContaining([
+            expect.objectContaining({
+              amount_subtotal: 1000,
+              amount_total: 1000,
+              unit_amount_decimal: '10.00',
+              unit_amount_gross: 1000,
+              unit_amount_net: 1000,
+              taxes: [
+                {
+                  amount: 0,
+                  rate: 'nontaxable',
+                  rateValue: 0,
+                },
+              ],
+            }),
+            expect.objectContaining({
+              amount_subtotal: 2000,
+              amount_total: 2000,
+              unit_amount_decimal: '20.00',
+              unit_amount_gross: 2000,
+              unit_amount_net: 2000,
+              taxes: [
+                {
+                  amount: 0,
+                  rate: 'nontaxable',
+                  rateValue: 0,
+                },
+              ],
+            }),
+          ]),
+          total_details: expect.objectContaining({ amount_tax: 0 }),
+        }),
+      );
+    });
+
     it('should return the right result when quantity=0', () => {
       const priceItems = [{ ...samples.priceItem1, quantity: 0 }];
 

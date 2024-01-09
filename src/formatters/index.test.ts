@@ -55,9 +55,15 @@ describe('formatAmount', () => {
   );
 
   it('should formats an integer amount as string', () => {
-    const formattedAmount = formatAmount({ amount: '100023' });
+    const formattedAmount = formatAmount({ amount: '100023', locale: 'de-DE' });
 
     expect(formattedAmount).toEqual('1.000,23\xa0€');
+  });
+
+  it('should formats an integer amount as string', () => {
+    const formattedAmount = formatAmount({ amount: '100023', locale: 'en-GB' });
+
+    expect(formattedAmount).toEqual('€1,000.23');
   });
 
   it('should formats an integer amount, with a currency into a formatted text string', () => {

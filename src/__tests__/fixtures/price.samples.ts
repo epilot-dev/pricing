@@ -205,6 +205,35 @@ export const priceItemNonTaxable: PriceItemDto = {
   pricing_model: 'per_unit',
 };
 
+export const priceItemNonTaxable2: PriceItemDto = {
+  quantity: 1,
+  product_id: 'prod-id#12325',
+  price_id: 'price#4',
+  _price: {
+    _id: 'price#4',
+    unit_amount: 2000,
+    unit_amount_currency: 'EUR',
+    unit_amount_decimal: '20.00',
+    type: 'recurring',
+    billing_period: 'monthly',
+    billing_duration_amount: 1,
+    billing_duration_unit: 'years',
+    notice_time_amount: 1,
+    notice_time_unit: 'months',
+    termination_time_amount: 2,
+    termination_time_unit: 'weeks',
+    renewal_duration_amount: 1,
+    renewal_duration_unit: 'years',
+    tax: null!,
+    is_tax_inclusive: true,
+    description: 'Winter Lease 2',
+    _title: 'Winter Lease 2',
+    pricing_model: 'per_unit',
+  },
+  _product: {},
+  pricing_model: 'per_unit',
+};
+
 export const compositePrice: CompositePriceItemDto = {
   price_id: 'price#4',
   product_id: 'prod-id#1234',

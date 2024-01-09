@@ -438,7 +438,7 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
     recurrence.amount_tax = taxAmount.add(priceTax).getAmount();
   }
 
-  const recurrenceTax = !tax && itemTax ? taxes.at(-1) : tax;
+  const recurrenceTax = !tax && itemTax ? taxes?.[taxes?.length - 1] : tax;
 
   if (!recurrenceByTax) {
     const type = price?.type || priceItemToAppend?.type;
@@ -449,7 +449,7 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
       amount_total: priceTotal.getAmount(),
       amount_subtotal: priceSubtotal.getAmount(),
       amount_tax: priceTax.getAmount(),
-      tax: recurrenceTax,
+      tax: recurrenceTax ?? { amount: 0, rate: 'nontaxable', rateValue: 0, tax: { rate: 0 } },
     });
   } else {
     const totalAmount = d(recurrenceByTax.amount_total);

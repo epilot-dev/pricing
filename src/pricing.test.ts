@@ -309,7 +309,7 @@ describe('computeAggregatedAndPriceTotals', () => {
                 value: 0,
               },
             ] as PriceInputMappings,
-            quantity: 0,
+            quantity: 1,
           },
         ];
 
@@ -700,7 +700,7 @@ describe('computeAggregatedAndPriceTotals', () => {
                 value: 0,
               },
             ] as PriceInputMappings,
-            quantity: 0,
+            quantity: 1,
           },
         ];
 

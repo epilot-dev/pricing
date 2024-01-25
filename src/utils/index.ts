@@ -104,8 +104,13 @@ export const computePriceItemValues = (
  * @param tiers a set of ordered price tiers
  * @param quantity the quantity to check
  */
-const byPriceTiersForQuantity = (tiers: PriceTier[], quantity: number) => (_: PriceTier, index: number) =>
-  quantity > (tiers[index - 1]?.up_to || 0);
+const byPriceTiersForQuantity = (tiers: PriceTier[], quantity: number) => (_: PriceTier, index: number) => {
+  if (index === 0) {
+    return quantity >= 0;
+  }
+
+  return quantity > (tiers[index - 1]?.up_to || 0);
+};
 
 /**
  * Gets the price tiers for a quantity given the pricing model and price tiers.
@@ -125,6 +130,7 @@ export const getPriceTiersForQuantity = (tiers: PriceTier[], quantity: number): 
 };
 
 const getPriceTierForQuantity = (tiers: PriceTier[], quantity: number): PriceTier | null | undefined => {
+  console.log({ quantity });
   const selectedTiers = tiers?.filter(byPriceTiersForQuantity(tiers, quantity));
 
   if (selectedTiers?.length) {
@@ -175,8 +181,10 @@ export const computeTieredFlatFeePriceItemValues = (
   isUsingPriceMappingToSelectTier: boolean,
   unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'],
 ): PriceItemsTotals => {
+  console.log('tiers', tiers);
+  console.log('quantityToSelectTier', quantityToSelectTier);
   const tier = getPriceTierForQuantity(tiers, quantityToSelectTier);
-
+  console.log('tier', tier);
   /**
    * If the price mapping is used to select the tier, we need to multiply the totals by the quantity.
    * Otherwise, the quantity is only used to select the tier.

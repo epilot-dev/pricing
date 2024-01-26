@@ -309,7 +309,7 @@ describe('computeAggregatedAndPriceTotals', () => {
                 value: 0,
               },
             ] as PriceInputMappings,
-            quantity: 0,
+            quantity: 1,
           },
         ];
 
@@ -326,7 +326,7 @@ describe('computeAggregatedAndPriceTotals', () => {
               expect.objectContaining({
                 amount_total: 0,
                 amount_subtotal: 0,
-                unit_amount_gross: 0,
+                unit_amount_gross: 1000,
               }),
               expect.not.objectContaining({
                 unit_amount: undefined,
@@ -700,7 +700,7 @@ describe('computeAggregatedAndPriceTotals', () => {
                 value: 0,
               },
             ] as PriceInputMappings,
-            quantity: 0,
+            quantity: 1,
           },
         ];
 
@@ -717,7 +717,7 @@ describe('computeAggregatedAndPriceTotals', () => {
               expect.objectContaining({
                 amount_total: 0,
                 amount_subtotal: 0,
-                unit_amount_gross: 0,
+                unit_amount_gross: 1000,
               }),
               expect.not.objectContaining({
                 unit_amount: undefined,
@@ -1048,23 +1048,23 @@ describe('computeAggregatedAndPriceTotals', () => {
                 value: 0,
               },
             ],
-            quantity: 0,
+            quantity: 1,
           },
         ];
         const result = computeAggregatedAndPriceTotals(priceItems);
 
         expect(result).toStrictEqual(
           expect.objectContaining({
-            amount_total: 0,
-            amount_subtotal: 0,
+            amount_total: 10000,
+            amount_subtotal: 9091,
             total_details: expect.objectContaining({
-              amount_tax: 0,
+              amount_tax: 909,
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
-                amount_total: 0,
-                amount_subtotal: 0,
-                unit_amount_gross: 0,
+                amount_total: 10000,
+                amount_subtotal: 9091,
+                unit_amount_gross: 10000,
               }),
               expect.not.objectContaining({
                 unit_amount: undefined,

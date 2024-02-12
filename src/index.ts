@@ -1,7 +1,6 @@
 import DineroConstructor from 'dinero.js'
 
 export { DineroConstructor }
-export type { Currency, Dinero } from 'dinero.js';
 export { DEFAULT_CURRENCY } from './currencies';
 export {
   AmountFormatter,

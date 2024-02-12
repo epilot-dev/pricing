@@ -1,4 +1,4 @@
-export type { Currency } from 'dinero.js';
+export type { Currency, Dinero } from 'dinero.js';
 export { DEFAULT_CURRENCY } from './currencies';
 export {
   AmountFormatter,

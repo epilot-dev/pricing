@@ -62,6 +62,11 @@ describe('normalizeTimeFrequency', () => {
     ${24000}    | ${'yearly'}         | ${'Monthly'}        | ${2000}
     ${24000}    | ${'yearly'}         | ${undefined}        | ${24000}
     ${24000}    | ${undefined}        | ${'monthly'}        | ${24000}
+    ${'2400.5'} | ${'monthly'}        | ${'weekly'}         | ${600.125}
+    ${'1000'}   | ${'monthly'}        | ${'yearly'}         | ${12000}
+    ${'1000.50'}| ${'monthly'}        | ${'yearly'}         | ${12006}
+    ${'12006'}  | ${'yearly'}        | ${'monthly'}         | ${1000.50}
+    ${'159.345'}| ${'yearly'}        | ${'monthly'}         | ${13.2788}
   `(
     `should normalize $timeValue/$timeValueFrequency properly to time frequency $targetTimeFrequency`,
     ({ timeValue, timeValueFrequency, targetTimeFrequency, expectedNormalizedValue }) => {

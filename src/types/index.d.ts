@@ -27,13 +27,13 @@ export type TimeFrequency = Exclude<BillingPeriod, 'one_time'>;
 export type PriceTier = Components.Schemas.PriceTier;
 export type PriceTierDisplayMode = Components.Schemas.PriceTierDisplayMode;
 export type NormalizeTimeFrequency = (
-  timeValue: number,
+  timeValue: number | string,
   timeValueFrequency: TimeFrequency,
   targetTimeFrequency: TimeFrequency,
   precision?: number,
 ) => number;
 export type NormalizeTimeFrequencyToDinero = (
-  timeValue: number,
+  timeValue: number | string,
   timeValueFrequency: TimeFrequency,
   targetTimeFrequency: TimeFrequency,
   precision?: number,

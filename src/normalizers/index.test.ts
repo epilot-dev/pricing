@@ -1,6 +1,6 @@
 import { Price } from '../types';
 
-import { normalizePriceMappingInput, normalizeTimeFrequency } from '.';
+import { normalizeAmount, normalizePriceMappingInput, normalizeTimeFrequency, normalizeTimeFrequencyToDinero } from '.';
 
 describe('normalizePriceMappingInput', () => {
   const oneTimePrice = {
@@ -31,48 +31,79 @@ describe('normalizePriceMappingInput', () => {
 
 describe('normalizeTimeFrequency', () => {
   it.each`
-    timeValue   | timeValueFrequency  | targetTimeFrequency | expectedNormalizedValue
-    ${100}      | ${'yearly'}         | ${'weekly'}         | ${1.9231}
-    ${100}      | ${'yearly'}         | ${'monthly'}        | ${8.3333}
-    ${100}      | ${'yearly'}         | ${'every_quarter'}  | ${25}
-    ${100}      | ${'yearly'}         | ${'every_6_months'} | ${50}
-    ${100}      | ${'yearly'}         | ${'yearly'}         | ${100}
-    ${100}      | ${'every_6_months'} | ${'weekly'}         | ${3.8462}
-    ${100}      | ${'every_6_months'} | ${'monthly'}        | ${16.6667}
-    ${100}      | ${'every_6_months'} | ${'every_quarter'}  | ${50}
-    ${100}      | ${'every_6_months'} | ${'every_6_months'} | ${100}
-    ${100}      | ${'every_6_months'} | ${'yearly'}         | ${200}
-    ${100}      | ${'every_quarter'}  | ${'weekly'}         | ${7.6923}
-    ${100}      | ${'every_quarter'}  | ${'monthly'}        | ${33.3333}
-    ${100}      | ${'every_quarter'}  | ${'every_quarter'}  | ${100}
-    ${100}      | ${'every_quarter'}  | ${'every_6_months'} | ${200}
-    ${100}      | ${'every_quarter'}  | ${'yearly'}         | ${400}
-    ${1000}     | ${'monthly'}        | ${'weekly'}         | ${250}
-    ${1000}     | ${'monthly'}        | ${'monthly'}        | ${1000}
-    ${1000}     | ${'monthly'}        | ${'every_quarter'}  | ${3000}
-    ${1000}     | ${'monthly'}        | ${'every_6_months'} | ${6000}
-    ${1000}     | ${'monthly'}        | ${'yearly'}         | ${12000}
-    ${1000}     | ${'weekly'}         | ${'weekly'}         | ${1000}
-    ${1000}     | ${'weekly'}         | ${'monthly'}        | ${4000}
-    ${1000}     | ${'weekly'}         | ${'every_quarter'}  | ${13000}
-    ${1000}     | ${'weekly'}         | ${'every_6_months'} | ${26000}
-    ${1000}     | ${'weekly'}         | ${'yearly'}         | ${52000}
-    ${0.387676} | ${'weekly'}         | ${'monthly'}        | ${1.5507}
-    ${36.32422} | ${'yearly'}         | ${'monthly'}        | ${3.027}
-    ${24000}    | ${'yearly'}         | ${'Monthly'}        | ${2000}
-    ${24000}    | ${'yearly'}         | ${undefined}        | ${24000}
-    ${24000}    | ${undefined}        | ${'monthly'}        | ${24000}
-    ${'2400.5'} | ${'monthly'}        | ${'weekly'}         | ${600.125}
-    ${'1000'}   | ${'monthly'}        | ${'yearly'}         | ${12000}
-    ${'1000.50'}| ${'monthly'}        | ${'yearly'}         | ${12006}
-    ${'12006'}  | ${'yearly'}        | ${'monthly'}         | ${1000.50}
-    ${'159.345'}| ${'yearly'}        | ${'monthly'}         | ${13.2788}
+    timeValue    | timeValueFrequency  | targetTimeFrequency | expectedNormalizedValue
+    ${100}       | ${'yearly'}         | ${'weekly'}         | ${1.9231}
+    ${100}       | ${'yearly'}         | ${'monthly'}        | ${8.3333}
+    ${100}       | ${'yearly'}         | ${'every_quarter'}  | ${25}
+    ${100}       | ${'yearly'}         | ${'every_6_months'} | ${50}
+    ${100}       | ${'yearly'}         | ${'yearly'}         | ${100}
+    ${100}       | ${'every_6_months'} | ${'weekly'}         | ${3.8462}
+    ${100}       | ${'every_6_months'} | ${'monthly'}        | ${16.6667}
+    ${100}       | ${'every_6_months'} | ${'every_quarter'}  | ${50}
+    ${100}       | ${'every_6_months'} | ${'every_6_months'} | ${100}
+    ${100}       | ${'every_6_months'} | ${'yearly'}         | ${200}
+    ${100}       | ${'every_quarter'}  | ${'weekly'}         | ${7.6923}
+    ${100}       | ${'every_quarter'}  | ${'monthly'}        | ${33.3333}
+    ${100}       | ${'every_quarter'}  | ${'every_quarter'}  | ${100}
+    ${100}       | ${'every_quarter'}  | ${'every_6_months'} | ${200}
+    ${100}       | ${'every_quarter'}  | ${'yearly'}         | ${400}
+    ${1000}      | ${'monthly'}        | ${'weekly'}         | ${250}
+    ${1000}      | ${'monthly'}        | ${'monthly'}        | ${1000}
+    ${1000}      | ${'monthly'}        | ${'every_quarter'}  | ${3000}
+    ${1000}      | ${'monthly'}        | ${'every_6_months'} | ${6000}
+    ${1000}      | ${'monthly'}        | ${'yearly'}         | ${12000}
+    ${1000}      | ${'weekly'}         | ${'weekly'}         | ${1000}
+    ${1000}      | ${'weekly'}         | ${'monthly'}        | ${4000}
+    ${1000}      | ${'weekly'}         | ${'every_quarter'}  | ${13000}
+    ${1000}      | ${'weekly'}         | ${'every_6_months'} | ${26000}
+    ${1000}      | ${'weekly'}         | ${'yearly'}         | ${52000}
+    ${0.387676}  | ${'weekly'}         | ${'monthly'}        | ${1.5507}
+    ${36.32422}  | ${'yearly'}         | ${'monthly'}        | ${3.027}
+    ${24000}     | ${'yearly'}         | ${'Monthly'}        | ${2000}
+    ${24000}     | ${'yearly'}         | ${undefined}        | ${24000}
+    ${24000}     | ${undefined}        | ${'monthly'}        | ${24000}
+    ${'2400.5'}  | ${'monthly'}        | ${'weekly'}         | ${600.125}
+    ${'1000'}    | ${'monthly'}        | ${'yearly'}         | ${12000}
+    ${'1000.50'} | ${'monthly'}        | ${'yearly'}         | ${12006}
+    ${'12006'}   | ${'yearly'}         | ${'monthly'}        | ${1000.5}
+    ${'159.345'} | ${'yearly'}         | ${'monthly'}        | ${13.2788}
   `(
     `should normalize $timeValue/$timeValueFrequency properly to time frequency $targetTimeFrequency`,
     ({ timeValue, timeValueFrequency, targetTimeFrequency, expectedNormalizedValue }) => {
       expect(normalizeTimeFrequency(timeValue, timeValueFrequency, targetTimeFrequency)).toStrictEqual(
         expectedNormalizedValue,
       );
+    },
+  );
+});
+
+describe('normalizeAmount', () => {
+  it.each`
+    amount       | timeValueFrequency | targetTimeFrequency | precision    | expectedNormalizedValue
+    ${1200}      | ${'yearly'}        | ${'monthly'}        | ${2}         | ${10000}
+    ${'1200'}    | ${'yearly'}        | ${'monthly'}        | ${2}         | ${10000}
+    ${'1200.00'} | ${'yearly'}        | ${'monthly'}        | ${2}         | ${10000}
+    ${1200}      | ${'yearly'}        | ${'monthly'}        | ${undefined} | ${10000}
+    ${'1200'}    | ${'yearly'}        | ${'monthly'}        | ${undefined} | ${10000}
+    ${'1200.00'} | ${'yearly'}        | ${'monthly'}        | ${undefined} | ${10000}
+    ${1200}      | ${'yearly'}        | ${'monthly'}        | ${4}         | ${1000000}
+    ${'1200'}    | ${'yearly'}        | ${'monthly'}        | ${4}         | ${1000000}
+    ${'1200.00'} | ${'yearly'}        | ${'monthly'}        | ${4}         | ${1000000}
+    ${100}       | ${'monthly'}       | ${'yearly'}         | ${2}         | ${120000}
+    ${'100'}     | ${'monthly'}       | ${'yearly'}         | ${2}         | ${120000}
+    ${'100.00'}  | ${'monthly'}       | ${'yearly'}         | ${2}         | ${120000}
+    ${100}       | ${'monthly'}       | ${'yearly'}         | ${undefined} | ${120000}
+    ${'100'}     | ${'monthly'}       | ${'yearly'}         | ${undefined} | ${120000}
+    ${'100.00'}  | ${'monthly'}       | ${'yearly'}         | ${undefined} | ${120000}
+    ${100}       | ${'monthly'}       | ${'yearly'}         | ${4}         | ${12000000}
+    ${'100'}     | ${'monthly'}       | ${'yearly'}         | ${4}         | ${12000000}
+    ${'100.00'}  | ${'monthly'}       | ${'yearly'}         | ${4}         | ${12000000}
+  `(
+    `should normalize $amount/$timeValueFrequency properly to time frequency $targetTimeFrequency`,
+    ({ amount, timeValueFrequency, targetTimeFrequency, precision, expectedNormalizedValue }) => {
+      const result = normalizeAmount(amount, timeValueFrequency, targetTimeFrequency, precision);
+
+      expect(result).toStrictEqual(expectedNormalizedValue);
     },
   );
 });

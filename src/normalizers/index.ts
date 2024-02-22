@@ -119,3 +119,32 @@ export const normalizeTimeFrequency: NormalizeTimeFrequency = (
       .toFormat('0.0000'),
   );
 };
+
+/**
+ * This function will normalize an inputted amount value of a specific time frequency to the
+ * desired time frequency based on constant values defined here {@link timeFrequencyNormalizerMatrix}.
+ * It returns the normalized amount as an integer with the specified precision.
+ *
+ * @param {number} amount the amount that will be normalized
+ * @param {TimeFrequency} timeValueFrequency the current time frequency of the amount
+ * @param {TimeFrequency} targetTimeFrequency the time frequency the amount will be normalized to
+ * @param {number} precision the precision of the normalized amount
+ *
+ * @returns {number} normalizedAmount
+ *
+ * See also {@link TimeFrequency}
+ */
+export const normalizeAmount = (
+  amount: number | string,
+  timeValueFrequency: string,
+  targetTimeFrequency: string,
+  precision = 2,
+) => {
+  return normalizeTimeFrequencyToDinero(
+    amount,
+    timeValueFrequency?.toLowerCase() as TimeFrequency,
+    targetTimeFrequency?.toLocaleLowerCase() as TimeFrequency,
+  )
+    .convertPrecision(precision)
+    .getAmount();
+};

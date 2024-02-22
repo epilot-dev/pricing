@@ -261,4 +261,16 @@ export const computeTieredGraduatedPriceItemValues = (
   };
 };
 
+export const computeExternalGetAGPriceItemValues = () => {
+  return {
+    unitAmount: 0,
+    unitAmountNet: 0,
+    unitAmountGross: 0,
+    amountSubtotal: 0,
+    amountTotal: 0,
+    taxAmount: 0,
+    displayMode: 'show_price',
+  };
+};
+
 export const isNotPieceUnit = (unit: string | undefined) => unit !== undefined && unit !== 'unit';

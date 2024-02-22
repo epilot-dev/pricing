@@ -21,6 +21,7 @@ import type {
   TaxAmountDto,
 } from './types';
 import {
+  computeExternalGetAGPriceItemValues,
   computePriceItemValues,
   computeTieredFlatFeePriceItemValues,
   computeTieredGraduatedPriceItemValues,
@@ -46,6 +47,7 @@ export enum PricingModel {
   tieredGraduated = 'tiered_graduated',
   tieredVolume = 'tiered_volume',
   tieredFlatFee = 'tiered_flatfee',
+  externalGetAG = 'external_getag',
 }
 
 export type ComputeAggregatedAndPriceTotals = typeof computeAggregatedAndPriceTotals;
@@ -633,6 +635,8 @@ export const computePriceItem = (
           isUsingPriceMappingToSelectTier,
           priceItem._price?.unchanged_price_display_in_journeys,
         )
+      : (price?.pricing_model as any) === PricingModel.externalGetAG
+      ? computeExternalGetAGPriceItemValues()
       : computePriceItemValues(unitAmountDecimal, currency, isTaxInclusive, unitAmountMultiplier!, priceTax!);
 
   return {

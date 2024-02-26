@@ -273,11 +273,6 @@ export const computeExternalGetAGPriceItemValues = (
   const unitAmountFee = toDinero(getAgFees.amount_total_decimal, 'EUR');
   const taxRate = getTaxValue(tax);
 
-  console.log({
-    unitAmountMarkup: unitAmountMarkup.convertPrecision(2).getAmount(),
-    unitAmountFee: unitAmountFee.convertPrecision(2).getAmount(),
-  });
-
   const unitAmountMarkupNet = isTaxInclusive ? unitAmountMarkup.divide(1 + taxRate) : unitAmountMarkup;
   const unitAmountNet = unitAmountMarkupNet.add(unitAmountFee);
 

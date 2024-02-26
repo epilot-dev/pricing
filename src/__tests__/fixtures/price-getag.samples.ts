@@ -216,3 +216,13 @@ export const compositePriceGetAG: PriceItemDto = {
       { price_id: 'comp#2', amount_total: 0, amount_total_decimal: '0.00' ,frequency_unit: 'yearly' }
     ]
   } as any
+
+
+  // Variable
+  // 0 + 1000*0.10 = 100
+
+  // Static
+  // 31.26 + 10.00 = 41.26
+
+  // Total
+  // 100 + 41.26 = 141.26

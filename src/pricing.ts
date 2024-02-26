@@ -88,17 +88,22 @@ export const computePriceComponent = (
 ): PriceItem => {
   const tax = priceItemComponent?.taxes?.[0]?.tax;
   const priceMapping = priceItem.price_mappings?.find(({ price_id }) => priceItemComponent._price!._id === price_id);
-  const externalFeeMapping = priceItem.price_mappings?.find(
-    ({ price_id }) => priceItemComponent._price!._id === price_id,
+  const externalFeeMapping = (priceItem as any).external_fees_mappings?.find(
+    ({ price_id }: any) => priceItemComponent._price!._id === price_id,
   );
-
-  console.log({ externalFeeMapping });
 
   const safeQuantity = isNaN(priceItemComponent?.quantity!) ? 1 : priceItemComponent?.quantity;
   const safeParentQuantity = isNaN(priceItem.quantity!) ? 1 : priceItem.quantity!;
   const quantity = toDinero(String(safeQuantity)).multiply(safeParentQuantity).toUnit();
 
-  return computePriceItem(priceItemComponent, priceItemComponent._price, tax!, quantity, priceMapping, priceItem);
+  return computePriceItem(
+    priceItemComponent,
+    priceItemComponent._price,
+    tax!,
+    quantity,
+    priceMapping,
+    externalFeeMapping,
+  );
 };
 
 const isValidPrice = (priceComponent: Price): boolean => {
@@ -276,8 +281,13 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
     if (isCompositePrice(priceItem)) {
       const price = priceItem._price;
       const compositePriceItemToAppend = computeCompositePrice(priceItem, price!);
+      console.log({ compositePriceItemToAppend });
       const itemBreakdown = computeCompositePriceBreakDown(compositePriceItemToAppend);
+      console.log({ itemBreakdown });
       const updatedTotals = recomputeDetailTotalsFromCompositePrice(details, compositePriceItemToAppend);
+
+      console.log({ updatedTotals });
+      console.log({ total_details: updatedTotals?.total_details?.breakdown?.recurrences });
 
       return {
         ...updatedTotals,
@@ -592,9 +602,8 @@ export const computePriceItem = (
   applicableTax: Tax,
   quantity: number,
   priceMapping?: PriceInputMapping,
-  priceItemParent?: CompositePriceItem,
+  externalFeeMapping?: CompositePriceItem,
 ): PriceItem => {
-  console.log('priceItem', priceItem);
   const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase() as Currency;
   const priceItemDescription = priceItem?.description ?? price?.description;
 
@@ -639,7 +648,14 @@ export const computePriceItem = (
           priceItem._price?.unchanged_price_display_in_journeys,
         )
       : (price?.pricing_model as any) === PricingModel.externalGetAG
-      ? computeExternalGetAGPriceItemValues(price?.get_ag, unitAmountMultiplier!, (priceItemParent as any)?.get_ag_fees)
+      ? computeExternalGetAGPriceItemValues(
+          price?.get_ag,
+          currency,
+          priceTax,
+          isTaxInclusive,
+          unitAmountMultiplier!,
+          externalFeeMapping,
+        )
       : computePriceItemValues(unitAmountDecimal, currency, isTaxInclusive, unitAmountMultiplier!, priceTax!);
 
   return {

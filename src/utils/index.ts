@@ -261,14 +261,30 @@ export const computeTieredGraduatedPriceItemValues = (
   };
 };
 
-export const computeExternalGetAGPriceItemValues = () => {
+export const computeExternalGetAGPriceItemValues = (getAg: any, unitAmountMultiplier: number, getAgFees: any) => {
+  const isTaxInclusive = true;
+  const taxRate = 10;
+
+  const unitAmount = toDinero(getAg.markup_amount_decimal, 'EUR');
+
+  const unitAmountNet = isTaxInclusive ? unitAmount.divide(1 + taxRate) : unitAmount;
+  const unitTaxAmount = isTaxInclusive
+    ? unitAmount.subtract(unitAmount.divide(1 + taxRate))
+    : unitAmount.multiply(taxRate);
+
+  const unitAmountGross = unitAmountNet.add(unitTaxAmount);
+
+  const amountSubtotal = unitAmountNet.multiply(unitAmountMultiplier);
+  const amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
+  const taxAmount = unitTaxAmount.multiply(unitAmountMultiplier);
+
   return {
-    unitAmount: 0,
-    unitAmountNet: 0,
-    unitAmountGross: 0,
-    amountSubtotal: 0,
-    amountTotal: 0,
-    taxAmount: 0,
+    unitAmount: unitAmount.getAmount(),
+    unitAmountNet: unitAmountNet.getAmount(),
+    unitAmountGross: unitAmountGross.getAmount(),
+    amountSubtotal: amountSubtotal.getAmount(),
+    amountTotal: amountTotal.getAmount(),
+    taxAmount: taxAmount.getAmount(),
     displayMode: 'show_price',
   };
 };

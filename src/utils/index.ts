@@ -265,8 +265,18 @@ export const computeExternalGetAGPriceItemValues = (
   getAg: Price['get_ag'],
   currency: Currency,
   unitAmountMultiplier: number,
-  externalFeeAmountDecimal: string,
+  externalFeeAmountDecimal: string | undefined,
 ) => {
+  if (externalFeeAmountDecimal === undefined || getAg === undefined) {
+    return {
+      unitAmountNet: 0,
+      unitAmountGross: 0,
+      taxAmount: 0,
+      amountSubtotal: 0,
+      amountTotal: 0,
+    };
+  }
+
   const unitAmountGetAFee = toDinero(externalFeeAmountDecimal, currency);
   const unitAmountMarkup = toDinero(getAg.markup_amount_decimal, currency).multiply(unitAmountMultiplier);
   // Sum fee and markup

@@ -15,7 +15,9 @@ export type TaxAmountDto = Components.Schemas.TaxAmountDto;
 export type TaxAmount = Components.Schemas.TaxAmount;
 export type CompositePrice = Components.Schemas.CompositePrice;
 export type PriceComponentRelation = Components.Schemas.PriceComponentRelation;
-export type CompositePriceItemDto = Components.Schemas.CompositePriceItemDto;
+export type CompositePriceItemDto = Components.Schemas.CompositePriceItemDto & {
+  external_fees_mappings?: ExternalFeesMappings[];
+};
 export type CompositePriceItem = Components.Schemas.CompositePriceItem;
 export type EntityItem = Components.Schemas.EntityItem;
 export type EntityRelation = Components.Schemas.EntityRelation;

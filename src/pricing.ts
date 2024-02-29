@@ -90,8 +90,8 @@ export const computePriceComponent = (
 ): PriceItem => {
   const tax = priceItemComponent?.taxes?.[0]?.tax;
   const priceMapping = priceItem.price_mappings?.find(({ price_id }) => priceItemComponent._price!._id === price_id);
-  const externalFeeMapping = (priceItem as any).external_fees_mappings?.find(
-    ({ price_id }: any) => priceItemComponent._price!._id === price_id,
+  const externalFeeMapping = priceItem.external_fees_mappings?.find(
+    ({ price_id }) => priceItemComponent._price!._id === price_id,
   );
 
   const safeQuantity = isNaN(priceItemComponent?.quantity!) ? 1 : priceItemComponent?.quantity;

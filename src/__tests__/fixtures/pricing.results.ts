@@ -196,6 +196,7 @@ export const computedCompositePrice: CompositePriceItem & { [key: string]: unkno
       unit_amount_net: 9718181818182,
       unit_amount_gross: 10690000000000,
       pricing_model: 'per_unit',
+      billing_period: 'monthly',
     },
     {
       _price: {
@@ -266,6 +267,7 @@ export const computedCompositePrice: CompositePriceItem & { [key: string]: unkno
       unit_amount_gross: 450000000000,
       unit_amount_net: 424528301887,
       pricing_model: 'per_unit',
+      billing_period: 'monthly',
     },
     {
       _price: {
@@ -1014,6 +1016,7 @@ export const severalItemsPerRecurrenceTotals = {
           unit_amount_decimal: '10.69',
           unit_amount_gross: 1069,
           pricing_model: 'per_unit',
+          billing_period: 'monthly',
         },
         {
           quantity: 1,
@@ -1082,6 +1085,7 @@ export const severalItemsPerRecurrenceTotals = {
           unit_amount_decimal: '0.45',
           unit_amount_gross: 45,
           pricing_model: 'per_unit',
+          billing_period: 'monthly',
         },
         {
           quantity: 1,
@@ -1148,8 +1152,7 @@ export const severalItemsPerRecurrenceTotals = {
           amount_total: 50000,
           amount_subtotal_decimal: '420.168067226891',
           amount_total_decimal: '500',
-          pricing_model: 'per_unit',
-        },
+          pricing_model: 'per_unit'        },
       ],
     },
   ],
@@ -1468,6 +1471,7 @@ export const compositePricesUnitAmountZeroResult = {
           unit_amount_gross: 1069,
           unit_amount_net: 972,
           pricing_model: 'per_unit',
+          billing_period: 'monthly',
         },
         {
           _price: {
@@ -1540,6 +1544,7 @@ export const compositePricesUnitAmountZeroResult = {
           unit_amount_gross: 0,
           unit_amount_net: 0,
           pricing_model: 'per_unit',
+          billing_period: 'monthly',
         },
       ],
       price_id: 'price#4',
@@ -2100,6 +2105,7 @@ export const compositePriceWithDisplayOnRequest = {
           amount_tax: 97,
           amount_total: 1069,
           pricing_model: 'per_unit',
+          billing_period: 'monthly',
         },
         {
           quantity: 1,
@@ -2166,6 +2172,7 @@ export const compositePriceWithDisplayOnRequest = {
           amount_tax: 97,
           amount_total: 1069,
           pricing_model: 'per_unit',
+          billing_period: 'monthly',
         },
       ],
       total_details: {
@@ -2779,6 +2786,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           amount_tax: 97,
           amount_total: 1069,
           pricing_model: 'per_unit',
+          billing_period: 'monthly'
         },
         {
           quantity: 1,
@@ -2847,6 +2855,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           amount_total: 45,
           amount_tax: 3,
           pricing_model: 'per_unit',
+          billing_period: 'monthly'
         },
         {
           quantity: 1,
@@ -3072,6 +3081,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           amount_tax: 97,
           amount_total: 1069,
           pricing_model: 'per_unit',
+          billing_period: 'monthly'
         },
         {
           quantity: 1,
@@ -3138,6 +3148,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           amount_tax: 97,
           amount_total: 1069,
           pricing_model: 'per_unit',
+          billing_period: 'monthly'
         },
       ],
       total_details: {
@@ -3479,6 +3490,7 @@ export const resultCompositePriceQuantity2 = {
           unit_amount_decimal: '10.69',
           unit_amount_gross: 1069,
           pricing_model: 'per_unit',
+          billing_period: 'monthly'
         },
         {
           _price: {
@@ -3551,6 +3563,7 @@ export const resultCompositePriceQuantity2 = {
           unit_amount_decimal: '0.45',
           unit_amount_gross: 45,
           pricing_model: 'per_unit',
+          billing_period: 'monthly'
         },
         {
           _price: {
@@ -4148,6 +4161,7 @@ export const priceDetailsForCompositePrice = {
           unit_amount_decimal: '10.69',
           unit_amount_gross: 1069,
           pricing_model: 'per_unit',
+          billing_period: 'monthly',
         },
         {
           quantity: 1,
@@ -4216,6 +4230,7 @@ export const priceDetailsForCompositePrice = {
           unit_amount_decimal: '0.45',
           unit_amount_gross: 45,
           pricing_model: 'per_unit',
+          billing_period: 'monthly',
         },
         {
           quantity: 1,
@@ -4592,6 +4607,7 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
           amount_total: 20,
           unit_amount_gross: 20,
           pricing_model: 'per_unit',
+          billing_period: 'monthly',
         },
       ],
       _price: {
@@ -4927,6 +4943,7 @@ export const resultsWithCompositePrices = {
           unit_amount_gross: 1069,
           unit_amount_net: 972,
           pricing_model: 'per_unit',
+          billing_period: 'monthly',
         },
         {
           _price: {
@@ -4995,6 +5012,7 @@ export const resultsWithCompositePrices = {
           unit_amount_decimal: '0.45',
           unit_amount_gross: 45,
           pricing_model: 'per_unit',
+          billing_period: 'monthly',
         },
         {
           _price: {
@@ -5783,6 +5801,7 @@ export const resultCompositePriceWithTotalDetails = {
           unit_amount_net: 972,
           unit_amount_decimal: '10.69',
           unit_amount_gross: 1069,
+          billing_period: 'monthly',
         },
         {
           _price: {
@@ -5854,6 +5873,7 @@ export const resultCompositePriceWithTotalDetails = {
           unit_amount_decimal: '0.45',
           unit_amount_gross: 45,
           pricing_model: 'per_unit',
+          billing_period: 'monthly',
         },
         {
           _price: {

@@ -206,12 +206,16 @@ export const computeCompositePrice = (
     const itemTaxRate: TaxAmountDto = (componentTax?.[0] && { tax: componentTax?.[0] }) || { rate: 'nontaxable' };
 
     const { _itemRef: existingItemComponent, ...existingPrice } = component;
+    const type = existingItemComponent?.type || component.type;
 
     const itemComponent: PriceItemDto = {
       ...existingItemComponent,
       pricing_model: existingItemComponent?.pricing_model || component.pricing_model,
       quantity: isNaN(existingItemComponent?.quantity!) ? 1 : existingItemComponent?.quantity,
-      type: existingItemComponent?.type || component.type,
+      type,
+      ...(type === 'recurring' && {
+        billing_period: existingItemComponent?.billing_period || component.billing_period,
+      }),
       price_id: existingItemComponent?.price_id || component._id,
       product_id: existingItemComponent?.product_id || priceItem.product_id,
       _price: mapToPriceSnapshot(existingItemComponent?._price || existingPrice),

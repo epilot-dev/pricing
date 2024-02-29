@@ -262,44 +262,27 @@ export const computeTieredGraduatedPriceItemValues = (
 };
 
 export const computeExternalGetAGPriceItemValues = (
-  getAg: any,
-  _currency: any,
-  isTaxInclusive: any,
-  tax: any,
+  getAg: Price['get_ag'],
+  currency: Currency,
   unitAmountMultiplier: number,
   externalFeeAmountDecimal: string,
 ) => {
-  const unitAmountMarkup = toDinero(getAg.markup_amount_decimal, 'EUR');
-  const unitAmountFee = toDinero(externalFeeAmountDecimal, 'EUR');
-  const taxRate = getTaxValue(tax);
+  const unitAmountGetAFee = toDinero(externalFeeAmountDecimal, currency);
+  const unitAmountMarkup = toDinero(getAg.markup_amount_decimal, currency).multiply(unitAmountMultiplier);
+  // Sum fee and markup
+  const unitAmount = unitAmountGetAFee.add(unitAmountMarkup);
 
-  const unitAmountMarkupNet = unitAmountMarkup;
-  const unitAmountNet = unitAmountMarkupNet.add(unitAmountFee.divide(12));
-
-  const unitTaxAmountMarkup = unitAmountMarkup;
-  const unitTaxAmountFee = unitAmountMarkup.multiply(taxRate);
-  const unitTaxAmount = unitTaxAmountMarkup.add(unitTaxAmountFee);
-
-  const unitAmountGross = unitAmountNet.add(unitTaxAmount);
-
-  const amountSubtotal = unitAmountNet.multiply(unitAmountMultiplier);
-  // const amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
-  const taxAmount = unitTaxAmount.multiply(unitAmountMultiplier);
-
-  // /////////////////////////////////////////////////////////////
-
-  const amountGetAgFee = toDinero(externalFeeAmountDecimal, 'EUR');
-  const amountMarkup = toDinero(getAg.markup_amount_decimal, 'EUR').multiply(unitAmountMultiplier);
+  const amountGetAgFee = toDinero(externalFeeAmountDecimal, currency);
+  const amountMarkup = toDinero(getAg.markup_amount_decimal, currency).multiply(unitAmountMultiplier);
   // Sum fee and markup
   const amountTotalV2 = amountGetAgFee.add(amountMarkup);
 
   return {
-    unitAmountNet: unitAmountMarkupNet.getAmount(),
-    unitAmountGross: unitAmountGross.getAmount(),
-    taxAmount: taxAmount.getAmount(),
+    unitAmountNet: unitAmount.getAmount(),
+    unitAmountGross: unitAmount.getAmount(),
+    taxAmount: 0,
     amountSubtotal: amountTotalV2.getAmount(),
     amountTotal: amountTotalV2.getAmount(),
-    displayMode: 'show_price',
   };
 };
 

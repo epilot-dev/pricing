@@ -651,14 +651,7 @@ export const computePriceItem = (
           priceItem._price?.unchanged_price_display_in_journeys,
         )
       : (price?.pricing_model as any) === PricingModel.externalGetAG
-      ? computeExternalGetAGPriceItemValues(
-          price?.get_ag,
-          currency,
-          priceTax,
-          isTaxInclusive,
-          unitAmountMultiplier!,
-          externalFeeAmountDecimal,
-        )
+      ? computeExternalGetAGPriceItemValues(price?.get_ag, currency, unitAmountMultiplier!, externalFeeAmountDecimal)
       : computePriceItemValues(unitAmountDecimal, currency, isTaxInclusive, unitAmountMultiplier!, priceTax!);
 
   return {

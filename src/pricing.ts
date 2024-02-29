@@ -601,7 +601,7 @@ export const mapToProductSnapshot = (product?: Product): Product | undefined => 
  * Computes all price item total amounts to integers with a decimal precision of DECIMAL_PRECISION.
  */
 export const computePriceItem = (
-  priceItem: PriceItemDto & { billing_period?: TimeFrequency },
+  priceItem: PriceItemDto,
   price: Price | undefined,
   applicableTax: Tax,
   quantity: number,

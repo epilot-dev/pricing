@@ -3,7 +3,9 @@ import type { Dinero } from 'dinero.js';
 
 export type Price = Components.Schemas.Price;
 export type PriceItem = Components.Schemas.PriceItem;
-export type PriceItemDto = Components.Schemas.PriceItemDto;
+export type PriceItemDto = Components.Schemas.PriceItemDto & {
+  billing_period: TimeFrequency;
+};
 export type Product = Components.Schemas.Product;
 export type PricingDetails = Components.Schemas.PricingDetails;
 export type PriceItems = Components.Schemas.PriceItems;
@@ -23,6 +25,12 @@ export type RecurrenceAmountWithTax = Components.Schemas.RecurrenceAmountWithTax
 export type BillingPeriod = Components.Schemas.BillingPeriod;
 export type PriceInputMappings = Components.Schemas.PriceInputMappings;
 export type PriceInputMapping = Components.Schemas.PriceInputMapping;
+export type ExternalFeesMappings = {
+  price_id: string;
+  amount_total: number;
+  amount_total_decimal: string;
+  frequency_unit: TimeFrequency;
+};
 export type TimeFrequency = Exclude<BillingPeriod, 'one_time'>;
 export type PriceTier = Components.Schemas.PriceTier;
 export type PriceTierDisplayMode = Components.Schemas.PriceTierDisplayMode;
@@ -31,7 +39,7 @@ export type NormalizeTimeFrequency = (
   timeValueFrequency: TimeFrequency,
   targetTimeFrequency: TimeFrequency,
   precision?: number,
-) => number;
+) => number | string;
 export type NormalizeTimeFrequencyToDinero = (
   timeValue: number | string,
   timeValueFrequency: TimeFrequency,

@@ -2,11 +2,12 @@ import type { Currency } from 'dinero.js';
 
 import { DEFAULT_CURRENCY } from './currencies';
 import { d, toDinero } from './formatters';
-import { normalizePriceMappingInput } from './normalizers';
+import { normalizePriceMappingInput, normalizeNumberToFrequency } from './normalizers';
 import type {
   CompositePrice,
   CompositePriceItem,
   CompositePriceItemDto,
+  ExternalFeesMappings,
   Price,
   PriceInputMapping,
   PriceItem,
@@ -18,6 +19,7 @@ import type {
   RecurrenceAmountWithTax,
   Tax,
   TaxAmountDto,
+  TimeFrequency,
 } from './types';
 import {
   computeExternalGetAGPriceItemValues,
@@ -222,6 +224,7 @@ export const computeCompositePrice = (
       pricing_model: existingItemComponent?.pricing_model || component.pricing_model,
       quantity: isNaN(existingItemComponent?.quantity!) ? 1 : existingItemComponent?.quantity,
       type: existingItemComponent?.type || component.type,
+      billing_period: existingItemComponent?.billing_period || (component.billing_period as TimeFrequency),
       price_id: existingItemComponent?.price_id || component._id,
       product_id: existingItemComponent?.product_id || priceItem.product_id,
       _price: mapToPriceSnapshot(existingItemComponent?._price || existingPrice),
@@ -281,13 +284,8 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
     if (isCompositePrice(priceItem)) {
       const price = priceItem._price;
       const compositePriceItemToAppend = computeCompositePrice(priceItem, price!);
-      console.log({ compositePriceItemToAppend });
       const itemBreakdown = computeCompositePriceBreakDown(compositePriceItemToAppend);
-      console.log({ itemBreakdown });
       const updatedTotals = recomputeDetailTotalsFromCompositePrice(details, compositePriceItemToAppend);
-
-      console.log({ updatedTotals });
-      console.log({ total_details: updatedTotals?.total_details?.breakdown?.recurrences });
 
       return {
         ...updatedTotals,
@@ -597,13 +595,14 @@ export const mapToProductSnapshot = (product?: Product): Product | undefined => 
  * Computes all price item total amounts to integers with a decimal precision of DECIMAL_PRECISION.
  */
 export const computePriceItem = (
-  priceItem: PriceItemDto,
+  priceItem: PriceItemDto & { billing_period?: TimeFrequency },
   price: Price | undefined,
   applicableTax: Tax,
   quantity: number,
   priceMapping?: PriceInputMapping,
-  externalFeeMapping?: CompositePriceItem,
+  externalFeeMapping?: ExternalFeesMappings,
 ): PriceItem => {
+  console.log({ priceItem });
   const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase() as Currency;
   const priceItemDescription = priceItem?.description ?? price?.description;
 
@@ -613,6 +612,10 @@ export const computePriceItem = (
 
   const { safeQuantity, quantityToSelectTier, unitAmountMultiplier, isUsingPriceMappingToSelectTier } =
     computeQuantities(price!, quantity, priceMapping);
+
+  console.log({ priceMapping, externalFeeMapping, target: priceItem.billing_period });
+  const externalFeeAmountDecimal =
+    externalFeeMapping && computeExternalFee(externalFeeMapping, priceItem.billing_period);
 
   const itemValues =
     price?.pricing_model === PricingModel.tieredVolume
@@ -654,7 +657,7 @@ export const computePriceItem = (
           priceTax,
           isTaxInclusive,
           unitAmountMultiplier!,
-          externalFeeMapping,
+          externalFeeAmountDecimal,
         )
       : computePriceItemValues(unitAmountDecimal, currency, isTaxInclusive, unitAmountMultiplier!, priceTax!);
 
@@ -865,4 +868,19 @@ export const computeQuantities = (price: Price, quantity?: number, priceMapping?
     unitAmountMultiplier,
     isUsingPriceMappingToSelectTier: Boolean(normalizedPriceMappingInput),
   };
+};
+
+export const computeExternalFee = (
+  externalFeeMapping: ExternalFeesMappings,
+  priceBillingPeriod?: TimeFrequency,
+): string => {
+  if (!priceBillingPeriod) {
+    return externalFeeMapping.amount_total_decimal;
+  }
+
+  return normalizeNumberToFrequency(
+    externalFeeMapping.amount_total_decimal,
+    externalFeeMapping.frequency_unit,
+    priceBillingPeriod,
+  ) as string;
 };

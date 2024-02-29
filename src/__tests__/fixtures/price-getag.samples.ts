@@ -11,7 +11,8 @@ export const compositePriceGetAG: PriceItemDto = {
         sales_tax: "standard",
         active: true,
         price_display_in_journeys: "show_price",
-        type: "one_time",
+        type: "recurring",
+        billing_period: 'monthly',
         _slug: "price",
         _schema: "price",
         pricing_model: "external_getag",
@@ -93,7 +94,8 @@ export const compositePriceGetAG: PriceItemDto = {
           sales_tax: "standard",
           active: true,
           price_display_in_journeys: "show_price",
-          type: "one_time",
+          type: "recurring",
+          billing_period: 'monthly',
           _slug: "price",
           _schema: "price",
           pricing_model: "external_getag",
@@ -212,17 +214,7 @@ export const compositePriceGetAG: PriceItemDto = {
       { price_id: 'comp#2', value: 12000, frequency_unit: 'yearly' }
     ],
     external_fees_mappings: [
-      { price_id: 'comp#1', amount_total: 3126, amount_total_decimal: '31.26' ,frequency_unit: 'yearly' },
-      { price_id: 'comp#2', amount_total: 0, amount_total_decimal: '0.00' ,frequency_unit: 'yearly' }
+      { price_id: 'comp#1', amount_total: 3126, amount_total_decimal: '54.26' ,frequency_unit: 'yearly' },
+      { price_id: 'comp#2', amount_total: 142632, amount_total_decimal: '1426.32' ,frequency_unit: 'yearly' }
     ]
   } as any
-
-
-  // Variable
-  // 0 + 1000*0.10 = 100
-
-  // Static
-  // 31.26 + 10.00 = 41.26
-
-  // Total
-  // 100 + 41.26 = 141.26

@@ -8,10 +8,27 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
   });
 
   describe('when is_composite_price = true', () => {
-    const priceItems: PriceItemDto[] = [
-      compositePriceGetAG
-    ];
+    it('', () => {
+      const priceItems: PriceItemDto[] = [
+        compositePriceGetAG
+      ];
+  
+      const result = computeAggregatedAndPriceTotals(priceItems);
 
-    expect(computeAggregatedAndPriceTotals(priceItems)).toStrictEqual(null);
+      console.log(result.total_details?.breakdown?.recurrences?.[0])
+
+      expect(result).toStrictEqual(expect.objectContaining({
+        total_details: expect.objectContaining({
+          breakdown: 
+            expect.objectContaining({
+              recurrences: expect.arrayContaining([
+                expect.objectContaining({
+                  amount_total: 23338,
+                }),
+              ]),
+            }),
+        }),
+      }));
+    })
   });
 });

@@ -16,7 +16,7 @@ export { DECIMAL_PRECISION, GENERIC_UNIT_DISPLAY_LABEL } from './formatters/cons
 export {
   TimeFrequencyNormalizerMatrix,
   normalizePriceMappingInput,
-  normalizeTimeFrequency,
+  normalizeNumberToFrequency,
   normalizeTimeFrequencyToDinero,
   timeFrequencyNormalizerMatrix,
 } from './normalizers';

@@ -93,7 +93,7 @@ export const normalizeTimeFrequencyToDinero: NormalizeTimeFrequencyToDinero = (
  *
  * The default precision is set to 4 decimal places.
  *
- * @param {number} value the value in time that will be normalized
+ * @param {number} timeValue the value in time that will be normalized
  * @param {TimeFrequency} timeValueFrequency the current time frequency of the value
  * @param {TimeFrequency} targetTimeFrequency the time frequency the value will be normalized to
  * @param {number} precision the precision of the normalized value
@@ -103,24 +103,23 @@ export const normalizeTimeFrequencyToDinero: NormalizeTimeFrequencyToDinero = (
  * @deprecated The method will be removed in the next major version. Use normalizeValueToFrequencyUnit instead.
  * See also {@link TimeFrequency}
  */
-export const normalizeNumberToFrequency: NormalizeTimeFrequency = (
-  value,
+export const normalizeTimeFrequency: NormalizeTimeFrequency = (
+  timeValue,
   timeValueFrequency,
   targetTimeFrequency,
-  precision,
+  precision = 4,
 ) => {
-  const safePrecision = precision ? precision : typeof value === 'number' ? 4 : 12;
+  const targetPrecision = typeof precision !== undefined && precision >= 0 ? precision : 4;
 
-  const normalizedValue = normalizeTimeFrequencyToDinero(
-    value,
-    timeValueFrequency?.toLowerCase() as TimeFrequency,
-    targetTimeFrequency?.toLocaleLowerCase() as TimeFrequency,
-  )
-    .convertPrecision(safePrecision)
-    .toUnit()
-    .toString();
-
-  return typeof value === 'string' ? normalizedValue : Number(normalizedValue);
+  return Number(
+    normalizeTimeFrequencyToDinero(
+      timeValue,
+      timeValueFrequency?.toLowerCase() as TimeFrequency,
+      targetTimeFrequency?.toLocaleLowerCase() as TimeFrequency,
+    )
+      .convertPrecision(targetPrecision)
+      .toFormat('0.0000'),
+  );
 };
 
 /**

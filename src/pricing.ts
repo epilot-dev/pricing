@@ -305,14 +305,20 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
         ],
       } as PricingDetails;
     } else {
-      const price = priceItem._price;
+      const price = priceItem._price as Price;
       const tax = priceItem.taxes?.[0]?.tax;
       const priceMapping = priceItem.price_mappings?.find(({ price_id }) => priceItem._price!._id === price_id);
 
-      const priceItemToAppend = computePriceItem(priceItem, price, tax!, priceItem.quantity!, priceMapping);
+      const priceItemToAppend = computePriceItem(
+        priceItem as PriceItemDto,
+        price,
+        tax!,
+        priceItem.quantity!,
+        priceMapping,
+      );
 
       const updatedTotals = isUnitAmountApproved(
-        priceItem,
+        priceItem as PriceItemDto,
         priceItemToAppend?._price?.price_display_in_journeys ?? price?.price_display_in_journeys,
         null!,
       )

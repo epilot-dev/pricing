@@ -266,7 +266,7 @@ export const computeExternalGetAGPriceItemValues = (
   currency: Currency,
   unitAmountMultiplier: number,
   externalFeeAmountDecimal: string | undefined,
-) => {
+): PriceItemsTotals => {
   if (externalFeeAmountDecimal === undefined || getAg === undefined) {
     return {
       unitAmountNet: 0,

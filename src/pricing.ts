@@ -621,8 +621,7 @@ export const computePriceItem = (
   const { safeQuantity, quantityToSelectTier, unitAmountMultiplier, isUsingPriceMappingToSelectTier } =
     computeQuantities(price!, quantity, priceMapping);
 
-  const externalFeeAmountDecimal =
-    externalFeeMapping && computeExternalFee(externalFeeMapping, priceItem.billing_period);
+  const externalFeeAmountDecimal = computeExternalFee(externalFeeMapping, priceItem.billing_period);
 
   const itemValues =
     price?.pricing_model === PricingModel.tieredVolume
@@ -871,9 +870,13 @@ export const computeQuantities = (price: Price, quantity?: number, priceMapping?
 };
 
 export const computeExternalFee = (
-  externalFeeMapping: ExternalFeesMappings,
-  priceBillingPeriod?: TimeFrequency,
-): string => {
+  externalFeeMapping: ExternalFeesMappings | undefined,
+  priceBillingPeriod: TimeFrequency | undefined,
+): string | undefined => {
+  if (!externalFeeMapping) {
+    return;
+  }
+
   if (!priceBillingPeriod) {
     return externalFeeMapping.amount_total_decimal;
   }

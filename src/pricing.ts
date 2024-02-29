@@ -2,7 +2,7 @@ import type { Currency } from 'dinero.js';
 
 import { DEFAULT_CURRENCY } from './currencies';
 import { d, toDinero } from './formatters';
-import { normalizePriceMappingInput, normalizeNumberToFrequency } from './normalizers';
+import { normalizePriceMappingInput, normalizeValueToFrequencyUnit } from './normalizers';
 import type {
   CompositePrice,
   CompositePriceItem,
@@ -875,7 +875,7 @@ export const computeExternalFee = (
     return externalFeeMapping.amount_total_decimal;
   }
 
-  return normalizeNumberToFrequency(
+  return normalizeValueToFrequencyUnit(
     externalFeeMapping.amount_total_decimal,
     externalFeeMapping.frequency_unit,
     priceBillingPeriod,

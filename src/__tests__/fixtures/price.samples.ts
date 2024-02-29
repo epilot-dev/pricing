@@ -3226,7 +3226,6 @@ export const simplePriceWithNumberInputEqualsToZero: PriceItemDto = {
   active: true,
   variable_price: true,
   type: 'one_time',
-  billing_period: undefined,
   billing_duration_amount: null,
   billing_duration_unit: null,
   notice_time_amount: null,

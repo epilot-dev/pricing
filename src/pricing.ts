@@ -665,7 +665,7 @@ export const computePriceItem = (
     ...priceItem,
     currency,
     ...(priceItemDescription && { description: priceItemDescription }),
-    ...(Number.isInteger(itemValues.unitAmount || 0) && { unit_amount: itemValues?.unitAmount || 0 }),
+    ...(Number.isInteger(itemValues.unitAmount) && { unit_amount: itemValues?.unitAmount }),
     ...(Number.isInteger(itemValues.unitAmountNet) && { unit_amount_net: itemValues.unitAmountNet }),
     ...(price?.pricing_model === PricingModel.perUnit &&
       unitAmountDecimal && { unit_amount_decimal: unitAmountDecimal }),

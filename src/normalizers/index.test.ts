@@ -1,6 +1,6 @@
 import { Price } from '../types';
 
-import { normalizePriceMappingInput, normalizeNumberToFrequency } from '.';
+import { normalizePriceMappingInput, normalizeValueToFrequencyUnit } from '.';
 
 describe('normalizePriceMappingInput', () => {
   const oneTimePrice = {
@@ -28,6 +28,7 @@ describe('normalizePriceMappingInput', () => {
     },
   );
 });
+
 describe('normalizeNumberToFrequency', () => {
   it.each`
     timeValue    | timeValueFrequency  | targetTimeFrequency | precision    | expectedNormalizedValue
@@ -74,7 +75,7 @@ describe('normalizeNumberToFrequency', () => {
   `(
     `should normalize $timeValue/$timeValueFrequency properly to time frequency $targetTimeFrequency`,
     ({ timeValue, timeValueFrequency, targetTimeFrequency, precision, expectedNormalizedValue }) => {
-      expect(normalizeNumberToFrequency(timeValue, timeValueFrequency, targetTimeFrequency, precision)).toStrictEqual(
+      expect(normalizeValueToFrequencyUnit(timeValue, timeValueFrequency, targetTimeFrequency, precision)).toStrictEqual(
         expectedNormalizedValue,
       );
     },

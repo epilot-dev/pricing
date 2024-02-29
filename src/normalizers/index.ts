@@ -4,6 +4,7 @@ import { toDinero } from '../formatters';
 import {
   NormalizeTimeFrequency,
   NormalizeTimeFrequencyToDinero,
+  NormalizeValueToFrequencyUnit,
   Price,
   PriceInputMapping,
   TimeFrequency,
@@ -99,9 +100,44 @@ export const normalizeTimeFrequencyToDinero: NormalizeTimeFrequencyToDinero = (
  *
  * @returns {number} normalizedFrequencyInput
  *
+ * @deprecated The method will be removed in the next major version. Use normalizeValueToFrequencyUnit instead.
  * See also {@link TimeFrequency}
  */
 export const normalizeNumberToFrequency: NormalizeTimeFrequency = (
+  value,
+  timeValueFrequency,
+  targetTimeFrequency,
+  precision,
+) => {
+  const safePrecision = precision ? precision : typeof value === 'number' ? 4 : 12;
+
+  const normalizedValue = normalizeTimeFrequencyToDinero(
+    value,
+    timeValueFrequency?.toLowerCase() as TimeFrequency,
+    targetTimeFrequency?.toLocaleLowerCase() as TimeFrequency,
+  )
+    .convertPrecision(safePrecision)
+    .toUnit()
+    .toString();
+
+  return typeof value === 'string' ? normalizedValue : Number(normalizedValue);
+};
+
+/**
+ * This function will normalize an inputted value of a specific time frequency to the
+ * desired time frequency based on constant values defined here {@link timeFrequencyNormalizerMatrix}.
+ *
+ * The default precision is set to 4 decimal places.
+ *
+ * @param {number} value the value that will be normalized
+ * @param {TimeFrequency} timeValueFrequency the current time frequency of the value
+ * @param {TimeFrequency} targetTimeFrequency the time frequency the value will be normalized to
+ * @param {number} precision the precision of the normalized value
+ *
+ * @returns {number | string} normalized value
+ * See also {@link TimeFrequency}
+ */
+export const normalizeValueToFrequencyUnit: NormalizeValueToFrequencyUnit = (
   value,
   timeValueFrequency,
   targetTimeFrequency,

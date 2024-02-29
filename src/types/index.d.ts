@@ -41,7 +41,14 @@ export type NormalizeTimeFrequency = (
   timeValueFrequency: TimeFrequency,
   targetTimeFrequency: TimeFrequency,
   precision?: number,
+) => number;
+export type NormalizeValueToFrequencyUnit = (
+  timeValue: number | string,
+  timeValueFrequency: TimeFrequency,
+  targetTimeFrequency: TimeFrequency,
+  precision?: number,
 ) => number | string;
+
 export type NormalizeTimeFrequencyToDinero = (
   timeValue: number | string,
   timeValueFrequency: TimeFrequency,

@@ -608,7 +608,6 @@ export const computePriceItem = (
   priceMapping?: PriceInputMapping,
   externalFeeMapping?: ExternalFeesMappings,
 ): PriceItem => {
-  console.log({ priceItem });
   const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase() as Currency;
   const priceItemDescription = priceItem?.description ?? price?.description;
 
@@ -619,7 +618,6 @@ export const computePriceItem = (
   const { safeQuantity, quantityToSelectTier, unitAmountMultiplier, isUsingPriceMappingToSelectTier } =
     computeQuantities(price!, quantity, priceMapping);
 
-  console.log({ priceMapping, externalFeeMapping, target: priceItem.billing_period });
   const externalFeeAmountDecimal =
     externalFeeMapping && computeExternalFee(externalFeeMapping, priceItem.billing_period);
 
@@ -656,7 +654,7 @@ export const computePriceItem = (
           isUsingPriceMappingToSelectTier,
           priceItem._price?.unchanged_price_display_in_journeys,
         )
-      : (price?.pricing_model as any) === PricingModel.externalGetAG
+      : price?.pricing_model === PricingModel.externalGetAG
       ? computeExternalGetAGPriceItemValues(price?.get_ag, currency, unitAmountMultiplier!, externalFeeAmountDecimal)
       : computePriceItemValues(unitAmountDecimal, currency, isTaxInclusive, unitAmountMultiplier!, priceTax!);
 
@@ -664,7 +662,7 @@ export const computePriceItem = (
     ...priceItem,
     currency,
     ...(priceItemDescription && { description: priceItemDescription }),
-    ...(Number.isInteger((itemValues as any).unitAmount || 0) && { unit_amount: (itemValues as any)?.unitAmount || 0 }),
+    ...(Number.isInteger(itemValues.unitAmount || 0) && { unit_amount: (itemValues as any)?.unitAmount || 0 }),
     ...(Number.isInteger(itemValues.unitAmountNet) && { unit_amount_net: itemValues.unitAmountNet }),
     ...(price?.pricing_model === PricingModel.perUnit &&
       unitAmountDecimal && { unit_amount_decimal: unitAmountDecimal }),

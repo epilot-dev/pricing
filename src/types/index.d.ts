@@ -13,9 +13,7 @@ export type TaxAmountDto = Components.Schemas.TaxAmountDto;
 export type TaxAmount = Components.Schemas.TaxAmount;
 export type CompositePrice = Components.Schemas.CompositePrice;
 export type PriceComponentRelation = Components.Schemas.PriceComponentRelation;
-export type CompositePriceItemDto = Components.Schemas.CompositePriceItemDto & {
-  external_fees_mappings?: ExternalFeesMappings[];
-};
+export type CompositePriceItemDto = Components.Schemas.CompositePriceItemDto;
 export type CompositePriceItem = Components.Schemas.CompositePriceItem;
 export type EntityItem = Components.Schemas.EntityItem;
 export type EntityRelation = Components.Schemas.EntityRelation;
@@ -25,12 +23,7 @@ export type RecurrenceAmountWithTax = Components.Schemas.RecurrenceAmountWithTax
 export type BillingPeriod = Components.Schemas.BillingPeriod;
 export type PriceInputMappings = Components.Schemas.PriceInputMappings;
 export type PriceInputMapping = Components.Schemas.PriceInputMapping;
-export type ExternalFeesMappings = {
-  price_id: string;
-  amount_total: number;
-  amount_total_decimal: string;
-  frequency_unit: TimeFrequency;
-};
+export type ExternalFeesMappings = Components.Schemas.ExternalFeesMappings;
 export type TimeFrequency = Exclude<BillingPeriod, 'one_time'>;
 export type PriceTier = Components.Schemas.PriceTier;
 export type PriceTierDisplayMode = Components.Schemas.PriceTierDisplayMode;

@@ -279,20 +279,20 @@ export const computeExternalGetAGPriceItemValues = (
 
   const unitAmountGetAFee = toDinero(externalFeeAmountDecimal, currency);
   const unitAmountMarkup = toDinero(getAg.markup_amount_decimal, currency).multiply(unitAmountMultiplier);
-  // Sum fee and markup
+  // fee + markup
   const unitAmount = unitAmountGetAFee.add(unitAmountMarkup);
 
   const amountGetAgFee = toDinero(externalFeeAmountDecimal, currency);
   const amountMarkup = toDinero(getAg.markup_amount_decimal, currency).multiply(unitAmountMultiplier);
-  // Sum fee and markup
-  const amountTotalV2 = amountGetAgFee.add(amountMarkup);
+  // fee + markup
+  const amountTotal = amountGetAgFee.add(amountMarkup);
 
   return {
     unitAmountNet: unitAmount.getAmount(),
     unitAmountGross: unitAmount.getAmount(),
     taxAmount: 0,
-    amountSubtotal: amountTotalV2.getAmount(),
-    amountTotal: amountTotalV2.getAmount(),
+    amountSubtotal: amountTotal.getAmount(),
+    amountTotal: amountTotal.getAmount(),
   };
 };
 

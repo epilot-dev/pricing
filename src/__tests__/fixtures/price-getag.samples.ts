@@ -1,5 +1,40 @@
 import { PriceItemDto } from "./../../types";
 
+export const priceGetAG: PriceItemDto = {
+  quantity: 1,
+  product_id: 'prod-id#1',
+  price_id: 'price#1',
+  _price: {
+    _id: 'price#1',
+    unit_amount_currency: 'EUR',
+    is_tax_inclusive: true,
+    pricing_model: 'external_getag',
+    get_ag: {
+      category: "power",
+      markup_amount: 10,
+      markup_amount_decimal: "0.10"
+    },
+    billing_period: 'monthly',
+  },
+  _product: {
+    _tags: [],
+  },
+  type: 'recurring',
+  pricing_model: 'external_getag',
+  get_ag: {
+    category: "power",
+    markup_amount: 10,
+    markup_amount_decimal: "0.10"
+  },
+  price_mappings: [
+    { price_id: 'price#1', value: 12000, frequency_unit: 'yearly' }
+  ],
+  external_fees_mappings: [
+    { price_id: 'price#1', amount_total: 142632, amount_total_decimal: '1426.32' ,frequency_unit: 'yearly' }
+  ],
+  billing_period: 'monthly'
+} as any
+
 export const compositePriceGetAG: PriceItemDto = {
     description: "Test GetAG Composite",
     price_components: [

@@ -313,12 +313,17 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
       const tax = priceItem.taxes?.[0]?.tax;
       const priceMapping = priceItem.price_mappings?.find(({ price_id }) => priceItem._price!._id === price_id);
 
+      const externalFeeMapping = priceItem.external_fees_mappings?.find(
+        ({ price_id }) => priceItem._price!._id === price_id,
+      );
+
       const priceItemToAppend = computePriceItem(
         priceItem as PriceItemDto,
         price,
         tax!,
         priceItem.quantity!,
         priceMapping,
+        externalFeeMapping,
       );
 
       const updatedTotals = isUnitAmountApproved(
@@ -622,7 +627,10 @@ export const computePriceItem = (
   const { safeQuantity, quantityToSelectTier, unitAmountMultiplier, isUsingPriceMappingToSelectTier } =
     computeQuantities(price!, quantity, priceMapping);
 
-  const externalFeeAmountDecimal = computeExternalFee(externalFeeMapping, priceItem.billing_period);
+  const externalFeeAmountDecimal = computeExternalFee(
+    externalFeeMapping,
+    priceItem.billing_period || price?.billing_period,
+  );
 
   const itemValues =
     price?.pricing_model === PricingModel.tieredVolume

@@ -3,9 +3,7 @@ import type { Dinero } from 'dinero.js';
 
 export type Price = Components.Schemas.Price;
 export type PriceItem = Components.Schemas.PriceItem;
-export type PriceItemDto = Components.Schemas.PriceItemDto & {
-  billing_period?: TimeFrequency;
-};
+export type PriceItemDto = Components.Schemas.PriceItemDto;
 export type Product = Components.Schemas.Product;
 export type PricingDetails = Components.Schemas.PricingDetails;
 export type PriceItems = Components.Schemas.PriceItems;

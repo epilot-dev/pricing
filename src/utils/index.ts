@@ -261,4 +261,39 @@ export const computeTieredGraduatedPriceItemValues = (
   };
 };
 
+export const computeExternalGetAGPriceItemValues = (
+  getAg: Price['get_ag'],
+  currency: Currency,
+  unitAmountMultiplier: number,
+  externalFeeAmountDecimal: string | undefined,
+): PriceItemsTotals => {
+  if (externalFeeAmountDecimal === undefined || getAg === undefined) {
+    return {
+      unitAmountNet: 0,
+      unitAmountGross: 0,
+      taxAmount: 0,
+      amountSubtotal: 0,
+      amountTotal: 0,
+    };
+  }
+
+  const unitAmountGetAgFee = toDinero(externalFeeAmountDecimal, currency).divide(unitAmountMultiplier);
+  const unitAmountMarkup = toDinero(getAg.markup_amount_decimal, currency);
+  // fee + markup
+  const unitAmount = unitAmountGetAgFee.add(unitAmountMarkup);
+
+  const amountGetAgFee = toDinero(externalFeeAmountDecimal, currency);
+  const amountMarkup = toDinero(getAg.markup_amount_decimal, currency).multiply(unitAmountMultiplier);
+  // fee + markup
+  const amountTotal = amountGetAgFee.add(amountMarkup);
+
+  return {
+    unitAmountNet: unitAmount.getAmount(),
+    unitAmountGross: unitAmount.getAmount(),
+    taxAmount: 0,
+    amountSubtotal: amountTotal.getAmount(),
+    amountTotal: amountTotal.getAmount(),
+  };
+};
+
 export const isNotPieceUnit = (unit: string | undefined) => unit !== undefined && unit !== 'unit';

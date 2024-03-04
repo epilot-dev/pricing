@@ -2,14 +2,14 @@ import type { Currency } from 'dinero.js';
 
 import { DEFAULT_CURRENCY } from './currencies';
 import { d, toDinero } from './formatters';
-import { normalizePriceMappingInput } from './normalizers';
+import { normalizePriceMappingInput, normalizeValueToFrequencyUnit } from './normalizers';
 import type {
   CompositePrice,
   CompositePriceItem,
   CompositePriceItemDto,
+  ExternalFeesMappings,
   Price,
   PriceInputMapping,
-  PriceInputMappings,
   PriceItem,
   PriceItemDto,
   PriceItemsDto,
@@ -19,8 +19,10 @@ import type {
   RecurrenceAmountWithTax,
   Tax,
   TaxAmountDto,
+  TimeFrequency,
 } from './types';
 import {
+  computeExternalGetAGPriceItemValues,
   computePriceItemValues,
   computeTieredFlatFeePriceItemValues,
   computeTieredGraduatedPriceItemValues,
@@ -46,6 +48,7 @@ export enum PricingModel {
   tieredGraduated = 'tiered_graduated',
   tieredVolume = 'tiered_volume',
   tieredFlatFee = 'tiered_flatfee',
+  externalGetAG = 'external_getag',
 }
 
 export type ComputeAggregatedAndPriceTotals = typeof computeAggregatedAndPriceTotals;
@@ -83,17 +86,27 @@ export const isCompositePrice = (priceItem: PriceItemDto | CompositePriceItemDto
 
 export const computePriceComponent = (
   priceItemComponent: PriceItemDto,
-  priceMappings: PriceInputMappings,
-  parentQuantity: number,
+  priceItem: CompositePriceItemDto,
 ): PriceItem => {
   const tax = priceItemComponent?.taxes?.[0]?.tax;
-  const priceMapping = priceMappings?.find(({ price_id }) => priceItemComponent._price!._id === price_id);
+  const priceMapping = priceItem.price_mappings?.find(({ price_id }) => priceItemComponent._price!._id === price_id);
+
+  const externalFeeMapping = priceItem.external_fees_mappings?.find(
+    ({ price_id }) => priceItemComponent._price!._id === price_id,
+  );
 
   const safeQuantity = isNaN(priceItemComponent?.quantity!) ? 1 : priceItemComponent?.quantity;
-  const safeParentQuantity = isNaN(parentQuantity) ? 1 : parentQuantity;
+  const safeParentQuantity = isNaN(priceItem.quantity!) ? 1 : priceItem.quantity!;
   const quantity = toDinero(String(safeQuantity)).multiply(safeParentQuantity).toUnit();
 
-  return computePriceItem(priceItemComponent, priceItemComponent._price, tax!, quantity, priceMapping);
+  return computePriceItem(
+    priceItemComponent,
+    priceItemComponent._price,
+    tax!,
+    quantity,
+    priceMapping,
+    externalFeeMapping,
+  );
 };
 
 const isValidPrice = (priceComponent: Price): boolean => {
@@ -231,9 +244,7 @@ export const computeCompositePrice = (
     return [...itemComponentsResult, itemComponent];
   }, []);
 
-  const computedItemComponents = itemComponents.map((priceRelation) =>
-    computePriceComponent(priceRelation, priceItem.price_mappings!, priceItem.quantity!),
-  );
+  const computedItemComponents = itemComponents.map((priceRelation) => computePriceComponent(priceRelation, priceItem));
 
   const itemDescription = priceItem?.description ?? compositePrice?.description ?? null;
 
@@ -302,7 +313,18 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
       const tax = priceItem.taxes?.[0]?.tax;
       const priceMapping = priceItem.price_mappings?.find(({ price_id }) => priceItem._price!._id === price_id);
 
-      const priceItemToAppend = computePriceItem(priceItem, price, tax!, priceItem.quantity!, priceMapping);
+      const externalFeeMapping = priceItem.external_fees_mappings?.find(
+        ({ price_id }) => priceItem._price!._id === price_id,
+      );
+
+      const priceItemToAppend = computePriceItem(
+        priceItem as PriceItemDto,
+        price,
+        tax!,
+        priceItem.quantity!,
+        priceMapping,
+        externalFeeMapping,
+      );
 
       const updatedTotals = isUnitAmountApproved(
         priceItem,
@@ -593,6 +615,7 @@ export const computePriceItem = (
   applicableTax: Tax,
   quantity: number,
   priceMapping?: PriceInputMapping,
+  externalFeeMapping?: ExternalFeesMappings,
 ): PriceItem => {
   const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase() as Currency;
   const priceItemDescription = priceItem?.description ?? price?.description;
@@ -603,6 +626,11 @@ export const computePriceItem = (
 
   const { safeQuantity, quantityToSelectTier, unitAmountMultiplier, isUsingPriceMappingToSelectTier } =
     computeQuantities(price!, quantity, priceMapping);
+
+  const externalFeeAmountDecimal = computeExternalFee(
+    externalFeeMapping,
+    priceItem.billing_period || price?.billing_period,
+  );
 
   const itemValues =
     price?.pricing_model === PricingModel.tieredVolume
@@ -637,6 +665,8 @@ export const computePriceItem = (
           isUsingPriceMappingToSelectTier,
           priceItem._price?.unchanged_price_display_in_journeys,
         )
+      : price?.pricing_model === PricingModel.externalGetAG
+      ? computeExternalGetAGPriceItemValues(price?.get_ag, currency, unitAmountMultiplier!, externalFeeAmountDecimal)
       : computePriceItemValues(unitAmountDecimal, currency, isTaxInclusive, unitAmountMultiplier!, priceTax!);
 
   return {
@@ -846,4 +876,23 @@ export const computeQuantities = (price: Price, quantity?: number, priceMapping?
     unitAmountMultiplier,
     isUsingPriceMappingToSelectTier: Boolean(normalizedPriceMappingInput),
   };
+};
+
+export const computeExternalFee = (
+  externalFeeMapping: ExternalFeesMappings | undefined,
+  priceBillingPeriod: TimeFrequency | undefined,
+): string | undefined => {
+  if (!externalFeeMapping) {
+    return;
+  }
+
+  if (!priceBillingPeriod) {
+    return externalFeeMapping.amount_total_decimal;
+  }
+
+  return normalizeValueToFrequencyUnit(
+    externalFeeMapping.amount_total_decimal,
+    externalFeeMapping.frequency_unit,
+    priceBillingPeriod,
+  ) as string;
 };

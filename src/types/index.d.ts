@@ -23,6 +23,7 @@ export type RecurrenceAmountWithTax = Components.Schemas.RecurrenceAmountWithTax
 export type BillingPeriod = Components.Schemas.BillingPeriod;
 export type PriceInputMappings = Components.Schemas.PriceInputMappings;
 export type PriceInputMapping = Components.Schemas.PriceInputMapping;
+export type ExternalFeesMappings = Components.Schemas.ExternalFeesMappings;
 export type TimeFrequency = Exclude<BillingPeriod, 'one_time'>;
 export type PriceTier = Components.Schemas.PriceTier;
 export type PriceTierDisplayMode = Components.Schemas.PriceTierDisplayMode;

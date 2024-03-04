@@ -277,8 +277,8 @@ export const computeExternalGetAGPriceItemValues = (
     };
   }
 
-  const unitAmountGetAFee = toDinero(externalFeeAmountDecimal, currency);
-  const unitAmountMarkup = toDinero(getAg.markup_amount_decimal, currency).multiply(unitAmountMultiplier);
+  const unitAmountGetAFee = toDinero(externalFeeAmountDecimal, currency).divide(unitAmountMultiplier);
+  const unitAmountMarkup = toDinero(getAg.markup_amount_decimal, currency);
   // fee + markup
   const unitAmount = unitAmountGetAFee.add(unitAmountMarkup);
 

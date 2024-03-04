@@ -253,3 +253,4 @@ export const compositePriceGetAG: PriceItemDto = {
       { price_id: 'comp#2', amount_total: 142632, amount_total_decimal: '1426.32' ,frequency_unit: 'yearly' }
     ]
   } as any
+  

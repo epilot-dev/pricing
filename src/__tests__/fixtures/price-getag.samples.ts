@@ -1,4 +1,5 @@
 import { PriceItemDto } from "./../../types";
+import { tax19percent } from "./tax.samples";
 
 export const priceGetAG: PriceItemDto = {
   quantity: 1,
@@ -15,6 +16,7 @@ export const priceGetAG: PriceItemDto = {
       markup_amount_decimal: "0.10"
     },
     billing_period: 'monthly',
+    tax: [tax19percent],
   },
   _product: {
     _tags: [],
@@ -32,7 +34,12 @@ export const priceGetAG: PriceItemDto = {
   external_fees_mappings: [
     { price_id: 'price#1', amount_total: 142632, amount_total_decimal: '1426.32' ,frequency_unit: 'yearly' }
   ],
-  billing_period: 'monthly'
+  billing_period: 'monthly',
+  taxes: [
+    {
+      tax: tax19percent,
+    },
+  ]
 } as any
 
 export const compositePriceGetAG: PriceItemDto = {
@@ -57,7 +64,12 @@ export const compositePriceGetAG: PriceItemDto = {
           category: "power",
           markup_amount: 1000,
           markup_amount_decimal: "10.00"
-        }
+        },
+        taxes: [
+          {
+            tax: tax19percent,
+          },
+        ]
       },
       {
         _id: "comp#2",
@@ -71,37 +83,10 @@ export const compositePriceGetAG: PriceItemDto = {
         _slug: "price",
         _schema: "price",
         _title: "Consumption",
-        tax: [
+        taxes: [
           {
-            active: true,
-            description: "New Tax",
-            region: "DE",
-            rate: "12",
-            type: "VAT",
-            _schema: "tax",
-            _id: "8d3a3f9a-b6a6-4695-99ed-abd52c8f3854",
-            _org: "739224",
-            _owners: [
-              {
-                org_id: "739224",
-                user_id: "11000895"
-              }
-            ],
-            _created_at: "2023-12-21T16:46:50.200Z",
-            _updated_at: "2023-12-21T16:46:50.200Z",
-            _title: "New Tax",
-            _acl: {
-              view: [
-                "org_739224"
-              ],
-              edit: [
-                "org_739224"
-              ],
-              delete: [
-                "org_739224"
-              ]
-            }
-          }
+            tax: tax19percent,
+          },
         ],
         get_ag: {
           category: "power",
@@ -140,7 +125,10 @@ export const compositePriceGetAG: PriceItemDto = {
             category: "power",
             markup_amount: 1000,
             markup_amount_decimal: "10.00"
-          }
+          },
+          tax: [
+            tax19percent
+          ]
         },
         {
           _id: "comp#2",
@@ -155,36 +143,7 @@ export const compositePriceGetAG: PriceItemDto = {
           _schema: "price",
           _title: "Consumption",
           tax: [
-            {
-              active: true,
-              description: "New Tax",
-              region: "DE",
-              rate: "12",
-              type: "VAT",
-              _schema: "tax",
-              _id: "8d3a3f9a-b6a6-4695-99ed-abd52c8f3854",
-              _org: "739224",
-              _owners: [
-                {
-                  org_id: "739224",
-                  user_id: "11000895"
-                }
-              ],
-              _created_at: "2023-12-21T16:46:50.200Z",
-              _updated_at: "2023-12-21T16:46:50.200Z",
-              _title: "New Tax",
-              _acl: {
-                view: [
-                  "org_739224"
-                ],
-                edit: [
-                  "org_739224"
-                ],
-                delete: [
-                  "org_739224"
-                ]
-              }
-            }
+            tax19percent
           ],
           get_ag: {
             category: "power",

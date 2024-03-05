@@ -264,8 +264,10 @@ export const computeTieredGraduatedPriceItemValues = (
 export const computeExternalGetAGPriceItemValues = (
   getAg: Price['get_ag'],
   currency: Currency,
+  isTaxInclusive: boolean,
   unitAmountMultiplier: number,
   externalFeeAmountDecimal: string | undefined,
+  tax?: Tax,
 ): PriceItemsTotals => {
   if (externalFeeAmountDecimal === undefined || getAg === undefined) {
     return {
@@ -277,21 +279,38 @@ export const computeExternalGetAGPriceItemValues = (
     };
   }
 
-  const unitAmountGetAgFee = toDinero(externalFeeAmountDecimal, currency).divide(unitAmountMultiplier);
-  const unitAmountMarkup = toDinero(getAg.markup_amount_decimal, currency);
-  // fee + markup
-  const unitAmount = unitAmountGetAgFee.add(unitAmountMarkup);
+  const taxRate = getTaxValue(tax);
 
-  const amountGetAgFee = toDinero(externalFeeAmountDecimal, currency);
-  const amountMarkup = toDinero(getAg.markup_amount_decimal, currency).multiply(unitAmountMultiplier);
+  const unitAmountGetAgFeeNet = toDinero(externalFeeAmountDecimal, currency).divide(unitAmountMultiplier);
+  const unitAmountMarkup = toDinero(getAg.markup_amount_decimal, currency);
+  const unitAmountMarkupNet = isTaxInclusive ? unitAmountMarkup.divide(1 + taxRate) : unitAmountMarkup;
   // fee + markup
-  const amountTotal = amountGetAgFee.add(amountMarkup);
+  const unitAmountNet = unitAmountGetAgFeeNet.add(unitAmountMarkupNet);
+
+  // Unit tax amount
+  const unitTaxAmount = unitAmountNet.multiply(taxRate);
+
+  const unitAmountGross = unitAmountNet.add(unitTaxAmount);
+
+  const amountSubtotal = toDinero(externalFeeAmountDecimal, currency).add(
+    unitAmountMarkupNet.multiply(unitAmountMultiplier),
+  );
+  const amountTax = unitTaxAmount.multiply(unitAmountMultiplier);
+  const amountTotal = amountSubtotal.add(amountTax);
+
+  console.log({
+    unitAmountGetAgFeeNet: unitAmountGetAgFeeNet.convertPrecision(2).getAmount(),
+    unitAmountMarkup: unitAmountMarkupNet.convertPrecision(2).getAmount(),
+    unitAmountNet: unitAmountNet.convertPrecision(2).getAmount(),
+    taxRate,
+    amountTax: amountTax.convertPrecision(2).getAmount(),
+  });
 
   return {
-    unitAmountNet: unitAmount.getAmount(),
-    unitAmountGross: unitAmount.getAmount(),
-    taxAmount: 0,
-    amountSubtotal: amountTotal.getAmount(),
+    unitAmountNet: unitAmountNet.getAmount(),
+    unitAmountGross: unitAmountGross.getAmount(),
+    taxAmount: amountTax.getAmount(),
+    amountSubtotal: amountSubtotal.getAmount(),
     amountTotal: amountTotal.getAmount(),
   };
 };

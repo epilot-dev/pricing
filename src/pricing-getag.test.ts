@@ -5,7 +5,7 @@ import { PriceItemDto } from './types';
 describe('GetAG - computeAggregatedAndPriceTotals', () => {
 
   describe('when is_composite_price = false', () => {
-    fit('returns the correct amount_total', () => {
+    it('returns the correct amount_total', () => {
       const priceItems: PriceItemDto[] = [
         priceGetAG
       ];
@@ -28,7 +28,7 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
   })
 
   describe('when is_composite_price = true', () => {
-    it('returns the correct amount_total', () => {
+    fit('returns the correct amount_total', () => {
       const priceItems: PriceItemDto[] = [
         compositePriceGetAG
       ];

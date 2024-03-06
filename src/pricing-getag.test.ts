@@ -13,12 +13,17 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
       const result = computeAggregatedAndPriceTotals(priceItems);
 
       expect(result).toStrictEqual(expect.objectContaining({
+        amount_total: 24144,
+        amount_subtotal: 20289,
+        amount_tax: 3855,
         total_details: expect.objectContaining({
           breakdown: 
             expect.objectContaining({
               recurrences: expect.arrayContaining([
                 expect.objectContaining({
-                  amount_total: 21886,
+                  amount_total: 24144,
+                  amount_subtotal: 20289,
+                  amount_tax: 3855,
                 }),
               ]),
             }),
@@ -28,7 +33,7 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
   })
 
   describe('when is_composite_price = true', () => {
-    fit('returns the correct amount_total', () => {
+    it('returns the correct amount_total', () => {
       const priceItems: PriceItemDto[] = [
         compositePriceGetAG
       ];
@@ -36,12 +41,17 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
       const result = computeAggregatedAndPriceTotals(priceItems);
 
       expect(result).toStrictEqual(expect.objectContaining({
+        amount_total: 25682,
+        amount_subtotal: 21582,
+        amount_tax: 4101,
         total_details: expect.objectContaining({
           breakdown: 
             expect.objectContaining({
               recurrences: expect.arrayContaining([
                 expect.objectContaining({
-                  amount_total: 23338,
+                  amount_total: 25682,
+                  amount_subtotal: 21582,
+                  amount_tax: 4101,
                 }),
               ]),
             }),

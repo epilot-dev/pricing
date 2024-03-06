@@ -281,22 +281,20 @@ export const computeExternalGetAGPriceItemValues = (
 
   const taxRate = getTaxValue(tax);
 
+  // Unit amounts
   const unitAmountGetAgFeeNet = toDinero(externalFeeAmountDecimal, currency).divide(unitAmountMultiplier);
   const unitAmountMarkup = toDinero(getAg.markup_amount_decimal, currency);
   const unitAmountMarkupNet = isTaxInclusive ? unitAmountMarkup.divide(1 + taxRate) : unitAmountMarkup;
-  // fee + markup
+  //     Unit amount net = fee net + markup net
   const unitAmountNet = unitAmountGetAgFeeNet.add(unitAmountMarkupNet);
 
-  // Unit tax amount
   const unitTaxAmount = unitAmountNet.multiply(taxRate);
-
   const unitAmountGross = unitAmountNet.add(unitTaxAmount);
 
-  const amountSubtotal = toDinero(externalFeeAmountDecimal, currency).add(
-    unitAmountMarkupNet.multiply(unitAmountMultiplier),
-  );
+  // Totals
+  const amountSubtotal = unitAmountNet.multiply(unitAmountMultiplier);
   const amountTax = unitTaxAmount.multiply(unitAmountMultiplier);
-  const amountTotal = amountSubtotal.add(amountTax);
+  const amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
 
   console.log({
     unitAmountGetAgFeeNet: unitAmountGetAgFeeNet.convertPrecision(2).getAmount(),

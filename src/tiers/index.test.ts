@@ -324,13 +324,13 @@ describe('computeCumulativeValue', () => {
     tiers             | quantityToSelectTier | unit        | locale       | currency | shouldDisplayOnRequest | showStartsAt | tax | expected
     ${baseTiers}      | ${1}                 | ${'kWh'}    | ${undefined} | ${'EUR'} | ${undefined}           | ${undefined} | ${{
       isIncluded: true, rate: 10
-    }} | ${{ netTotal: '9,09\xa0€', netTotalWithPrecision: '9,090909090909\xa0€', netAverage: '9,09\xa0€/kWh', total: '10,00\xa0€', totalWithPrecision: '10,00\xa0€', average: '10,00\xa0€/kWh', breakdown: [{ quantityUsed: '1 kWh', tierAmountDecimal: '10,00\xa0€/kWh', totalAmountDecimal: '10,00\xa0€' }] }}
+    }} | ${{ amountSubtotal: '9,09\xa0€', amountSubtotalWithPrecision: '9,090909090909\xa0€', amountSubtotalAverage: '9,09\xa0€/kWh', total: '10,00\xa0€', totalWithPrecision: '10,00\xa0€', average: '10,00\xa0€/kWh', breakdown: [{ quantityUsed: '1 kWh', tierAmountDecimal: '10,00\xa0€/kWh', totalAmountDecimal: '10,00\xa0€' }] }}
     ${baseTiers}      | ${2}                 | ${'m'}      | ${'de'}      | ${'EUR'} | ${undefined}           | ${undefined} | ${{
       isIncluded: true, rate: 10
-    }} | ${{ netTotal: '18,18\xa0€', netTotalWithPrecision: '18,181818181818\xa0€', netAverage: '9,09\xa0€/m', total: '20,00\xa0€', totalWithPrecision: '20,00\xa0€', average: '10,00\xa0€/m', breakdown: [{ quantityUsed: '2 m', tierAmountDecimal: '10,00\xa0€/m', totalAmountDecimal: '20,00\xa0€' }] }}
+    }} | ${{ amountSubtotal: '18,18\xa0€', amountSubtotalWithPrecision: '18,181818181818\xa0€', amountSubtotalAverage: '9,09\xa0€/m', total: '20,00\xa0€', totalWithPrecision: '20,00\xa0€', average: '10,00\xa0€/m', breakdown: [{ quantityUsed: '2 m', tierAmountDecimal: '10,00\xa0€/m', totalAmountDecimal: '20,00\xa0€' }] }}
     ${baseTiers}      | ${50}                 | ${'kWh'}    | ${undefined} | ${'EUR'} | ${undefined}           | ${undefined} | ${{
       isIncluded: false, rate: 10
-    }} | ${{ netTotal: '430,00\xa0€', netTotalWithPrecision: '430,00\xa0€', netAverage: '8,60\xa0€/kWh', total: '430,00\xa0€', totalWithPrecision: '430,00\xa0€', average: '8,60\xa0€/kWh', breakdown: [{ quantityUsed: '10 kWh', tierAmountDecimal: '10,00\xa0€/kWh', totalAmountDecimal: '100,00\xa0€' }, { quantityUsed: '10 kWh', tierAmountDecimal: '9,00\xa0€/kWh', totalAmountDecimal: '90,00\xa0€' }, { quantityUsed: '30 kWh', tierAmountDecimal: '8,00\xa0€/kWh', totalAmountDecimal: '240,00\xa0€' }] }}
+    }} | ${{ amountSubtotal: '430,00\xa0€', amountSubtotalWithPrecision: '430,00\xa0€', amountSubtotalAverage: '8,60\xa0€/kWh', total: '430,00\xa0€', totalWithPrecision: '430,00\xa0€', average: '8,60\xa0€/kWh', breakdown: [{ quantityUsed: '10 kWh', tierAmountDecimal: '10,00\xa0€/kWh', totalAmountDecimal: '100,00\xa0€' }, { quantityUsed: '10 kWh', tierAmountDecimal: '9,00\xa0€/kWh', totalAmountDecimal: '90,00\xa0€' }, { quantityUsed: '30 kWh', tierAmountDecimal: '8,00\xa0€/kWh', totalAmountDecimal: '240,00\xa0€' }] }}
   `(
     'should compute net cumulative value correctly when quantityToSelectTier=$quantityToSelectTier',
     ({ tiers, quantityToSelectTier, unit, locale, currency, shouldDisplayOnRequest, showStartsAt, tax, expected }) => {

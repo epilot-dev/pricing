@@ -177,13 +177,13 @@ describe('getTierDescription', () => {
   const tierWithUnitAmount = {
     up_to: 10,
     unit_amount: 1000,
-    unit_amount_decimal: '10',
+    unit_amount_decimal: '10.00',
   };
 
   const tierWithUnitAmountOnRequest = {
     up_to: 10,
     unit_amount: 1000,
-    unit_amount_decimal: '10',
+    unit_amount_decimal: '10.00',
     display_mode: 'on_request',
   };
 
@@ -208,13 +208,13 @@ describe('getTierDescription', () => {
   const tierWithFlatFeeAmount = {
     up_to: 10,
     flat_fee_amount: 1000,
-    flat_fee_amount_decimal: '10',
+    flat_fee_amount_decimal: '10.00',
   };
 
   const tierWithFlatFeeAmountOnRequest = {
     up_to: 10,
     flat_fee_amount: 1000,
-    flat_fee_amount_decimal: '10',
+    flat_fee_amount_decimal: '10.00',
     display_mode: 'on_request',
   };
 
@@ -292,6 +292,50 @@ describe('getTierDescription', () => {
       expect(result?.replace(/\s+/g, ' ').trim()).toEqual(expected);
     },
   );
+
+  it.each`
+    pricingModel                    | tier                              | unit         | locale       | currency     | t    | showStartsAt | enableSubunitDisplay | shouldDisplayOnRequest | tax | expected
+    ${PricingModel.tieredGraduated} | ${tierWithUnitAmount}             | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${{ isIncluded: true, rate: 10 }} | ${'Starts at €9.09/kWh'}
+    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${{ isIncluded: true, rate: 10 }} | ${'Starts at €9.09/kWh'}
+    ${PricingModel.tieredVolume}    | ${tierWithSubunitAmount}          | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${true}              | ${undefined}           | ${{ isIncluded: true, rate: 10 }} | ${'Starts at 4.55 cents/kWh'}
+    ${PricingModel.tieredFlatFee}   | ${tierWithFlatFeeAmount}          | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${{ isIncluded: true, rate: 10 }} | ${'Starts at €9.09'}
+
+  `(
+    'should return correct net values for the tier, when pricingModel=$pricingModel, unit=$unit, locale=$locale, currency=$currency, showStartsAt=$showStartsAt',
+    ({
+      pricingModel,
+      tier,
+      unit,
+      locale,
+      currency,
+      t,
+      showStartsAt,
+      enableSubunitDisplay,
+      shouldDisplayOnRequest,
+      tax,
+      expected,
+    }: {
+      pricingModel: PricingModel;
+      tier: PriceTier;
+      unit: string;
+      locale: string;
+      currency: Currency;
+      t: jest.Mock;
+      showStartsAt: boolean;
+      enableSubunitDisplay: boolean;
+      shouldDisplayOnRequest?: boolean;
+      tax: { isIncluded: boolean; rate: number };
+      expected: string;
+    }) => {
+      const result = getTierDescription(pricingModel, tier, unit, locale, currency, t, {
+        showStartsAt,
+        enableSubunitDisplay,
+        shouldDisplayOnRequest,
+      }, tax);
+
+      expect(result?.replace(/\s+/g, ' ').trim()).toEqual(expected);
+    },
+  )
 });
 
 describe('computeCumulativeValue', () => {

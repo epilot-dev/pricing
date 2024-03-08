@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Currency, Dinero } from 'dinero.js';
 
 import { DEFAULT_CURRENCY } from '../currencies';
@@ -96,6 +97,7 @@ export function getTierDescription(
   currency: Currency | undefined,
   t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
   options: { showStartsAt?: boolean; enableSubunitDisplay?: boolean; shouldDisplayOnRequest?: boolean } = {},
+  tax: { isIncluded: boolean; rate: number } | undefined = undefined,
 ): string | undefined {
   if (!pricingModel) {
     return;
@@ -129,24 +131,45 @@ export function getTierDescription(
       defaultValue: 'Starts at',
     });
 
+  const formatOptions = {
+    currency: currency || DEFAULT_CURRENCY,
+    locale: locale || DEFAULT_LOCALE,
+    useRealPrecision: tax ? false : true,
+    enableSubunitDisplay,
+  };
+
+  const unitAmountDecimal =
+    !showUnitAmount || tax === undefined
+      ? tier.unit_amount_decimal
+      : tax?.isIncluded
+      ? addSeparatorToDineroString(toDinero(tier.unit_amount_decimal!, formatOptions.currency)
+          .divide(1 + tax.rate / 100)
+          .getAmount()
+          .toString())
+      : tier.unit_amount_decimal!;
+
+  const flatFeeAmountDecimal =
+    !showFlatFeeAmount || tax === undefined
+      ? tier.flat_fee_amount_decimal
+      : tax?.isIncluded
+      ? addSeparatorToDineroString(toDinero(tier.flat_fee_amount_decimal!, formatOptions.currency)
+          .divide(1 + tax.rate / 100)
+          .getAmount()
+          .toString())
+      : tier.flat_fee_amount_decimal!;
+
   const formatedAmountString =
     showUnitAmount &&
     formatAmountFromString({
-      decimalAmount: tier.unit_amount_decimal!,
-      currency: currency || DEFAULT_CURRENCY,
-      locale,
-      useRealPrecision: true,
-      enableSubunitDisplay,
+      ...formatOptions,
+      decimalAmount: unitAmountDecimal!,
     });
 
   const formatedFlatFeeString =
     showFlatFeeAmount &&
     formatAmountFromString({
-      decimalAmount: tier.flat_fee_amount_decimal || '0',
-      currency: currency || DEFAULT_CURRENCY,
-      locale,
-      useRealPrecision: true,
-      enableSubunitDisplay,
+      ...formatOptions,
+      decimalAmount: flatFeeAmountDecimal || '0',
     });
 
   const formatedUnitString =

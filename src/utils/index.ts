@@ -163,6 +163,7 @@ export const computeTieredVolumePriceItemValues = (
 
   return {
     unitAmountGross: d(tierValues.unitAmountGross!).getAmount(),
+    unitAmountNet: d(tierValues.unitAmountNet!).getAmount(),
     amountSubtotal: d(tierValues.amountSubtotal).getAmount(),
     amountTotal: d(tierValues.amountTotal).getAmount(),
     taxAmount: d(tierValues.taxAmount).getAmount(),
@@ -200,6 +201,7 @@ export const computeTieredFlatFeePriceItemValues = (
 
   return {
     unitAmountGross: d(tierValues.unitAmountGross!).getAmount(),
+    unitAmountNet: d(tierValues.unitAmountNet!).getAmount(),
     amountSubtotal: d(tierValues.amountSubtotal).getAmount(),
     amountTotal: d(tierValues.amountTotal).getAmount(),
     taxAmount: d(tierValues.taxAmount).getAmount(),
@@ -238,13 +240,14 @@ export const computeTieredGraduatedPriceItemValues = (
 
       return {
         unitAmountGross: d(totals.unitAmountGross!).add(d(tierValues.unitAmountGross!)).getAmount(),
+        unitAmountNet: d(totals.unitAmountNet!).add(d(tierValues.unitAmountNet!)).getAmount(),
         amountSubtotal: d(totals.amountSubtotal).add(d(tierValues.amountSubtotal)).getAmount(),
         amountTotal: d(totals.amountTotal).add(d(tierValues.amountTotal)).getAmount(),
         taxAmount: d(totals.taxAmount).add(d(tierValues.taxAmount)).getAmount(),
         displayMode,
       };
     },
-    { unitAmountGross: 0, amountSubtotal: 0, amountTotal: 0, taxAmount: 0 },
+    { unitAmountGross: 0, unitAmountNet: 0, amountSubtotal: 0, amountTotal: 0, taxAmount: 0 },
   );
 
   /**

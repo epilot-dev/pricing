@@ -411,6 +411,9 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
   const totalTax = d(details?.total_details?.amount_tax!);
 
   const priceUnitAmountGross = d(priceItemToAppend.unit_amount_gross!);
+  const priceUnitAmountNet = Number.isInteger(priceItemToAppend.unit_amount_net)
+    ? d(priceItemToAppend.unit_amount_net!)
+    : null;
   const priceSubtotal = d(priceItemToAppend.amount_subtotal!);
   const priceTotal = d(priceItemToAppend.amount_total!);
   const priceTax = d(priceItemToAppend?.taxes?.[0]?.amount || 0.0);
@@ -445,6 +448,7 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
       type: ['one_time', 'recurring'].includes(type!) ? type : 'one_time',
       ...(price?.type === 'recurring' && { billing_period: price?.billing_period }),
       unit_amount_gross: priceUnitAmountGross.getAmount(),
+      unit_amount_net: priceUnitAmountNet?.getAmount() ?? undefined,
       amount_subtotal: priceSubtotal.getAmount(),
       amount_total: priceTotal.getAmount(),
       amount_subtotal_decimal: priceSubtotal.toUnit().toString(),
@@ -453,10 +457,12 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
     });
   } else {
     const unitAmountGrossAmount = d(recurrence.unit_amount_gross!);
+    const unitAmountNetAmount = recurrence.unit_amount_net ? d(recurrence.unit_amount_net) : undefined;
     const subTotalAmount = d(recurrence.amount_subtotal);
     const totalAmount = d(recurrence.amount_total);
     const taxAmount = d(recurrence.amount_tax!);
     recurrence.unit_amount_gross = unitAmountGrossAmount.add(priceUnitAmountGross).getAmount();
+    recurrence.unit_amount_net = unitAmountNetAmount?.add(priceUnitAmountNet!).getAmount() ?? undefined;
     recurrence.amount_subtotal = subTotalAmount.add(priceSubtotal).getAmount();
     recurrence.amount_total = totalAmount.add(priceTotal).getAmount();
     recurrence.amount_subtotal_decimal = subTotalAmount.add(priceSubtotal).toUnit().toString();
@@ -755,6 +761,9 @@ const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem,
           return {
             ...recurrence,
             unit_amount_gross: d(recurrence.unit_amount_gross!).convertPrecision(precision).getAmount(),
+            unit_amount_net: Number.isInteger(recurrence.unit_amount_net)
+              ? d(recurrence.unit_amount_net!).convertPrecision(precision).getAmount()
+              : undefined,
             amount_subtotal: d(recurrence.amount_subtotal).convertPrecision(precision).getAmount(),
             amount_total: d(recurrence.amount_total).convertPrecision(precision).getAmount(),
             amount_tax: d(recurrence.amount_tax!).convertPrecision(precision).getAmount(),

@@ -172,6 +172,7 @@ export const computeCumulativeValue = (
   currency: Currency | undefined,
   t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
   options: { showStartsAt?: boolean; shouldDisplayOnRequest?: boolean } = {},
+  tax: { isIncluded: boolean; rate: number } | undefined = undefined,
 ) => {
   if (!tiers || !tiers.length || quantityToSelectTier < 0) {
     return;
@@ -232,6 +233,29 @@ export const computeCumulativeValue = (
       defaultValue: 'Starts at',
     });
 
+  const averageAmount = total
+    .divide(quantityToSelectTier || 1)
+    .getAmount()
+    .toString();
+
+  const netValues: {
+    net_total?: Dinero;
+    net_average?: string;
+  } = {
+    net_total: undefined,
+    net_average: undefined,
+  };
+
+  if (tax) {
+    const taxMultiplier = 1 + tax.rate / 100;
+    netValues.net_total = tax.isIncluded ? total.divide(taxMultiplier) : total;
+
+    netValues.net_average = netValues.net_total
+      .divide(quantityToSelectTier || 1)
+      .getAmount()
+      .toString();
+  }
+
   return {
     total:
       (startsAt ? `${startsAt} ` : '') +
@@ -248,16 +272,33 @@ export const computeCumulativeValue = (
         ...formatOptions,
       }),
     average: `${formatAmountFromString({
-      decimalAmount: addSeparatorToDineroString(
-        total
-          .divide(quantityToSelectTier || 1)
-          .getAmount()
-          .toString(),
-      ),
+      decimalAmount: addSeparatorToDineroString(averageAmount),
       ...formatOptions,
       precision: 2,
       useRealPrecision: false,
     })}${formattedUnit ? `/${formattedUnit}` : ''}`,
+    ...(netValues.net_total && {
+      netTotal:
+        (startsAt ? `${startsAt} ` : '') +
+        formatAmountFromString({
+          decimalAmount: addSeparatorToDineroString(netValues.net_total.getAmount().toString()),
+          ...formatOptions,
+          precision: 2,
+          useRealPrecision: false,
+        }),
+      netTotalWithPrecision:
+        (startsAt ? `${startsAt} ` : '') +
+        formatAmountFromString({
+          decimalAmount: addSeparatorToDineroString(netValues.net_total.getAmount().toString()),
+          ...formatOptions,
+        }),
+      netAverage: `${formatAmountFromString({
+        decimalAmount: addSeparatorToDineroString(netValues.net_average!),
+        ...formatOptions,
+        precision: 2,
+        useRealPrecision: false,
+      })}${formattedUnit ? `/${formattedUnit}` : ''}`,
+    }),
     breakdown,
   };
 };

@@ -238,19 +238,19 @@ export const computeCumulativeValue = (
     .getAmount()
     .toString();
 
-  const netValues: {
-    net_total?: Dinero;
-    net_average?: string;
+  const amountSubtotals: {
+    amountSubtotal?: Dinero;
+    amountSubtotalAverage?: string;
   } = {
-    net_total: undefined,
-    net_average: undefined,
+    amountSubtotal: undefined,
+    amountSubtotalAverage: undefined,
   };
 
   if (tax) {
     const taxMultiplier = 1 + tax.rate / 100;
-    netValues.net_total = tax.isIncluded ? total.divide(taxMultiplier) : total;
+    amountSubtotals.amountSubtotal = tax.isIncluded ? total.divide(taxMultiplier) : total;
 
-    netValues.net_average = netValues.net_total
+    amountSubtotals.amountSubtotalAverage = amountSubtotals.amountSubtotal
       .divide(quantityToSelectTier || 1)
       .getAmount()
       .toString();
@@ -277,23 +277,23 @@ export const computeCumulativeValue = (
       precision: 2,
       useRealPrecision: false,
     })}${formattedUnit ? `/${formattedUnit}` : ''}`,
-    ...(netValues.net_total && {
-      netTotal:
+    ...(amountSubtotals.amountSubtotal && {
+      amountSubtotal:
         (startsAt ? `${startsAt} ` : '') +
         formatAmountFromString({
-          decimalAmount: addSeparatorToDineroString(netValues.net_total.getAmount().toString()),
+          decimalAmount: addSeparatorToDineroString(amountSubtotals.amountSubtotal.getAmount().toString()),
           ...formatOptions,
           precision: 2,
           useRealPrecision: false,
         }),
-      netTotalWithPrecision:
+      amountSubtotalWithPrecision:
         (startsAt ? `${startsAt} ` : '') +
         formatAmountFromString({
-          decimalAmount: addSeparatorToDineroString(netValues.net_total.getAmount().toString()),
+          decimalAmount: addSeparatorToDineroString(amountSubtotals.amountSubtotal.getAmount().toString()),
           ...formatOptions,
         }),
-      netAverage: `${formatAmountFromString({
-        decimalAmount: addSeparatorToDineroString(netValues.net_average!),
+      amountSubtotalAverage: `${formatAmountFromString({
+        decimalAmount: addSeparatorToDineroString(amountSubtotals.amountSubtotalAverage!),
         ...formatOptions,
         precision: 2,
         useRealPrecision: false,

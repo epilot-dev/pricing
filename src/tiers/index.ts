@@ -97,7 +97,7 @@ export function getTierDescription(
   currency: Currency | undefined,
   t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
   options: { showStartsAt?: boolean; enableSubunitDisplay?: boolean; shouldDisplayOnRequest?: boolean } = {},
-  tax: { isIncluded: boolean; rate: number } | undefined = undefined,
+  tax: { isInclusive: boolean; rate: number } | undefined = undefined,
 ): string | undefined {
   if (!pricingModel) {
     return;
@@ -141,7 +141,7 @@ export function getTierDescription(
   const unitAmountDecimal =
     !showUnitAmount || tax === undefined
       ? tier.unit_amount_decimal
-      : tax?.isIncluded
+      : tax?.isInclusive
       ? addSeparatorToDineroString(toDinero(tier.unit_amount_decimal!, formatOptions.currency)
           .divide(1 + tax.rate / 100)
           .getAmount()
@@ -151,7 +151,7 @@ export function getTierDescription(
   const flatFeeAmountDecimal =
     !showFlatFeeAmount || tax === undefined
       ? tier.flat_fee_amount_decimal
-      : tax?.isIncluded
+      : tax?.isInclusive
       ? addSeparatorToDineroString(toDinero(tier.flat_fee_amount_decimal!, formatOptions.currency)
           .divide(1 + tax.rate / 100)
           .getAmount()
@@ -195,7 +195,7 @@ export const computeCumulativeValue = (
   currency: Currency | undefined,
   t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
   options: { showStartsAt?: boolean; shouldDisplayOnRequest?: boolean } = {},
-  tax: { isIncluded: boolean; rate: number } | undefined = undefined,
+  tax: { isInclusive: boolean; rate: number } | undefined = undefined,
 ) => {
   if (!tiers || !tiers.length || quantityToSelectTier < 0) {
     return;
@@ -271,7 +271,7 @@ export const computeCumulativeValue = (
 
   if (tax) {
     const taxMultiplier = 1 + tax.rate / 100;
-    amountSubtotals.amountSubtotal = tax.isIncluded ? total.divide(taxMultiplier) : total;
+    amountSubtotals.amountSubtotal = tax.isInclusive ? total.divide(taxMultiplier) : total;
 
     amountSubtotals.amountSubtotalAverage = amountSubtotals.amountSubtotal
       .divide(quantityToSelectTier || 1)

@@ -295,10 +295,10 @@ describe('getTierDescription', () => {
 
   it.each`
     pricingModel                    | tier                              | unit         | locale       | currency     | t    | showStartsAt | enableSubunitDisplay | shouldDisplayOnRequest | tax | expected
-    ${PricingModel.tieredGraduated} | ${tierWithUnitAmount}             | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${{ isIncluded: true, rate: 10 }} | ${'Starts at €9.09/kWh'}
-    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${{ isIncluded: true, rate: 10 }} | ${'Starts at €9.09/kWh'}
-    ${PricingModel.tieredVolume}    | ${tierWithSubunitAmount}          | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${true}              | ${undefined}           | ${{ isIncluded: true, rate: 10 }} | ${'Starts at 4.55 cents/kWh'}
-    ${PricingModel.tieredFlatFee}   | ${tierWithFlatFeeAmount}          | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${{ isIncluded: true, rate: 10 }} | ${'Starts at €9.09'}
+    ${PricingModel.tieredGraduated} | ${tierWithUnitAmount}             | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${{ isInclusive: true, rate: 10 }} | ${'Starts at €9.09/kWh'}
+    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${{ isInclusive: true, rate: 10 }} | ${'Starts at €9.09/kWh'}
+    ${PricingModel.tieredVolume}    | ${tierWithSubunitAmount}          | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${true}              | ${undefined}           | ${{ isInclusive: true, rate: 10 }} | ${'Starts at 4.55 cents/kWh'}
+    ${PricingModel.tieredFlatFee}   | ${tierWithFlatFeeAmount}          | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${{ isInclusive: true, rate: 10 }} | ${'Starts at €9.09'}
 
   `(
     'should return correct net values for the tier, when pricingModel=$pricingModel, unit=$unit, locale=$locale, currency=$currency, showStartsAt=$showStartsAt',
@@ -324,7 +324,7 @@ describe('getTierDescription', () => {
       showStartsAt: boolean;
       enableSubunitDisplay: boolean;
       shouldDisplayOnRequest?: boolean;
-      tax: { isIncluded: boolean; rate: number };
+      tax: { isInclusive: boolean; rate: number };
       expected: string;
     }) => {
       const result = getTierDescription(pricingModel, tier, unit, locale, currency, t, {
@@ -367,13 +367,13 @@ describe('computeCumulativeValue', () => {
   it.each`
     tiers             | quantityToSelectTier | unit        | locale       | currency | shouldDisplayOnRequest | showStartsAt | tax | expected
     ${baseTiers}      | ${1}                 | ${'kWh'}    | ${undefined} | ${'EUR'} | ${undefined}           | ${undefined} | ${{
-      isIncluded: true, rate: 10
+      isInclusive: true, rate: 10
     }} | ${{ amountSubtotal: '9,09\xa0€', amountSubtotalWithPrecision: '9,090909090909\xa0€', amountSubtotalAverage: '9,09\xa0€/kWh', total: '10,00\xa0€', totalWithPrecision: '10,00\xa0€', average: '10,00\xa0€/kWh', breakdown: [{ quantityUsed: '1 kWh', tierAmountDecimal: '10,00\xa0€/kWh', totalAmountDecimal: '10,00\xa0€' }] }}
     ${baseTiers}      | ${2}                 | ${'m'}      | ${'de'}      | ${'EUR'} | ${undefined}           | ${undefined} | ${{
-      isIncluded: true, rate: 10
+      isInclusive: true, rate: 10
     }} | ${{ amountSubtotal: '18,18\xa0€', amountSubtotalWithPrecision: '18,181818181818\xa0€', amountSubtotalAverage: '9,09\xa0€/m', total: '20,00\xa0€', totalWithPrecision: '20,00\xa0€', average: '10,00\xa0€/m', breakdown: [{ quantityUsed: '2 m', tierAmountDecimal: '10,00\xa0€/m', totalAmountDecimal: '20,00\xa0€' }] }}
     ${baseTiers}      | ${50}                 | ${'kWh'}    | ${undefined} | ${'EUR'} | ${undefined}           | ${undefined} | ${{
-      isIncluded: false, rate: 10
+      isInclusive: false, rate: 10
     }} | ${{ amountSubtotal: '430,00\xa0€', amountSubtotalWithPrecision: '430,00\xa0€', amountSubtotalAverage: '8,60\xa0€/kWh', total: '430,00\xa0€', totalWithPrecision: '430,00\xa0€', average: '8,60\xa0€/kWh', breakdown: [{ quantityUsed: '10 kWh', tierAmountDecimal: '10,00\xa0€/kWh', totalAmountDecimal: '100,00\xa0€' }, { quantityUsed: '10 kWh', tierAmountDecimal: '9,00\xa0€/kWh', totalAmountDecimal: '90,00\xa0€' }, { quantityUsed: '30 kWh', tierAmountDecimal: '8,00\xa0€/kWh', totalAmountDecimal: '240,00\xa0€' }] }}
   `(
     'should compute net cumulative value correctly when quantityToSelectTier=$quantityToSelectTier',

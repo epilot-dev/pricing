@@ -204,6 +204,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                 amount_subtotal: 9091,
                 amount_total: 10000,
                 unit_amount_gross: 1000,
+                tiers: expect.arrayContaining([
+                  expect.objectContaining({
+                    quantity: 10,
+                    unit_amount_gross: 1000,
+                    unit_amount_net: 909,
+                    unit_amount_decimal: '10.00',
+                    unit_amount: 1000,
+                    amount_total: 10000,
+                    amount_subtotal: 9091,
+                    amount_tax: 909,
+                  }),
+                ]),
               }),
               expect.not.objectContaining({
                 unit_amount: undefined,

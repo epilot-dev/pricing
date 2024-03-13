@@ -7,7 +7,7 @@ import type {
   CompositePrice,
   CompositePriceItem,
   CompositePriceItemDto,
-  ExternalFeesMappings,
+  ExternalFeeMapping,
   Price,
   PriceInputMapping,
   PriceItem,
@@ -624,7 +624,7 @@ export const computePriceItem = (
   applicableTax: Tax,
   quantity: number,
   priceMapping?: PriceInputMapping,
-  externalFeeMapping?: ExternalFeesMappings,
+  externalFeeMapping?: ExternalFeeMapping,
 ): PriceItem => {
   const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase() as Currency;
   const priceItemDescription = priceItem?.description ?? price?.description;
@@ -898,10 +898,10 @@ export const computeQuantities = (price: Price, quantity?: number, priceMapping?
 };
 
 export const computeExternalFee = (
-  externalFeeMapping: ExternalFeesMappings | undefined,
+  externalFeeMapping: ExternalFeeMapping | undefined,
   priceBillingPeriod: TimeFrequency | undefined,
 ): string | undefined => {
-  if (!externalFeeMapping) {
+  if (!externalFeeMapping || !externalFeeMapping.amount_total_decimal) {
     return;
   }
 
@@ -911,7 +911,7 @@ export const computeExternalFee = (
 
   return normalizeValueToFrequencyUnit(
     externalFeeMapping.amount_total_decimal,
-    externalFeeMapping.frequency_unit,
+    externalFeeMapping.frequency_unit as TimeFrequency,
     priceBillingPeriod,
   ) as string;
 };

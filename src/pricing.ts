@@ -267,7 +267,6 @@ export const computeCompositePrice = (
  */
 
 export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): PricingDetails => {
-  console.log('computeAggregatedAndPriceTotals ~ locally');
   const initialPricingDetails: PricingDetails = {
     items: [],
     amount_subtotal: 0,
@@ -348,8 +347,6 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
   }, initialPricingDetails);
 
   priceDetails.currency = (priceDetails?.items?.[0]?.currency as Currency) || DEFAULT_CURRENCY;
-
-  console.log('result', convertPricingPrecision(priceDetails, 2));
 
   return convertPricingPrecision(priceDetails, 2);
 };
@@ -754,15 +751,17 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
       ...tax,
       amount: d(tax.amount!).convertPrecision(precision).getAmount(),
     })),
-    tiers: (priceItem as any).tiers?.map((tier: any) => {
-      return {
-        ...tier,
-        unit_amount_gross: d(priceItem.unit_amount_gross!).convertPrecision(precision).getAmount(),
-        unit_amount_net: d(priceItem.unit_amount_net!).convertPrecision(precision).getAmount(),
-        amount_total: d(tier.amount_total).convertPrecision(precision).getAmount(),
-        amount_subtotal: d(tier.amount_subtotal).convertPrecision(precision).getAmount(),
-        amount_tax: d(tier.amount_tax).convertPrecision(precision).getAmount(),
-      };
+    ...((priceItem as any).tiers && {
+      tiers: (priceItem as any).tiers?.map((tier: any) => {
+        return {
+          ...tier,
+          unit_amount_gross: d(priceItem.unit_amount_gross!).convertPrecision(precision).getAmount(),
+          unit_amount_net: d(priceItem.unit_amount_net!).convertPrecision(precision).getAmount(),
+          amount_total: d(tier.amount_total).convertPrecision(precision).getAmount(),
+          amount_subtotal: d(tier.amount_subtotal).convertPrecision(precision).getAmount(),
+          amount_tax: d(tier.amount_tax).convertPrecision(precision).getAmount(),
+        };
+      }),
     }),
   } as any);
 

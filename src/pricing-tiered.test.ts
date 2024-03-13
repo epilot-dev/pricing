@@ -123,7 +123,7 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      fit('should return the correct result when input mapping is 2', () => {
+      it('should return the correct result when input mapping is 2', () => {
         const priceItems = [
           {
             ...samples.priceItemWithGraduatedTiersNoFlatFee,

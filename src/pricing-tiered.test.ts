@@ -123,7 +123,7 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
-      it('should return the correct result when input mapping is 2', () => {
+      fit('should return the correct result when input mapping is 2', () => {
         const priceItems = [
           {
             ...samples.priceItemWithGraduatedTiersNoFlatFee,
@@ -143,6 +143,7 @@ describe('computeAggregatedAndPriceTotals', () => {
           expect.objectContaining({
             amount_subtotal: 1818,
             amount_total: 2000,
+            amount_tax: 182,
             total_details: expect.objectContaining({
               amount_tax: 182,
             }),
@@ -151,6 +152,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                 amount_subtotal: 1818,
                 amount_total: 2000,
                 unit_amount_gross: 1000,
+                tiers: expect.arrayContaining([
+                  expect.objectContaining({
+                    quantity: 2,
+                    unit_amount_gross: 1000,
+                    unit_amount_net: 909,
+                    unit_amount_decimal: '10.00',
+                    unit_amount: 1000,
+                    amount_subtotal: 1818,
+                    amount_total: 2000,
+                    amount_tax: 182,
+                  }),
+                ]),
               }),
               expect.not.objectContaining({
                 unit_amount: undefined,

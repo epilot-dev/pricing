@@ -222,7 +222,7 @@ export const computeTieredGraduatedPriceItemValues = (
   const priceTiersForQuantity = getPriceTiersForQuantity(tiers, quantityToSelectTier);
 
   const totals = priceTiersForQuantity.reduce(
-    (totals: PriceItemsTotals, tier: PriceTier, index: number) => {
+    (totals: PriceItemsTotals & { tiers?: any }, tier: PriceTier, index: number) => {
       const tierMinQuantity = index === 0 ? 0 : tiers[index - 1].up_to;
       const tierMaxQuantity = tier.up_to || Infinity;
       const graduatedQuantity = getQuantityForTier(tierMinQuantity!, tierMaxQuantity, quantityToSelectTier);
@@ -239,6 +239,19 @@ export const computeTieredGraduatedPriceItemValues = (
         tier?.display_mode === 'on_request' ? 'show_as_on_request' : unchangedPriceDisplayInJourneys;
 
       return {
+        tiers: [
+          ...(totals.tiers || []),
+          {
+            quantity: graduatedQuantity,
+            unitAmount: tier.unit_amount,
+            unitAmountDecimal: tier.unit_amount_decimal,
+            unitAmountNet: tierValues.unitAmountNet,
+            unitAmountGross: tierValues.unitAmountGross,
+            amountSubtotal: tierValues.amountSubtotal,
+            amountTotal: tierValues.amountTotal,
+            taxAmount: tierValues.taxAmount,
+          },
+        ],
         unitAmountGross: d(totals.unitAmountGross!).add(d(tierValues.unitAmountGross!)).getAmount(),
         unitAmountNet: d(totals.unitAmountNet!).add(d(tierValues.unitAmountNet!)).getAmount(),
         amountSubtotal: d(totals.amountSubtotal).add(d(tierValues.amountSubtotal)).getAmount(),
@@ -298,14 +311,6 @@ export const computeExternalGetAGPriceItemValues = (
   const amountSubtotal = unitAmountNet.multiply(unitAmountMultiplier);
   const amountTax = unitTaxAmount.multiply(unitAmountMultiplier);
   const amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
-
-  console.log({
-    unitAmountGetAgFeeNet: unitAmountGetAgFeeNet.convertPrecision(2).getAmount(),
-    unitAmountMarkup: unitAmountMarkupNet.convertPrecision(2).getAmount(),
-    unitAmountNet: unitAmountNet.convertPrecision(2).getAmount(),
-    taxRate,
-    amountTax: amountTax.convertPrecision(2).getAmount(),
-  });
 
   return {
     unitAmountNet: unitAmountNet.getAmount(),

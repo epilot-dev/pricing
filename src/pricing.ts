@@ -267,6 +267,7 @@ export const computeCompositePrice = (
  */
 
 export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): PricingDetails => {
+  // console.log('computeAggregatedAndPriceTotals ~ locally');
   const initialPricingDetails: PricingDetails = {
     items: [],
     amount_subtotal: 0,
@@ -347,6 +348,8 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
   }, initialPricingDetails);
 
   priceDetails.currency = (priceDetails?.items?.[0]?.currency as Currency) || DEFAULT_CURRENCY;
+
+  // console.log('result', convertPricingPrecision(priceDetails, 2));
 
   return convertPricingPrecision(priceDetails, 2);
 };

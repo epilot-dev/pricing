@@ -15,10 +15,7 @@ import {
   CompositePrice,
   CompositePriceItemDto,
   Price,
-  PriceInputMappings,
   PriceItemDto,
-  PriceTier,
-  TimeFrequency,
 } from './types';
 
 describe('computeAggregatedAndPriceTotals', () => {

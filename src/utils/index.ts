@@ -242,7 +242,7 @@ export const computeTieredGraduatedPriceItemValues = (
   const priceTiersForQuantity = getPriceTiersForQuantity(tiers, quantityToSelectTier);
 
   const totals = priceTiersForQuantity.reduce(
-    (totals: PriceItemsTotals & { tiers?: any }, tier: PriceTier, index: number) => {
+    (totals: PriceItemsTotals & { tiers_details?: any }, tier: PriceTier, index: number) => {
       const tierMinQuantity = index === 0 ? 0 : tiers[index - 1].up_to;
       const tierMaxQuantity = tier.up_to || Infinity;
       const graduatedQuantity = getQuantityForTier(tierMinQuantity!, tierMaxQuantity, quantityToSelectTier);
@@ -259,8 +259,8 @@ export const computeTieredGraduatedPriceItemValues = (
         tier?.display_mode === 'on_request' ? 'show_as_on_request' : unchangedPriceDisplayInJourneys;
 
       return {
-        tiers: [
-          ...(totals.tiers || []),
+        tiers_details: [
+          ...(totals.tiers_details || []),
           {
             quantity: graduatedQuantity,
             unitAmount: tier.unit_amount,

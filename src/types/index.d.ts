@@ -3,9 +3,14 @@ import type { Dinero } from 'dinero.js';
 
 export type Price = Components.Schemas.Price;
 export type PriceItem = Components.Schemas.PriceItem & {
-  tiers?: {
+  tiers_details?: {
     quantity: number;
     unit_amount: number;
+    unit_amount_gross: number;
+    unit_amount_net: number;
+    amount_total: number;
+    amount_subtotal: number;
+    amount_tax: number;
   }[];
 };
 export type PriceItemDto = Components.Schemas.PriceItemDto;

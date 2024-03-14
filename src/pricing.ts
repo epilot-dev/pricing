@@ -326,6 +326,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
         externalFeeMapping,
       );
 
+      console.log({ priceItemToAppend });
       const updatedTotals = isUnitAmountApproved(
         priceItem,
         priceItemToAppend?._price?.price_display_in_journeys ?? price?.price_display_in_journeys,
@@ -682,6 +683,8 @@ export const computePriceItem = (
         )
       : computePriceItemValues(unitAmountDecimal, currency, isTaxInclusive, unitAmountMultiplier!, priceTax!);
 
+  console.log(itemValues);
+
   return {
     ...priceItem,
     currency,
@@ -694,8 +697,8 @@ export const computePriceItem = (
     amount_subtotal: itemValues.amountSubtotal,
     amount_total: itemValues.amountTotal,
     amount_tax: itemValues.taxAmount,
-    ...(itemValues.tiers && {
-      tiers: itemValues.tiers.map((tier) => ({
+    ...((itemValues as any).tiers_details && {
+      tiers_details: (itemValues as any).tiers_details.map((tier: any) => ({
         quantity: tier.quantity,
         unit_amount: tier.unitAmount,
         unit_amount_decimal: tier.unitAmountDecimal,
@@ -751,8 +754,8 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
       ...tax,
       amount: d(tax.amount!).convertPrecision(precision).getAmount(),
     })),
-    ...(priceItem.tiers && {
-      tiers: priceItem.tiers?.map((tier: any) => {
+    ...(priceItem.tiers_details && {
+      tiers_details: priceItem.tiers_details?.map((tier) => {
         return {
           ...tier,
           unit_amount_gross: d(tier.unit_amount_gross).convertPrecision(precision).getAmount(),

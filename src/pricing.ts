@@ -529,13 +529,13 @@ const recomputeDetailTotalsFromCompositePrice = (
     },
   };
 
-  return compositePriceItem?.item_components?.reduce((detailTotals, itemComponent: Price) => {
+  return compositePriceItem?.item_components?.reduce((detailTotals, itemComponent) => {
     const updatedTotals = isUnitAmountApproved(
       itemComponent,
       itemComponent._price?.price_display_in_journeys,
       compositePriceItem,
     )
-      ? recomputeDetailTotals(detailTotals, itemComponent._price, itemComponent)
+      ? recomputeDetailTotals(detailTotals, itemComponent._price as Price, itemComponent)
       : {
           amount_subtotal: details?.amount_subtotal || 0,
           amount_total: details?.amount_total || 0,

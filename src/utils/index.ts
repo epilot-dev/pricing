@@ -5,6 +5,17 @@ import { Price, PriceTier, Tax } from '../types';
 
 type GetTaxValue = (tax?: Tax) => number;
 
+type PriceTierBreakdown = {
+  quantity: number;
+  unitAmount: number;
+  unitAmountDecimal: string;
+  unitAmountNet: number;
+  unitAmountGross: number;
+  amountSubtotal: number;
+  amountTotal: number;
+  taxAmount: number;
+};
+
 type PriceItemsTotals = {
   unitAmount?: number;
   unitAmountNet?: number;
@@ -13,6 +24,7 @@ type PriceItemsTotals = {
   amountTotal: number;
   taxAmount: number;
   displayMode?: Price['price_display_in_journeys'];
+  tiers?: PriceTierBreakdown[];
 };
 
 export const TaxRates = Object.freeze({

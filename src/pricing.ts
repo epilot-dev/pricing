@@ -694,8 +694,8 @@ export const computePriceItem = (
     amount_subtotal: itemValues.amountSubtotal,
     amount_total: itemValues.amountTotal,
     amount_tax: itemValues.taxAmount,
-    ...((itemValues as any).tiers && {
-      tiers: (itemValues as any).tiers.map((tier: any) => ({
+    ...(itemValues.tiers && {
+      tiers: itemValues.tiers.map((tier) => ({
         quantity: tier.quantity,
         unit_amount: tier.unitAmount,
         unit_amount_decimal: tier.unitAmountDecimal,
@@ -721,7 +721,7 @@ export const computePriceItem = (
           priceItem._price?.unchanged_price_display_in_journeys ?? price?.price_display_in_journeys,
       }),
     },
-  } as any;
+  };
 };
 
 const convertPriceComponentsPrecision = (items: PriceItem[], precision = 2): PriceItem[] =>

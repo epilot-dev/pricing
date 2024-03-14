@@ -51,6 +51,14 @@ export const isTaxInclusivePrice = (price: Price): boolean => {
  * @returns The quantity to be considered for the tier totals computation.
  */
 export const getQuantityForTier = (tierMinQuantity: number, tierMaxQuantity: number, normalizedQuantity: number) => {
+  if (typeof tierMinQuantity !== 'number' && isNaN(tierMinQuantity)) {
+    throw new Error('Tier min quantity must be a number');
+  }
+
+  if (typeof tierMaxQuantity !== 'number' && isNaN(tierMaxQuantity)) {
+    throw new Error('Tier max quantity must be a number');
+  }
+
   if (tierMinQuantity >= tierMaxQuantity) {
     throw new Error('Tier min quantity must be less than tier max quantity');
   }
@@ -60,10 +68,10 @@ export const getQuantityForTier = (tierMinQuantity: number, tierMaxQuantity: num
   }
 
   if (normalizedQuantity >= tierMaxQuantity) {
-    return tierMaxQuantity - tierMinQuantity;
+    return toDinero(tierMaxQuantity.toString(), 'EUR').subtract(toDinero(tierMinQuantity.toString(), 'EUR')).toUnit();
   }
 
-  return normalizedQuantity - tierMinQuantity;
+  return toDinero(normalizedQuantity.toString(), 'EUR').subtract(toDinero(tierMinQuantity.toString(), 'EUR')).toUnit();
 };
 
 export const computePriceItemValues = (

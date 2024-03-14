@@ -755,8 +755,8 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
       tiers: (priceItem as any).tiers?.map((tier: any) => {
         return {
           ...tier,
-          unit_amount_gross: d(priceItem.unit_amount_gross!).convertPrecision(precision).getAmount(),
-          unit_amount_net: d(priceItem.unit_amount_net!).convertPrecision(precision).getAmount(),
+          unit_amount_gross: d(tier.unit_amount_gross).convertPrecision(precision).getAmount(),
+          unit_amount_net: d(tier.unit_amount_net).convertPrecision(precision).getAmount(),
           amount_total: d(tier.amount_total).convertPrecision(precision).getAmount(),
           amount_subtotal: d(tier.amount_subtotal).convertPrecision(precision).getAmount(),
           amount_tax: d(tier.amount_tax).convertPrecision(precision).getAmount(),

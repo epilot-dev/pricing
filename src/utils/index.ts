@@ -179,7 +179,21 @@ export const computeTieredVolumePriceItemValues = (
   const displayMode: Price['price_display_in_journeys'] =
     tier?.display_mode === 'on_request' ? 'show_as_on_request' : unchangedPriceDisplayInJourneys;
 
+  console.log({ unitAmountMultiplier });
+
   return {
+    tiers_details: [
+      {
+        quantity: unitAmountMultiplier,
+        unitAmount: tier?.unit_amount || 0,
+        unitAmountDecimal: tier?.unit_amount_decimal || '0',
+        unitAmountNet: tierValues.unitAmountNet || 0,
+        unitAmountGross: tierValues.unitAmountGross || 0,
+        amountSubtotal: tierValues.amountSubtotal || 0,
+        amountTotal: tierValues.amountTotal || 0,
+        taxAmount: tierValues.taxAmount || 0,
+      },
+    ],
     unitAmountGross: d(tierValues.unitAmountGross!).getAmount(),
     unitAmountNet: d(tierValues.unitAmountNet!).getAmount(),
     amountSubtotal: d(tierValues.amountSubtotal).getAmount(),

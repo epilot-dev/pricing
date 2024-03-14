@@ -1,13 +1,6 @@
 import * as samples from './__tests__/fixtures/price.samples';
-import {
-  computeAggregatedAndPriceTotals,
-} from './pricing';
-import {
-  Price,
-  PriceInputMappings,
-  PriceTier,
-  TimeFrequency,
-} from './types';
+import { computeAggregatedAndPriceTotals } from './pricing';
+import { Price, PriceInputMappings, PriceTier, TimeFrequency } from './types';
 
 describe('computeAggregatedAndPriceTotals', () => {
   describe('when is_composite_price = false', () => {
@@ -276,7 +269,7 @@ describe('computeAggregatedAndPriceTotals', () => {
                     amount_total: 799,
                     amount_subtotal: 727,
                     amount_tax: 73,
-                  })
+                  }),
                 ]),
               }),
               expect.not.objectContaining({
@@ -337,7 +330,7 @@ describe('computeAggregatedAndPriceTotals', () => {
                     amount_total: 4000,
                     amount_subtotal: 3636,
                     amount_tax: 364,
-                  })
+                  }),
                 ]),
               }),
               expect.not.objectContaining({
@@ -408,7 +401,7 @@ describe('computeAggregatedAndPriceTotals', () => {
                     amount_total: 48000,
                     amount_subtotal: 43636,
                     amount_tax: 4364,
-                  })
+                  }),
                 ]),
               }),
               expect.not.objectContaining({
@@ -460,8 +453,8 @@ describe('computeAggregatedAndPriceTotals', () => {
                     amount_total: -2000,
                     amount_subtotal: -1818,
                     amount_tax: -182,
-                  })
-                ])
+                  }),
+                ]),
               }),
               expect.not.objectContaining({
                 unit_amount: undefined,
@@ -522,8 +515,8 @@ describe('computeAggregatedAndPriceTotals', () => {
                     amount_total: -8000,
                     amount_subtotal: -7273,
                     amount_tax: -727,
-                  })
-                ])
+                  }),
+                ]),
               }),
               expect.not.objectContaining({
                 unit_amount: undefined,
@@ -666,6 +659,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                 amount_subtotal: 1818,
                 amount_total: 2000,
                 unit_amount_gross: 1000,
+                tiers_details: expect.arrayContaining([
+                  {
+                    quantity: 2,
+                    unit_amount_gross: 1000,
+                    unit_amount_net: 909,
+                    unit_amount_decimal: '10.00',
+                    unit_amount: 1000,
+                    amount_subtotal: 1818,
+                    amount_total: 2000,
+                    amount_tax: 182,
+                  },
+                ]),
               }),
               expect.not.objectContaining({
                 unit_amount: undefined,
@@ -695,6 +700,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                 amount_subtotal: 9091,
                 amount_total: 10000,
                 unit_amount_gross: 1000,
+                tiers_details: expect.arrayContaining([
+                  {
+                    quantity: 10,
+                    unit_amount_gross: 1000,
+                    unit_amount_net: 909,
+                    unit_amount_decimal: '10.00',
+                    unit_amount: 1000,
+                    amount_total: 10000,
+                    amount_subtotal: 9091,
+                    amount_tax: 909,
+                  },
+                ]),
               }),
               expect.not.objectContaining({
                 unit_amount: undefined,
@@ -735,6 +752,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                 amount_subtotal: 7999,
                 amount_total: 8799,
                 unit_amount_gross: 800,
+                tiers_details: expect.arrayContaining([
+                  {
+                    quantity: 10.999,
+                    unit_amount_gross: 800,
+                    unit_amount_net: 727,
+                    unit_amount: 800,
+                    unit_amount_decimal: '8.00',
+                    amount_subtotal: 7999,
+                    amount_tax: 800,
+                    amount_total: 8799,
+                  },
+                ]),
               }),
               expect.not.objectContaining({
                 unit_amount: undefined,
@@ -775,6 +804,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                 amount_subtotal: 10909,
                 amount_total: 12000,
                 unit_amount_gross: 800,
+                tiers_details: expect.arrayContaining([
+                  {
+                    quantity: 15,
+                    unit_amount_gross: 800,
+                    unit_amount_net: 727,
+                    unit_amount: 800,
+                    unit_amount_decimal: '8.00',
+                    amount_subtotal: 10909,
+                    amount_tax: 1091,
+                    amount_total: 12000,
+                  },
+                ]),
               }),
             ]),
           }),
@@ -809,6 +850,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                 amount_total: 60000,
                 amount_subtotal: 54545,
                 unit_amount_gross: 600,
+                tiers_details: expect.arrayContaining([
+                  {
+                    quantity: 100,
+                    unit_amount_gross: 600,
+                    unit_amount_net: 545,
+                    unit_amount: 600,
+                    unit_amount_decimal: '6.00',
+                    amount_subtotal: 54545,
+                    amount_tax: 5455,
+                    amount_total: 60000,
+                  },
+                ]),
               }),
             ]),
           }),
@@ -843,6 +896,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                 pricing_model: 'tiered_volume',
                 amount_subtotal: -2727,
                 amount_total: -3000,
+                tiers_details: expect.arrayContaining([
+                  expect.objectContaining({
+                    quantity: 3,
+                    unit_amount_gross: -1000,
+                    unit_amount_net: -909,
+                    unit_amount_decimal: '-10.00',
+                    unit_amount: -1000,
+                    amount_subtotal: -2727,
+                    amount_tax: -273,
+                    amount_total: -3000,
+                  }),
+                ]),
               }),
             ]),
           }),
@@ -878,6 +943,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                 unit_amount_gross: -600,
                 amount_subtotal: -54545,
                 amount_total: -60000,
+                tiers_details: expect.arrayContaining([
+                  expect.objectContaining({
+                    quantity: 100,
+                    unit_amount_gross: -600,
+                    unit_amount_net: -545,
+                    unit_amount_decimal: '-6.00',
+                    unit_amount: -600,
+                    amount_subtotal: -54545,
+                    amount_tax: -5455,
+                    amount_total: -60000,
+                  }),
+                ]),
               }),
             ]),
           }),
@@ -1417,7 +1494,7 @@ describe('computeAggregatedAndPriceTotals', () => {
                         amount_total: 4000,
                         amount_subtotal: 3636,
                         amount_tax: 364,
-                      })
+                      }),
                     ]),
                   }),
                 ]),
@@ -1489,7 +1566,7 @@ describe('computeAggregatedAndPriceTotals', () => {
                         amount_total: 48000,
                         amount_subtotal: 43636,
                         amount_tax: 4364,
-                      })
+                      }),
                     ]),
                   }),
                 ]),
@@ -1541,8 +1618,8 @@ describe('computeAggregatedAndPriceTotals', () => {
                         amount_total: -2000,
                         amount_subtotal: -1818,
                         amount_tax: -182,
-                      })
-                    ])
+                      }),
+                    ]),
                   }),
                 ]),
               }),
@@ -1598,8 +1675,8 @@ describe('computeAggregatedAndPriceTotals', () => {
                         amount_total: -8000,
                         amount_subtotal: -7273,
                         amount_tax: -727,
-                      })
-                    ])
+                      }),
+                    ]),
                   }),
                 ]),
               }),
@@ -1637,6 +1714,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                   expect.objectContaining({
                     unit_amount_gross: 1000,
                     unit_amount_net: 909,
+                    tiers_details: expect.arrayContaining([
+                      expect.objectContaining({
+                        quantity: 2,
+                        unit_amount_gross: 1000,
+                        unit_amount_net: 909,
+                        unit_amount_decimal: '10.00',
+                        unit_amount: 1000,
+                        amount_total: 2000,
+                        amount_subtotal: 1818,
+                        amount_tax: 182,
+                      }),
+                    ]),
                   }),
                 ]),
               }),
@@ -1672,6 +1761,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                   expect.objectContaining({
                     unit_amount_gross: 1000,
                     unit_amount_net: 909,
+                    tiers_details: expect.arrayContaining([
+                      expect.objectContaining({
+                        quantity: 10,
+                        unit_amount_gross: 1000,
+                        unit_amount_net: 909,
+                        unit_amount_decimal: '10.00',
+                        unit_amount: 1000,
+                        amount_total: 10000,
+                        amount_subtotal: 9091,
+                        amount_tax: 909,
+                      }),
+                    ]),
                   }),
                 ]),
               }),
@@ -1707,6 +1808,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                   expect.objectContaining({
                     unit_amount_gross: 800,
                     unit_amount_net: 727,
+                    tiers_details: expect.arrayContaining([
+                      expect.objectContaining({
+                        quantity: 15,
+                        unit_amount_gross: 800,
+                        unit_amount_net: 727,
+                        unit_amount_decimal: '8.00',
+                        unit_amount: 800,
+                        amount_total: 12000,
+                        amount_subtotal: 10909,
+                        amount_tax: 1091,
+                      }),
+                    ]),
                   }),
                 ]),
               }),
@@ -1742,6 +1855,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                   expect.objectContaining({
                     unit_amount_gross: 600,
                     unit_amount_net: 545,
+                    tiers_details: expect.arrayContaining([
+                      expect.objectContaining({
+                        quantity: 100,
+                        unit_amount_gross: 600,
+                        unit_amount_net: 545,
+                        unit_amount_decimal: '6.00',
+                        unit_amount: 600,
+                        amount_total: 60000,
+                        amount_subtotal: 54545,
+                        amount_tax: 5455,
+                      }),
+                    ]),
                   }),
                 ]),
               }),
@@ -1755,7 +1880,7 @@ describe('computeAggregatedAndPriceTotals', () => {
           {
             ...samples.compositePriceItemWithNegativePriceTieredVolumeComponent,
             price_mappings: [
-              { frequency_unit: 'one_time', price_id: 'price#1-tiered-graduated', value: 3 },
+              { frequency_unit: 'one_time', price_id: 'price#1-tiered-volume', value: 3 },
             ] as PriceInputMappings,
           },
         ];
@@ -1764,19 +1889,31 @@ describe('computeAggregatedAndPriceTotals', () => {
 
         expect(result).toStrictEqual(
           expect.objectContaining({
-            amount_subtotal: -909,
-            amount_total: -1000,
+            amount_subtotal: -2727,
+            amount_total: -3000,
             total_details: expect.objectContaining({
-              amount_tax: -91,
+              amount_tax: -273,
             }),
             items: expect.arrayContaining([
               expect.objectContaining({
-                amount_subtotal: -909,
-                amount_total: -1000,
+                amount_subtotal: -2727,
+                amount_total: -3000,
                 item_components: expect.arrayContaining([
                   expect.objectContaining({
                     unit_amount_gross: -1000,
                     unit_amount_net: -909,
+                    tiers_details: expect.arrayContaining([
+                      expect.objectContaining({
+                        quantity: 3,
+                        unit_amount_gross: -1000,
+                        unit_amount_net: -909,
+                        unit_amount_decimal: '-10.00',
+                        unit_amount: -1000,
+                        amount_total: -3000,
+                        amount_subtotal: -2727,
+                        amount_tax: -273,
+                      }),
+                    ]),
                   }),
                 ]),
               }),
@@ -1812,6 +1949,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                   expect.objectContaining({
                     unit_amount_gross: -600,
                     unit_amount_net: -545,
+                    tiers_details: expect.arrayContaining([
+                      expect.objectContaining({
+                        quantity: 100,
+                        unit_amount_gross: -600,
+                        unit_amount_net: -545,
+                        unit_amount_decimal: '-6.00',
+                        unit_amount: -600,
+                        amount_total: -60000,
+                        amount_subtotal: -54545,
+                        amount_tax: -5455,
+                      }),
+                    ]),
                   }),
                 ]),
               }),

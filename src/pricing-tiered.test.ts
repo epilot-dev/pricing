@@ -1097,6 +1097,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                 amount_total: 10000,
                 amount_subtotal: 9091,
                 unit_amount_gross: 10000,
+                tiers_details: expect.arrayContaining([
+                  expect.objectContaining({
+                    quantity: 2,
+                    unit_amount_gross: 10000,
+                    unit_amount_net: 9091,
+                    unit_amount_decimal: '100.00',
+                    unit_amount: 10000,
+                    amount_total: 10000,
+                    amount_subtotal: 9091,
+                    amount_tax: 909,
+                  }),
+                ]),
               }),
               expect.not.objectContaining({
                 unit_amount: undefined,
@@ -1133,6 +1145,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                 amount_total: 8000,
                 amount_subtotal: 7273,
                 unit_amount_gross: 8000,
+                tiers_details: expect.arrayContaining([
+                  expect.objectContaining({
+                    quantity: 10,
+                    unit_amount_gross: 8000,
+                    unit_amount_net: 7273,
+                    unit_amount_decimal: '80.00',
+                    unit_amount: 8000,
+                    amount_total: 8000,
+                    amount_subtotal: 7273,
+                    amount_tax: 727,
+                  }),
+                ]),
               }),
               expect.not.objectContaining({
                 unit_amount: undefined,
@@ -1174,6 +1198,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                 amount_total: 16000,
                 amount_subtotal: 14545,
                 unit_amount_gross: 8000,
+                tiers_details: expect.arrayContaining([
+                  expect.objectContaining({
+                    quantity: 10,
+                    unit_amount_gross: 8000,
+                    unit_amount_net: 7273,
+                    unit_amount_decimal: '80.00',
+                    unit_amount: 8000,
+                    amount_total: 8000,
+                    amount_subtotal: 7273,
+                    amount_tax: 727,
+                  }),
+                ]),
               }),
               expect.not.objectContaining({
                 unit_amount: undefined,
@@ -1210,6 +1246,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                 amount_total: 6000,
                 amount_subtotal: 5455,
                 unit_amount_gross: 6000,
+                tiers_details: expect.arrayContaining([
+                  expect.objectContaining({
+                    quantity: 10.999,
+                    unit_amount_gross: 6000,
+                    unit_amount_net: 5455,
+                    unit_amount_decimal: '60.00',
+                    unit_amount: 6000,
+                    amount_total: 6000,
+                    amount_subtotal: 5455,
+                    amount_tax: 545,
+                  }),
+                ])
               }),
               expect.not.objectContaining({
                 unit_amount: undefined,
@@ -1245,6 +1293,18 @@ describe('computeAggregatedAndPriceTotals', () => {
               expect.objectContaining({
                 amount_total: 6000,
                 amount_subtotal: 5455,
+                tiers_details: expect.arrayContaining([
+                  expect.objectContaining({
+                    quantity: 15,
+                    unit_amount_gross: 6000,
+                    unit_amount_net: 5455,
+                    unit_amount_decimal: '60.00',
+                    unit_amount: 6000,
+                    amount_total: 6000,
+                    amount_subtotal: 5455,
+                    amount_tax: 545,
+                  }),
+                ]),
               }),
             ]),
           }),
@@ -1275,6 +1335,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                 amount_total: 6000,
                 amount_subtotal: 5455,
                 unit_amount_gross: 6000,
+                tiers_details: expect.arrayContaining([
+                  expect.objectContaining({
+                    quantity: 100,
+                    unit_amount_gross: 6000,
+                    unit_amount_net: 5455,
+                    unit_amount_decimal: '60.00',
+                    unit_amount: 6000,
+                    amount_total: 6000,
+                    amount_subtotal: 5455,
+                    amount_tax: 545,
+                  }),
+                ]),
               }),
             ]),
           }),
@@ -1304,6 +1376,18 @@ describe('computeAggregatedAndPriceTotals', () => {
               expect.objectContaining({
                 amount_subtotal: -9091,
                 amount_total: -10000,
+                tiers_details: expect.arrayContaining([
+                  expect.objectContaining({
+                    quantity: 3,
+                    unit_amount_gross: -10000,
+                    unit_amount_net: -9091,
+                    unit_amount_decimal: '-100.00',
+                    unit_amount: -10000,
+                    amount_total: -10000,
+                    amount_subtotal: -9091,
+                    amount_tax: -909,
+                  }),
+                ]),
               }),
             ]),
           }),
@@ -1333,6 +1417,18 @@ describe('computeAggregatedAndPriceTotals', () => {
               expect.objectContaining({
                 amount_subtotal: -5455,
                 amount_total: -6000,
+                tiers_details: expect.arrayContaining([
+                  expect.objectContaining({
+                    quantity: 100,
+                    unit_amount_gross: -6000,
+                    unit_amount_net: -5455,
+                    unit_amount_decimal: '-60.00',
+                    unit_amount: -6000,
+                    amount_total: -6000,
+                    amount_subtotal: -5455,
+                    amount_tax: -545,
+                  }),
+                ]),
               }),
             ]),
           }),
@@ -1998,6 +2094,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                   expect.objectContaining({
                     unit_amount_gross: 10000,
                     unit_amount_net: 9091,
+                    tiers_details: expect.arrayContaining([
+                      expect.objectContaining({
+                        quantity: 2,
+                        unit_amount_gross: 10000,
+                        unit_amount_net: 9091,
+                        unit_amount_decimal: '100.00',
+                        unit_amount: 10000,
+                        amount_total: 10000,
+                        amount_subtotal: 9091,
+                        amount_tax: 909,
+                      }),
+                    ]),
                   }),
                 ]),
               }),
@@ -2033,6 +2141,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                   expect.objectContaining({
                     unit_amount_gross: 8000,
                     unit_amount_net: 7273,
+                    tiers_details: expect.arrayContaining([
+                      expect.objectContaining({
+                        quantity: 10,
+                        unit_amount_gross: 8000,
+                        unit_amount_net: 7273,
+                        unit_amount_decimal: '80.00',
+                        unit_amount: 8000,
+                        amount_total: 8000,
+                        amount_subtotal: 7273,
+                        amount_tax: 727,
+                      }),
+                    ]),
                   }),
                 ]),
               }),
@@ -2068,6 +2188,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                   expect.objectContaining({
                     unit_amount_gross: 6000,
                     unit_amount_net: 5455,
+                    tiers_details: expect.arrayContaining([
+                      expect.objectContaining({
+                        quantity: 15,
+                        unit_amount_gross: 6000,
+                        unit_amount_net: 5455,
+                        unit_amount_decimal: '60.00',
+                        unit_amount: 6000,
+                        amount_total: 6000,
+                        amount_subtotal: 5455,
+                        amount_tax: 545,
+                      }),
+                    ]),
                   }),
                 ]),
               }),
@@ -2103,6 +2235,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                   expect.objectContaining({
                     unit_amount_gross: 6000,
                     unit_amount_net: 5455,
+                    tiers_details: expect.arrayContaining([
+                      expect.objectContaining({
+                        quantity: 100,
+                        unit_amount_gross: 6000,
+                        unit_amount_net: 5455,
+                        unit_amount_decimal: '60.00',
+                        unit_amount: 6000,
+                        amount_total: 6000,
+                        amount_subtotal: 5455,
+                        amount_tax: 545,
+                      }),
+                    ]),
                   }),
                 ]),
               }),
@@ -2138,6 +2282,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                   expect.objectContaining({
                     unit_amount_gross: -10000,
                     unit_amount_net: -9091,
+                    tiers_details: expect.arrayContaining([
+                      expect.objectContaining({
+                        quantity: 3,
+                        unit_amount_gross: -10000,
+                        unit_amount_net: -9091,
+                        unit_amount_decimal: '-100.00',
+                        unit_amount: -10000,
+                        amount_total: -10000,
+                        amount_subtotal: -9091,
+                        amount_tax: -909,
+                      }),
+                    ]),
                   }),
                 ]),
               }),
@@ -2173,6 +2329,18 @@ describe('computeAggregatedAndPriceTotals', () => {
                   expect.objectContaining({
                     unit_amount_gross: -6000,
                     unit_amount_net: -5455,
+                    tiers_details: expect.arrayContaining([
+                      expect.objectContaining({
+                        quantity: 100,
+                        unit_amount_gross: -6000,
+                        unit_amount_net: -5455,
+                        unit_amount_decimal: '-60.00',
+                        unit_amount: -6000,
+                        amount_total: -6000,
+                        amount_subtotal: -5455,
+                        amount_tax: -545,
+                      }),
+                    ]),
                   }),
                 ]),
               }),

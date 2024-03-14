@@ -179,8 +179,6 @@ export const computeTieredVolumePriceItemValues = (
   const displayMode: Price['price_display_in_journeys'] =
     tier?.display_mode === 'on_request' ? 'show_as_on_request' : unchangedPriceDisplayInJourneys;
 
-  console.log({ unitAmountMultiplier });
-
   return {
     tiers_details: [
       {
@@ -232,6 +230,18 @@ export const computeTieredFlatFeePriceItemValues = (
     tier?.display_mode === 'on_request' ? 'show_as_on_request' : unchangedPriceDisplayInJourneys;
 
   return {
+    tiers_details: [
+      {
+        quantity: quantityToSelectTier,
+        unitAmount: tier?.flat_fee_amount || 0,
+        unitAmountDecimal: tier?.flat_fee_amount_decimal || '0',
+        unitAmountNet: tierValues.unitAmountNet || 0,
+        unitAmountGross: tierValues.unitAmountGross || 0,
+        amountSubtotal: tierValues.unitAmountNet || 0,
+        amountTotal: tierValues.unitAmountGross || 0,
+        taxAmount: d(tierValues.unitAmountGross!).subtract(d(tierValues.unitAmountNet!)).getAmount() || 0,
+      },
+    ],
     unitAmountGross: d(tierValues.unitAmountGross!).getAmount(),
     unitAmountNet: d(tierValues.unitAmountNet!).getAmount(),
     amountSubtotal: d(tierValues.amountSubtotal).getAmount(),

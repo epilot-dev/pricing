@@ -326,7 +326,6 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
         externalFeeMapping,
       );
 
-      console.log({ priceItemToAppend });
       const updatedTotals = isUnitAmountApproved(
         priceItem,
         priceItemToAppend?._price?.price_display_in_journeys ?? price?.price_display_in_journeys,

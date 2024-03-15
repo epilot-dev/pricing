@@ -169,6 +169,60 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
 
+      it('should return the correct result when input mapping is 2 and quantity is 2', () => {
+        const priceItems = [
+          {
+            ...samples.priceItemWithGraduatedTiersNoFlatFee,
+            quantity: 2,
+            price_mappings: [
+              {
+                frequency_unit: 'one_time',
+                price_id: samples.priceItemWithGraduatedTiersNoFlatFee._price?._id,
+                value: 2,
+              },
+            ] as PriceInputMappings,
+          },
+        ];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        expect(result).toStrictEqual(
+          expect.objectContaining({
+            amount_subtotal: 3636,
+            amount_total: 4000,
+            amount_tax: 364,
+            total_details: expect.objectContaining({
+              amount_tax: 364,
+            }),
+            items: expect.arrayContaining([
+              expect.objectContaining({
+                amount_subtotal: 3636,
+                amount_total: 4000,
+                unit_amount_gross: 1000,
+                tiers_details: expect.arrayContaining([
+                  expect.objectContaining({
+                    quantity: 2,
+                    unit_amount_gross: 1000,
+                    unit_amount_net: 909,
+                    unit_amount_decimal: '10.00',
+                    unit_amount: 1000,
+                    amount_subtotal: 1818,
+                    amount_total: 2000,
+                    amount_tax: 182,
+                  }),
+                ]),
+              }),
+              expect.not.objectContaining({
+                unit_amount: undefined,
+                unit_amount_net: undefined,
+                unit_amount_decimal: undefined,
+                unit_amount_gross: undefined,
+              }),
+            ]),
+          }),
+        );
+      });
+
       it('should return the correct result when input mapping is 10', () => {
         const priceItems = [
           {

@@ -7,7 +7,7 @@ import type {
   CompositePrice,
   CompositePriceItem,
   CompositePriceItemDto,
-  ExternalFeesMappings,
+  ExternalFeeMapping,
   Price,
   PriceInputMapping,
   PriceItem,
@@ -621,7 +621,7 @@ export const computePriceItem = (
   applicableTax: Tax,
   quantity: number,
   priceMapping?: PriceInputMapping,
-  externalFeeMapping?: ExternalFeesMappings,
+  externalFeeMapping?: ExternalFeeMapping,
 ): PriceItem => {
   const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase() as Currency;
   const priceItemDescription = priceItem?.description ?? price?.description;
@@ -706,6 +706,7 @@ export const computePriceItem = (
         amount_tax: tier.taxAmount,
       })),
     }),
+    ...(itemValues.getAg && { get_ag: itemValues.getAg }),
     taxes: [
       {
         ...(priceTax ? { tax: priceTax } : { rate: 'nontaxable', rateValue: 0 }),
@@ -761,6 +762,15 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
         amount_tax: d(tier.amount_tax).convertPrecision(precision).getAmount(),
       };
     }),
+  }),
+  ...(priceItem.get_ag && {
+    get_ag: {
+      ...priceItem.get_ag,
+      unit_amount_net: d(priceItem.get_ag.unit_amount_net).convertPrecision(precision).getAmount(),
+      unit_amount_gross: d(priceItem.get_ag.unit_amount_gross).convertPrecision(precision).getAmount(),
+      unit_amount_net_decimal: d(priceItem.get_ag.unit_amount_net).toUnit().toString(),
+      unit_amount_gross_decimal: d(priceItem.get_ag.unit_amount_gross).toUnit().toString(),
+    },
   }),
 });
 
@@ -919,10 +929,10 @@ export const computeQuantities = (price: Price, quantity?: number, priceMapping?
 };
 
 export const computeExternalFee = (
-  externalFeeMapping: ExternalFeesMappings | undefined,
+  externalFeeMapping: ExternalFeeMapping | undefined,
   priceBillingPeriod: TimeFrequency | undefined,
 ): string | undefined => {
-  if (!externalFeeMapping) {
+  if (!externalFeeMapping || !externalFeeMapping.amount_total_decimal) {
     return;
   }
 
@@ -932,7 +942,7 @@ export const computeExternalFee = (
 
   return normalizeValueToFrequencyUnit(
     externalFeeMapping.amount_total_decimal,
-    externalFeeMapping.frequency_unit,
+    externalFeeMapping.frequency_unit as TimeFrequency,
     priceBillingPeriod,
   ) as string;
 };

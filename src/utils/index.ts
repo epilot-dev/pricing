@@ -1,7 +1,7 @@
 import { Currency } from 'dinero.js';
 
 import { d, toDinero } from '../formatters';
-import { Price, PriceTier, Tax } from '../types';
+import { Price, PriceGetAgConfig, PriceItemGetAgConfig, PriceTier, Tax } from '../types';
 
 type GetTaxValue = (tax?: Tax) => number;
 
@@ -23,6 +23,7 @@ type PriceItemsTotals = {
     amountTotal: number;
     taxAmount: number;
   }[];
+  getAg?: PriceItemGetAgConfig;
 };
 
 export const TaxRates = Object.freeze({
@@ -320,7 +321,7 @@ export const computeTieredGraduatedPriceItemValues = (
 };
 
 export const computeExternalGetAGPriceItemValues = (
-  getAg: Price['get_ag'],
+  getAg: PriceGetAgConfig,
   currency: Currency,
   isTaxInclusive: boolean,
   unitAmountMultiplier: number,
@@ -341,6 +342,7 @@ export const computeExternalGetAGPriceItemValues = (
 
   // Unit amounts
   const unitAmountGetAgFeeNet = toDinero(externalFeeAmountDecimal, currency).divide(unitAmountMultiplier);
+  const unitAmountGetAgFeeGross = unitAmountGetAgFeeNet.multiply(1 + taxRate);
   const unitAmountMarkup = toDinero(getAg.markup_amount_decimal, currency);
   const unitAmountMarkupNet = isTaxInclusive ? unitAmountMarkup.divide(1 + taxRate) : unitAmountMarkup;
   //     Unit amount net = fee net + markup net
@@ -360,6 +362,11 @@ export const computeExternalGetAGPriceItemValues = (
     taxAmount: amountTax.getAmount(),
     amountSubtotal: amountSubtotal.getAmount(),
     amountTotal: amountTotal.getAmount(),
+    getAg: {
+      ...getAg,
+      unit_amount_net: unitAmountGetAgFeeNet.getAmount(),
+      unit_amount_gross: unitAmountGetAgFeeGross.getAmount(),
+    },
   };
 };
 

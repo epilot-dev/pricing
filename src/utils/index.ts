@@ -14,6 +14,16 @@ type PriceItemsTotals = {
   taxAmount: number;
   displayMode?: Price['price_display_in_journeys'];
   getAg?: PriceGetAg;
+  tiers_details?: {
+    quantity: number;
+    unitAmount: number;
+    unitAmountDecimal: string;
+    unitAmountNet: number;
+    unitAmountGross: number;
+    amountSubtotal: number;
+    amountTotal: number;
+    taxAmount: number;
+  }[];
 };
 
 export const TaxRates = Object.freeze({
@@ -52,6 +62,14 @@ export const isTaxInclusivePrice = (price: Price): boolean => {
  * @returns The quantity to be considered for the tier totals computation.
  */
 export const getQuantityForTier = (tierMinQuantity: number, tierMaxQuantity: number, normalizedQuantity: number) => {
+  if (typeof tierMinQuantity !== 'number' && isNaN(tierMinQuantity)) {
+    throw new Error('Tier min quantity must be a number');
+  }
+
+  if (typeof tierMaxQuantity !== 'number' && isNaN(tierMaxQuantity)) {
+    throw new Error('Tier max quantity must be a number');
+  }
+
   if (tierMinQuantity >= tierMaxQuantity) {
     throw new Error('Tier min quantity must be less than tier max quantity');
   }
@@ -61,10 +79,10 @@ export const getQuantityForTier = (tierMinQuantity: number, tierMaxQuantity: num
   }
 
   if (normalizedQuantity >= tierMaxQuantity) {
-    return tierMaxQuantity - tierMinQuantity;
+    return toDinero(tierMaxQuantity.toString(), 'EUR').subtract(toDinero(tierMinQuantity.toString(), 'EUR')).toUnit();
   }
 
-  return normalizedQuantity - tierMinQuantity;
+  return toDinero(normalizedQuantity.toString(), 'EUR').subtract(toDinero(tierMinQuantity.toString(), 'EUR')).toUnit();
 };
 
 export const computePriceItemValues = (
@@ -163,6 +181,18 @@ export const computeTieredVolumePriceItemValues = (
     tier?.display_mode === 'on_request' ? 'show_as_on_request' : unchangedPriceDisplayInJourneys;
 
   return {
+    tiers_details: [
+      {
+        quantity: unitAmountMultiplier,
+        unitAmount: tier?.unit_amount || 0,
+        unitAmountDecimal: tier?.unit_amount_decimal || '0',
+        unitAmountNet: tierValues.unitAmountNet || 0,
+        unitAmountGross: tierValues.unitAmountGross || 0,
+        amountSubtotal: tierValues.amountSubtotal || 0,
+        amountTotal: tierValues.amountTotal || 0,
+        taxAmount: tierValues.taxAmount || 0,
+      },
+    ],
     unitAmountGross: d(tierValues.unitAmountGross!).getAmount(),
     unitAmountNet: d(tierValues.unitAmountNet!).getAmount(),
     amountSubtotal: d(tierValues.amountSubtotal).getAmount(),
@@ -201,6 +231,18 @@ export const computeTieredFlatFeePriceItemValues = (
     tier?.display_mode === 'on_request' ? 'show_as_on_request' : unchangedPriceDisplayInJourneys;
 
   return {
+    tiers_details: [
+      {
+        quantity: quantityToSelectTier,
+        unitAmount: tier?.flat_fee_amount || 0,
+        unitAmountDecimal: tier?.flat_fee_amount_decimal || '0',
+        unitAmountNet: tierValues.unitAmountNet || 0,
+        unitAmountGross: tierValues.unitAmountGross || 0,
+        amountSubtotal: tierValues.unitAmountNet || 0,
+        amountTotal: tierValues.unitAmountGross || 0,
+        taxAmount: d(tierValues.unitAmountGross!).subtract(d(tierValues.unitAmountNet!)).getAmount() || 0,
+      },
+    ],
     unitAmountGross: d(tierValues.unitAmountGross!).getAmount(),
     unitAmountNet: d(tierValues.unitAmountNet!).getAmount(),
     amountSubtotal: d(tierValues.amountSubtotal).getAmount(),
@@ -240,6 +282,19 @@ export const computeTieredGraduatedPriceItemValues = (
         tier?.display_mode === 'on_request' ? 'show_as_on_request' : unchangedPriceDisplayInJourneys;
 
       return {
+        tiers_details: [
+          ...(totals.tiers_details || []),
+          {
+            quantity: graduatedQuantity,
+            unitAmount: tier.unit_amount || 0,
+            unitAmountDecimal: tier.unit_amount_decimal || '0',
+            unitAmountNet: tierValues.unitAmountNet || 0,
+            unitAmountGross: tierValues.unitAmountGross || 0,
+            amountSubtotal: tierValues.amountSubtotal || 0,
+            amountTotal: tierValues.amountTotal || 0,
+            taxAmount: tierValues.taxAmount || 0,
+          },
+        ],
         unitAmountGross: d(totals.unitAmountGross!).add(d(tierValues.unitAmountGross!)).getAmount(),
         unitAmountNet: d(totals.unitAmountNet!).add(d(tierValues.unitAmountNet!)).getAmount(),
         amountSubtotal: d(totals.amountSubtotal).add(d(tierValues.amountSubtotal)).getAmount(),

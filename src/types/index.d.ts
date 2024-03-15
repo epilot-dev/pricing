@@ -29,6 +29,7 @@ export type TimeFrequency = Exclude<BillingPeriod, 'one_time'>;
 export type PriceTier = Components.Schemas.PriceTier;
 export type PriceTierDisplayMode = Components.Schemas.PriceTierDisplayMode;
 export type PriceGetAg = Components.Schemas.PriceGetAg;
+export type TierDetails = Components.Schemas.TierDetails;
 export type NormalizeTimeFrequency = (
   timeValue: number | string,
   timeValueFrequency: TimeFrequency,

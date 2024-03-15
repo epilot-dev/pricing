@@ -2,7 +2,9 @@ import { Components } from '@epilot/pricing-client';
 import type { Dinero } from 'dinero.js';
 
 export type Price = Components.Schemas.Price;
-export type PriceItem = Components.Schemas.PriceItem;
+export type PriceItem = Components.Schemas.PriceItem & {
+  get_ag?: PriceItemGetAgConfig;
+};
 export type PriceItemDto = Components.Schemas.PriceItemDto;
 export type Product = Components.Schemas.Product;
 export type PricingDetails = Components.Schemas.PricingDetails;
@@ -47,3 +49,16 @@ export type NormalizeTimeFrequencyToDinero = (
   targetTimeFrequency: TimeFrequency,
   precision?: number,
 ) => Dinero;
+
+export type PriceGetAgConfig = {
+  category: string;
+  markup_amount: number;
+  markup_amount_decimal: string;
+};
+
+export type PriceItemGetAgConfig = PriceGetAgConfig & {
+  unit_amount_gross: number;
+  unit_amount_gross_decimal?: string;
+  unit_amount_net: number;
+  unit_amount_net_decimal?: string;
+};

@@ -155,60 +155,12 @@ export const compositePriceGetAG: PriceItemDto = {
       is_composite_price: true,
       _schema: "price",
       _id: "price#1",
-      getag_price: {
-        amount_total: 3126,
-        amount_total_decimal: "31.26",
-        amount_static: 3126,
-        amount_static_decimal: "31.26",
-        amount_variable: 0,
-        amount_variable_decimal: "0.000000000000",
-        currency: "EUR",
-        billing_period: "yearly",
-        breakdown: {
-          static: {
-            basic_fee: {
-              amount: 1921,
-              amount_decimal: "19.21"
-            },
-            maintenance_fee: {
-              amount: 1205,
-              amount_decimal: "12.05"
-            }
-          },
-          variable: {
-            offshore_liability_fee: {
-              amount: 0,
-              amount_decimal: "0"
-            },
-            interruptible_load: {
-              amount: 0,
-              amount_decimal: "0"
-            },
-            extra_charge: {
-              amount: 0,
-              amount_decimal: "0"
-            },
-            chp: {
-              amount: 0,
-              amount_decimal: "0"
-            },
-            power_kwh: {
-              amount: 0,
-              amount_decimal: "0"
-            },
-            concession: {
-              amount: 0,
-              amount_decimal: "0"
-            }
-          }
-        }
-      }
     },
     price_mappings: [
       { price_id: 'comp#2', value: 12000, frequency_unit: 'yearly' }
     ],
     external_fees_mappings: [
-      { price_id: 'comp#1', amount_total: 3126, amount_total_decimal: '54.26' ,frequency_unit: 'yearly' },
+      { price_id: 'comp#1', amount_total: 5426, amount_total_decimal: '54.26' ,frequency_unit: 'yearly' },
       { price_id: 'comp#2', amount_total: 142632, amount_total_decimal: '1426.32' ,frequency_unit: 'yearly' }
     ]
   } as any

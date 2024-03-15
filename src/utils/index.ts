@@ -1,7 +1,7 @@
 import { Currency } from 'dinero.js';
 
 import { d, toDinero } from '../formatters';
-import { Price, PriceTier, Tax } from '../types';
+import { Price, PriceGetAgConfig, PriceItemGetAgConfig, PriceTier, Tax } from '../types';
 
 type GetTaxValue = (tax?: Tax) => number;
 
@@ -13,6 +13,7 @@ type PriceItemsTotals = {
   amountTotal: number;
   taxAmount: number;
   displayMode?: Price['price_display_in_journeys'];
+  getAg?: PriceItemGetAgConfig;
 };
 
 export const TaxRates = Object.freeze({
@@ -265,7 +266,7 @@ export const computeTieredGraduatedPriceItemValues = (
 };
 
 export const computeExternalGetAGPriceItemValues = (
-  getAg: Price['get_ag'],
+  getAg: PriceGetAgConfig,
   currency: Currency,
   isTaxInclusive: boolean,
   unitAmountMultiplier: number,
@@ -286,6 +287,7 @@ export const computeExternalGetAGPriceItemValues = (
 
   // Unit amounts
   const unitAmountGetAgFeeNet = toDinero(externalFeeAmountDecimal, currency).divide(unitAmountMultiplier);
+  const unitAmountGetAgFeeGross = unitAmountGetAgFeeNet.multiply(1 + taxRate);
   const unitAmountMarkup = toDinero(getAg.markup_amount_decimal, currency);
   const unitAmountMarkupNet = isTaxInclusive ? unitAmountMarkup.divide(1 + taxRate) : unitAmountMarkup;
   //     Unit amount net = fee net + markup net
@@ -299,20 +301,17 @@ export const computeExternalGetAGPriceItemValues = (
   const amountTax = unitTaxAmount.multiply(unitAmountMultiplier);
   const amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
 
-  console.log({
-    unitAmountGetAgFeeNet: unitAmountGetAgFeeNet.convertPrecision(2).getAmount(),
-    unitAmountMarkup: unitAmountMarkupNet.convertPrecision(2).getAmount(),
-    unitAmountNet: unitAmountNet.convertPrecision(2).getAmount(),
-    taxRate,
-    amountTax: amountTax.convertPrecision(2).getAmount(),
-  });
-
   return {
     unitAmountNet: unitAmountNet.getAmount(),
     unitAmountGross: unitAmountGross.getAmount(),
     taxAmount: amountTax.getAmount(),
     amountSubtotal: amountSubtotal.getAmount(),
     amountTotal: amountTotal.getAmount(),
+    getAg: {
+      ...getAg,
+      unit_amount_net: unitAmountGetAgFeeNet.getAmount(),
+      unit_amount_gross: unitAmountGetAgFeeGross.getAmount(),
+    },
   };
 };
 

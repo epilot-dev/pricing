@@ -267,7 +267,6 @@ export const computeCompositePrice = (
  */
 
 export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): PricingDetails => {
-  // console.log('computeAggregatedAndPriceTotals ~ locally');
   const initialPricingDetails: PricingDetails = {
     items: [],
     amount_subtotal: 0,
@@ -348,8 +347,6 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
   }, initialPricingDetails);
 
   priceDetails.currency = (priceDetails?.items?.[0]?.currency as Currency) || DEFAULT_CURRENCY;
-
-  // console.log('result', convertPricingPrecision(priceDetails, 2));
 
   return convertPricingPrecision(priceDetails, 2);
 };
@@ -697,6 +694,7 @@ export const computePriceItem = (
     amount_subtotal: itemValues.amountSubtotal,
     amount_total: itemValues.amountTotal,
     amount_tax: itemValues.taxAmount,
+    ...(itemValues.getAg && { get_ag: itemValues.getAg }),
     taxes: [
       {
         ...(priceTax ? { tax: priceTax } : { rate: 'nontaxable', rateValue: 0 }),
@@ -741,6 +739,15 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
     ...tax,
     amount: d(tax.amount!).convertPrecision(precision).getAmount(),
   })),
+  ...(priceItem.get_ag && {
+    get_ag: {
+      ...priceItem.get_ag,
+      unit_amount_net: d(priceItem.get_ag.unit_amount_net).convertPrecision(precision).getAmount(),
+      unit_amount_gross: d(priceItem.get_ag.unit_amount_gross).convertPrecision(precision).getAmount(),
+      unit_amount_net_decimal: d(priceItem.get_ag.unit_amount_net).toUnit().toString(),
+      unit_amount_gross_decimal: d(priceItem.get_ag.unit_amount_gross).toUnit().toString(),
+    },
+  }),
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -3,16 +3,6 @@ import type { Dinero } from 'dinero.js';
 
 export type Price = Components.Schemas.Price;
 
-export type TierDetails = {
-  quantity: number;
-  unit_amount: number;
-  unit_amount_gross: number;
-  unit_amount_net: number;
-  amount_total: number;
-  amount_subtotal: number;
-  amount_tax: number;
-};
-
 export type PriceItem = Components.Schemas.PriceItem & {
   get_ag?: PriceItemGetAgConfig;
 };
@@ -41,6 +31,7 @@ export type ExternalFeeMapping = Components.Schemas.ExternalFeeMapping;
 export type TimeFrequency = Exclude<BillingPeriod, 'one_time'>;
 export type PriceTier = Components.Schemas.PriceTier;
 export type PriceTierDisplayMode = Components.Schemas.PriceTierDisplayMode;
+export type TierDetails = Components.Schemas.TierDetails;
 export type NormalizeTimeFrequency = (
   timeValue: number | string,
   timeValueFrequency: TimeFrequency,

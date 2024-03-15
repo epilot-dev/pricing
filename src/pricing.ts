@@ -529,13 +529,13 @@ const recomputeDetailTotalsFromCompositePrice = (
     },
   };
 
-  return compositePriceItem?.item_components?.reduce((detailTotals, itemComponent: Price) => {
+  return compositePriceItem?.item_components?.reduce((detailTotals, itemComponent) => {
     const updatedTotals = isUnitAmountApproved(
       itemComponent,
       itemComponent._price?.price_display_in_journeys,
       compositePriceItem,
     )
-      ? recomputeDetailTotals(detailTotals, itemComponent._price, itemComponent)
+      ? recomputeDetailTotals(detailTotals, itemComponent._price as Price, itemComponent)
       : {
           amount_subtotal: details?.amount_subtotal || 0,
           amount_total: details?.amount_total || 0,
@@ -694,6 +694,18 @@ export const computePriceItem = (
     amount_subtotal: itemValues.amountSubtotal,
     amount_total: itemValues.amountTotal,
     amount_tax: itemValues.taxAmount,
+    ...(itemValues.tiers_details && {
+      tiers_details: itemValues.tiers_details.map((tier) => ({
+        quantity: tier.quantity,
+        unit_amount: tier.unitAmount,
+        unit_amount_decimal: tier.unitAmountDecimal,
+        unit_amount_gross: tier.unitAmountGross,
+        unit_amount_net: tier.unitAmountNet,
+        amount_subtotal: tier.amountSubtotal,
+        amount_total: tier.amountTotal,
+        amount_tax: tier.taxAmount,
+      })),
+    }),
     ...(itemValues.getAg && { get_ag: itemValues.getAg }),
     taxes: [
       {
@@ -739,6 +751,18 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
     ...tax,
     amount: d(tax.amount!).convertPrecision(precision).getAmount(),
   })),
+  ...(priceItem.tiers_details && {
+    tiers_details: priceItem.tiers_details?.map((tier) => {
+      return {
+        ...tier,
+        unit_amount_gross: d(tier.unit_amount_gross).convertPrecision(precision).getAmount(),
+        unit_amount_net: d(tier.unit_amount_net).convertPrecision(precision).getAmount(),
+        amount_total: d(tier.amount_total).convertPrecision(precision).getAmount(),
+        amount_subtotal: d(tier.amount_subtotal).convertPrecision(precision).getAmount(),
+        amount_tax: d(tier.amount_tax).convertPrecision(precision).getAmount(),
+      };
+    }),
+  }),
   ...(priceItem.get_ag && {
     get_ag: {
       ...priceItem.get_ag,

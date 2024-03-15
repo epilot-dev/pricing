@@ -25,6 +25,11 @@ describe('getQuantityForTier', () => {
     const result = getQuantityForTier(10, 20, 100);
     expect(result).toBe(10);
   });
+
+  it('should return the correct result when quantity is 10.999', () => {
+    const result = getQuantityForTier(10, 20, 10.999);
+    expect(result).toBe(0.999);
+  });
 });
 
 describe('getPriceTiersForQuantity', () => {

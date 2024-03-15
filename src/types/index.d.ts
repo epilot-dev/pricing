@@ -15,7 +15,6 @@ export type TierDetails = {
 
 export type PriceItem = Components.Schemas.PriceItem & {
   get_ag?: PriceItemGetAgConfig;
-  tiers_details?: TierDetails[];
 };
 export type PriceItemDto = Components.Schemas.PriceItemDto;
 export type Product = Components.Schemas.Product;

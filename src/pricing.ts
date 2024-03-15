@@ -677,6 +677,7 @@ export const computePriceItem = (
           currency,
           isTaxInclusive,
           unitAmountMultiplier!,
+          quantityToSelectTier,
           externalFeeAmountDecimal,
           priceTax!,
         )

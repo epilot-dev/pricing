@@ -1,7 +1,7 @@
 import { Currency } from 'dinero.js';
 
 import { d, toDinero } from '../formatters';
-import { Price, PriceGetAgConfig, PriceItemGetAgConfig, PriceTier, Tax } from '../types';
+import { Price, PriceGetAg, PriceTier, Tax } from '../types';
 
 type GetTaxValue = (tax?: Tax) => number;
 
@@ -13,6 +13,7 @@ type PriceItemsTotals = {
   amountTotal: number;
   taxAmount: number;
   displayMode?: Price['price_display_in_journeys'];
+  getAg?: PriceGetAg;
   tiers_details?: {
     quantity: number;
     unitAmount: number;
@@ -23,7 +24,6 @@ type PriceItemsTotals = {
     amountTotal: number;
     taxAmount: number;
   }[];
-  getAg?: PriceItemGetAgConfig;
 };
 
 export const TaxRates = Object.freeze({
@@ -321,10 +321,11 @@ export const computeTieredGraduatedPriceItemValues = (
 };
 
 export const computeExternalGetAGPriceItemValues = (
-  getAg: PriceGetAgConfig,
+  getAg: PriceGetAg,
   currency: Currency,
   isTaxInclusive: boolean,
   unitAmountMultiplier: number,
+  userInput: number,
   externalFeeAmountDecimal: string | undefined,
   tax?: Tax,
 ): PriceItemsTotals => {
@@ -341,15 +342,15 @@ export const computeExternalGetAGPriceItemValues = (
   const taxRate = getTaxValue(tax);
 
   // Unit amounts
-  const unitAmountGetAgFeeNet = toDinero(externalFeeAmountDecimal, currency).divide(unitAmountMultiplier);
+  const unitAmountGetAgFeeNet = toDinero(externalFeeAmountDecimal, currency).divide(userInput);
   const unitAmountGetAgFeeGross = unitAmountGetAgFeeNet.multiply(1 + taxRate);
   const unitAmountMarkup = toDinero(getAg.markup_amount_decimal, currency);
   const unitAmountMarkupNet = isTaxInclusive ? unitAmountMarkup.divide(1 + taxRate) : unitAmountMarkup;
   //     Unit amount net = fee net + markup net
   const unitAmountNet = unitAmountGetAgFeeNet.add(unitAmountMarkupNet);
 
-  const unitTaxAmount = unitAmountNet.multiply(taxRate);
-  const unitAmountGross = unitAmountNet.add(unitTaxAmount);
+  const unitAmountGross = unitAmountNet.multiply(1 + taxRate);
+  const unitTaxAmount = unitAmountGross.subtract(unitAmountNet);
 
   // Totals
   const amountSubtotal = unitAmountNet.multiply(unitAmountMultiplier);

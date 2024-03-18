@@ -2,10 +2,7 @@ import { Components } from '@epilot/pricing-client';
 import type { Dinero } from 'dinero.js';
 
 export type Price = Components.Schemas.Price;
-
-export type PriceItem = Components.Schemas.PriceItem & {
-  get_ag?: PriceItemGetAgConfig;
-};
+export type PriceItem = Components.Schemas.PriceItem;
 export type PriceItemDto = Components.Schemas.PriceItemDto;
 export type Product = Components.Schemas.Product;
 export type PricingDetails = Components.Schemas.PricingDetails;
@@ -31,6 +28,7 @@ export type ExternalFeeMapping = Components.Schemas.ExternalFeeMapping;
 export type TimeFrequency = Exclude<BillingPeriod, 'one_time'>;
 export type PriceTier = Components.Schemas.PriceTier;
 export type PriceTierDisplayMode = Components.Schemas.PriceTierDisplayMode;
+export type PriceGetAg = Components.Schemas.PriceGetAg;
 export type TierDetails = Components.Schemas.TierDetails;
 export type NormalizeTimeFrequency = (
   timeValue: number | string,
@@ -51,16 +49,3 @@ export type NormalizeTimeFrequencyToDinero = (
   targetTimeFrequency: TimeFrequency,
   precision?: number,
 ) => Dinero;
-
-export type PriceGetAgConfig = {
-  category: string;
-  markup_amount: number;
-  markup_amount_decimal: string;
-};
-
-export type PriceItemGetAgConfig = PriceGetAgConfig & {
-  unit_amount_gross: number;
-  unit_amount_gross_decimal?: string;
-  unit_amount_net: number;
-  unit_amount_net_decimal?: string;
-};

@@ -84,6 +84,18 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
         }),
       );
     });
+    
+    it('returns the default amount_total if no external fees mappings are passed', () => {
+      const priceItems: PriceItemDto[] = [{
+        ...priceGetAG,
+        external_fees_mappings: undefined
+      }];
+
+      const result = computeAggregatedAndPriceTotals(priceItems);
+
+      expect(result).toBeDefined();
+      expect(result.amount_total).toBe(0);
+    });
   });
 
   describe('when is_composite_price = true', () => {

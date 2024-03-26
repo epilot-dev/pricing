@@ -336,6 +336,11 @@ export const computeExternalGetAGPriceItemValues = (
       taxAmount: 0,
       amountSubtotal: 0,
       amountTotal: 0,
+      getAg: {
+        ...getAg,
+        unit_amount_net: 0,
+        unit_amount_gross: 0,
+      },
     };
   }
 

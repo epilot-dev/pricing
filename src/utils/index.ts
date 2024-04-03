@@ -340,6 +340,7 @@ export const computeExternalGetAGPriceItemValues = (
         ...getAg,
         unit_amount_net: 0,
         unit_amount_gross: 0,
+        markup_amount_net: 0,
       },
     };
   }
@@ -372,6 +373,7 @@ export const computeExternalGetAGPriceItemValues = (
       ...getAg,
       unit_amount_net: unitAmountGetAgFeeNet.getAmount(),
       unit_amount_gross: unitAmountGetAgFeeGross.getAmount(),
+      markup_amount_net: unitAmountMarkupNet.getAmount(),
     },
   };
 };

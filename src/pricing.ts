@@ -771,6 +771,8 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
       unit_amount_gross: d(priceItem.get_ag.unit_amount_gross).convertPrecision(precision).getAmount(),
       unit_amount_net_decimal: d(priceItem.get_ag.unit_amount_net).toUnit().toString(),
       unit_amount_gross_decimal: d(priceItem.get_ag.unit_amount_gross).toUnit().toString(),
+      markup_amount_net: d(priceItem.get_ag.markup_amount_net!).convertPrecision(precision).getAmount(),
+      markup_amount_net_decimal: d(priceItem.get_ag.markup_amount_net!).toUnit().toString(),
     },
   }),
 });

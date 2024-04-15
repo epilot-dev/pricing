@@ -628,7 +628,8 @@ export const computePriceItem = (
 
   const unitAmountDecimal = priceItem?.unit_amount_decimal || price?.unit_amount_decimal || '0.0';
   const priceTax = getPriceTax(applicableTax, price!, priceItem?.taxes);
-  const isTaxInclusive = isTaxInclusivePrice(price!);
+  const isTaxInclusive =
+    priceItem.is_tax_inclusive !== undefined ? priceItem.is_tax_inclusive : isTaxInclusivePrice(price!);
 
   const { safeQuantity, quantityToSelectTier, unitAmountMultiplier, isUsingPriceMappingToSelectTier } =
     computeQuantities(price!, quantity, priceMapping);

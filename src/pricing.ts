@@ -723,6 +723,7 @@ export const computePriceItem = (
           priceItem._price?.unchanged_price_display_in_journeys ?? price?.price_display_in_journeys,
       }),
     },
+    is_tax_inclusive: isTaxInclusive,
   };
 };
 

@@ -197,6 +197,7 @@ export const computedCompositePrice: CompositePriceItem & { [key: string]: unkno
       unit_amount_gross: 10690000000000,
       pricing_model: 'per_unit',
       billing_period: 'monthly',
+      is_tax_inclusive: true,
     },
     {
       _price: {
@@ -268,6 +269,7 @@ export const computedCompositePrice: CompositePriceItem & { [key: string]: unkno
       unit_amount_net: 424528301887,
       pricing_model: 'per_unit',
       billing_period: 'monthly',
+      is_tax_inclusive: true,
     },
     {
       _price: {
@@ -333,6 +335,7 @@ export const computedCompositePrice: CompositePriceItem & { [key: string]: unkno
       unit_amount_decimal: '500.00',
       unit_amount_net: 420168067226891,
       pricing_model: 'per_unit',
+      is_tax_inclusive: true,
     },
   ],
   price_id: 'price#4',
@@ -469,6 +472,7 @@ export const severalItemsPerRecurrenceTotals = {
       amount_total: 394728,
       amount_subtotal_decimal: '3317.04295990201',
       amount_total_decimal: '3947.28112228339',
+      is_tax_inclusive: true,
     },
     {
       quantity: 1,
@@ -537,6 +541,7 @@ export const severalItemsPerRecurrenceTotals = {
         },
       ],
       pricing_model: 'per_unit',
+      is_tax_inclusive: true,
     },
     {
       quantity: 3,
@@ -605,6 +610,7 @@ export const severalItemsPerRecurrenceTotals = {
       amount_tax: 818,
       amount_total: 14455,
       pricing_model: 'per_unit',
+      is_tax_inclusive: false,
     },
     {
       quantity: 5,
@@ -663,6 +669,7 @@ export const severalItemsPerRecurrenceTotals = {
       amount_tax: 63024,
       amount_total: 394728,
       pricing_model: 'per_unit',
+      is_tax_inclusive: true,
     },
     {
       quantity: 3,
@@ -730,6 +737,7 @@ export const severalItemsPerRecurrenceTotals = {
       amount_subtotal_decimal: '136.368673370034',
       amount_total_decimal: '144.550793772237',
       pricing_model: 'per_unit',
+      is_tax_inclusive: false,
     },
     {
       amount_subtotal: 43031,
@@ -1020,6 +1028,7 @@ export const severalItemsPerRecurrenceTotals = {
           unit_amount_gross: 1069,
           pricing_model: 'per_unit',
           billing_period: 'monthly',
+          is_tax_inclusive: true,
         },
         {
           quantity: 1,
@@ -1089,6 +1098,7 @@ export const severalItemsPerRecurrenceTotals = {
           unit_amount_gross: 45,
           pricing_model: 'per_unit',
           billing_period: 'monthly',
+          is_tax_inclusive: true,
         },
         {
           quantity: 1,
@@ -1155,7 +1165,9 @@ export const severalItemsPerRecurrenceTotals = {
           amount_total: 50000,
           amount_subtotal_decimal: '420.168067226891',
           amount_total_decimal: '500',
-          pricing_model: 'per_unit'        },
+          pricing_model: 'per_unit',
+          is_tax_inclusive: true,
+        },
       ],
     },
   ],
@@ -1478,6 +1490,7 @@ export const compositePricesUnitAmountZeroResult = {
           unit_amount_net: 972,
           pricing_model: 'per_unit',
           billing_period: 'monthly',
+          is_tax_inclusive: true,
         },
         {
           _price: {
@@ -1551,6 +1564,7 @@ export const compositePricesUnitAmountZeroResult = {
           unit_amount_net: 0,
           pricing_model: 'per_unit',
           billing_period: 'monthly',
+          is_tax_inclusive: true,
         },
       ],
       price_id: 'price#4',
@@ -1840,6 +1854,7 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
       unit_amount_decimal: '45.456224456678',
       unit_amount_gross: 5000,
       pricing_model: 'per_unit',
+      is_tax_inclusive: false,
     },
   ],
   total_details: {
@@ -2117,6 +2132,7 @@ export const compositePriceWithDisplayOnRequest = {
           amount_total: 1069,
           pricing_model: 'per_unit',
           billing_period: 'monthly',
+          is_tax_inclusive: true,
         },
         {
           quantity: 1,
@@ -2184,6 +2200,7 @@ export const compositePriceWithDisplayOnRequest = {
           amount_total: 1069,
           pricing_model: 'per_unit',
           billing_period: 'monthly',
+          is_tax_inclusive: true,
         },
       ],
       total_details: {
@@ -2252,10 +2269,10 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
             _updated_at: '2022-06-29T20:26:19.020Z',
           },
         ],
-        is_tax_inclusive: true,
         description: 'Winter Sale',
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
+        is_tax_inclusive: true,
       },
       _product: { _tags: ['product-tag-1', 'product-tag-2'] },
       currency: 'EUR',
@@ -2270,6 +2287,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
       amount_tax: 63024,
       amount_total: 394728,
       pricing_model: 'per_unit',
+      is_tax_inclusive: true,
     },
     {
       quantity: 1,
@@ -2338,6 +2356,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
         },
       ],
       pricing_model: 'per_unit',
+      is_tax_inclusive: true,
     },
     {
       quantity: 3,
@@ -2406,6 +2425,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
       amount_total: 14455,
       amount_tax: 818,
       pricing_model: 'per_unit',
+      is_tax_inclusive: false,
     },
     {
       quantity: 5,
@@ -2464,6 +2484,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
       amount_tax: 63024,
       amount_total: 394728,
       pricing_model: 'per_unit',
+      is_tax_inclusive: true,
     },
     {
       quantity: 3,
@@ -2531,6 +2552,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
       amount_tax: 818,
       amount_total: 14455,
       pricing_model: 'per_unit',
+      is_tax_inclusive: false,
     },
     {
       amount_subtotal: 43031,
@@ -2660,8 +2682,8 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
             ],
-            is_tax_inclusive: true,
             pricing_model: 'per_unit',
+            is_tax_inclusive: true,
           },
           {
             _id: 'price#4-comp#2',
@@ -2692,9 +2714,9 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
             ],
-            is_tax_inclusive: true,
             variable_price: true,
             pricing_model: 'per_unit',
+            is_tax_inclusive: true,
           },
           {
             _id: 'price#4-comp#3',
@@ -2720,13 +2742,13 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
             ],
-            is_tax_inclusive: true,
             billing_period: 'weekly',
             billing_duration_unit: 'months',
             notice_time_unit: 'months',
             termination_time_unit: 'months',
             renewal_duration_unit: 'months',
             description: 'Wallbox 11 kW',
+            is_tax_inclusive: true,
           },
         ],
         _id: 'price#4',
@@ -2767,8 +2789,8 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
             ],
-            is_tax_inclusive: true,
             pricing_model: 'per_unit',
+            is_tax_inclusive: true,
           },
           _product: {},
           taxes: [
@@ -2799,7 +2821,8 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           amount_tax: 97,
           amount_total: 1069,
           pricing_model: 'per_unit',
-          billing_period: 'monthly'
+          billing_period: 'monthly',
+          is_tax_inclusive: true,
         },
         {
           quantity: 1,
@@ -2835,9 +2858,9 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
             ],
-            is_tax_inclusive: true,
             variable_price: true,
             pricing_model: 'per_unit',
+            is_tax_inclusive: true,
           },
           _product: {},
           taxes: [
@@ -2868,7 +2891,8 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           amount_total: 45,
           amount_tax: 3,
           pricing_model: 'per_unit',
-          billing_period: 'monthly'
+          billing_period: 'monthly',
+          is_tax_inclusive: true,
         },
         {
           quantity: 1,
@@ -2899,13 +2923,13 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
             ],
-            is_tax_inclusive: true,
             billing_period: 'weekly',
             billing_duration_unit: 'months',
             notice_time_unit: 'months',
             termination_time_unit: 'months',
             renewal_duration_unit: 'months',
             description: 'Wallbox 11 kW',
+            is_tax_inclusive: true,
           },
           _product: {},
           taxes: [
@@ -2936,6 +2960,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           amount_tax: 7983,
           amount_total: 50000,
           pricing_model: 'per_unit',
+          is_tax_inclusive: true,
         },
       ],
     },
@@ -3094,7 +3119,8 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           amount_tax: 97,
           amount_total: 1069,
           pricing_model: 'per_unit',
-          billing_period: 'monthly'
+          billing_period: 'monthly',
+          is_tax_inclusive: true,
         },
         {
           quantity: 1,
@@ -3161,7 +3187,8 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           amount_tax: 97,
           amount_total: 1069,
           pricing_model: 'per_unit',
-          billing_period: 'monthly'
+          billing_period: 'monthly',
+          is_tax_inclusive: true,
         },
       ],
       total_details: {
@@ -3506,7 +3533,8 @@ export const resultCompositePriceQuantity2 = {
           unit_amount_decimal: '10.69',
           unit_amount_gross: 1069,
           pricing_model: 'per_unit',
-          billing_period: 'monthly'
+          billing_period: 'monthly',
+          is_tax_inclusive: true,
         },
         {
           _price: {
@@ -3579,7 +3607,8 @@ export const resultCompositePriceQuantity2 = {
           unit_amount_decimal: '0.45',
           unit_amount_gross: 45,
           pricing_model: 'per_unit',
-          billing_period: 'monthly'
+          billing_period: 'monthly',
+          is_tax_inclusive: true,
         },
         {
           _price: {
@@ -3647,6 +3676,7 @@ export const resultCompositePriceQuantity2 = {
           unit_amount_decimal: '500.00',
           unit_amount_gross: 50000,
           pricing_model: 'per_unit',
+          is_tax_inclusive: true,
         },
       ],
       price_id: 'price#4',
@@ -3879,6 +3909,7 @@ export const priceDetailsForOnePrice = {
       unit_amount_gross: 78946,
       unit_amount_decimal: '789.456224456678',
       pricing_model: 'per_unit',
+      is_tax_inclusive: true,
     },
   ],
   total_details: {
@@ -4185,6 +4216,7 @@ export const priceDetailsForCompositePrice = {
           unit_amount_gross: 1069,
           pricing_model: 'per_unit',
           billing_period: 'monthly',
+          is_tax_inclusive: true,
         },
         {
           quantity: 1,
@@ -4254,6 +4286,7 @@ export const priceDetailsForCompositePrice = {
           unit_amount_gross: 45,
           pricing_model: 'per_unit',
           billing_period: 'monthly',
+          is_tax_inclusive: true,
         },
         {
           quantity: 1,
@@ -4321,6 +4354,7 @@ export const priceDetailsForCompositePrice = {
           unit_amount_decimal: '500.00',
           unit_amount_gross: 50000,
           pricing_model: 'per_unit',
+          is_tax_inclusive: true,
         },
       ],
       amount_subtotal: 43031,
@@ -4552,6 +4586,7 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
           amount_subtotal_decimal: '0.1',
           amount_total_decimal: '0.1',
           pricing_model: 'per_unit',
+          is_tax_inclusive: true,
         },
         {
           price_id: 'bd0b8da9-6d91-46e3-b0b5-91dcffd4e0d3',
@@ -4635,6 +4670,7 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
           unit_amount_gross: 20,
           pricing_model: 'per_unit',
           billing_period: 'monthly',
+          is_tax_inclusive: true,
         },
       ],
       _price: {
@@ -4973,6 +5009,7 @@ export const resultsWithCompositePrices = {
           unit_amount_net: 972,
           pricing_model: 'per_unit',
           billing_period: 'monthly',
+          is_tax_inclusive: true,
         },
         {
           _price: {
@@ -5042,6 +5079,7 @@ export const resultsWithCompositePrices = {
           unit_amount_gross: 45,
           pricing_model: 'per_unit',
           billing_period: 'monthly',
+          is_tax_inclusive: true,
         },
         {
           _price: {
@@ -5109,6 +5147,7 @@ export const resultsWithCompositePrices = {
           unit_amount_decimal: '500.00',
           unit_amount_gross: 50000,
           pricing_model: 'per_unit',
+          is_tax_inclusive: true,
         },
       ],
       // pricing_model: undefined,
@@ -5356,6 +5395,7 @@ export const resultsForSimplePrice = {
       unit_amount_decimal: '789.456224456678',
       unit_amount_gross: 78946,
       pricing_model: 'per_unit',
+      is_tax_inclusive: true,
     },
   ],
   total_details: {
@@ -5839,6 +5879,7 @@ export const resultCompositePriceWithTotalDetails = {
           unit_amount_decimal: '10.69',
           unit_amount_gross: 1069,
           billing_period: 'monthly',
+          is_tax_inclusive: true,
         },
         {
           _price: {
@@ -5911,6 +5952,7 @@ export const resultCompositePriceWithTotalDetails = {
           unit_amount_gross: 45,
           pricing_model: 'per_unit',
           billing_period: 'monthly',
+          is_tax_inclusive: true,
         },
         {
           _price: {
@@ -5978,6 +6020,7 @@ export const resultCompositePriceWithTotalDetails = {
           unit_amount_decimal: '500.00',
           unit_amount_gross: 50000,
           pricing_model: 'per_unit',
+          is_tax_inclusive: true,
         },
       ],
       price_id: 'price#4',

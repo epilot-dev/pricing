@@ -385,6 +385,7 @@ describe('computeAggregatedAndPriceTotals', () => {
                     },
                   ],
                   pricing_model: 'per_unit',
+                  is_tax_inclusive: true,
                 },
                 expect.any(Object),
                 expect.any(Object),

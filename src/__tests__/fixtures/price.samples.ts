@@ -35,6 +35,7 @@ export const priceItem1: PriceItemDto = {
     _tags: ['product-tag-1', 'product-tag-2'],
   },
   pricing_model: 'per_unit',
+  is_tax_inclusive: true,
 };
 
 export const priceItem2: PriceItemDto = {
@@ -70,6 +71,7 @@ export const priceItem2: PriceItemDto = {
   },
   _product: {},
   pricing_model: 'per_unit',
+  is_tax_inclusive: true,
 };
 
 export const priceItem3: PriceItemDto = {
@@ -105,6 +107,7 @@ export const priceItem3: PriceItemDto = {
   },
   _product: {},
   pricing_model: 'per_unit',
+  is_tax_inclusive: false,
 };
 
 export const priceItem4: PriceItemDto = {
@@ -130,6 +133,7 @@ export const priceItem4: PriceItemDto = {
   },
   _product: {},
   pricing_model: 'per_unit',
+  is_tax_inclusive: true,
 };
 
 export const priceItem5: PriceItemDto = {
@@ -164,6 +168,7 @@ export const priceItem5: PriceItemDto = {
   },
   _product: {},
   pricing_model: 'per_unit',
+  is_tax_inclusive: false,
 };
 
 export const customPriceItem: PriceItemDto = {
@@ -398,6 +403,7 @@ export const compositePriceWithCustomItem: CompositePriceItemDto = {
       unit_amount: 1069,
       unit_amount_decimal: '10.69',
       pricing_model: 'per_unit',
+      is_tax_inclusive: true,
     },
     {
       quantity: 1,
@@ -460,6 +466,7 @@ export const compositePriceWithCustomItem: CompositePriceItemDto = {
       unit_amount: 45,
       unit_amount_decimal: '0.45',
       pricing_model: 'per_unit',
+      is_tax_inclusive: true,
     },
     {
       quantity: 1,
@@ -521,6 +528,7 @@ export const compositePriceWithCustomItem: CompositePriceItemDto = {
       unit_amount: 50000,
       unit_amount_decimal: '500.00',
       pricing_model: 'per_unit',
+      is_tax_inclusive: true,
     },
   ],
   _price: {
@@ -688,6 +696,7 @@ export const compositePriceWithTaxChanges: CompositePriceItemDto = {
       taxes: [{ rate: null! }],
       type: 'one_time',
       pricing_model: 'per_unit',
+      is_tax_inclusive: true,
     },
     {
       price_id: 'bd0b8da9-6d91-46e3-b0b5-91dcffd4e0d3',
@@ -773,6 +782,7 @@ export const compositePriceWithTaxChanges: CompositePriceItemDto = {
       ],
       type: 'recurring',
       pricing_model: 'per_unit',
+      is_tax_inclusive: true,
     },
   ],
   _price: {
@@ -1064,6 +1074,7 @@ export const compositePriceWithComponentOverrides: CompositePriceItemDto = {
         quantity: 1,
       },
       pricing_model: 'tiered_volume',
+      is_tax_inclusive: true,
     },
     {
       unit_amount: 45,
@@ -1130,6 +1141,7 @@ export const compositePriceWithComponentOverrides: CompositePriceItemDto = {
         quantity: 1,
       },
       pricing_model: 'tiered_volume',
+      is_tax_inclusive: true,
     },
     {
       unit_amount: 50000,
@@ -1190,6 +1202,7 @@ export const compositePriceWithComponentOverrides: CompositePriceItemDto = {
         quantity: 1,
       },
       pricing_model: 'tiered_volume',
+      is_tax_inclusive: true,
     },
     {
       unit_amount: -10000,
@@ -1234,6 +1247,7 @@ export const compositePriceWithComponentOverrides: CompositePriceItemDto = {
         quantity: 1,
       },
       pricing_model: 'tiered_volume',
+      is_tax_inclusive: true,
     },
   ],
 };
@@ -1339,6 +1353,7 @@ export const priceItem6: PriceItemDto = {
     pricing_model: 'per_unit',
   },
   pricing_model: 'tiered_volume',
+  is_tax_inclusive: false,
 };
 
 export const priceItem: PriceItem = {
@@ -1438,6 +1453,7 @@ export const priceItem: PriceItem = {
   amount_subtotal: 388966739,
   amount_total: 388966739,
   pricing_model: 'per_unit',
+  is_tax_inclusive: true,
 };
 
 export const incompletePriceItem: PriceItemDto = {
@@ -1448,6 +1464,7 @@ export const incompletePriceItem: PriceItemDto = {
     pricing_model: 'per_unit',
   },
   pricing_model: 'tiered_volume',
+  is_tax_inclusive: true,
 };
 
 export const nonComputedCompositePrice: CompositePriceItem & { [key: string]: unknown } = {
@@ -1620,6 +1637,7 @@ export const priceItemDisplayOnRequest: PriceItemDto = {
     pricing_model: 'per_unit',
   },
   pricing_model: 'per_unit',
+  is_tax_inclusive: false,
 };
 
 export const priceItemDisplayAsStartingPrice: PriceItemDto = {

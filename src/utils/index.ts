@@ -329,7 +329,7 @@ export const computeExternalGetAGPriceItemValues = (
   externalFeeAmountDecimal: string | undefined,
   tax?: Tax,
 ): PriceItemsTotals => {
-  if (externalFeeAmountDecimal === undefined || getAg === undefined) {
+  if (externalFeeAmountDecimal === undefined || getAg === undefined || userInput === 0) {
     return {
       unitAmountNet: 0,
       unitAmountGross: 0,
@@ -348,7 +348,9 @@ export const computeExternalGetAGPriceItemValues = (
   const taxRate = getTaxValue(tax);
 
   // Unit amounts
-  const unitAmountGetAgFeeNet = toDinero(externalFeeAmountDecimal, currency).divide(userInput);
+  const unitAmountGetAgFeeNet = userInput
+    ? toDinero(externalFeeAmountDecimal, currency).divide(userInput)
+    : toDinero(externalFeeAmountDecimal, currency);
   const unitAmountGetAgFeeGross = unitAmountGetAgFeeNet.multiply(1 + taxRate);
   const unitAmountMarkup = toDinero(getAg.markup_amount_decimal, currency);
   const unitAmountMarkupNet = isTaxInclusive ? unitAmountMarkup.divide(1 + taxRate) : unitAmountMarkup;

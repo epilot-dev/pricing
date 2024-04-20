@@ -348,9 +348,7 @@ export const computeExternalGetAGPriceItemValues = (
   const taxRate = getTaxValue(tax);
 
   // Unit amounts
-  const unitAmountGetAgFeeNet = userInput
-    ? toDinero(externalFeeAmountDecimal, currency).divide(userInput)
-    : toDinero(externalFeeAmountDecimal, currency);
+  const unitAmountGetAgFeeNet = toDinero(externalFeeAmountDecimal, currency).divide(userInput);
   const unitAmountGetAgFeeGross = unitAmountGetAgFeeNet.multiply(1 + taxRate);
   const unitAmountMarkup = toDinero(getAg.markup_amount_decimal, currency);
   const unitAmountMarkupNet = isTaxInclusive ? unitAmountMarkup.divide(1 + taxRate) : unitAmountMarkup;

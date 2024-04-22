@@ -329,7 +329,7 @@ export const computeExternalGetAGPriceItemValues = (
   externalFeeAmountDecimal: string | undefined,
   tax?: Tax,
 ): PriceItemsTotals => {
-  if (externalFeeAmountDecimal === undefined || getAg === undefined) {
+  if (externalFeeAmountDecimal === undefined || getAg === undefined || userInput === 0) {
     return {
       unitAmountNet: 0,
       unitAmountGross: 0,

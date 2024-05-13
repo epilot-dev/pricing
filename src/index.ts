@@ -19,6 +19,7 @@ export {
   normalizeTimeFrequency,
   normalizeTimeFrequencyToDinero,
   timeFrequencyNormalizerMatrix,
+  normalizeValueToFrequencyUnit,
 } from './normalizers';
 export {
   BillingPeriods,

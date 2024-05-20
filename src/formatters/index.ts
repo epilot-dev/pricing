@@ -280,7 +280,7 @@ export function addSeparatorToDineroString(dineroString: string) {
 /**
  * Convert an amount decimal and currency into a dinero object.
  */
-export const toDinero: DineroConvertor = (unitAmountDecimal, currency) => {
+export const toDinero: DineroConvertor = (unitAmountDecimal, currency = 'EUR') => {
   const [amountInteger = '0', amountDecimal = '0'] = (unitAmountDecimal || '0').split('.');
   const truncatedDecimal = amountDecimal.substr(0, DECIMAL_PRECISION).padEnd(DECIMAL_PRECISION, '0');
   const unitAmountInteger = Number(`${amountInteger}${truncatedDecimal}`);

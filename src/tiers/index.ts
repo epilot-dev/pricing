@@ -5,7 +5,7 @@ import { DEFAULT_CURRENCY } from '../currencies';
 import { addSeparatorToDineroString, formatAmountFromString, toDinero } from '../formatters';
 import { DEFAULT_LOCALE } from '../formatters/constants';
 import { PricingModel } from '../pricing';
-import { Price, PriceTier, Tax } from '../types';
+import { Price, PriceTier, PriceTierEnhanced, Tax } from '../types';
 import { getQuantityForTier, getTaxValue, isNotPieceUnit } from '../utils';
 
 const byInputQuantity = (tiers: PriceTier[], quantity: number) => (_: PriceTier, index: number) =>
@@ -33,7 +33,7 @@ export function getDisplayTierByQuantity(
   pricingModel: PricingModel | Price['pricing_model'],
   isTaxInclusive: boolean,
   tax: Tax,
-): PriceTier | undefined {
+): PriceTierEnhanced | undefined {
   if (!tiers || !tiers.length) {
     return;
   }
@@ -339,9 +339,9 @@ export const computeCumulativeValue = (
  * @param {PriceTier} tier
  * @param {boolean} isTaxInclusive
  * @param {Tax} tax
- * @returns {any} an enhanced PriceTier with the gross amounts.
+ * @returns {PriceTierEnhanced} an enhanced PriceTier with the gross amounts.
  */
-const enhanceTier = (tier: PriceTier, isTaxInclusive: boolean, tax: Tax) => {
+const enhanceTier = (tier: PriceTier, isTaxInclusive: boolean, tax: Tax): PriceTierEnhanced => {
   const taxRate = getTaxValue(tax);
 
   const unitAmount = tier.unit_amount_decimal && toDinero(tier.unit_amount_decimal);

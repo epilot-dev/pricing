@@ -136,6 +136,7 @@ describe('getDisplayTiersByQuantity', () => {
     tiers                     | quantity                           | pricingModel                    | isTaxInclusive | tax             | expected
     ${baseTiersUnitAmount}    | ${-1}                              | ${PricingModel.tieredGraduated} | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }}
     ${baseTiersUnitAmount}    | ${Math.floor(Math.random() * 100)} | ${PricingModel.tieredGraduated} | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }}
+    ${baseTiersUnitAmount}    | ${Math.floor(Math.random() * 100)} | ${PricingModel.tieredGraduated} | ${false}       | ${undefined}    | ${{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }}
     ${baseTiersUnitAmount}    | ${Math.floor(Math.random() * 100)} | ${PricingModel.tieredGraduated} | ${false}       | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[0], unit_amount_gross: 1190, unit_amount_gross_decimal: '11.9' }}
     ${undefined}              | ${Math.floor(Math.random() * 100)} | ${PricingModel.tieredGraduated} | ${true}        | ${{ rate: 19 }} | ${undefined}
     ${baseTiersUnitAmount}    | ${undefined}                       | ${PricingModel.tieredGraduated} | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }}
@@ -147,10 +148,13 @@ describe('getDisplayTiersByQuantity', () => {
     ${baseTiersUnitAmount}    | ${5}                               | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }}
     ${baseTiersUnitAmount}    | ${10}                              | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }}
     ${baseTiersUnitAmount}    | ${10}                              | ${PricingModel.tieredVolume}    | ${false}       | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[0], unit_amount_gross: 1190, unit_amount_gross_decimal: '11.9' }}
+    ${baseTiersUnitAmount}    | ${10}                              | ${PricingModel.tieredVolume}    | ${false}       | ${undefined}    | ${{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }}
     ${baseTiersUnitAmount}    | ${10.999}                          | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[1], unit_amount_gross: 900, unit_amount_gross_decimal: '9' }}
     ${baseTiersUnitAmount}    | ${15}                              | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[1], unit_amount_gross: 900, unit_amount_gross_decimal: '9' }}
     ${baseTiersUnitAmount}    | ${20}                              | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[1], unit_amount_gross: 900, unit_amount_gross_decimal: '9' }}
+    ${baseTiersUnitAmount}    | ${20}                              | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[1], unit_amount_gross: 900, unit_amount_gross_decimal: '9' }}
     ${baseTiersUnitAmount}    | ${20}                              | ${PricingModel.tieredVolume}    | ${false}       | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[1], unit_amount_gross: 1071, unit_amount_gross_decimal: '10.71' }}
+    ${baseTiersUnitAmount}    | ${20}                              | ${PricingModel.tieredVolume}    | ${false}       | ${undefined}    | ${{ ...baseTiersUnitAmount[1], unit_amount_gross: 900, unit_amount_gross_decimal: '9' }}
     ${baseTiersUnitAmount}    | ${21}                              | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[2], unit_amount_gross: 800, unit_amount_gross_decimal: '8' }}
     ${baseTiersUnitAmount}    | ${21}                              | ${PricingModel.tieredVolume}    | ${false}       | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[2], unit_amount_gross: 952, unit_amount_gross_decimal: '9.52' }}
     ${baseTiersUnitAmount}    | ${100}                             | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[2], unit_amount_gross: 800, unit_amount_gross_decimal: '8' }}
@@ -164,6 +168,8 @@ describe('getDisplayTiersByQuantity', () => {
     ${baseTiersFlatFeeAmount} | ${20}                              | ${PricingModel.tieredFlatFee}   | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersFlatFeeAmount[1], flat_fee_amount_gross: 900, flat_fee_amount_gross_decimal: '9' }}
     ${baseTiersFlatFeeAmount} | ${21}                              | ${PricingModel.tieredFlatFee}   | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersFlatFeeAmount[2], flat_fee_amount_gross: 800, flat_fee_amount_gross_decimal: '8' }}
     ${baseTiersFlatFeeAmount} | ${100}                             | ${PricingModel.tieredFlatFee}   | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersFlatFeeAmount[2], flat_fee_amount_gross: 800, flat_fee_amount_gross_decimal: '8' }}
+    ${baseTiersFlatFeeAmount} | ${100}                             | ${PricingModel.tieredFlatFee}   | ${false}       | ${{ rate: 19 }} | ${{ ...baseTiersFlatFeeAmount[2], flat_fee_amount_gross: 952, flat_fee_amount_gross_decimal: '9.52' }}
+    ${baseTiersFlatFeeAmount} | ${100}                             | ${PricingModel.tieredFlatFee}   | ${false}       | ${undefined}    | ${{ ...baseTiersFlatFeeAmount[2], flat_fee_amount_gross: 800, flat_fee_amount_gross_decimal: '8' }}
     ${baseTiersFlatFeeAmount} | ${100}                             | ${undefined}                    | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersFlatFeeAmount[0], flat_fee_amount_gross: 1000, flat_fee_amount_gross_decimal: '10' }}
   `(
     'should return correctly for quantity=$quantity and pricingModel=$pricingModel',

@@ -5,8 +5,8 @@ import { DEFAULT_CURRENCY } from '../currencies';
 import { addSeparatorToDineroString, formatAmountFromString, toDinero } from '../formatters';
 import { DEFAULT_LOCALE } from '../formatters/constants';
 import { PricingModel } from '../pricing';
-import { Price, PriceTier } from '../types';
-import { getQuantityForTier, isNotPieceUnit } from '../utils';
+import { Price, PriceTier, Tax } from '../types';
+import { getQuantityForTier, getTaxValue, isNotPieceUnit } from '../utils';
 
 const byInputQuantity = (tiers: PriceTier[], quantity: number) => (_: PriceTier, index: number) =>
   quantity > (tiers[index - 1]?.up_to || 0);
@@ -23,28 +23,32 @@ type CumulativePriceBreakdownItem = {
  * @param {PriceTier[]} tiers - The price tiers.
  * @param {Number} quantity - The quantity.
  * @param {PricingModel} pricingModel - The pricing model.
+ * @param {boolean} isTaxInclusive - The boolean to check if the tax is inclusive.
+ * @param {Tax} tax - The tax object.
  * @returns {Price} The selected tier.
  */
 export function getDisplayTierByQuantity(
   tiers: PriceTier[],
   quantity: number,
   pricingModel: PricingModel | Price['pricing_model'],
+  isTaxInclusive: boolean,
+  tax: Tax,
 ): PriceTier | undefined {
   if (!tiers || !tiers.length) {
     return;
   }
 
   if (!quantity || quantity <= 0 || !pricingModel) {
-    return tiers[0];
+    return enhanceTier(tiers[0], isTaxInclusive, tax);
   }
 
   if (pricingModel === PricingModel.tieredGraduated) {
-    return tiers[0];
+    return enhanceTier(tiers[0], isTaxInclusive, tax);
   }
 
   const matchingTiers = tiers.filter(byInputQuantity(tiers, quantity));
 
-  return matchingTiers[matchingTiers.length - 1];
+  return enhanceTier(matchingTiers[matchingTiers.length - 1], isTaxInclusive, tax);
 }
 
 /**
@@ -60,6 +64,7 @@ export function getDisplayTiersByQuantity(
   quantity: number,
   pricingModel: PricingModel | Price['pricing_model'],
 ): PriceTier[] | undefined {
+  console.log('TEST');
   if (!tiers || !tiers.length) {
     return;
   }
@@ -142,20 +147,24 @@ export function getTierDescription(
     !showUnitAmount || tax === undefined
       ? tier.unit_amount_decimal
       : tax?.isInclusive
-      ? addSeparatorToDineroString(toDinero(tier.unit_amount_decimal!, formatOptions.currency)
-          .divide(1 + tax.rate / 100)
-          .getAmount()
-          .toString())
+      ? addSeparatorToDineroString(
+          toDinero(tier.unit_amount_decimal!, formatOptions.currency)
+            .divide(1 + tax.rate / 100)
+            .getAmount()
+            .toString(),
+        )
       : tier.unit_amount_decimal!;
 
   const flatFeeAmountDecimal =
     !showFlatFeeAmount || tax === undefined
       ? tier.flat_fee_amount_decimal
       : tax?.isInclusive
-      ? addSeparatorToDineroString(toDinero(tier.flat_fee_amount_decimal!, formatOptions.currency)
-          .divide(1 + tax.rate / 100)
-          .getAmount()
-          .toString())
+      ? addSeparatorToDineroString(
+          toDinero(tier.flat_fee_amount_decimal!, formatOptions.currency)
+            .divide(1 + tax.rate / 100)
+            .getAmount()
+            .toString(),
+        )
       : tier.flat_fee_amount_decimal!;
 
   const formatedAmountString =
@@ -323,5 +332,30 @@ export const computeCumulativeValue = (
       })}${formattedUnit ? `/${formattedUnit}` : ''}`,
     }),
     breakdown,
+  };
+};
+
+/**
+ * This function enhances a PriceTier with the gross amounts.
+ * @param {PriceTier} tier
+ * @param {boolean} isTaxInclusive
+ * @param {Tax} tax
+ * @returns
+ */
+const enhanceTier = (tier: PriceTier, isTaxInclusive: boolean, tax: Tax) => {
+  const taxRate = getTaxValue(tax);
+
+  const unitAmount = tier.unit_amount_decimal && toDinero(tier.unit_amount_decimal);
+  const unitAmountGross = !isTaxInclusive && unitAmount ? unitAmount.multiply(1 + taxRate) : unitAmount;
+
+  const flatFeeAmount = tier.flat_fee_amount_decimal && toDinero(tier.flat_fee_amount_decimal);
+  const flatFeeAmountGross = !isTaxInclusive && flatFeeAmount ? flatFeeAmount.multiply(1 + taxRate) : flatFeeAmount;
+
+  return {
+    ...tier,
+    ...(unitAmountGross && { unit_amount_gross: unitAmountGross?.convertPrecision(2).getAmount() }),
+    ...(unitAmountGross && { unit_amount_gross_decimal: unitAmountGross?.toUnit().toString() }),
+    ...(flatFeeAmountGross && {flat_fee_amount_gross: flatFeeAmountGross?.convertPrecision(2).getAmount()}),
+    ...(flatFeeAmountGross && {flat_fee_amount_gross_decimal: flatFeeAmountGross?.toUnit().toString()}),
   };
 };

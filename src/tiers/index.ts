@@ -64,7 +64,6 @@ export function getDisplayTiersByQuantity(
   quantity: number,
   pricingModel: PricingModel | Price['pricing_model'],
 ): PriceTier[] | undefined {
-  console.log('TEST');
   if (!tiers || !tiers.length) {
     return;
   }

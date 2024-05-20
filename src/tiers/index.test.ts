@@ -132,7 +132,7 @@ describe('getDisplayTierByQuantity', () => {
 });
 
 describe('getDisplayTiersByQuantity', () => {
-  fit.each`
+  it.each`
     tiers                     | quantity                           | pricingModel                    | isTaxInclusive | tax             | expected
     ${baseTiersUnitAmount}    | ${-1}                              | ${PricingModel.tieredGraduated} | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }}
     ${baseTiersUnitAmount}    | ${Math.floor(Math.random() * 100)} | ${PricingModel.tieredGraduated} | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }}
@@ -154,7 +154,7 @@ describe('getDisplayTiersByQuantity', () => {
     ${baseTiersUnitAmount}    | ${21}                              | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[2], unit_amount_gross: 800, unit_amount_gross_decimal: '8' }}
     ${baseTiersUnitAmount}    | ${21}                              | ${PricingModel.tieredVolume}    | ${false}       | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[2], unit_amount_gross: 952, unit_amount_gross_decimal: '9.52' }}
     ${baseTiersUnitAmount}    | ${100}                             | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[2], unit_amount_gross: 800, unit_amount_gross_decimal: '8' }}
-    ${baseTiersUnitAmount}    | ${0}                               | ${PricingModel.tieredFlatFee}   | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersFlatFeeAmount[0], flat_fee_amount_gross: 1000, flat_fee_amount_gross_decimal: '10' }}
+    ${baseTiersFlatFeeAmount} | ${0}                               | ${PricingModel.tieredFlatFee}   | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersFlatFeeAmount[0], flat_fee_amount_gross: 1000, flat_fee_amount_gross_decimal: '10' }}
     ${undefined}              | ${0}                               | ${PricingModel.tieredFlatFee}   | ${true}        | ${{ rate: 19 }} | ${undefined}
     ${baseTiersFlatFeeAmount} | ${undefined}                       | ${PricingModel.tieredFlatFee}   | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersFlatFeeAmount[0], flat_fee_amount_gross: 1000, flat_fee_amount_gross_decimal: '10' }}
     ${baseTiersFlatFeeAmount} | ${5}                               | ${PricingModel.tieredFlatFee}   | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersFlatFeeAmount[0], flat_fee_amount_gross: 1000, flat_fee_amount_gross_decimal: '10' }}

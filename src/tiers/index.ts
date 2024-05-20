@@ -340,7 +340,7 @@ export const computeCumulativeValue = (
  * @param {PriceTier} tier
  * @param {boolean} isTaxInclusive
  * @param {Tax} tax
- * @returns
+ * @returns {any} an enhanced PriceTier with the gross amounts.
  */
 const enhanceTier = (tier: PriceTier, isTaxInclusive: boolean, tax: Tax) => {
   const taxRate = getTaxValue(tax);

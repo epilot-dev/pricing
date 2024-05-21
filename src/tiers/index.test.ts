@@ -79,59 +79,71 @@ const t = jest.fn().mockImplementation((key: string, { defaultValue }) => mockTr
 
 describe('getDisplayTierByQuantity', () => {
   it.each`
-    tiers                  | quantity     | pricingModel                    | expected
-    ${baseTiersUnitAmount} | ${-1}        | ${PricingModel.tieredGraduated} | ${[baseTiersUnitAmount[0]]}
-    ${baseTiersUnitAmount} | ${0}         | ${PricingModel.tieredGraduated} | ${[baseTiersUnitAmount[0]]}
-    ${baseTiersUnitAmount} | ${5}         | ${PricingModel.tieredGraduated} | ${[baseTiersUnitAmount[0]]}
-    ${baseTiersUnitAmount} | ${10}        | ${PricingModel.tieredGraduated} | ${[baseTiersUnitAmount[0]]}
-    ${baseTiersUnitAmount} | ${10.999}    | ${PricingModel.tieredGraduated} | ${[baseTiersUnitAmount[0], baseTiersUnitAmount[1]]}
-    ${baseTiersUnitAmount} | ${15}        | ${PricingModel.tieredGraduated} | ${[baseTiersUnitAmount[0], baseTiersUnitAmount[1]]}
-    ${baseTiersUnitAmount} | ${20}        | ${PricingModel.tieredGraduated} | ${[baseTiersUnitAmount[0], baseTiersUnitAmount[1]]}
-    ${baseTiersUnitAmount} | ${21}        | ${PricingModel.tieredGraduated} | ${baseTiersUnitAmount}
-    ${baseTiersUnitAmount} | ${100}       | ${PricingModel.tieredGraduated} | ${baseTiersUnitAmount}
-    ${undefined}           | ${30}        | ${PricingModel.tieredGraduated} | ${undefined}
-    ${baseTiersUnitAmount} | ${undefined} | ${PricingModel.tieredGraduated} | ${[baseTiersUnitAmount[0]]}
-    ${baseTiersUnitAmount} | ${-1}        | ${PricingModel.tieredVolume}    | ${[baseTiersUnitAmount[0]]}
-    ${baseTiersUnitAmount} | ${0}         | ${PricingModel.tieredVolume}    | ${[baseTiersUnitAmount[0]]}
-    ${undefined}           | ${0}         | ${PricingModel.tieredVolume}    | ${undefined}
-    ${baseTiersUnitAmount} | ${undefined} | ${PricingModel.tieredVolume}    | ${[baseTiersUnitAmount[0]]}
-    ${baseTiersUnitAmount} | ${5}         | ${PricingModel.tieredVolume}    | ${[baseTiersUnitAmount[0]]}
-    ${baseTiersUnitAmount} | ${10}        | ${PricingModel.tieredVolume}    | ${[baseTiersUnitAmount[0]]}
-    ${baseTiersUnitAmount} | ${10.999}    | ${PricingModel.tieredVolume}    | ${[baseTiersUnitAmount[1]]}
-    ${baseTiersUnitAmount} | ${15}        | ${PricingModel.tieredVolume}    | ${[baseTiersUnitAmount[1]]}
-    ${baseTiersUnitAmount} | ${20}        | ${PricingModel.tieredVolume}    | ${[baseTiersUnitAmount[1]]}
-    ${baseTiersUnitAmount} | ${21}        | ${PricingModel.tieredVolume}    | ${[baseTiersUnitAmount[2]]}
-    ${baseTiersUnitAmount} | ${100}       | ${PricingModel.tieredVolume}    | ${[baseTiersUnitAmount[2]]}
-    ${baseTiersUnitAmount} | ${0}         | ${PricingModel.tieredFlatFee}   | ${[baseTiersUnitAmount[0]]}
-    ${undefined}           | ${0}         | ${PricingModel.tieredFlatFee}   | ${undefined}
-    ${baseTiersUnitAmount} | ${undefined} | ${PricingModel.tieredFlatFee}   | ${[baseTiersUnitAmount[0]]}
-    ${baseTiersUnitAmount} | ${5}         | ${PricingModel.tieredFlatFee}   | ${[baseTiersUnitAmount[0]]}
-    ${baseTiersUnitAmount} | ${10}        | ${PricingModel.tieredFlatFee}   | ${[baseTiersUnitAmount[0]]}
-    ${baseTiersUnitAmount} | ${10.999}    | ${PricingModel.tieredFlatFee}   | ${[baseTiersUnitAmount[1]]}
-    ${baseTiersUnitAmount} | ${15}        | ${PricingModel.tieredFlatFee}   | ${[baseTiersUnitAmount[1]]}
-    ${baseTiersUnitAmount} | ${20}        | ${PricingModel.tieredFlatFee}   | ${[baseTiersUnitAmount[1]]}
-    ${baseTiersUnitAmount} | ${21}        | ${PricingModel.tieredFlatFee}   | ${[baseTiersUnitAmount[2]]}
-    ${baseTiersUnitAmount} | ${100}       | ${PricingModel.tieredFlatFee}   | ${[baseTiersUnitAmount[2]]}
-    ${baseTiersUnitAmount} | ${100}       | ${undefined}                    | ${[baseTiersUnitAmount[0]]}
+    tiers                     | quantity     | pricingModel                    | isTaxInclusive | tax             | expected
+    ${baseTiersUnitAmount}    | ${-1}        | ${PricingModel.tieredGraduated} | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }]}
+    ${baseTiersUnitAmount}    | ${-1}        | ${PricingModel.tieredGraduated} | ${false}       | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1190, unit_amount_gross_decimal: '11.9' }]}
+    ${baseTiersUnitAmount}    | ${0}         | ${PricingModel.tieredGraduated} | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }]}
+    ${baseTiersUnitAmount}    | ${5}         | ${PricingModel.tieredGraduated} | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }]}
+    ${baseTiersUnitAmount}    | ${5}         | ${PricingModel.tieredGraduated} | ${false}       | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1190, unit_amount_gross_decimal: '11.9' }]}
+    ${baseTiersUnitAmount}    | ${10}        | ${PricingModel.tieredGraduated} | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }]}
+    ${baseTiersUnitAmount}    | ${10.999}    | ${PricingModel.tieredGraduated} | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }, { ...baseTiersUnitAmount[1], unit_amount_gross: 900, unit_amount_gross_decimal: '9' }]}
+    ${baseTiersUnitAmount}    | ${15}        | ${PricingModel.tieredGraduated} | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }, { ...baseTiersUnitAmount[1], unit_amount_gross: 900, unit_amount_gross_decimal: '9' }]}
+    ${baseTiersUnitAmount}    | ${20}        | ${PricingModel.tieredGraduated} | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }, { ...baseTiersUnitAmount[1], unit_amount_gross: 900, unit_amount_gross_decimal: '9' }]}
+    ${baseTiersUnitAmount}    | ${21}        | ${PricingModel.tieredGraduated} | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }, { ...baseTiersUnitAmount[1], unit_amount_gross: 900, unit_amount_gross_decimal: '9' }, { ...baseTiersUnitAmount[2], unit_amount_gross: 800, unit_amount_gross_decimal: '8' }]}
+    ${baseTiersUnitAmount}    | ${21}        | ${PricingModel.tieredGraduated} | ${false}       | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1190, unit_amount_gross_decimal: '11.9' }, { ...baseTiersUnitAmount[1], unit_amount_gross: 1071, unit_amount_gross_decimal: '10.71' }, { ...baseTiersUnitAmount[2], unit_amount_gross: 952, unit_amount_gross_decimal: '9.52' }]}
+    ${baseTiersUnitAmount}    | ${100}       | ${PricingModel.tieredGraduated} | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }, { ...baseTiersUnitAmount[1], unit_amount_gross: 900, unit_amount_gross_decimal: '9' }, { ...baseTiersUnitAmount[2], unit_amount_gross: 800, unit_amount_gross_decimal: '8' }]}
+    ${baseTiersUnitAmount}    | ${100}       | ${PricingModel.tieredGraduated} | ${undefined}   | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }, { ...baseTiersUnitAmount[1], unit_amount_gross: 900, unit_amount_gross_decimal: '9' }, { ...baseTiersUnitAmount[2], unit_amount_gross: 800, unit_amount_gross_decimal: '8' }]}
+    ${baseTiersUnitAmount}    | ${100}       | ${PricingModel.tieredGraduated} | ${undefined}   | ${undefined}    | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }, { ...baseTiersUnitAmount[1], unit_amount_gross: 900, unit_amount_gross_decimal: '9' }, { ...baseTiersUnitAmount[2], unit_amount_gross: 800, unit_amount_gross_decimal: '8' }]}
+    ${undefined}              | ${30}        | ${PricingModel.tieredGraduated} | ${true}        | ${{ rate: 19 }} | ${undefined}
+    ${baseTiersUnitAmount}    | ${undefined} | ${PricingModel.tieredGraduated} | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }]}
+    ${baseTiersUnitAmount}    | ${-1}        | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }]}
+    ${baseTiersUnitAmount}    | ${0}         | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }]}
+    ${undefined}              | ${0}         | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${undefined}
+    ${baseTiersUnitAmount}    | ${undefined} | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }]}
+    ${baseTiersUnitAmount}    | ${5}         | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }]}
+    ${baseTiersUnitAmount}    | ${5}         | ${PricingModel.tieredVolume}    | ${false}       | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1190, unit_amount_gross_decimal: '11.9' }]}
+    ${baseTiersUnitAmount}    | ${10}        | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }]}
+    ${baseTiersUnitAmount}    | ${10.999}    | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[1], unit_amount_gross: 900, unit_amount_gross_decimal: '9' }]}
+    ${baseTiersUnitAmount}    | ${15}        | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[1], unit_amount_gross: 900, unit_amount_gross_decimal: '9' }]}
+    ${baseTiersUnitAmount}    | ${15}        | ${PricingModel.tieredVolume}    | ${false}       | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[1], unit_amount_gross: 1071, unit_amount_gross_decimal: '10.71' }]}
+    ${baseTiersUnitAmount}    | ${20}        | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[1], unit_amount_gross: 900, unit_amount_gross_decimal: '9' }]}
+    ${baseTiersUnitAmount}    | ${21}        | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[2], unit_amount_gross: 800, unit_amount_gross_decimal: '8' }]}
+    ${baseTiersUnitAmount}    | ${100}       | ${PricingModel.tieredVolume}    | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersUnitAmount[2], unit_amount_gross: 800, unit_amount_gross_decimal: '8' }]}
+    ${baseTiersFlatFeeAmount} | ${0}         | ${PricingModel.tieredFlatFee}   | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersFlatFeeAmount[0], flat_fee_amount_gross: 1000, flat_fee_amount_gross_decimal: '10' }]}
+    ${undefined}              | ${0}         | ${PricingModel.tieredFlatFee}   | ${true}        | ${{ rate: 19 }} | ${undefined}
+    ${baseTiersFlatFeeAmount} | ${undefined} | ${PricingModel.tieredFlatFee}   | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersFlatFeeAmount[0], flat_fee_amount_gross: 1000, flat_fee_amount_gross_decimal: '10' }]}
+    ${baseTiersFlatFeeAmount} | ${5}         | ${PricingModel.tieredFlatFee}   | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersFlatFeeAmount[0], flat_fee_amount_gross: 1000, flat_fee_amount_gross_decimal: '10' }]}
+    ${baseTiersFlatFeeAmount} | ${10}        | ${PricingModel.tieredFlatFee}   | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersFlatFeeAmount[0], flat_fee_amount_gross: 1000, flat_fee_amount_gross_decimal: '10' }]}
+    ${baseTiersFlatFeeAmount} | ${10}        | ${PricingModel.tieredFlatFee}   | ${false}       | ${{ rate: 19 }} | ${[{ ...baseTiersFlatFeeAmount[0], flat_fee_amount_gross: 1190, flat_fee_amount_gross_decimal: '11.9' }]}
+    ${baseTiersFlatFeeAmount} | ${10.999}    | ${PricingModel.tieredFlatFee}   | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersFlatFeeAmount[1], flat_fee_amount_gross: 900, flat_fee_amount_gross_decimal: '9' }]}
+    ${baseTiersFlatFeeAmount} | ${15}        | ${PricingModel.tieredFlatFee}   | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersFlatFeeAmount[1], flat_fee_amount_gross: 900, flat_fee_amount_gross_decimal: '9' }]}
+    ${baseTiersFlatFeeAmount} | ${20}        | ${PricingModel.tieredFlatFee}   | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersFlatFeeAmount[1], flat_fee_amount_gross: 900, flat_fee_amount_gross_decimal: '9' }]}
+    ${baseTiersFlatFeeAmount} | ${21}        | ${PricingModel.tieredFlatFee}   | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersFlatFeeAmount[2], flat_fee_amount_gross: 800, flat_fee_amount_gross_decimal: '8' }]}
+    ${baseTiersFlatFeeAmount} | ${21}        | ${PricingModel.tieredFlatFee}   | ${false}       | ${{ rate: 19 }} | ${[{ ...baseTiersFlatFeeAmount[2], flat_fee_amount_gross: 952, flat_fee_amount_gross_decimal: '9.52' }]}
+    ${baseTiersFlatFeeAmount} | ${100}       | ${PricingModel.tieredFlatFee}   | ${true}        | ${{ rate: 19 }} | ${[{ ...baseTiersFlatFeeAmount[2], flat_fee_amount_gross: 800, flat_fee_amount_gross_decimal: '8' }]}
   `(
     'should return correctly for quantity=$quantity and pricingModel=$pricingModel',
     ({
       tiers,
       quantity,
       pricingModel,
+      isTaxInclusive,
+      tax,
       expected,
     }: {
       tiers: PriceTier[];
       quantity: number;
       pricingModel: PricingModel;
+      isTaxInclusive: boolean;
+      tax: Tax;
       expected: PriceTier[] | undefined;
     }) => {
-      expect(getDisplayTiersByQuantity(tiers, quantity, pricingModel)).toEqual(expected);
+      expect(getDisplayTiersByQuantity(tiers, quantity, pricingModel, isTaxInclusive, tax)).toEqual(expected);
     },
   );
 });
 
-describe('getDisplayTiersByQuantity', () => {
+describe('getDisplayTierByQuantity', () => {
   it.each`
     tiers                     | quantity                           | pricingModel                    | isTaxInclusive | tax             | expected
     ${baseTiersUnitAmount}    | ${-1}                              | ${PricingModel.tieredGraduated} | ${true}        | ${{ rate: 19 }} | ${{ ...baseTiersUnitAmount[0], unit_amount_gross: 1000, unit_amount_gross_decimal: '10' }}

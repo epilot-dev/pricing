@@ -31,7 +31,7 @@ export function getDisplayTierByQuantity(
   tiers: PriceTier[],
   quantity: number,
   pricingModel: PricingModel | Price['pricing_model'],
-  isTaxInclusive: boolean,
+  isTaxInclusive = true,
   tax: Tax,
 ): PriceTierEnhanced | undefined {
   if (!tiers || !tiers.length) {
@@ -63,19 +63,21 @@ export function getDisplayTiersByQuantity(
   tiers: PriceTier[],
   quantity: number,
   pricingModel: PricingModel | Price['pricing_model'],
-): PriceTier[] | undefined {
+  isTaxInclusive = true,
+  tax?: Tax,
+): PriceTierEnhanced[] | undefined {
   if (!tiers || !tiers.length) {
     return;
   }
 
   if (!quantity || quantity <= 0 || !pricingModel) {
-    return [tiers[0]];
+    return [enhanceTier(tiers[0], !!isTaxInclusive, tax)];
   }
 
-  const matchingTiers = tiers.filter(byInputQuantity(tiers, quantity));
+  const matchingTiers = tiers.filter(byInputQuantity(tiers, quantity)).map((tier) => enhanceTier(tier, isTaxInclusive, tax));
 
   if (pricingModel === PricingModel.tieredGraduated) {
-    return matchingTiers;
+    return matchingTiers.map((tier) => enhanceTier(tier, isTaxInclusive, tax));
   }
 
   return [matchingTiers[matchingTiers.length - 1]];
@@ -202,14 +204,14 @@ export const computeCumulativeValue = (
   locale: string,
   currency: Currency | undefined,
   t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
-  options: { showStartsAt?: boolean; shouldDisplayOnRequest?: boolean } = {},
-  tax: { isInclusive: boolean; rate: number } | undefined = undefined,
+  options: { showStartsAt?: boolean; shouldDisplayOnRequest?: boolean; showGrossAmount?: boolean } = {},
+  tax: Tax | undefined = undefined,
 ) => {
   if (!tiers || !tiers.length || quantityToSelectTier < 0) {
     return;
   }
 
-  const priceTiersForQuantity = getDisplayTiersByQuantity(tiers, quantityToSelectTier, PricingModel.tieredGraduated);
+  const priceTiersForQuantity = getDisplayTiersByQuantity(tiers, quantityToSelectTier, PricingModel.tieredGraduated, true, tax);
   const onRequestTier = priceTiersForQuantity!.find((tier) => tier.display_mode === 'on_request');
   if (onRequestTier && options.shouldDisplayOnRequest) {
     return t('show_as_on_request', {
@@ -341,7 +343,7 @@ export const computeCumulativeValue = (
  * @param {Tax} tax
  * @returns {PriceTierEnhanced} an enhanced PriceTier with the gross amounts.
  */
-const enhanceTier = (tier: PriceTier, isTaxInclusive: boolean, tax: Tax): PriceTierEnhanced => {
+const enhanceTier = (tier: PriceTier, isTaxInclusive: boolean, tax?: Tax): PriceTierEnhanced => {
   const taxRate = getTaxValue(tax);
 
   const unitAmount = tier.unit_amount_decimal && toDinero(tier.unit_amount_decimal);

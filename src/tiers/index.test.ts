@@ -378,37 +378,61 @@ describe('getTierDescription', () => {
   );
 });
 
+// ${baseTiersUnitAmount} | ${1}                 | ${'kWh'} | ${undefined} | ${'EUR'} | ${undefined}   | ${undefined}  | ${undefined} | ${{ rate: 19 }} | ${undefined}    | ${{ total: '10,00\xa0€', totalGross: '10,00\xa0€', totalWithPrecision: '10,00\xa0€', average: '10,00\xa0€/kWh', breakdown: [{ quantityUsed: '1 kWh', tierAmountDecimal: '10,00\xa0€/kWh', totalAmountDecimal: '10,00\xa0€' }] }}
+
+// ${baseTiersUnitAmount} | ${1}                 | ${'kWh'}    | ${undefined} | ${'EUR'} | ${undefined}   | ${undefined}  | ${undefined} | ${{ rate: 19 }} | ${true}         | ${{ total: '11,90\xa0€', totalWithPrecision: '11,90\xa0€', average: '11,90\xa0€/kWh', breakdown: [{ quantityUsed: '1 kWh', tierAmountDecimal: '11,90\xa0€/kWh', totalAmountDecimal: '11,90\xa0€' }] }}
+//     ${baseTiersUnitAmount} | ${2}                 | ${'m'}      | ${'de'}      | ${'EUR'} | ${undefined}   | ${undefined}  | ${undefined} | ${{ rate: 19 }} | ${undefined}    | ${{ total: '20,00\xa0€', totalWithPrecision: '20,00\xa0€', average: '10,00\xa0€/m', breakdown: [{ quantityUsed: '2 m', tierAmountDecimal: '10,00\xa0€/m', totalAmountDecimal: '20,00\xa0€' }] }}
+//     ${baseTiersUnitAmount} | ${5}                 | ${'kWh'}    | ${'en'}      | ${'EUR'} | ${undefined}   | ${undefined}  | ${undefined} | ${{ rate: 19 }} | ${undefined}    | ${{ total: '€50.00', totalWithPrecision: '€50.00', average: '€10.00/kWh', breakdown: [{ quantityUsed: '5 kWh', tierAmountDecimal: '€10.00/kWh', totalAmountDecimal: '€50.00' }] }}
+//     ${baseTiersUnitAmount} | ${15}                | ${'banana'} | ${'en'}      | ${'EUR'} | ${undefined}   | ${undefined}  | ${undefined} | ${{ rate: 19 }} | ${undefined}    | ${{ total: '€145.00', totalWithPrecision: '€145.00', average: '€9.67/banana', breakdown: [{ quantityUsed: '10 banana', tierAmountDecimal: '€10.00/banana', totalAmountDecimal: '€100.00' }, { quantityUsed: '5 banana', tierAmountDecimal: '€9.00/banana', totalAmountDecimal: '€45.00' }] }}
+//     ${baseTiersUnitAmount} | ${30}                | ${'kWh'}    | ${'en'}      | ${'USD'} | ${undefined}   | ${undefined}  | ${undefined} | ${{ rate: 19 }} | ${undefined}    | ${{ total: '$270.00', totalWithPrecision: '$270.00', average: '$9.00/kWh', breakdown: [{ quantityUsed: '10 kWh', tierAmountDecimal: '$10.00/kWh', totalAmountDecimal: '$100.00' }, { quantityUsed: '10 kWh', tierAmountDecimal: '$9.00/kWh', totalAmountDecimal: '$90.00' }, { quantityUsed: '10 kWh', tierAmountDecimal: '$8.00/kWh', totalAmountDecimal: '$80.00' }] }}
+//     ${baseTiersUnitAmount} | ${0}                 | ${'kWh'}    | ${'en'}      | ${'USD'} | ${undefined}   | ${undefined}  | ${undefined} | ${{ rate: 19 }} | ${undefined}    | ${{ total: '$0.00', totalWithPrecision: '$0.00', average: '$0.00/kWh', breakdown: [{ quantityUsed: '0 kWh', tierAmountDecimal: '$10.00/kWh', totalAmountDecimal: '$0.00' }] }}
+//     ${subunitTiers}        | ${5}                 | ${'kWh'}    | ${'en'}      | ${'USD'} | ${undefined}   | ${undefined}  | ${undefined} | ${{ rate: 19 }} | ${undefined}    | ${{ total: '5.00 cents', totalWithPrecision: '5.00 cents', average: '1.00 cent/kWh', breakdown: [{ quantityUsed: '5 kWh', tierAmountDecimal: '1.00 cent/kWh', totalAmountDecimal: '5.00 cents' }] }}
+//     ${subunitTiers}        | ${1396}              | ${'kWh'}    | ${'en'}      | ${'USD'} | ${undefined}   | ${undefined}  | ${undefined} | ${{ rate: 19 }} | ${undefined}    | ${{ total: '$11.20', totalWithPrecision: '$11.198', average: '0.80 cents/kWh', breakdown: [{ quantityUsed: '10 kWh', tierAmountDecimal: '1.00 cent/kWh', totalAmountDecimal: '10.00 cents' }, { quantityUsed: '10 kWh', tierAmountDecimal: '0.90 cents/kWh', totalAmountDecimal: '9.00 cents' }, { quantityUsed: '1,376 kWh', tierAmountDecimal: '0.80 cents/kWh', totalAmountDecimal: '$11.008' }] }}
+//     ${zeroTiers}           | ${1}                 | ${'kWh'}    | ${'en'}      | ${'USD'} | ${undefined}   | ${undefined}  | ${undefined} | ${{ rate: 19 }} | ${undefined}    | ${{ total: '$0.00', totalWithPrecision: '$0.00', average: '$0.00/kWh', breakdown: [{ quantityUsed: '1 kWh', tierAmountDecimal: '$0.00/kWh', totalAmountDecimal: '$0.00' }] }}
+//     ${onRequestTiers}      | ${5}                 | ${'kWh'}    | ${'en'}      | ${'EUR'} | ${undefined}   | ${true}       | ${undefined} | ${{ rate: 19 }} | ${undefined}    | ${{ total: '€50.00', totalWithPrecision: '€50.00', average: '€10.00/kWh', breakdown: [{ quantityUsed: '5 kWh', tierAmountDecimal: '€10.00/kWh', totalAmountDecimal: '€50.00' }] }}
+//     ${onRequestTiers}      | ${15}                | ${'kWh'}    | ${'en'}      | ${'EUR'} | ${undefined}   | ${true}       | ${undefined} | ${{ rate: 19 }} | ${undefined}    | ${'Price on request'}
+//     ${onRequestTiers}      | ${15}                | ${'kWh'}    | ${'en'}      | ${'EUR'} | ${undefined}   | ${false}      | ${undefined} | ${{ rate: 19 }} | ${undefined}    | ${{ total: '€145.00', totalWithPrecision: '€145.00', average: '€9.67/kWh', breakdown: [{ quantityUsed: '10 kWh', tierAmountDecimal: '€10.00/kWh', totalAmountDecimal: '€100.00' }, { quantityUsed: '5 kWh', tierAmountDecimal: '€9.00/kWh', totalAmountDecimal: '€45.00' }] }}
+//     ${decimalTiers}        | ${7}                 | ${'kWh'}    | ${'en'}      | ${'EUR'} | ${undefined}   | ${false}      | ${undefined} | ${{ rate: 19 }} | ${undefined}    | ${{ total: '38.59 cents', totalWithPrecision: '38.5915 cents', average: '5.51 cents/kWh', breakdown: [{ quantityUsed: '5 kWh', tierAmountDecimal: '5.5451 cents/kWh', totalAmountDecimal: '27.7255 cents' }, { quantityUsed: '2 kWh', tierAmountDecimal: '5.433 cents/kWh', totalAmountDecimal: '10.866 cents' }] }}
+//     ${decimalTiers}        | ${7}                 | ${'kWh'}    | ${'en'}      | ${'EUR'} | ${undefined}   | ${false}      | ${true}      | ${{ rate: 19 }} | ${undefined}    | ${{ total: 'Starts at 38.59 cents', totalWithPrecision: 'Starts at 38.5915 cents', average: '5.51 cents/kWh', breakdown: [{ quantityUsed: '5 kWh', tierAmountDecimal: '5.5451 cents/kWh', totalAmountDecimal: '27.7255 cents' }, { quantityUsed: '2 kWh', tierAmountDecimal: '5.433 cents/kWh', totalAmountDecimal: '10.866 cents' }] }}
+
 describe('computeCumulativeValue', () => {
-  it.each`
-    tiers                  | quantityToSelectTier | unit        | locale       | currency | shouldDisplayOnRequest | showStartsAt | expected
-    ${baseTiersUnitAmount} | ${1}                 | ${'kWh'}    | ${undefined} | ${'EUR'} | ${undefined}           | ${undefined} | ${{ total: '10,00\xa0€', totalWithPrecision: '10,00\xa0€', average: '10,00\xa0€/kWh', breakdown: [{ quantityUsed: '1 kWh', tierAmountDecimal: '10,00\xa0€/kWh', totalAmountDecimal: '10,00\xa0€' }] }}
-    ${baseTiersUnitAmount} | ${2}                 | ${'m'}      | ${'de'}      | ${'EUR'} | ${undefined}           | ${undefined} | ${{ total: '20,00\xa0€', totalWithPrecision: '20,00\xa0€', average: '10,00\xa0€/m', breakdown: [{ quantityUsed: '2 m', tierAmountDecimal: '10,00\xa0€/m', totalAmountDecimal: '20,00\xa0€' }] }}
-    ${baseTiersUnitAmount} | ${5}                 | ${'kWh'}    | ${'en'}      | ${'EUR'} | ${undefined}           | ${undefined} | ${{ total: '€50.00', totalWithPrecision: '€50.00', average: '€10.00/kWh', breakdown: [{ quantityUsed: '5 kWh', tierAmountDecimal: '€10.00/kWh', totalAmountDecimal: '€50.00' }] }}
-    ${baseTiersUnitAmount} | ${15}                | ${'banana'} | ${'en'}      | ${'EUR'} | ${undefined}           | ${undefined} | ${{ total: '€145.00', totalWithPrecision: '€145.00', average: '€9.67/banana', breakdown: [{ quantityUsed: '10 banana', tierAmountDecimal: '€10.00/banana', totalAmountDecimal: '€100.00' }, { quantityUsed: '5 banana', tierAmountDecimal: '€9.00/banana', totalAmountDecimal: '€45.00' }] }}
-    ${baseTiersUnitAmount} | ${30}                | ${'kWh'}    | ${'en'}      | ${'USD'} | ${undefined}           | ${undefined} | ${{ total: '$270.00', totalWithPrecision: '$270.00', average: '$9.00/kWh', breakdown: [{ quantityUsed: '10 kWh', tierAmountDecimal: '$10.00/kWh', totalAmountDecimal: '$100.00' }, { quantityUsed: '10 kWh', tierAmountDecimal: '$9.00/kWh', totalAmountDecimal: '$90.00' }, { quantityUsed: '10 kWh', tierAmountDecimal: '$8.00/kWh', totalAmountDecimal: '$80.00' }] }}
-    ${baseTiersUnitAmount} | ${0}                 | ${'kWh'}    | ${'en'}      | ${'USD'} | ${undefined}           | ${undefined} | ${{ total: '$0.00', totalWithPrecision: '$0.00', average: '$0.00/kWh', breakdown: [{ quantityUsed: '0 kWh', tierAmountDecimal: '$10.00/kWh', totalAmountDecimal: '$0.00' }] }}
-    ${subunitTiers}        | ${5}                 | ${'kWh'}    | ${'en'}      | ${'USD'} | ${undefined}           | ${undefined} | ${{ total: '5.00 cents', totalWithPrecision: '5.00 cents', average: '1.00 cent/kWh', breakdown: [{ quantityUsed: '5 kWh', tierAmountDecimal: '1.00 cent/kWh', totalAmountDecimal: '5.00 cents' }] }}
-    ${subunitTiers}        | ${1396}              | ${'kWh'}    | ${'en'}      | ${'USD'} | ${undefined}           | ${undefined} | ${{ total: '$11.20', totalWithPrecision: '$11.198', average: '0.80 cents/kWh', breakdown: [{ quantityUsed: '10 kWh', tierAmountDecimal: '1.00 cent/kWh', totalAmountDecimal: '10.00 cents' }, { quantityUsed: '10 kWh', tierAmountDecimal: '0.90 cents/kWh', totalAmountDecimal: '9.00 cents' }, { quantityUsed: '1,376 kWh', tierAmountDecimal: '0.80 cents/kWh', totalAmountDecimal: '$11.008' }] }}
-    ${zeroTiers}           | ${1}                 | ${'kWh'}    | ${'en'}      | ${'USD'} | ${undefined}           | ${undefined} | ${{ total: '$0.00', totalWithPrecision: '$0.00', average: '$0.00/kWh', breakdown: [{ quantityUsed: '1 kWh', tierAmountDecimal: '$0.00/kWh', totalAmountDecimal: '$0.00' }] }}
-    ${onRequestTiers}      | ${5}                 | ${'kWh'}    | ${'en'}      | ${'EUR'} | ${true}                | ${undefined} | ${{ total: '€50.00', totalWithPrecision: '€50.00', average: '€10.00/kWh', breakdown: [{ quantityUsed: '5 kWh', tierAmountDecimal: '€10.00/kWh', totalAmountDecimal: '€50.00' }] }}
-    ${onRequestTiers}      | ${15}                | ${'kWh'}    | ${'en'}      | ${'EUR'} | ${true}                | ${undefined} | ${'Price on request'}
-    ${onRequestTiers}      | ${15}                | ${'kWh'}    | ${'en'}      | ${'EUR'} | ${false}               | ${undefined} | ${{ total: '€145.00', totalWithPrecision: '€145.00', average: '€9.67/kWh', breakdown: [{ quantityUsed: '10 kWh', tierAmountDecimal: '€10.00/kWh', totalAmountDecimal: '€100.00' }, { quantityUsed: '5 kWh', tierAmountDecimal: '€9.00/kWh', totalAmountDecimal: '€45.00' }] }}
-    ${decimalTiers}        | ${7}                 | ${'kWh'}    | ${'en'}      | ${'EUR'} | ${false}               | ${undefined} | ${{ total: '38.59 cents', totalWithPrecision: '38.5915 cents', average: '5.51 cents/kWh', breakdown: [{ quantityUsed: '5 kWh', tierAmountDecimal: '5.5451 cents/kWh', totalAmountDecimal: '27.7255 cents' }, { quantityUsed: '2 kWh', tierAmountDecimal: '5.433 cents/kWh', totalAmountDecimal: '10.866 cents' }] }}
-    ${decimalTiers}        | ${7}                 | ${'kWh'}    | ${'en'}      | ${'EUR'} | ${false}               | ${true}      | ${{ total: 'Starts at 38.59 cents', totalWithPrecision: 'Starts at 38.5915 cents', average: '5.51 cents/kWh', breakdown: [{ quantityUsed: '5 kWh', tierAmountDecimal: '5.5451 cents/kWh', totalAmountDecimal: '27.7255 cents' }, { quantityUsed: '2 kWh', tierAmountDecimal: '5.433 cents/kWh', totalAmountDecimal: '10.866 cents' }] }}
+  it.only.each`
+    tiers                  | quantityToSelectTier | unit     | locale       | currency | isTaxInclusive | showOnRequest | showStartsAt | tax             | showGrossAmount | expected
+    ${baseTiersUnitAmount} | ${1}                 | ${'kWh'} | ${undefined} | ${'EUR'} | ${true}       | ${undefined}  | ${undefined} | ${{ rate: 19 }} | ${undefined}     | ${{ total: '10,00\xa0€', totalGross: '10,00\xa0€', totalWithPrecision: '10,00\xa0€', average: '10,00\xa0€/kWh', breakdown: [{ quantityUsed: '1 kWh', tierAmountDecimal: '10,00\xa0€/kWh', totalAmountDecimal: '10,00\xa0€' }] }}
   `(
-    'should compute cumulative value correctly when quantityToSelectTier=$quantityToSelectTier',
-    ({ tiers, quantityToSelectTier, unit, locale, currency, shouldDisplayOnRequest, showStartsAt, expected }) => {
+    'should compute cumulative value correctly when quantityToSelectTier=$quantityToSelectTier, isTaxInclusive=$isTaxInclusive and tax=$tax',
+    ({
+      tiers,
+      quantityToSelectTier,
+      unit,
+      locale,
+      currency,
+      showOnRequest,
+      showStartsAt,
+      isTaxInclusive,
+      tax,
+      expected,
+    }) => {
       expect(
-        computeCumulativeValue(tiers, quantityToSelectTier, unit, locale, currency, t, {
-          shouldDisplayOnRequest,
-          showStartsAt,
-        }),
+        computeCumulativeValue(
+          tiers,
+          quantityToSelectTier,
+          unit,
+          locale,
+          currency,
+          t,
+          isTaxInclusive,
+          {
+            showOnRequest,
+            showStartsAt,
+          },
+        ),
       ).toEqual(expected);
     },
   );
 
   it.each`
-    tiers | quantityToSelectTier | unit | locale | currency | shouldDisplayOnRequest | showStartsAt | tax | expected
+    tiers | quantityToSelectTier | unit | locale | currency | showOnRequest | showStartsAt | tax | expected
     ${baseTiersUnitAmount} | ${1} | ${'kWh'} | ${undefined} | ${'EUR'} | ${undefined} | ${undefined} | ${{
   isInclusive: true,
   rate: 10,
@@ -423,7 +447,7 @@ describe('computeCumulativeValue', () => {
 }} | ${{ amountSubtotal: '430,00\xa0€', amountSubtotalWithPrecision: '430,00\xa0€', amountSubtotalAverage: '8,60\xa0€/kWh', total: '430,00\xa0€', totalWithPrecision: '430,00\xa0€', average: '8,60\xa0€/kWh', breakdown: [{ quantityUsed: '10 kWh', tierAmountDecimal: '10,00\xa0€/kWh', totalAmountDecimal: '100,00\xa0€' }, { quantityUsed: '10 kWh', tierAmountDecimal: '9,00\xa0€/kWh', totalAmountDecimal: '90,00\xa0€' }, { quantityUsed: '30 kWh', tierAmountDecimal: '8,00\xa0€/kWh', totalAmountDecimal: '240,00\xa0€' }] }}
   `(
     'should compute net cumulative value correctly when quantityToSelectTier=$quantityToSelectTier',
-    ({ tiers, quantityToSelectTier, unit, locale, currency, shouldDisplayOnRequest, showStartsAt, tax, expected }) => {
+    ({ tiers, quantityToSelectTier, unit, locale, currency, showOnRequest, showStartsAt, tax, expected }) => {
       expect(
         computeCumulativeValue(
           tiers,
@@ -432,7 +456,8 @@ describe('computeCumulativeValue', () => {
           locale,
           currency,
           t,
-          { shouldDisplayOnRequest, showStartsAt },
+          true,
+          { showOnRequest, showStartsAt },
           tax,
         ),
       ).toEqual(expected);

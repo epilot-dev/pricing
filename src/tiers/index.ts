@@ -14,9 +14,7 @@ const byInputQuantity = (tiers: PriceTier[], quantity: number) => (_: PriceTier,
 type CumulativePriceBreakdownItem = {
   quantityUsed: string;
   tierAmountDecimal: string;
-  tierAmountGrossDecimal?: string;
   totalAmountDecimal: string;
-  totalAmountGrossDecimal?: string;
 };
 
 /**
@@ -73,7 +71,7 @@ export function getDisplayTiersByQuantity(
   }
 
   if (!quantity || quantity <= 0 || !pricingModel) {
-    return [enhanceTier(tiers[0], !!isTaxInclusive, tax)];
+    return [enhanceTier(tiers[0], isTaxInclusive, tax)];
   }
 
   const matchingTiers = tiers

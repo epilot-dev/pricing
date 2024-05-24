@@ -200,16 +200,17 @@ export function getTierDescription(
 }
 
 /**
- *
- * @param tiers
- * @param quantityToSelectTier
- * @param unit
- * @param locale
- * @param currency
- * @param t
- * @param options
- * @param tax
- * @returns
+ * Computes the totals for cumulative prices and returns them in a human-readable format.
+ * It includes a breakdown of the price tiers considered for the calculation.
+ * @param {PriceTier[]} tiers
+ * @param {number} quantityToSelectTier
+ * @param {string} unit
+ * @param {string} locale
+ * @param {Currency} currency
+ * @param {Function} t
+ * @param {Object} options
+ * @param {Tax} tax
+ * @returns {Object} The cumulative price totals and breakdown.
  */
 export const computeCumulativeValue = (
   tiers: PriceTier[] | undefined,

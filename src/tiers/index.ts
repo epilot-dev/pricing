@@ -73,8 +73,6 @@ export function getDisplayTiersByQuantity(
   }
 
   if (!quantity || quantity <= 0 || !pricingModel) {
-    console.log('Return 1');
-
     return [enhanceTier(tiers[0], !!isTaxInclusive, tax)];
   }
 
@@ -83,12 +81,8 @@ export function getDisplayTiersByQuantity(
     .map((tier) => enhanceTier(tier, isTaxInclusive, tax));
 
   if (pricingModel === PricingModel.tieredGraduated) {
-    console.log('Return 2');
-
     return matchingTiers.map((tier) => enhanceTier(tier, isTaxInclusive, tax));
   }
-
-  console.log('Return 3');
 
   return [enhanceTier(matchingTiers[matchingTiers.length - 1], isTaxInclusive, tax)];
 }
@@ -112,7 +106,7 @@ export function getTierDescription(
   locale: string,
   currency: Currency | undefined,
   t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
-  options: { showStartsAt?: boolean; enableSubunitDisplay?: boolean; shouldDisplayOnRequest?: boolean } = {},
+  options: { showStartsAt?: boolean; enableSubunitDisplay?: boolean; showOnRequest?: boolean } = {},
   tax: { isInclusive: boolean; rate: number } | undefined = undefined,
 ): string | undefined {
   if (!pricingModel) {
@@ -123,7 +117,7 @@ export function getTierDescription(
     return;
   }
 
-  if (tier.display_mode === 'on_request' && options.shouldDisplayOnRequest) {
+  if (tier.display_mode === 'on_request' && options.showOnRequest) {
     return t('show_as_on_request', {
       ns: '',
       defaultValue: 'Price on request',
@@ -207,6 +201,18 @@ export function getTierDescription(
   );
 }
 
+/**
+ *
+ * @param tiers
+ * @param quantityToSelectTier
+ * @param unit
+ * @param locale
+ * @param currency
+ * @param t
+ * @param options
+ * @param tax
+ * @returns
+ */
 export const computeCumulativeValue = (
   tiers: PriceTier[] | undefined,
   quantityToSelectTier: number,
@@ -216,23 +222,13 @@ export const computeCumulativeValue = (
   t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
   isTaxInclusive = true,
   options: { showStartsAt?: boolean; showOnRequest?: boolean } = {},
-  tax: Tax | undefined = undefined,
+  tax?: Tax,
 ) => {
-  console.log({ isTaxInclusive });
   if (!tiers || !tiers.length || quantityToSelectTier < 0) {
     return;
   }
 
-  const priceTiersForQuantity = getDisplayTiersByQuantity(
-    tiers,
-    quantityToSelectTier,
-    PricingModel.tieredGraduated,
-    isTaxInclusive,
-    tax,
-  );
-
-  console.log({ priceTiersForQuantity });
-
+  const priceTiersForQuantity = getDisplayTiersByQuantity(tiers, quantityToSelectTier, PricingModel.tieredGraduated);
   const onRequestTier = priceTiersForQuantity!.find((tier) => tier.display_mode === 'on_request');
   if (onRequestTier && options.showOnRequest) {
     return t('show_as_on_request', {
@@ -257,34 +253,28 @@ export const computeCumulativeValue = (
 
   const breakdown: CumulativePriceBreakdownItem[] = [];
 
-  const { total, totalGross } = priceTiersForQuantity!.reduce(
-    ({ total }, tier: PriceTierEnhanced, index: number) => {
-      const tierMinQuantity = index === 0 ? 0 : tiers[index - 1].up_to;
-      const tierMaxQuantity = tier.up_to || Infinity;
-      const graduatedQuantity = getQuantityForTier(tierMinQuantity!, tierMaxQuantity, quantityToSelectTier);
-      const tierAmount = toDinero(tier.unit_amount_decimal!, formatOptions.currency).multiply(graduatedQuantity);
-      const tierAmountGross = toDinero(tier.unit_amount_gross_decimal!, formatOptions.currency).multiply(
-        graduatedQuantity,
-      );
+  const total = priceTiersForQuantity!.reduce((total: Dinero, tier: PriceTier, index: number) => {
+    const tierMinQuantity = index === 0 ? 0 : tiers[index - 1].up_to;
+    const tierMaxQuantity = tier.up_to || Infinity;
+    const graduatedQuantity = getQuantityForTier(tierMinQuantity!, tierMaxQuantity, quantityToSelectTier);
+    const tierAmount = toDinero(tier.unit_amount_decimal!, formatOptions.currency).multiply(graduatedQuantity);
 
-      breakdown.push({
-        quantityUsed: `${graduatedQuantity.toLocaleString(formatOptions.locale, {
-          maximumFractionDigits: 6,
-        })} ${formattedUnit}`,
-        tierAmountDecimal: `${formatAmountFromString({
-          decimalAmount: tier.unit_amount_decimal!,
-          ...formatOptions,
-        })}${formattedUnit ? `/${formattedUnit}` : ''}`,
-        totalAmountDecimal: formatAmountFromString({
-          decimalAmount: addSeparatorToDineroString(tierAmount.getAmount().toString()),
-          ...formatOptions,
-        }),
-      });
+    breakdown.push({
+      quantityUsed: `${graduatedQuantity.toLocaleString(formatOptions.locale, {
+        maximumFractionDigits: 6,
+      })} ${formattedUnit}`,
+      tierAmountDecimal: `${formatAmountFromString({
+        decimalAmount: tier.unit_amount_decimal!,
+        ...formatOptions,
+      })}${formattedUnit ? `/${formattedUnit}` : ''}`,
+      totalAmountDecimal: formatAmountFromString({
+        decimalAmount: addSeparatorToDineroString(tierAmount.getAmount().toString()),
+        ...formatOptions,
+      }),
+    });
 
-      return { total: tierAmount.add(total), totalGross: tierAmountGross.add(total) };
-    },
-    { total: toDinero('0', formatOptions.currency), totalGross: toDinero('0', formatOptions.currency) },
-  );
+    return tierAmount.add(total);
+  }, toDinero('0', formatOptions.currency));
 
   const startsAt =
     options.showStartsAt &&
@@ -293,75 +283,78 @@ export const computeCumulativeValue = (
       defaultValue: 'Starts at',
     });
 
-  const averageAmount = total
+  const amounts: {
+    amountSubtotal?: Dinero;
+    amountTotal?: Dinero;
+    amountSubtotalAverage?: string;
+    amountTotalAverage?: string;
+  } = {
+    amountSubtotal: undefined,
+    amountTotal: undefined,
+    amountSubtotalAverage: undefined,
+    amountTotalAverage: undefined,
+  };
+
+  const taxRate = getTaxValue(tax);
+  amounts.amountTotal = isTaxInclusive ? total : total.multiply(1 + taxRate);
+  amounts.amountSubtotal = isTaxInclusive ? total.divide(1 + taxRate) : total;
+
+  amounts.amountSubtotalAverage = amounts.amountTotal
+    .divide(quantityToSelectTier || 1)
+    .getAmount()
+    .toString();
+  amounts.amountSubtotalAverage = amounts.amountSubtotal
     .divide(quantityToSelectTier || 1)
     .getAmount()
     .toString();
 
-  const amountSubtotals: {
-    amountSubtotal?: Dinero;
-    amountSubtotalAverage?: string;
-  } = {
-    amountSubtotal: undefined,
-    amountSubtotalAverage: undefined,
-  };
-
-  if (tax) {
-    const taxMultiplier = 1 + tax.rate / 100;
-    amountSubtotals.amountSubtotal = tax.isInclusive ? total.divide(taxMultiplier) : total;
-
-    amountSubtotals.amountSubtotalAverage = amountSubtotals.amountSubtotal
-      .divide(quantityToSelectTier || 1)
-      .getAmount()
-      .toString();
-  }
+  const averageAmount = amounts.amountTotal
+    ? amounts.amountTotal
+        .divide(quantityToSelectTier || 1)
+        .getAmount()
+        .toString()
+    : '0';
 
   return {
-    total:
-      (startsAt ? `${startsAt} ` : '') +
-      formatAmountFromString({
-        decimalAmount: addSeparatorToDineroString(total.getAmount().toString()),
-        ...formatOptions,
-        precision: 2,
-        useRealPrecision: false,
-      }),
-    totalGross:
-      (startsAt ? `${startsAt} ` : '') +
-      formatAmountFromString({
-        decimalAmount: addSeparatorToDineroString(totalGross.getAmount().toString()),
-        ...formatOptions,
-        precision: 2,
-        useRealPrecision: false,
-      }),
-    totalWithPrecision:
-      (startsAt ? `${startsAt} ` : '') +
-      formatAmountFromString({
-        decimalAmount: addSeparatorToDineroString(total.getAmount().toString()),
-        ...formatOptions,
-      }),
-    average: `${formatAmountFromString({
-      decimalAmount: addSeparatorToDineroString(averageAmount),
-      ...formatOptions,
-      precision: 2,
-      useRealPrecision: false,
-    })}${formattedUnit ? `/${formattedUnit}` : ''}`,
-    ...(amountSubtotals.amountSubtotal && {
-      amountSubtotal:
+    ...(amounts.amountTotal && {
+      total:
         (startsAt ? `${startsAt} ` : '') +
         formatAmountFromString({
-          decimalAmount: addSeparatorToDineroString(amountSubtotals.amountSubtotal.getAmount().toString()),
+          decimalAmount: addSeparatorToDineroString(amounts.amountTotal.getAmount().toString()),
           ...formatOptions,
           precision: 2,
           useRealPrecision: false,
         }),
-      amountSubtotalWithPrecision:
+      totalWithPrecision:
         (startsAt ? `${startsAt} ` : '') +
         formatAmountFromString({
-          decimalAmount: addSeparatorToDineroString(amountSubtotals.amountSubtotal.getAmount().toString()),
+          decimalAmount: addSeparatorToDineroString(amounts.amountTotal.getAmount().toString()),
           ...formatOptions,
         }),
-      amountSubtotalAverage: `${formatAmountFromString({
-        decimalAmount: addSeparatorToDineroString(amountSubtotals.amountSubtotalAverage!),
+      average: `${formatAmountFromString({
+        decimalAmount: addSeparatorToDineroString(averageAmount),
+        ...formatOptions,
+        precision: 2,
+        useRealPrecision: false,
+      })}${formattedUnit ? `/${formattedUnit}` : ''}`,
+    }),
+    ...(amounts.amountSubtotal && {
+      subtotal:
+        (startsAt ? `${startsAt} ` : '') +
+        formatAmountFromString({
+          decimalAmount: addSeparatorToDineroString(amounts.amountSubtotal.getAmount().toString()),
+          ...formatOptions,
+          precision: 2,
+          useRealPrecision: false,
+        }),
+      subtotalWithPrecision:
+        (startsAt ? `${startsAt} ` : '') +
+        formatAmountFromString({
+          decimalAmount: addSeparatorToDineroString(amounts.amountSubtotal.getAmount().toString()),
+          ...formatOptions,
+        }),
+      subAverage: `${formatAmountFromString({
+        decimalAmount: addSeparatorToDineroString(amounts.amountSubtotalAverage!),
         ...formatOptions,
         precision: 2,
         useRealPrecision: false,
@@ -379,24 +372,12 @@ export const computeCumulativeValue = (
  * @returns {PriceTierEnhanced} an enhanced PriceTier with the gross amounts.
  */
 const enhanceTier = (tier: PriceTier, isTaxInclusive: boolean, tax?: Tax): PriceTierEnhanced => {
-  console.log('enhanceTier', { tier, isTaxInclusive, tax });
   const taxRate = getTaxValue(tax);
 
   const unitAmount = tier.unit_amount_decimal && toDinero(tier.unit_amount_decimal);
   const unitAmountGross = !isTaxInclusive && unitAmount ? unitAmount.multiply(1 + taxRate) : unitAmount;
-  console.log({ unitAmountGross: (unitAmountGross as any).toUnit().toString() });
   const flatFeeAmount = tier.flat_fee_amount_decimal && toDinero(tier.flat_fee_amount_decimal);
   const flatFeeAmountGross = !isTaxInclusive && flatFeeAmount ? flatFeeAmount.multiply(1 + taxRate) : flatFeeAmount;
-
-  const x = {
-    ...tier,
-    ...(unitAmountGross && { unit_amount_gross: unitAmountGross?.convertPrecision(2).getAmount() }),
-    ...(unitAmountGross && { unit_amount_gross_decimal: unitAmountGross?.toUnit().toString() }),
-    ...(flatFeeAmountGross && { flat_fee_amount_gross: flatFeeAmountGross?.convertPrecision(2).getAmount() }),
-    ...(flatFeeAmountGross && { flat_fee_amount_gross_decimal: flatFeeAmountGross?.toUnit().toString() }),
-  }
-
-  console.log({ unitAmountGross, x });
 
   return {
     ...tier,

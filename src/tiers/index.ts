@@ -282,83 +282,63 @@ export const computeCumulativeValue = (
       defaultValue: 'Starts at',
     });
 
-  const amounts: {
-    amountSubtotal?: Dinero;
-    amountTotal?: Dinero;
-    amountSubtotalAverage?: string;
-    amountTotalAverage?: string;
-  } = {
-    amountSubtotal: undefined,
-    amountTotal: undefined,
-    amountSubtotalAverage: undefined,
-    amountTotalAverage: undefined,
-  };
-
   const taxRate = getTaxValue(tax);
-  amounts.amountTotal = isTaxInclusive ? total : total.multiply(1 + taxRate);
-  amounts.amountSubtotal = isTaxInclusive ? total.divide(1 + taxRate) : total;
+  const amountTotal = isTaxInclusive ? total : total.multiply(1 + taxRate);
+  const amountSubtotal = isTaxInclusive ? total.divide(1 + taxRate) : total;
 
-  amounts.amountSubtotalAverage = amounts.amountTotal
-    .divide(quantityToSelectTier || 1)
-    .getAmount()
-    .toString();
-  amounts.amountSubtotalAverage = amounts.amountSubtotal
+  const subAverage = amountSubtotal
     .divide(quantityToSelectTier || 1)
     .getAmount()
     .toString();
 
-  const averageAmount = amounts.amountTotal
-    ? amounts.amountTotal
+  const average = amountTotal
+    ? amountTotal
         .divide(quantityToSelectTier || 1)
         .getAmount()
         .toString()
     : '0';
 
   return {
-    ...(amounts.amountTotal && {
-      total:
-        (startsAt ? `${startsAt} ` : '') +
-        formatAmountFromString({
-          decimalAmount: addSeparatorToDineroString(amounts.amountTotal.getAmount().toString()),
-          ...formatOptions,
-          precision: 2,
-          useRealPrecision: false,
-        }),
-      totalWithPrecision:
-        (startsAt ? `${startsAt} ` : '') +
-        formatAmountFromString({
-          decimalAmount: addSeparatorToDineroString(amounts.amountTotal.getAmount().toString()),
-          ...formatOptions,
-        }),
-      average: `${formatAmountFromString({
-        decimalAmount: addSeparatorToDineroString(averageAmount),
+    total:
+      (startsAt ? `${startsAt} ` : '') +
+      formatAmountFromString({
+        decimalAmount: addSeparatorToDineroString(amountTotal.getAmount().toString()),
         ...formatOptions,
         precision: 2,
         useRealPrecision: false,
-      })}${formattedUnit ? `/${formattedUnit}` : ''}`,
-    }),
-    ...(amounts.amountSubtotal && {
-      subtotal:
-        (startsAt ? `${startsAt} ` : '') +
-        formatAmountFromString({
-          decimalAmount: addSeparatorToDineroString(amounts.amountSubtotal.getAmount().toString()),
-          ...formatOptions,
-          precision: 2,
-          useRealPrecision: false,
-        }),
-      subtotalWithPrecision:
-        (startsAt ? `${startsAt} ` : '') +
-        formatAmountFromString({
-          decimalAmount: addSeparatorToDineroString(amounts.amountSubtotal.getAmount().toString()),
-          ...formatOptions,
-        }),
-      subAverage: `${formatAmountFromString({
-        decimalAmount: addSeparatorToDineroString(amounts.amountSubtotalAverage!),
+      }),
+    totalWithPrecision:
+      (startsAt ? `${startsAt} ` : '') +
+      formatAmountFromString({
+        decimalAmount: addSeparatorToDineroString(amountTotal.getAmount().toString()),
+        ...formatOptions,
+      }),
+    average: `${formatAmountFromString({
+      decimalAmount: addSeparatorToDineroString(average),
+      ...formatOptions,
+      precision: 2,
+      useRealPrecision: false,
+    })}${formattedUnit ? `/${formattedUnit}` : ''}`,
+    subtotal:
+      (startsAt ? `${startsAt} ` : '') +
+      formatAmountFromString({
+        decimalAmount: addSeparatorToDineroString(amountSubtotal.getAmount().toString()),
         ...formatOptions,
         precision: 2,
         useRealPrecision: false,
-      })}${formattedUnit ? `/${formattedUnit}` : ''}`,
-    }),
+      }),
+    subtotalWithPrecision:
+      (startsAt ? `${startsAt} ` : '') +
+      formatAmountFromString({
+        decimalAmount: addSeparatorToDineroString(amountSubtotal.getAmount().toString()),
+        ...formatOptions,
+      }),
+    subAverage: `${formatAmountFromString({
+      decimalAmount: addSeparatorToDineroString(subAverage!),
+      ...formatOptions,
+      precision: 2,
+      useRealPrecision: false,
+    })}${formattedUnit ? `/${formattedUnit}` : ''}`,
     breakdown,
   };
 };

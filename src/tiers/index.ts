@@ -31,7 +31,7 @@ export function getDisplayTierByQuantity(
   tiers: PriceTier[],
   quantity: number,
   pricingModel: PricingModel | Price['pricing_model'],
-  isTaxInclusive: boolean,
+  isTaxInclusive = true,
   tax: Tax,
 ): PriceTierEnhanced | undefined {
   if (!tiers || !tiers.length) {
@@ -63,22 +63,26 @@ export function getDisplayTiersByQuantity(
   tiers: PriceTier[],
   quantity: number,
   pricingModel: PricingModel | Price['pricing_model'],
-): PriceTier[] | undefined {
+  isTaxInclusive = true,
+  tax?: Tax,
+): PriceTierEnhanced[] | undefined {
   if (!tiers || !tiers.length) {
     return;
   }
 
   if (!quantity || quantity <= 0 || !pricingModel) {
-    return [tiers[0]];
+    return [enhanceTier(tiers[0], isTaxInclusive, tax)];
   }
 
-  const matchingTiers = tiers.filter(byInputQuantity(tiers, quantity));
+  const matchingTiers = tiers
+    .filter(byInputQuantity(tiers, quantity))
+    .map((tier) => enhanceTier(tier, isTaxInclusive, tax));
 
   if (pricingModel === PricingModel.tieredGraduated) {
-    return matchingTiers;
+    return matchingTiers.map((tier) => enhanceTier(tier, isTaxInclusive, tax));
   }
 
-  return [matchingTiers[matchingTiers.length - 1]];
+  return [enhanceTier(matchingTiers[matchingTiers.length - 1], isTaxInclusive, tax)];
 }
 
 /**
@@ -100,7 +104,7 @@ export function getTierDescription(
   locale: string,
   currency: Currency | undefined,
   t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
-  options: { showStartsAt?: boolean; enableSubunitDisplay?: boolean; shouldDisplayOnRequest?: boolean } = {},
+  options: { showStartsAt?: boolean; enableSubunitDisplay?: boolean; showOnRequest?: boolean } = {},
   tax: { isInclusive: boolean; rate: number } | undefined = undefined,
 ): string | undefined {
   if (!pricingModel) {
@@ -111,7 +115,7 @@ export function getTierDescription(
     return;
   }
 
-  if (tier.display_mode === 'on_request' && options.shouldDisplayOnRequest) {
+  if (tier.display_mode === 'on_request' && options.showOnRequest) {
     return t('show_as_on_request', {
       ns: '',
       defaultValue: 'Price on request',
@@ -195,6 +199,19 @@ export function getTierDescription(
   );
 }
 
+/**
+ * Computes the totals for cumulative prices and returns them in a human-readable format.
+ * It includes a breakdown of the price tiers considered for the calculation.
+ * @param {PriceTier[]} tiers
+ * @param {number} quantityToSelectTier
+ * @param {string} unit
+ * @param {string} locale
+ * @param {Currency} currency
+ * @param {Function} t
+ * @param {Object} options
+ * @param {Tax} tax
+ * @returns {Object} The cumulative price totals and breakdown.
+ */
 export const computeCumulativeValue = (
   tiers: PriceTier[] | undefined,
   quantityToSelectTier: number,
@@ -202,8 +219,9 @@ export const computeCumulativeValue = (
   locale: string,
   currency: Currency | undefined,
   t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
-  options: { showStartsAt?: boolean; shouldDisplayOnRequest?: boolean } = {},
-  tax: { isInclusive: boolean; rate: number } | undefined = undefined,
+  isTaxInclusive = true,
+  options: { showStartsAt?: boolean; showOnRequest?: boolean } = {},
+  tax?: Tax,
 ) => {
   if (!tiers || !tiers.length || quantityToSelectTier < 0) {
     return;
@@ -211,7 +229,7 @@ export const computeCumulativeValue = (
 
   const priceTiersForQuantity = getDisplayTiersByQuantity(tiers, quantityToSelectTier, PricingModel.tieredGraduated);
   const onRequestTier = priceTiersForQuantity!.find((tier) => tier.display_mode === 'on_request');
-  if (onRequestTier && options.shouldDisplayOnRequest) {
+  if (onRequestTier && options.showOnRequest) {
     return t('show_as_on_request', {
       ns: '',
       defaultValue: 'Price on request',
@@ -264,34 +282,27 @@ export const computeCumulativeValue = (
       defaultValue: 'Starts at',
     });
 
-  const averageAmount = total
+  const taxRate = getTaxValue(tax);
+  const amountTotal = isTaxInclusive ? total : total.multiply(1 + taxRate);
+  const amountSubtotal = isTaxInclusive ? total.divide(1 + taxRate) : total;
+
+  const subAverage = amountSubtotal
     .divide(quantityToSelectTier || 1)
     .getAmount()
     .toString();
 
-  const amountSubtotals: {
-    amountSubtotal?: Dinero;
-    amountSubtotalAverage?: string;
-  } = {
-    amountSubtotal: undefined,
-    amountSubtotalAverage: undefined,
-  };
-
-  if (tax) {
-    const taxMultiplier = 1 + tax.rate / 100;
-    amountSubtotals.amountSubtotal = tax.isInclusive ? total.divide(taxMultiplier) : total;
-
-    amountSubtotals.amountSubtotalAverage = amountSubtotals.amountSubtotal
-      .divide(quantityToSelectTier || 1)
-      .getAmount()
-      .toString();
-  }
+  const average = amountTotal
+    ? amountTotal
+        .divide(quantityToSelectTier || 1)
+        .getAmount()
+        .toString()
+    : '0';
 
   return {
     total:
       (startsAt ? `${startsAt} ` : '') +
       formatAmountFromString({
-        decimalAmount: addSeparatorToDineroString(total.getAmount().toString()),
+        decimalAmount: addSeparatorToDineroString(amountTotal.getAmount().toString()),
         ...formatOptions,
         precision: 2,
         useRealPrecision: false,
@@ -299,37 +310,35 @@ export const computeCumulativeValue = (
     totalWithPrecision:
       (startsAt ? `${startsAt} ` : '') +
       formatAmountFromString({
-        decimalAmount: addSeparatorToDineroString(total.getAmount().toString()),
+        decimalAmount: addSeparatorToDineroString(amountTotal.getAmount().toString()),
         ...formatOptions,
       }),
     average: `${formatAmountFromString({
-      decimalAmount: addSeparatorToDineroString(averageAmount),
+      decimalAmount: addSeparatorToDineroString(average),
       ...formatOptions,
       precision: 2,
       useRealPrecision: false,
     })}${formattedUnit ? `/${formattedUnit}` : ''}`,
-    ...(amountSubtotals.amountSubtotal && {
-      amountSubtotal:
-        (startsAt ? `${startsAt} ` : '') +
-        formatAmountFromString({
-          decimalAmount: addSeparatorToDineroString(amountSubtotals.amountSubtotal.getAmount().toString()),
-          ...formatOptions,
-          precision: 2,
-          useRealPrecision: false,
-        }),
-      amountSubtotalWithPrecision:
-        (startsAt ? `${startsAt} ` : '') +
-        formatAmountFromString({
-          decimalAmount: addSeparatorToDineroString(amountSubtotals.amountSubtotal.getAmount().toString()),
-          ...formatOptions,
-        }),
-      amountSubtotalAverage: `${formatAmountFromString({
-        decimalAmount: addSeparatorToDineroString(amountSubtotals.amountSubtotalAverage!),
+    subtotal:
+      (startsAt ? `${startsAt} ` : '') +
+      formatAmountFromString({
+        decimalAmount: addSeparatorToDineroString(amountSubtotal.getAmount().toString()),
         ...formatOptions,
         precision: 2,
         useRealPrecision: false,
-      })}${formattedUnit ? `/${formattedUnit}` : ''}`,
-    }),
+      }),
+    subtotalWithPrecision:
+      (startsAt ? `${startsAt} ` : '') +
+      formatAmountFromString({
+        decimalAmount: addSeparatorToDineroString(amountSubtotal.getAmount().toString()),
+        ...formatOptions,
+      }),
+    subAverage: `${formatAmountFromString({
+      decimalAmount: addSeparatorToDineroString(subAverage!),
+      ...formatOptions,
+      precision: 2,
+      useRealPrecision: false,
+    })}${formattedUnit ? `/${formattedUnit}` : ''}`,
     breakdown,
   };
 };
@@ -341,12 +350,11 @@ export const computeCumulativeValue = (
  * @param {Tax} tax
  * @returns {PriceTierEnhanced} an enhanced PriceTier with the gross amounts.
  */
-const enhanceTier = (tier: PriceTier, isTaxInclusive: boolean, tax: Tax): PriceTierEnhanced => {
+const enhanceTier = (tier: PriceTier, isTaxInclusive: boolean, tax?: Tax): PriceTierEnhanced => {
   const taxRate = getTaxValue(tax);
 
   const unitAmount = tier.unit_amount_decimal && toDinero(tier.unit_amount_decimal);
   const unitAmountGross = !isTaxInclusive && unitAmount ? unitAmount.multiply(1 + taxRate) : unitAmount;
-
   const flatFeeAmount = tier.flat_fee_amount_decimal && toDinero(tier.flat_fee_amount_decimal);
   const flatFeeAmountGross = !isTaxInclusive && flatFeeAmount ? flatFeeAmount.multiply(1 + taxRate) : flatFeeAmount;
 
@@ -354,7 +362,7 @@ const enhanceTier = (tier: PriceTier, isTaxInclusive: boolean, tax: Tax): PriceT
     ...tier,
     ...(unitAmountGross && { unit_amount_gross: unitAmountGross?.convertPrecision(2).getAmount() }),
     ...(unitAmountGross && { unit_amount_gross_decimal: unitAmountGross?.toUnit().toString() }),
-    ...(flatFeeAmountGross && {flat_fee_amount_gross: flatFeeAmountGross?.convertPrecision(2).getAmount()}),
-    ...(flatFeeAmountGross && {flat_fee_amount_gross_decimal: flatFeeAmountGross?.toUnit().toString()}),
+    ...(flatFeeAmountGross && { flat_fee_amount_gross: flatFeeAmountGross?.convertPrecision(2).getAmount() }),
+    ...(flatFeeAmountGross && { flat_fee_amount_gross_decimal: flatFeeAmountGross?.toUnit().toString() }),
   };
 };

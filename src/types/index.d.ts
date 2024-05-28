@@ -2,7 +2,9 @@ import { Components } from '@epilot/pricing-client';
 import type { Dinero } from 'dinero.js';
 
 export type Price = Components.Schemas.Price;
-export type PriceItem = Components.Schemas.PriceItem;
+export type PriceItem = Components.Schemas.PriceItem & {
+  unit_amount_net_decimal?: string;
+};
 export type PriceItemDto = Components.Schemas.PriceItemDto;
 export type Product = Components.Schemas.Product;
 export type PricingDetails = Components.Schemas.PricingDetails;

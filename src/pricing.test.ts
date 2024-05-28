@@ -11,12 +11,7 @@ import {
   mapToPriceSnapshot,
   mapToProductSnapshot,
 } from './pricing';
-import {
-  CompositePrice,
-  CompositePriceItemDto,
-  Price,
-  PriceItemDto,
-} from './types';
+import { CompositePrice, CompositePriceItemDto, Price, PriceItemDto } from './types';
 
 describe('computeAggregatedAndPriceTotals', () => {
   describe('when is_composite_price = false', () => {
@@ -88,6 +83,7 @@ describe('computeAggregatedAndPriceTotals', () => {
               amount_total: 1000,
               unit_amount_decimal: '10.00',
               unit_amount_gross: 1000,
+              unit_amount_gross_decimal: '10',
               unit_amount_net: 1000,
               taxes: [
                 {
@@ -365,11 +361,13 @@ describe('computeAggregatedAndPriceTotals', () => {
                   unit_amount_currency: 'EUR',
                   unit_amount_decimal: '10.0',
                   unit_amount_gross: 1000,
+                  unit_amount_gross_decimal: '10',
                   type: 'one_time',
                   _price: {},
                   _product: {},
                   currency: 'EUR',
                   unit_amount_net: 1000,
+                  unit_amount_net_decimal: '10',
                   amount_subtotal: 10000,
                   amount_total: 10000,
                   amount_subtotal_decimal: '100',

@@ -8,7 +8,9 @@ type GetTaxValue = (tax?: Tax) => number;
 type PriceItemsTotals = {
   unitAmount?: number;
   unitAmountNet?: number;
+  unitAmountNetDecimal?: string;
   unitAmountGross?: number;
+  unitAmountGrossDecimal?: string;
   amountSubtotal: number;
   amountTotal: number;
   taxAmount: number;
@@ -110,7 +112,9 @@ export const computePriceItemValues = (
   return {
     unitAmount: unitAmount.getAmount(),
     unitAmountNet: unitAmountNet.getAmount(),
+    unitAmountNetDecimal: unitAmountNet.toUnit().toString(),
     unitAmountGross: unitAmountGross.getAmount(),
+    unitAmountGrossDecimal: unitAmountGross.toUnit().toString(),
     amountSubtotal: amountSubtotal.getAmount(),
     amountTotal: amountTotal.getAmount(),
     taxAmount: taxAmount.getAmount(),

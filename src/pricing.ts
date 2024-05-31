@@ -690,9 +690,11 @@ export const computePriceItem = (
     ...(priceItemDescription && { description: priceItemDescription }),
     ...(Number.isInteger(itemValues.unitAmount) && { unit_amount: itemValues.unitAmount }),
     ...(Number.isInteger(itemValues.unitAmountNet) && { unit_amount_net: itemValues.unitAmountNet }),
+    ...(itemValues.unitAmountNetDecimal && { unit_amount_net_decimal: itemValues.unitAmountNetDecimal }),
+    ...(Number.isInteger(itemValues.unitAmountGross) && { unit_amount_gross: itemValues.unitAmountGross }),
+    ...(itemValues.unitAmountGrossDecimal && { unit_amount_gross_decimal: itemValues.unitAmountGrossDecimal }),
     ...(price?.pricing_model === PricingModel.perUnit &&
       unitAmountDecimal && { unit_amount_decimal: unitAmountDecimal }),
-    unit_amount_gross: itemValues.unitAmountGross,
     amount_subtotal: itemValues.amountSubtotal,
     amount_total: itemValues.amountTotal,
     amount_tax: itemValues.taxAmount,

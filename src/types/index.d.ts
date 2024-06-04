@@ -29,7 +29,10 @@ export type TimeFrequency = Exclude<BillingPeriod, 'one_time'>;
 export type PriceTier = Components.Schemas.PriceTier;
 export type PriceTierEnhanced = Components.Schemas.PriceTierEnhanced;
 export type PriceTierDisplayMode = Components.Schemas.PriceTierDisplayMode;
-export type PriceGetAg = Components.Schemas.PriceGetAg;
+export type PriceGetAg = Components.Schemas.PriceGetAg & {
+  markup_pricing_model: Price['pricing_model'];
+  markup_tiers: PriceTier[];
+};
 export type TierDetails = Components.Schemas.TierDetails;
 export type NormalizeTimeFrequency = (
   timeValue: number | string,

@@ -22,7 +22,7 @@ import type {
   TimeFrequency,
 } from './types';
 import {
-  computeExternalGetAGPriceItemValues,
+  computeExternalGetAGItemValues,
   computePriceItemValues,
   computeTieredFlatFeePriceItemValues,
   computeTieredGraduatedPriceItemValues,
@@ -673,7 +673,7 @@ export const computePriceItem = (
           priceItem._price?.unchanged_price_display_in_journeys,
         )
       : price?.pricing_model === PricingModel.externalGetAG
-      ? computeExternalGetAGPriceItemValues(
+      ? computeExternalGetAGItemValues(
           price?.get_ag,
           currency,
           isTaxInclusive,

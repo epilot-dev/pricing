@@ -324,7 +324,7 @@ export const computeTieredGraduatedPriceItemValues = (
   };
 };
 
-export const computeExternalGetAGPriceItemValues = (
+export const computeExternalGetAGItemValues = (
   getAg: PriceGetAg,
   currency: Currency,
   isTaxInclusive: boolean,
@@ -349,14 +349,18 @@ export const computeExternalGetAGPriceItemValues = (
     };
   }
 
+  const tier = getGetAGMarkupTiers(getAg, userInput);
+
+  const markupAmountDecimal = tier ? tier.unit_amount_decimal : getAg.markup_amount_decimal;
+  const markupAmount = tier ? tier.unit_amount : getAg.markup_amount;
   const taxRate = getTaxValue(tax);
 
   // Unit amounts
   const unitAmountGetAgFeeNet = toDinero(externalFeeAmountDecimal, currency).divide(userInput);
   const unitAmountGetAgFeeGross = unitAmountGetAgFeeNet.multiply(1 + taxRate);
-  const unitAmountMarkup = toDinero(getAg.markup_amount_decimal, currency);
+  const unitAmountMarkup = toDinero(markupAmountDecimal || '0', currency);
   const unitAmountMarkupNet = isTaxInclusive ? unitAmountMarkup.divide(1 + taxRate) : unitAmountMarkup;
-  //     Unit amount net = fee net + markup net
+  // Unit amount net = fee net + markup net
   const unitAmountNet = unitAmountGetAgFeeNet.add(unitAmountMarkupNet);
 
   const unitAmountGross = unitAmountNet.multiply(1 + taxRate);
@@ -374,12 +378,31 @@ export const computeExternalGetAGPriceItemValues = (
     amountSubtotal: amountSubtotal.getAmount(),
     amountTotal: amountTotal.getAmount(),
     getAg: {
-      ...getAg,
+      category: getAg.category,
+      markup_amount: markupAmount,
+      markup_amount_decimal: markupAmountDecimal,
       unit_amount_net: unitAmountGetAgFeeNet.getAmount(),
       unit_amount_gross: unitAmountGetAgFeeGross.getAmount(),
       markup_amount_net: unitAmountMarkupNet.getAmount(),
-    },
+      ...(tier && { markup_tiers_details: [tier] }),
+    } as any,
   };
+};
+
+const getGetAGMarkupTiers = (getAg: PriceGetAg, userInput: number) => {
+  if (getAg.markup_pricing_model === 'tiered_volume') {
+    return getPriceTierForQuantity(getAg.markup_tiers, userInput);
+  }
+
+  if (getAg.markup_pricing_model === 'tiered_flatfee') {
+    return getPriceTierForQuantity(getAg.markup_tiers, userInput);
+  }
+
+  return;
+  // return {
+  //   markupAmountDecimal: getAg.markup_amount_decimal || '0',
+  //   markupAmount: getAg.markup_amount || 0,
+  // };
 };
 
 export const isNotPieceUnit = (unit: string | undefined) => unit !== undefined && unit !== 'unit';

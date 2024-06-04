@@ -1,6 +1,7 @@
 import { Currency } from 'dinero.js';
 
 import { d, toDinero } from '../formatters';
+import { PricingModel } from '../pricing';
 import { Price, PriceGetAg, PriceTier, Tax } from '../types';
 
 type GetTaxValue = (tax?: Tax) => number;
@@ -349,27 +350,40 @@ export const computeExternalGetAGItemValues = (
     };
   }
 
-  const tier = getGetAGMarkupTiers(getAg, userInput);
-
-  const markupAmountDecimal = tier ? tier.unit_amount_decimal : getAg.markup_amount_decimal;
-  const markupAmount = tier ? tier.unit_amount : getAg.markup_amount;
   const taxRate = getTaxValue(tax);
 
-  // Unit amounts
-  const unitAmountGetAgFeeNet = toDinero(externalFeeAmountDecimal, currency).divide(userInput);
-  const unitAmountGetAgFeeGross = unitAmountGetAgFeeNet.multiply(1 + taxRate);
-  const unitAmountMarkup = toDinero(markupAmountDecimal || '0', currency);
-  const unitAmountMarkupNet = isTaxInclusive ? unitAmountMarkup.divide(1 + taxRate) : unitAmountMarkup;
-  // Unit amount net = fee net + markup net
-  const unitAmountNet = unitAmountGetAgFeeNet.add(unitAmountMarkupNet);
+  const markupValues =
+    getAg.markup_pricing_model === PricingModel.tieredVolume
+      ? computeTieredVolumePriceItemValues(
+          getAg.markup_tiers,
+          currency,
+          isTaxInclusive,
+          userInput,
+          tax,
+          userInput,
+          'show_price',
+        )
+      : {
+          unitAmountNet: isTaxInclusive
+            ? toDinero(getAg.markup_amount_decimal)
+                .divide(1 + taxRate)
+                .getAmount()
+            : toDinero(getAg.markup_amount_decimal).getAmount(),
+        };
 
+  const unitAmountGetAgFeeNet = toDinero(externalFeeAmountDecimal).divide(userInput);
+  const unitAmountGetAgFeeGross = unitAmountGetAgFeeNet.multiply(1 + taxRate);
+
+  // Unit Amount = Markup amount + Fee Amount
+  const unitAmountNet = unitAmountGetAgFeeNet.add(d(markupValues.unitAmountNet || 0));
   const unitAmountGross = unitAmountNet.multiply(1 + taxRate);
   const unitTaxAmount = unitAmountGross.subtract(unitAmountNet);
+  const unitAmountMarkupNet = d(markupValues.unitAmountNet || 0);
 
-  // Totals
+  // Amount Subtotal = Unit Amount Net * Quantity
   const amountSubtotal = unitAmountNet.multiply(unitAmountMultiplier);
-  const amountTax = unitTaxAmount.multiply(unitAmountMultiplier);
   const amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
+  const amountTax = unitTaxAmount.multiply(unitAmountMultiplier);
 
   return {
     unitAmountNet: unitAmountNet.getAmount(),
@@ -378,31 +392,12 @@ export const computeExternalGetAGItemValues = (
     amountSubtotal: amountSubtotal.getAmount(),
     amountTotal: amountTotal.getAmount(),
     getAg: {
-      category: getAg.category,
-      markup_amount: markupAmount,
-      markup_amount_decimal: markupAmountDecimal,
+      ...getAg,
       unit_amount_net: unitAmountGetAgFeeNet.getAmount(),
       unit_amount_gross: unitAmountGetAgFeeGross.getAmount(),
       markup_amount_net: unitAmountMarkupNet.getAmount(),
-      ...(tier && { markup_tiers_details: [tier] }),
-    } as any,
+    },
   };
-};
-
-const getGetAGMarkupTiers = (getAg: PriceGetAg, userInput: number) => {
-  if (getAg.markup_pricing_model === 'tiered_volume') {
-    return getPriceTierForQuantity(getAg.markup_tiers, userInput);
-  }
-
-  if (getAg.markup_pricing_model === 'tiered_flatfee') {
-    return getPriceTierForQuantity(getAg.markup_tiers, userInput);
-  }
-
-  return;
-  // return {
-  //   markupAmountDecimal: getAg.markup_amount_decimal || '0',
-  //   markupAmount: getAg.markup_amount || 0,
-  // };
 };
 
 export const isNotPieceUnit = (unit: string | undefined) => unit !== undefined && unit !== 'unit';

@@ -32,6 +32,7 @@ export type PriceTierDisplayMode = Components.Schemas.PriceTierDisplayMode;
 export type PriceGetAg = Components.Schemas.PriceGetAg & {
   markup_pricing_model: Price['pricing_model'];
   markup_tiers: PriceTier[];
+  type: 'base_price' | 'work_price';
 };
 export type TierDetails = Components.Schemas.TierDetails;
 export type NormalizeTimeFrequency = (

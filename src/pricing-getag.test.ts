@@ -2,6 +2,7 @@ import {
   compositePriceGetAG,
   compositePriceGetAGWithZeroInputMapping,
   priceGetAG,
+  priceTieredFlatFeeGetAG,
   priceTieredGetAG,
 } from './__tests__/fixtures/price-getag.samples';
 import { computeAggregatedAndPriceTotals } from './pricing';
@@ -26,14 +27,14 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
               amount_tax: 3855,
               get_ag: expect.objectContaining({
                 category: 'power',
+                markup_amount_net_decimal: '0.084033613445',
+                markup_amount_net: 8,
                 markup_amount: 10,
                 markup_amount_decimal: '0.10',
                 unit_amount_gross: 14,
                 unit_amount_gross_decimal: '0.1414434',
                 unit_amount_net: 12,
                 unit_amount_net_decimal: '0.11886',
-                markup_amount_net: 8,
-                markup_amount_net_decimal: '0.084033613445',
               }),
             }),
           ]),
@@ -109,9 +110,24 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
     });
 
     describe('when margins are tiered', () => {
-      describe('when model is when model is tiered_volume', () => {
+      describe('when model is tiered_volume', () => {
         it('returns the correct amount_total', () => {
           const priceItems: PriceItemDto[] = [priceTieredGetAG];
+
+          const result = computeAggregatedAndPriceTotals(priceItems);
+
+          expect(result).toStrictEqual(
+            expect.objectContaining({
+              amount_total: 24144,
+              amount_subtotal: 20289,
+            }),
+          );
+        });
+
+      });
+      describe('when model is tiered_flatfee', () => {
+        it('returns the correct amount_total', () => {
+          const priceItems: PriceItemDto[] = [priceTieredFlatFeeGetAG];
 
           const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -127,23 +143,14 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                   amount_tax: 3855,
                   get_ag: expect.objectContaining({
                     category: 'power',
-                    markup_amount: 10,
-                    markup_amount_decimal: '0.10',
-                    markup_amount_net: 8,
-                    markup_amount_net_decimal: '0.084033613445',
-                    unit_amount_gross: 14,
-                    unit_amount_gross_decimal: '0.1414434',
-                    unit_amount_net: 12,
-                    unit_amount_net_decimal: '0.11886',
-                    markup_tiers_details: [
-                      expect.objectContaining({
-                        up_to: 1000,
-                        unit_amount: 10,
-                        unit_amount_decimal: '0.10',
-                        flat_fee_amount: 0,
-                        flat_fee_amount_decimal: '0',
-                      }),
-                    ],
+                    markup_amount: 1000,
+                    markup_amount_decimal: '10.00',
+                    unit_amount_gross: 538,
+                    unit_amount_gross_decimal: '5.380783333334',
+                    unit_amount_net: 452,
+                    unit_amount_net_decimal: '4.521666666667',
+                    markup_amount_net: 840,
+                    markup_amount_net_decimal: '8.403361344538',
                   }),
                 }),
               ]),

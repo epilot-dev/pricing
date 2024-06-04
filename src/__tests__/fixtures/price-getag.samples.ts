@@ -51,7 +51,7 @@ export const priceTieredGetAG: PriceItemDto = {
     pricing_model: 'external_getag',
     get_ag: {
       category: 'power',
-      type: 'variable',
+      type: 'work_price',
       markup_pricing_model: 'tiered_volume',
       markup_tiers: [
         {
@@ -74,6 +74,67 @@ export const priceTieredGetAG: PriceItemDto = {
           unit_amount_decimal: '0.30',
           flat_fee_amount: 0,
           flat_fee_amount_decimal: '0',
+        },
+      ],
+    },
+    billing_period: 'monthly',
+    tax: [tax19percent],
+  },
+  _product: {
+    _tags: [],
+  },
+  type: 'recurring',
+  pricing_model: 'external_getag',
+  get_ag: {
+    category: 'power',
+    markup_amount: 10,
+    markup_amount_decimal: '0.10',
+  },
+  price_mappings: [{ price_id: 'price#1', value: 12000, frequency_unit: 'yearly' }],
+  external_fees_mappings: [
+    { price_id: 'price#1', amount_total: 142632, amount_total_decimal: '1426.32', frequency_unit: 'yearly' },
+  ],
+  billing_period: 'monthly',
+  taxes: [
+    {
+      tax: tax19percent,
+    },
+  ],
+} as any;
+export const priceTieredFlatFeeGetAG: PriceItemDto = {
+  quantity: 1,
+  product_id: 'prod-id#1',
+  price_id: 'price#1',
+  _price: {
+    _id: 'price#1',
+    unit_amount_currency: 'EUR',
+    is_tax_inclusive: true,
+    pricing_model: 'external_getag',
+    get_ag: {
+      category: 'power',
+      type: 'base_price',
+      markup_pricing_model: 'tiered_flatfee',
+      markup_tiers: [
+        {
+          up_to: 500,
+          unit_amount: 0,
+          unit_amount_decimal: '0',
+          flat_fee_amount: 500,
+          flat_fee_amount_decimal: '5.00',
+        },
+        {
+          up_to: 1000,
+          unit_amount: 0,
+          unit_amount_decimal: '0',
+          flat_fee_amount: 1000,
+          flat_fee_amount_decimal: '10.00',
+        },
+        {
+          up_to: null,
+          unit_amount: 0,
+          unit_amount_decimal: '0',
+          flat_fee_amount: 2000,
+          flat_fee_amount_decimal: '20.00',
         },
       ],
     },

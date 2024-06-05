@@ -120,13 +120,43 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
             expect.objectContaining({
               amount_total: 24144,
               amount_subtotal: 20289,
+              amount_tax: 3855,
+              items: expect.arrayContaining([
+                expect.objectContaining({
+                  amount_total: 24144,
+                  amount_subtotal: 20289,
+                  amount_tax: 3855,
+                  get_ag: expect.objectContaining({
+                    category: 'power',
+                    markup_amount_net_decimal: '0.084033613445',
+                    markup_amount_net: 8,
+                    markup_amount: 10,
+                    markup_amount_decimal: '0.10',
+                    unit_amount_gross: 14,
+                    unit_amount_gross_decimal: '0.1414434',
+                    unit_amount_net: 12,
+                    unit_amount_net_decimal: '0.11886',
+                  }),
+                }),
+              ]),
+              total_details: expect.objectContaining({
+                breakdown: expect.objectContaining({
+                  recurrences: expect.arrayContaining([
+                    expect.objectContaining({
+                      amount_total: 24144,
+                      amount_subtotal: 20289,
+                      amount_tax: 3855,
+                    }),
+                  ]),
+                }),
+              }),
             }),
           );
         });
 
       });
       describe('when model is tiered_flatfee', () => {
-        it('returns the correct amount_total', () => {
+       it('returns the correct amount_total', () => {
           const priceItems: PriceItemDto[] = [priceTieredFlatFeeGetAG];
 
           const result = computeAggregatedAndPriceTotals(priceItems);
@@ -134,6 +164,37 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
           expect(result).toStrictEqual(
             expect.objectContaining({
               amount_total: 1538,
+              amount_subtotal: 1293,
+              amount_tax: 246,
+              items: expect.arrayContaining([
+                expect.objectContaining({
+                  amount_total: 1538,
+                  amount_subtotal: 1293,
+                  amount_tax: 246,
+                  get_ag: expect.objectContaining({
+                    category: 'power',
+                    markup_amount_net_decimal: '8.403361344538',
+                    markup_amount_net: 840,
+                    markup_amount: 1000,
+                    markup_amount_decimal: '10.00',
+                    unit_amount_gross: 538,
+                    unit_amount_gross_decimal: '5.380783333334',
+                    unit_amount_net: 452,
+                    unit_amount_net_decimal: '4.521666666667',
+                  }),
+                }),
+              ]),
+              total_details: expect.objectContaining({
+                breakdown: expect.objectContaining({
+                  recurrences: expect.arrayContaining([
+                    expect.objectContaining({
+                      amount_total: 1538,
+                      amount_subtotal: 1293,
+                      amount_tax: 246,
+                    }),
+                  ]),
+                }),
+              })
             }),
           );
         });

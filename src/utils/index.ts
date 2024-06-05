@@ -374,16 +374,17 @@ export const computeExternalGetAGItemValues = (
           true,
           'show_price',
         )
-      : {
+      : ({
           unitAmountNet: isTaxInclusive
             ? toDinero(getAg.markup_amount_decimal)
                 .divide(1 + taxRate)
                 .getAmount()
             : toDinero(getAg.markup_amount_decimal).getAmount(),
-        };
+        } as PriceItemsTotals);
 
+  const relevantTier = markupValues.tiers_details?.[0];
   const unitAmountGetAgFeeNet =
-    getAg.markup_pricing_model === PricingModel.tieredFlatFee
+    getAg.type === 'base_price'
       ? toDinero(externalFeeAmountDecimal)
       : toDinero(externalFeeAmountDecimal).divide(userInput);
   const unitAmountGetAgFeeGross = unitAmountGetAgFeeNet.multiply(1 + taxRate);
@@ -396,18 +397,9 @@ export const computeExternalGetAGItemValues = (
   const unitAmountMarkupNet = d(markupValues.unitAmountNet || 0);
 
   // Amount Subtotal = Unit Amount Net * Quantity
-  const amountSubtotal =
-    getAg.markup_pricing_model === PricingModel.tieredFlatFee
-      ? unitAmountNet
-      : unitAmountNet.multiply(unitAmountMultiplier);
-  const amountTotal =
-    getAg.markup_pricing_model === PricingModel.tieredFlatFee
-      ? unitAmountGross
-      : unitAmountGross.multiply(unitAmountMultiplier);
-  const amountTax =
-    getAg.markup_pricing_model === PricingModel.tieredFlatFee
-      ? unitTaxAmount
-      : unitTaxAmount.multiply(unitAmountMultiplier);
+  const amountSubtotal = getAg.type === 'base_price' ? unitAmountNet : unitAmountNet.multiply(unitAmountMultiplier);
+  const amountTotal = getAg.type === 'base_price' ? unitAmountGross : unitAmountGross.multiply(unitAmountMultiplier);
+  const amountTax = getAg.type === 'base_price' ? unitTaxAmount : unitTaxAmount.multiply(unitAmountMultiplier);
 
   return {
     unitAmountNet: unitAmountNet.getAmount(),
@@ -420,6 +412,8 @@ export const computeExternalGetAGItemValues = (
       unit_amount_net: unitAmountGetAgFeeNet.getAmount(),
       unit_amount_gross: unitAmountGetAgFeeGross.getAmount(),
       markup_amount_net: unitAmountMarkupNet.getAmount(),
+      markup_amount: getAg.markup_amount || relevantTier?.unitAmount || 0,
+      markup_amount_decimal: getAg.markup_amount_decimal || relevantTier?.unitAmountDecimal || '0', // Do this inside of the convertPriceItemPrecision
     },
   };
 };

@@ -212,7 +212,7 @@ export const computeTieredFlatFeePriceItemValues = (
   currency: Currency,
   isTaxInclusive: boolean,
   quantityToSelectTier: number,
-  tax: Tax,
+  tax: Tax | undefined,
   quantity: number,
   isUsingPriceMappingToSelectTier: boolean,
   unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'],
@@ -363,6 +363,17 @@ export const computeExternalGetAGItemValues = (
           userInput,
           'show_price',
         )
+      : getAg.markup_pricing_model === PricingModel.tieredFlatFee
+      ? computeTieredFlatFeePriceItemValues(
+          getAg.markup_tiers,
+          currency,
+          isTaxInclusive,
+          userInput,
+          tax,
+          userInput,
+          true,
+          'show_price',
+        )
       : {
           unitAmountNet: isTaxInclusive
             ? toDinero(getAg.markup_amount_decimal)
@@ -371,19 +382,32 @@ export const computeExternalGetAGItemValues = (
             : toDinero(getAg.markup_amount_decimal).getAmount(),
         };
 
-  const unitAmountGetAgFeeNet = toDinero(externalFeeAmountDecimal).divide(userInput);
+  const unitAmountGetAgFeeNet =
+    getAg.markup_pricing_model === PricingModel.tieredFlatFee
+      ? toDinero(externalFeeAmountDecimal)
+      : toDinero(externalFeeAmountDecimal).divide(userInput);
   const unitAmountGetAgFeeGross = unitAmountGetAgFeeNet.multiply(1 + taxRate);
 
   // Unit Amount = Markup amount + Fee Amount
   const unitAmountNet = unitAmountGetAgFeeNet.add(d(markupValues.unitAmountNet || 0));
+
   const unitAmountGross = unitAmountNet.multiply(1 + taxRate);
   const unitTaxAmount = unitAmountGross.subtract(unitAmountNet);
   const unitAmountMarkupNet = d(markupValues.unitAmountNet || 0);
 
   // Amount Subtotal = Unit Amount Net * Quantity
-  const amountSubtotal = unitAmountNet.multiply(unitAmountMultiplier);
-  const amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
-  const amountTax = unitTaxAmount.multiply(unitAmountMultiplier);
+  const amountSubtotal =
+    getAg.markup_pricing_model === PricingModel.tieredFlatFee
+      ? unitAmountNet
+      : unitAmountNet.multiply(unitAmountMultiplier);
+  const amountTotal =
+    getAg.markup_pricing_model === PricingModel.tieredFlatFee
+      ? unitAmountGross
+      : unitAmountGross.multiply(unitAmountMultiplier);
+  const amountTax =
+    getAg.markup_pricing_model === PricingModel.tieredFlatFee
+      ? unitTaxAmount
+      : unitTaxAmount.multiply(unitAmountMultiplier);
 
   return {
     unitAmountNet: unitAmountNet.getAmount(),

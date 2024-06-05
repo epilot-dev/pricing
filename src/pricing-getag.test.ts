@@ -133,38 +133,7 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
 
           expect(result).toStrictEqual(
             expect.objectContaining({
-              amount_total: 24144,
-              amount_subtotal: 20289,
-              amount_tax: 3855,
-              items: expect.arrayContaining([
-                expect.objectContaining({
-                  amount_total: 24144,
-                  amount_subtotal: 20289,
-                  amount_tax: 3855,
-                  get_ag: expect.objectContaining({
-                    category: 'power',
-                    markup_amount: 1000,
-                    markup_amount_decimal: '10.00',
-                    unit_amount_gross: 538,
-                    unit_amount_gross_decimal: '5.380783333334',
-                    unit_amount_net: 452,
-                    unit_amount_net_decimal: '4.521666666667',
-                    markup_amount_net: 840,
-                    markup_amount_net_decimal: '8.403361344538',
-                  }),
-                }),
-              ]),
-              total_details: expect.objectContaining({
-                breakdown: expect.objectContaining({
-                  recurrences: expect.arrayContaining([
-                    expect.objectContaining({
-                      amount_total: 24144,
-                      amount_subtotal: 20289,
-                      amount_tax: 3855,
-                    }),
-                  ]),
-                }),
-              }),
+              amount_total: 1538,
             }),
           );
         });

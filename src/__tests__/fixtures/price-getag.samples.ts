@@ -146,11 +146,6 @@ export const priceTieredFlatFeeGetAG: PriceItemDto = {
   },
   type: 'recurring',
   pricing_model: 'external_getag',
-  get_ag: {
-    category: 'power',
-    markup_amount: 10,
-    markup_amount_decimal: '0.10',
-  },
   price_mappings: [{ price_id: 'price#1', value: 12000, frequency_unit: 'yearly' }],
   external_fees_mappings: [
     { price_id: 'price#1', amount_total: 5426, amount_total_decimal: '54.26', frequency_unit: 'yearly' },

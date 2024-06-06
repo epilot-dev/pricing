@@ -416,7 +416,7 @@ export const computeExternalGetAGItemValues = (
       markup_amount_net: unitAmountMarkupNet.getAmount(),
       markup_amount: getAg.markup_amount || relevantTier?.unitAmount || 0,
       // ToDo: Move the computation of the decimal value on the convert precision step
-      markup_amount_decimal: getAg.markup_amount_decimal || relevantTier?.unitAmountDecimal || '0', // Do this inside of the convertPriceItemPrecision
+      markup_amount_decimal: getAg.markup_amount_decimal || relevantTier?.unitAmountDecimal || '0',
     },
   };
 };

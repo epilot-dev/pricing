@@ -353,7 +353,7 @@ export const computeExternalGetAGItemValues = (
   const taxRate = getTaxValue(tax);
 
   const markupValues =
-    getAg.markup_pricing_model === PricingModel.tieredVolume
+    getAg.markup_pricing_model === PricingModel.tieredVolume && getAg.markup_tiers
       ? computeTieredVolumePriceItemValues(
           getAg.markup_tiers,
           currency,
@@ -363,7 +363,7 @@ export const computeExternalGetAGItemValues = (
           userInput,
           'show_price',
         )
-      : getAg.markup_pricing_model === PricingModel.tieredFlatFee
+      : getAg.markup_pricing_model === PricingModel.tieredFlatFee && getAg.markup_tiers
       ? computeTieredFlatFeePriceItemValues(
           getAg.markup_tiers,
           currency,

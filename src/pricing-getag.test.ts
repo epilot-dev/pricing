@@ -1,9 +1,11 @@
 import {
   compositePriceGetAG,
   compositePriceGetAGWithZeroInputMapping,
+  compositePriceTieredFlatFeeGetAG,
+  compositePriceTieredVolumeGetAG,
   priceGetAG,
   priceTieredFlatFeeGetAG,
-  priceTieredGetAG,
+  priceTieredVolumeGetAG,
 } from './__tests__/fixtures/price-getag.samples';
 import { computeAggregatedAndPriceTotals } from './pricing';
 import { PriceItemDto } from './types';
@@ -112,7 +114,7 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
     describe('when margins are tiered', () => {
       describe('when model is tiered_volume', () => {
         it('returns the correct amount_total', () => {
-          const priceItems: PriceItemDto[] = [priceTieredGetAG];
+          const priceItems: PriceItemDto[] = [priceTieredVolumeGetAG];
 
           const result = computeAggregatedAndPriceTotals(priceItems);
 
@@ -153,10 +155,9 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
             }),
           );
         });
-
       });
       describe('when model is tiered_flatfee', () => {
-       it('returns the correct amount_total', () => {
+        it('returns the correct amount_total', () => {
           const priceItems: PriceItemDto[] = [priceTieredFlatFeeGetAG];
 
           const result = computeAggregatedAndPriceTotals(priceItems);
@@ -194,7 +195,7 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                     }),
                   ]),
                 }),
-              })
+              }),
             }),
           );
         });
@@ -390,6 +391,132 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
           }),
         }),
       );
+    });
+
+    describe('when margins are tiered', () => {
+      describe('when model is tiered_volume', () => {
+        it('returns the correct amount_total', () => {
+          const priceItems: PriceItemDto[] = [compositePriceTieredVolumeGetAG];
+
+          const result = computeAggregatedAndPriceTotals(priceItems);
+
+          expect(result).toStrictEqual(
+            expect.objectContaining({
+              amount_total: 25682,
+              amount_subtotal: 21582,
+              amount_tax: 4101,
+              items: expect.arrayContaining([
+                expect.objectContaining({
+                  amount_total: 25682,
+                  amount_subtotal: 21582,
+                  amount_tax: 4101,
+                  item_components: expect.arrayContaining([
+                    expect.objectContaining({
+                      get_ag: expect.objectContaining({
+                        category: 'power',
+                        markup_amount: 1000,
+                        markup_amount_decimal: '10.00',
+                        unit_amount_gross: 538,
+                        unit_amount_gross_decimal: '5.380783333334',
+                        unit_amount_net: 452,
+                        unit_amount_net_decimal: '4.521666666667',
+                        markup_amount_net: 840,
+                        markup_amount_net_decimal: '8.403361344538',
+                      }),
+                    }),
+                    expect.objectContaining({
+                      get_ag: expect.objectContaining({
+                        category: 'power',
+                        markup_amount: 10,
+                        markup_amount_decimal: '0.10',
+                        unit_amount_gross: 14,
+                        unit_amount_gross_decimal: '0.1414434',
+                        unit_amount_net: 12,
+                        unit_amount_net_decimal: '0.11886',
+                        markup_amount_net: 8,
+                        markup_amount_net_decimal: '0.084033613445',
+                      }),
+                    }),
+                  ]),
+                }),
+              ]),
+              total_details: expect.objectContaining({
+                breakdown: expect.objectContaining({
+                  recurrences: expect.arrayContaining([
+                    expect.objectContaining({
+                      amount_total: 25682,
+                      amount_subtotal: 21582,
+                      amount_tax: 4101,
+                    }),
+                  ]),
+                }),
+              }),
+            }),
+          );
+        });
+      });
+
+      describe('when model is tiered_flatfee', () => {
+       it('returns the correct amount_total', () => {
+          const priceItems: PriceItemDto[] = [compositePriceTieredFlatFeeGetAG];
+
+          const result = computeAggregatedAndPriceTotals(priceItems);
+
+          expect(result).toStrictEqual(
+            expect.objectContaining({
+              amount_total: 25682,
+              amount_subtotal: 21582,
+              amount_tax: 4101,
+              items: expect.arrayContaining([
+                expect.objectContaining({
+                  amount_total: 25682,
+                  amount_subtotal: 21582,
+                  amount_tax: 4101,
+                  item_components: expect.arrayContaining([
+                    expect.objectContaining({
+                      get_ag: expect.objectContaining({
+                        category: 'power',
+                        markup_amount: 1000,
+                        markup_amount_decimal: '10.00',
+                        unit_amount_gross: 538,
+                        unit_amount_gross_decimal: '5.380783333334',
+                        unit_amount_net: 452,
+                        unit_amount_net_decimal: '4.521666666667',
+                        markup_amount_net: 840,
+                        markup_amount_net_decimal: '8.403361344538',
+                      }),
+                    }),
+                    expect.objectContaining({
+                      get_ag: expect.objectContaining({
+                        category: 'power',
+                        markup_amount: 10,
+                        markup_amount_decimal: '0.10',
+                        unit_amount_gross: 14,
+                        unit_amount_gross_decimal: '0.1414434',
+                        unit_amount_net: 12,
+                        unit_amount_net_decimal: '0.11886',
+                        markup_amount_net: 8,
+                        markup_amount_net_decimal: '0.084033613445',
+                      }),
+                    }),
+                  ]),
+                }),
+              ]),
+              total_details: expect.objectContaining({
+                breakdown: expect.objectContaining({
+                  recurrences: expect.arrayContaining([
+                    expect.objectContaining({
+                      amount_total: 25682,
+                      amount_subtotal: 21582,
+                      amount_tax: 4101,
+                    }),
+                  ]),
+                }),
+              }),
+            }),
+          );
+        });
+      });
     });
   });
 });

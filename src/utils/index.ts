@@ -333,6 +333,7 @@ export const computeExternalGetAGItemValues = (
   userInput: number,
   externalFeeAmountDecimal: string | undefined,
   tax?: Tax,
+  variable_price?: boolean,
 ): PriceItemsTotals => {
   if (externalFeeAmountDecimal === undefined || getAg === undefined || userInput === 0) {
     return {

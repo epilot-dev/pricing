@@ -681,6 +681,7 @@ export const computePriceItem = (
           quantityToSelectTier,
           externalFeeAmountDecimal,
           priceTax!,
+          price.variable_price,
         )
       : computePriceItemValues(unitAmountDecimal, currency, isTaxInclusive, unitAmountMultiplier!, priceTax!);
 

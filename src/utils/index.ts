@@ -1,7 +1,7 @@
 import { Currency } from 'dinero.js';
 
 import { d, toDinero } from '../formatters';
-import { PricingModel } from '../pricing';
+import { MarkupPricingModel, TypeGetAg } from '../pricing';
 import { Price, PriceGetAg, PriceTier, Tax } from '../types';
 
 type GetTaxValue = (tax?: Tax) => number;
@@ -353,7 +353,7 @@ export const computeExternalGetAGItemValues = (
   const taxRate = getTaxValue(tax);
 
   const markupValues =
-    getAg.markup_pricing_model === PricingModel.tieredVolume && getAg.markup_tiers
+    getAg.markup_pricing_model === MarkupPricingModel.tieredVolume && getAg.markup_tiers
       ? computeTieredVolumePriceItemValues(
           getAg.markup_tiers,
           currency,
@@ -363,7 +363,7 @@ export const computeExternalGetAGItemValues = (
           userInput,
           'show_price',
         )
-      : getAg.markup_pricing_model === PricingModel.tieredFlatFee && getAg.markup_tiers
+      : getAg.markup_pricing_model === MarkupPricingModel.tieredFlatFee && getAg.markup_tiers
       ? computeTieredFlatFeePriceItemValues(
           getAg.markup_tiers,
           currency,
@@ -384,7 +384,7 @@ export const computeExternalGetAGItemValues = (
 
   const relevantTier = markupValues.tiers_details?.[0];
   const unitAmountGetAgFeeNet =
-    getAg.type === 'base_price'
+    getAg.type === TypeGetAg.basePrice
       ? toDinero(externalFeeAmountDecimal)
       : toDinero(externalFeeAmountDecimal).divide(userInput);
   const unitAmountGetAgFeeGross = unitAmountGetAgFeeNet.multiply(1 + taxRate);
@@ -397,9 +397,11 @@ export const computeExternalGetAGItemValues = (
   const unitAmountMarkupNet = d(markupValues.unitAmountNet || 0);
 
   // Amount Subtotal = Unit Amount Net * Quantity
-  const amountSubtotal = getAg.type === 'base_price' ? unitAmountNet : unitAmountNet.multiply(unitAmountMultiplier);
-  const amountTotal = getAg.type === 'base_price' ? unitAmountGross : unitAmountGross.multiply(unitAmountMultiplier);
-  const amountTax = getAg.type === 'base_price' ? unitTaxAmount : unitTaxAmount.multiply(unitAmountMultiplier);
+  const amountSubtotal =
+    getAg.type === TypeGetAg.basePrice ? unitAmountNet : unitAmountNet.multiply(unitAmountMultiplier);
+  const amountTotal =
+    getAg.type === TypeGetAg.basePrice ? unitAmountGross : unitAmountGross.multiply(unitAmountMultiplier);
+  const amountTax = getAg.type === TypeGetAg.basePrice ? unitTaxAmount : unitTaxAmount.multiply(unitAmountMultiplier);
 
   return {
     unitAmountNet: unitAmountNet.getAmount(),
@@ -413,6 +415,7 @@ export const computeExternalGetAGItemValues = (
       unit_amount_gross: unitAmountGetAgFeeGross.getAmount(),
       markup_amount_net: unitAmountMarkupNet.getAmount(),
       markup_amount: getAg.markup_amount || relevantTier?.unitAmount || 0,
+      // ToDo: Move the computation of the decimal value on the convert precision step
       markup_amount_decimal: getAg.markup_amount_decimal || relevantTier?.unitAmountDecimal || '0', // Do this inside of the convertPriceItemPrecision
     },
   };

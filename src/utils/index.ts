@@ -1,6 +1,7 @@
 import { Currency } from 'dinero.js';
 
 import { d, toDinero } from '../formatters';
+import { MarkupPricingModel, TypeGetAg } from '../pricing';
 import { Price, PriceGetAg, PriceTier, Tax } from '../types';
 
 type GetTaxValue = (tax?: Tax) => number;
@@ -211,7 +212,7 @@ export const computeTieredFlatFeePriceItemValues = (
   currency: Currency,
   isTaxInclusive: boolean,
   quantityToSelectTier: number,
-  tax: Tax,
+  tax: Tax | undefined,
   quantity: number,
   isUsingPriceMappingToSelectTier: boolean,
   unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'],
@@ -324,7 +325,7 @@ export const computeTieredGraduatedPriceItemValues = (
   };
 };
 
-export const computeExternalGetAGPriceItemValues = (
+export const computeExternalGetAGItemValues = (
   getAg: PriceGetAg,
   currency: Currency,
   isTaxInclusive: boolean,
@@ -351,21 +352,56 @@ export const computeExternalGetAGPriceItemValues = (
 
   const taxRate = getTaxValue(tax);
 
-  // Unit amounts
-  const unitAmountGetAgFeeNet = toDinero(externalFeeAmountDecimal, currency).divide(userInput);
+  const markupValues =
+    getAg.markup_pricing_model === MarkupPricingModel.tieredVolume && getAg.markup_tiers
+      ? computeTieredVolumePriceItemValues(
+          getAg.markup_tiers,
+          currency,
+          isTaxInclusive,
+          userInput,
+          tax,
+          userInput,
+          'show_price',
+        )
+      : getAg.markup_pricing_model === MarkupPricingModel.tieredFlatFee && getAg.markup_tiers
+      ? computeTieredFlatFeePriceItemValues(
+          getAg.markup_tiers,
+          currency,
+          isTaxInclusive,
+          userInput,
+          tax,
+          userInput,
+          true,
+          'show_price',
+        )
+      : ({
+          unitAmountNet: isTaxInclusive
+            ? toDinero(getAg.markup_amount_decimal)
+                .divide(1 + taxRate)
+                .getAmount()
+            : toDinero(getAg.markup_amount_decimal).getAmount(),
+        } as PriceItemsTotals);
+
+  const relevantTier = markupValues.tiers_details?.[0];
+  const unitAmountGetAgFeeNet =
+    getAg.type === TypeGetAg.basePrice
+      ? toDinero(externalFeeAmountDecimal)
+      : toDinero(externalFeeAmountDecimal).divide(userInput);
   const unitAmountGetAgFeeGross = unitAmountGetAgFeeNet.multiply(1 + taxRate);
-  const unitAmountMarkup = toDinero(getAg.markup_amount_decimal, currency);
-  const unitAmountMarkupNet = isTaxInclusive ? unitAmountMarkup.divide(1 + taxRate) : unitAmountMarkup;
-  //     Unit amount net = fee net + markup net
-  const unitAmountNet = unitAmountGetAgFeeNet.add(unitAmountMarkupNet);
+
+  // Unit Amount = Markup amount + Fee Amount
+  const unitAmountNet = unitAmountGetAgFeeNet.add(d(markupValues.unitAmountNet || 0));
 
   const unitAmountGross = unitAmountNet.multiply(1 + taxRate);
   const unitTaxAmount = unitAmountGross.subtract(unitAmountNet);
+  const unitAmountMarkupNet = d(markupValues.unitAmountNet || 0);
 
-  // Totals
-  const amountSubtotal = unitAmountNet.multiply(unitAmountMultiplier);
-  const amountTax = unitTaxAmount.multiply(unitAmountMultiplier);
-  const amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
+  // Amount Subtotal = Unit Amount Net * Quantity
+  const amountSubtotal =
+    getAg.type === TypeGetAg.basePrice ? unitAmountNet : unitAmountNet.multiply(unitAmountMultiplier);
+  const amountTotal =
+    getAg.type === TypeGetAg.basePrice ? unitAmountGross : unitAmountGross.multiply(unitAmountMultiplier);
+  const amountTax = getAg.type === TypeGetAg.basePrice ? unitTaxAmount : unitTaxAmount.multiply(unitAmountMultiplier);
 
   return {
     unitAmountNet: unitAmountNet.getAmount(),
@@ -378,6 +414,9 @@ export const computeExternalGetAGPriceItemValues = (
       unit_amount_net: unitAmountGetAgFeeNet.getAmount(),
       unit_amount_gross: unitAmountGetAgFeeGross.getAmount(),
       markup_amount_net: unitAmountMarkupNet.getAmount(),
+      markup_amount: getAg.markup_amount || relevantTier?.unitAmount || 0,
+      // ToDo: Move the computation of the decimal value on the convert precision step
+      markup_amount_decimal: getAg.markup_amount_decimal || relevantTier?.unitAmountDecimal || '0',
     },
   };
 };

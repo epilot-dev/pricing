@@ -32,7 +32,7 @@ export function getDisplayTierByQuantity(
   quantity: number,
   pricingModel: PricingModel | Price['pricing_model'],
   isTaxInclusive = true,
-  tax: Tax,
+  tax?: Tax,
 ): PriceTierEnhanced | undefined {
   if (!tiers || !tiers.length) {
     return;

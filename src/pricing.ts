@@ -22,7 +22,7 @@ import type {
   TimeFrequency,
 } from './types';
 import {
-  computeExternalGetAGPriceItemValues,
+  computeExternalGetAGItemValues,
   computePriceItemValues,
   computeTieredFlatFeePriceItemValues,
   computeTieredGraduatedPriceItemValues,
@@ -49,6 +49,15 @@ export enum PricingModel {
   tieredVolume = 'tiered_volume',
   tieredFlatFee = 'tiered_flatfee',
   externalGetAG = 'external_getag',
+}
+export enum MarkupPricingModel {
+  perUnit = 'per_unit',
+  tieredVolume = 'tiered_volume',
+  tieredFlatFee = 'tiered_flatfee',
+}
+export enum TypeGetAg {
+  basePrice = 'base_price',
+  workPrice = 'work_price',
 }
 
 export type ComputeAggregatedAndPriceTotals = typeof computeAggregatedAndPriceTotals;
@@ -673,7 +682,7 @@ export const computePriceItem = (
           priceItem._price?.unchanged_price_display_in_journeys,
         )
       : price?.pricing_model === PricingModel.externalGetAG
-      ? computeExternalGetAGPriceItemValues(
+      ? computeExternalGetAGItemValues(
           price?.get_ag,
           currency,
           isTaxInclusive,

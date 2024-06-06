@@ -300,7 +300,7 @@ export const toIntegerAmount: (decimalAmount: string) => number = (decimalAmount
 /**
  * Utility mapper from Integer amount into DineroJS object using DECIMAL_PRECISION (12).
  */
-export const d: (integerAmount: number, currency?: Currency) => dinero.Dinero = (integerAmount, currency) =>
+export const d: (integerAmount: number, currency?: Currency) => dinero.Dinero = (integerAmount, currency = 'EUR') =>
   dinero({ amount: integerAmount, precision: DECIMAL_PRECISION, ...(currency && { currency }) });
 
 /**

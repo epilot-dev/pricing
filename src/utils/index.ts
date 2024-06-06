@@ -189,7 +189,7 @@ export const computeTieredVolumePriceItemValues = (
     tiers_details: [
       {
         quantity: unitAmountMultiplier,
-        unitAmount: tierValues?.unitAmount || 0,
+        unitAmount: tier?.unit_amount || 0,
         unitAmountDecimal: tier?.unit_amount_decimal || '0',
         unitAmountNet: tierValues.unitAmountNet || 0,
         unitAmountGross: tierValues.unitAmountGross || 0,
@@ -239,7 +239,7 @@ export const computeTieredFlatFeePriceItemValues = (
     tiers_details: [
       {
         quantity: quantityToSelectTier,
-        unitAmount: tierValues?.unitAmount || 0,
+        unitAmount: tier?.flat_fee_amount || 0,
         unitAmountDecimal: tier?.flat_fee_amount_decimal || '0',
         unitAmountNet: tierValues.unitAmountNet || 0,
         unitAmountGross: tierValues.unitAmountGross || 0,
@@ -343,7 +343,6 @@ export const computeExternalGetAGItemValues = (
       amountTotal: 0,
       getAg: {
         ...getAg,
-        markup_amount: d(toDinero(getAg.markup_amount_decimal).getAmount()).getAmount() || 0,
         unit_amount_net: 0,
         unit_amount_gross: 0,
         markup_amount_net: 0,
@@ -376,7 +375,6 @@ export const computeExternalGetAGItemValues = (
           'show_price',
         )
       : ({
-          unitAmount: toDinero(getAg.markup_amount_decimal).getAmount(),
           unitAmountNet: isTaxInclusive
             ? toDinero(getAg.markup_amount_decimal)
                 .divide(1 + taxRate)
@@ -414,7 +412,8 @@ export const computeExternalGetAGItemValues = (
       unit_amount_net: unitAmountGetAgFeeNet.getAmount(),
       unit_amount_gross: unitAmountGetAgFeeGross.getAmount(),
       markup_amount_net: unitAmountMarkupNet.getAmount(),
-      markup_amount: d(markupValues.unitAmount || 0).getAmount() || d(relevantTier?.unitAmount || 0).getAmount() || 0,
+      markup_amount: getAg.markup_amount || relevantTier?.unitAmount || 0,
+      markup_amount_decimal: getAg.markup_amount_decimal || relevantTier?.unitAmountDecimal || '0', // Do this inside of the convertPriceItemPrecision
     },
   };
 };

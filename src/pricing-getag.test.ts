@@ -30,7 +30,7 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                 markup_amount_net_decimal: '0.084033613445',
                 markup_amount_net: 8,
                 markup_amount: 10,
-                markup_amount_decimal: '0.1',
+                markup_amount_decimal: '0.10',
                 unit_amount_gross: 14,
                 unit_amount_gross_decimal: '0.1414434',
                 unit_amount_net: 12,
@@ -71,7 +71,7 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
               get_ag: expect.objectContaining({
                 category: 'power',
                 markup_amount: 10,
-                markup_amount_decimal: '0.1',
+                markup_amount_decimal: '0.10',
                 unit_amount_gross: 14,
                 unit_amount_gross_decimal: '0.1414434',
                 unit_amount_net: 12,
@@ -131,7 +131,7 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                     markup_amount_net_decimal: '0.084033613445',
                     markup_amount_net: 8,
                     markup_amount: 10,
-                    markup_amount_decimal: '0.1',
+                    markup_amount_decimal: '0.10',
                     unit_amount_gross: 14,
                     unit_amount_gross_decimal: '0.1414434',
                     unit_amount_net: 12,
@@ -176,7 +176,7 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                     markup_amount_net_decimal: '8.403361344538',
                     markup_amount_net: 840,
                     markup_amount: 1000,
-                    markup_amount_decimal: '10',
+                    markup_amount_decimal: '10.00',
                     unit_amount_gross: 538,
                     unit_amount_gross_decimal: '5.380783333334',
                     unit_amount_net: 452,
@@ -223,7 +223,7 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                   get_ag: expect.objectContaining({
                     category: 'power',
                     markup_amount: 1000,
-                    markup_amount_decimal: '10',
+                    markup_amount_decimal: '10.00',
                     unit_amount_gross: 538,
                     unit_amount_gross_decimal: '5.380783333334',
                     unit_amount_net: 452,
@@ -236,7 +236,7 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                   get_ag: expect.objectContaining({
                     category: 'power',
                     markup_amount: 10,
-                    markup_amount_decimal: '0.1',
+                    markup_amount_decimal: '0.10',
                     unit_amount_gross: 14,
                     unit_amount_gross_decimal: '0.1414434',
                     unit_amount_net: 12,
@@ -282,7 +282,7 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                   get_ag: expect.objectContaining({
                     category: 'power',
                     markup_amount: 1000,
-                    markup_amount_decimal: '10',
+                    markup_amount_decimal: '10.00',
                     unit_amount_gross: 538,
                     unit_amount_gross_decimal: '5.380783333334',
                     unit_amount_net: 452,
@@ -294,8 +294,8 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                 expect.objectContaining({
                   get_ag: expect.objectContaining({
                     category: 'power',
-                    // markup_amount: 10,
-                    // markup_amount_decimal: '0.1',
+                    markup_amount: 10,
+                    markup_amount_decimal: '0.10',
                     unit_amount_gross: 0,
                     unit_amount_gross_decimal: '0',
                     unit_amount_net: 0,
@@ -347,7 +347,7 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                   get_ag: expect.objectContaining({
                     category: 'power',
                     markup_amount: 1000,
-                    markup_amount_decimal: '10',
+                    markup_amount_decimal: '10.00',
                     unit_amount_gross: 538,
                     unit_amount_gross_decimal: '5.380783333334',
                     unit_amount_net: 452,
@@ -365,7 +365,7 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                   get_ag: expect.objectContaining({
                     category: 'power',
                     markup_amount: 10,
-                    markup_amount_decimal: '0.1',
+                    markup_amount_decimal: '0.10',
                     unit_amount_gross: 14,
                     unit_amount_gross_decimal: '0.1414434',
                     unit_amount_net: 12,

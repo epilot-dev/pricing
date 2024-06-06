@@ -738,53 +738,49 @@ const convertPriceComponentsPrecision = (items: PriceItem[], precision = 2): Pri
  * e.g: 10.00 with precision DECIMAL_PRECISION, represented as 10(+12 zeros) with precision 2
  * would be 1000(only 2 zeros on the decimal component).
  */
-const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceItem => {
-  return {
-    ...priceItem,
-    ...(typeof priceItem.unit_amount === 'number' && {
-      unit_amount: d(priceItem.unit_amount).convertPrecision(precision).getAmount(),
+const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceItem => ({
+  ...priceItem,
+  ...(typeof priceItem.unit_amount === 'number' && {
+    unit_amount: d(priceItem.unit_amount).convertPrecision(precision).getAmount(),
+  }),
+  ...(typeof priceItem.unit_amount_net === 'number' && {
+    unit_amount_net: d(priceItem.unit_amount_net).convertPrecision(precision).getAmount(),
+  }),
+  unit_amount_gross: d(priceItem.unit_amount_gross!).convertPrecision(precision).getAmount(),
+  amount_subtotal: d(priceItem.amount_subtotal!).convertPrecision(precision).getAmount(),
+  amount_subtotal_decimal: d(priceItem.amount_subtotal!).toUnit().toString(),
+  amount_total: d(priceItem.amount_total!).convertPrecision(precision).getAmount(),
+  amount_total_decimal: d(priceItem.amount_total!).toUnit().toString(),
+  amount_tax: d(priceItem.amount_tax!).convertPrecision(precision).getAmount(),
+  taxes: priceItem.taxes!.map((tax) => ({
+    ...tax,
+    amount: d(tax.amount!).convertPrecision(precision).getAmount(),
+  })),
+  ...(priceItem.tiers_details && {
+    tiers_details: priceItem.tiers_details?.map((tier) => {
+      return {
+        ...tier,
+        unit_amount_gross: d(tier.unit_amount_gross).convertPrecision(precision).getAmount(),
+        unit_amount_net: d(tier.unit_amount_net).convertPrecision(precision).getAmount(),
+        amount_total: d(tier.amount_total).convertPrecision(precision).getAmount(),
+        amount_subtotal: d(tier.amount_subtotal).convertPrecision(precision).getAmount(),
+        amount_tax: d(tier.amount_tax).convertPrecision(precision).getAmount(),
+      };
     }),
-    ...(typeof priceItem.unit_amount_net === 'number' && {
-      unit_amount_net: d(priceItem.unit_amount_net).convertPrecision(precision).getAmount(),
+  }),
+  ...(priceItem.get_ag &&
+    priceItem.pricing_model === PricingModel.externalGetAG && {
+      get_ag: {
+        ...priceItem.get_ag,
+        unit_amount_net: d(priceItem.get_ag.unit_amount_net).convertPrecision(precision).getAmount(),
+        unit_amount_gross: d(priceItem.get_ag.unit_amount_gross).convertPrecision(precision).getAmount(),
+        unit_amount_net_decimal: d(priceItem.get_ag.unit_amount_net).toUnit().toString(),
+        unit_amount_gross_decimal: d(priceItem.get_ag.unit_amount_gross).toUnit().toString(),
+        markup_amount_net: d(priceItem.get_ag.markup_amount_net!).convertPrecision(precision).getAmount(),
+        markup_amount_net_decimal: d(priceItem.get_ag.markup_amount_net!).toUnit().toString(),
+      },
     }),
-    unit_amount_gross: d(priceItem.unit_amount_gross!).convertPrecision(precision).getAmount(),
-    amount_subtotal: d(priceItem.amount_subtotal!).convertPrecision(precision).getAmount(),
-    amount_subtotal_decimal: d(priceItem.amount_subtotal!).toUnit().toString(),
-    amount_total: d(priceItem.amount_total!).convertPrecision(precision).getAmount(),
-    amount_total_decimal: d(priceItem.amount_total!).toUnit().toString(),
-    amount_tax: d(priceItem.amount_tax!).convertPrecision(precision).getAmount(),
-    taxes: priceItem.taxes!.map((tax) => ({
-      ...tax,
-      amount: d(tax.amount!).convertPrecision(precision).getAmount(),
-    })),
-    ...(priceItem.tiers_details && {
-      tiers_details: priceItem.tiers_details?.map((tier) => {
-        return {
-          ...tier,
-          unit_amount_gross: d(tier.unit_amount_gross).convertPrecision(precision).getAmount(),
-          unit_amount_net: d(tier.unit_amount_net).convertPrecision(precision).getAmount(),
-          amount_total: d(tier.amount_total).convertPrecision(precision).getAmount(),
-          amount_subtotal: d(tier.amount_subtotal).convertPrecision(precision).getAmount(),
-          amount_tax: d(tier.amount_tax).convertPrecision(precision).getAmount(),
-        };
-      }),
-    }),
-    ...(priceItem.get_ag &&
-      priceItem.pricing_model === PricingModel.externalGetAG && {
-        get_ag: {
-          ...priceItem.get_ag,
-          unit_amount_net: d(priceItem.get_ag.unit_amount_net).convertPrecision(precision).getAmount(),
-          unit_amount_gross: d(priceItem.get_ag.unit_amount_gross).convertPrecision(precision).getAmount(),
-          markup_amount: d(priceItem.get_ag.markup_amount!).convertPrecision(precision).getAmount(),
-          unit_amount_net_decimal: d(priceItem.get_ag.unit_amount_net).toUnit().toString(),
-          unit_amount_gross_decimal: d(priceItem.get_ag.unit_amount_gross).toUnit().toString(),
-          markup_amount_net: d(priceItem.get_ag.markup_amount_net!).convertPrecision(precision).getAmount(),
-          markup_amount_net_decimal: d(priceItem.get_ag.markup_amount_net!).toUnit().toString(),
-          markup_amount_decimal: d(priceItem.get_ag.markup_amount!).toUnit().toString(),
-        },
-      }),
-  };
-};
+});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isPricingDetails = (details: any): details is PricingDetails => details.amount_tax !== undefined;

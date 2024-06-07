@@ -367,6 +367,8 @@ export const compositePriceTieredFlatFeeGetAG: PriceItemDto = {
               flat_fee_amount_decimal: '20.00',
             },
           ],
+          markup_amount_decimal: '100.00',
+          markup_amount: 10000,
         },
         tax: [tax19percent],
       },
@@ -396,7 +398,7 @@ export const compositePriceTieredFlatFeeGetAG: PriceItemDto = {
   },
   price_mappings: [
     { price_id: 'comp#1', value: 12000, frequency_unit: 'yearly' },
-    { price_id: 'comp#2', value: 12000, frequency_unit: 'yearly' }
+    { price_id: 'comp#2', value: 12000, frequency_unit: 'yearly' },
   ],
   external_fees_mappings: [
     { price_id: 'comp#1', amount_total: 5426, amount_total_decimal: '54.26', frequency_unit: 'yearly' },

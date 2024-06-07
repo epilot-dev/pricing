@@ -683,7 +683,7 @@ export const computePriceItem = (
         )
       : price?.pricing_model === PricingModel.externalGetAG
       ? computeExternalGetAGItemValues(
-          price?.get_ag,
+          price?.get_ag!,
           currency,
           isTaxInclusive,
           unitAmountMultiplier!,

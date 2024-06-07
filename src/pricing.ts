@@ -755,6 +755,12 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
   ...(typeof priceItem.unit_amount_net === 'number' && {
     unit_amount_net: d(priceItem.unit_amount_net).convertPrecision(precision).getAmount(),
   }),
+  ...(typeof priceItem.unit_amount_net === 'number' && {
+    unit_amount_net_decimal: d(priceItem.unit_amount_net!).toUnit().toString(),
+  }),
+  ...(typeof priceItem.unit_amount_gross === 'number' && {
+    unit_amount_gross_decimal: d(priceItem.unit_amount_gross!).toUnit().toString(),
+  }),
   unit_amount_gross: d(priceItem.unit_amount_gross!).convertPrecision(precision).getAmount(),
   amount_subtotal: d(priceItem.amount_subtotal!).convertPrecision(precision).getAmount(),
   amount_subtotal_decimal: d(priceItem.amount_subtotal!).toUnit().toString(),

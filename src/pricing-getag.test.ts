@@ -221,6 +221,10 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
               amount_tax: 4101,
               item_components: expect.arrayContaining([
                 expect.objectContaining({
+                  unit_amount_net: 1293,
+                  unit_amount_net_decimal: '12.925028011205',
+                  unit_amount_gross: 1538,
+                  unit_amount_gross_decimal: '15.380783333334',
                   get_ag: expect.objectContaining({
                     category: 'power',
                     markup_amount: 1000,
@@ -234,6 +238,10 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                   }),
                 }),
                 expect.objectContaining({
+                  unit_amount_net: 20,
+                  unit_amount_net_decimal: '0.202893613445',
+                  unit_amount_gross: 24,
+                  unit_amount_gross_decimal: '0.2414434',
                   get_ag: expect.objectContaining({
                     category: 'power',
                     markup_amount: 10,
@@ -263,6 +271,7 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
         }),
       );
     });
+
     it('returns the correct amount_total having consumption input zero', () => {
       const priceItems: PriceItemDto[] = [compositePriceGetAGWithZeroInputMapping];
 
@@ -457,7 +466,7 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
       });
 
       describe('when model is tiered_flatfee', () => {
-       it('returns the correct amount_total', () => {
+        it('returns the correct amount_total', () => {
           const priceItems: PriceItemDto[] = [compositePriceTieredFlatFeeGetAG];
 
           const result = computeAggregatedAndPriceTotals(priceItems);

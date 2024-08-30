@@ -2,7 +2,9 @@ import { Currency } from 'dinero.js';
 
 import { d, toDinero } from '../formatters';
 import { MarkupPricingModel, TypeGetAg } from '../pricing';
-import { Price, PriceGetAg, PriceTier, Tax } from '../types';
+import { Coupon, Price, PriceGetAg, PriceTier, Tax } from '../types';
+
+import { isPercentageCoupon, isValidCoupon } from './guards/coupon';
 
 type GetTaxValue = (tax?: Tax) => number;
 
@@ -15,6 +17,8 @@ type PriceItemsTotals = {
   amountSubtotal: number;
   amountTotal: number;
   taxAmount: number;
+  discountAmount?: number;
+  afterDiscountAmountTotal?: number;
   displayMode?: Price['price_display_in_journeys'];
   getAg?: PriceGetAg;
   tiers_details?: {
@@ -94,6 +98,7 @@ export const computePriceItemValues = (
   isTaxInclusive: boolean,
   unitAmountMultiplier: number,
   tax?: Tax,
+  coupons: ReadonlyArray<Coupon> = [],
 ): PriceItemsTotals => {
   const unitAmount = toDinero(unitAmountDecimal, currency);
   const taxRate = getTaxValue(tax);
@@ -110,6 +115,25 @@ export const computePriceItemValues = (
   const amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
   const taxAmount = unitTaxAmount.multiply(unitAmountMultiplier);
 
+  const [coupon] = coupons;
+
+  let discountAmount;
+  let afterDiscountAmountTotal;
+
+  if (coupon && isValidCoupon(coupon)) {
+    if (isPercentageCoupon(coupon)) {
+      discountAmount = amountTotal.multiply(Number(coupon.percentage_value)).divide(100);
+    } else {
+      discountAmount = d(coupon.fixed_value);
+    }
+
+    /* Totals before discount  */
+    const beforeDiscountTotalAmount = amountTotal;
+
+    /* Totals after discount */
+    afterDiscountAmountTotal = beforeDiscountTotalAmount.subtract(discountAmount);
+  }
+
   return {
     unitAmount: unitAmount.getAmount(),
     unitAmountNet: unitAmountNet.getAmount(),
@@ -119,6 +143,8 @@ export const computePriceItemValues = (
     amountSubtotal: amountSubtotal.getAmount(),
     amountTotal: amountTotal.getAmount(),
     taxAmount: taxAmount.getAmount(),
+    discountAmount: discountAmount ? discountAmount.getAmount() : undefined,
+    afterDiscountAmountTotal: afterDiscountAmountTotal ? afterDiscountAmountTotal.getAmount() : undefined,
   };
 };
 

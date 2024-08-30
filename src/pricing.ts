@@ -7,6 +7,7 @@ import type {
   CompositePrice,
   CompositePriceItem,
   CompositePriceItemDto,
+  Coupon,
   ExternalFeeMapping,
   Price,
   PriceInputMapping,
@@ -321,6 +322,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
       } as PricingDetails;
     } else {
       const price = priceItem._price;
+      const coupons = priceItem.coupons;
       const tax = priceItem.taxes?.[0]?.tax;
       const priceMapping = priceItem.price_mappings?.find(({ price_id }) => priceItem._price!._id === price_id);
 
@@ -335,6 +337,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
         priceItem.quantity!,
         priceMapping,
         externalFeeMapping,
+        coupons,
       );
 
       const updatedTotals = isUnitAmountApproved(
@@ -633,6 +636,7 @@ export const computePriceItem = (
   quantity: number,
   priceMapping?: PriceInputMapping,
   externalFeeMapping?: ExternalFeeMapping,
+  coupons?: ReadonlyArray<Coupon>,
 ): PriceItem => {
   const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase() as Currency;
   const priceItemDescription = priceItem?.description ?? price?.description;
@@ -693,7 +697,7 @@ export const computePriceItem = (
           externalFeeAmountDecimal,
           priceTax!,
         )
-      : computePriceItemValues(unitAmountDecimal, currency, isTaxInclusive, unitAmountMultiplier!, priceTax!);
+      : computePriceItemValues(unitAmountDecimal, currency, isTaxInclusive, unitAmountMultiplier!, priceTax!, coupons);
 
   return {
     ...priceItem,

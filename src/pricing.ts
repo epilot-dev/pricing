@@ -230,7 +230,7 @@ export const computeCompositePrice = (
     const { _itemRef: existingItemComponent, ...existingPrice } = component;
     const type = existingItemComponent?.type || component.type;
 
-    const priceRelation: PriceItemDto = {
+    const itemComponent: PriceItemDto = {
       ...existingItemComponent,
       pricing_model: existingItemComponent?.pricing_model || component.pricing_model,
       quantity: isNaN(existingItemComponent?.quantity!) ? 1 : existingItemComponent?.quantity,
@@ -250,7 +250,7 @@ export const computeCompositePrice = (
       ],
     };
 
-    return computePriceComponent(priceRelation, priceItem);
+    return computePriceComponent(itemComponent, priceItem);
   });
 
   const itemDescription = priceItem?.description ?? compositePrice?.description ?? null;

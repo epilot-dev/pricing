@@ -1,5 +1,0 @@
-*.js
-!webpack.config.js
-docs
-dist
-coverage/

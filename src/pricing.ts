@@ -28,6 +28,7 @@ import {
   computeTieredGraduatedPriceItemValues,
   computeTieredVolumePriceItemValues,
   isTaxInclusivePrice,
+  PriceItemsTotals,
 } from './utils';
 
 /**
@@ -648,50 +649,64 @@ export const computePriceItem = (
     priceItem.billing_period || price?.billing_period,
   );
 
-  const itemValues =
-    price?.pricing_model === PricingModel.tieredVolume
-      ? computeTieredVolumePriceItemValues(
-          price.tiers!,
-          currency,
-          isTaxInclusive,
-          quantityToSelectTier,
-          priceTax,
-          unitAmountMultiplier!,
-          priceItem._price?.unchanged_price_display_in_journeys,
-        )
-      : price?.pricing_model === PricingModel.tieredFlatFee
-      ? computeTieredFlatFeePriceItemValues(
-          price.tiers!,
-          currency,
-          isTaxInclusive,
-          quantityToSelectTier,
-          priceTax!,
-          safeQuantity!,
-          isUsingPriceMappingToSelectTier,
-          priceItem._price?.unchanged_price_display_in_journeys,
-        )
-      : price?.pricing_model === PricingModel.tieredGraduated
-      ? computeTieredGraduatedPriceItemValues(
-          price.tiers!,
-          currency,
-          isTaxInclusive,
-          quantityToSelectTier,
-          priceTax!,
-          safeQuantity!,
-          isUsingPriceMappingToSelectTier,
-          priceItem._price?.unchanged_price_display_in_journeys,
-        )
-      : price?.pricing_model === PricingModel.externalGetAG
-      ? computeExternalGetAGItemValues(
-          price?.get_ag!,
-          currency,
-          isTaxInclusive,
-          unitAmountMultiplier!,
-          quantityToSelectTier,
-          externalFeeAmountDecimal,
-          priceTax!,
-        )
-      : computePriceItemValues(unitAmountDecimal, currency, isTaxInclusive, unitAmountMultiplier!, priceTax!);
+  let itemValues: PriceItemsTotals;
+
+  switch (price?.pricing_model) {
+    case PricingModel.tieredVolume:
+      itemValues = computeTieredVolumePriceItemValues(
+        price.tiers!,
+        currency,
+        isTaxInclusive,
+        quantityToSelectTier,
+        priceTax,
+        unitAmountMultiplier!,
+        priceItem._price?.unchanged_price_display_in_journeys,
+      );
+      break;
+    case PricingModel.tieredFlatFee:
+      itemValues = computeTieredFlatFeePriceItemValues(
+        price.tiers!,
+        currency,
+        isTaxInclusive,
+        quantityToSelectTier,
+        priceTax!,
+        safeQuantity!,
+        isUsingPriceMappingToSelectTier,
+        priceItem._price?.unchanged_price_display_in_journeys,
+      );
+      break;
+    case PricingModel.tieredGraduated:
+      itemValues = computeTieredGraduatedPriceItemValues(
+        price.tiers!,
+        currency,
+        isTaxInclusive,
+        quantityToSelectTier,
+        priceTax!,
+        safeQuantity!,
+        isUsingPriceMappingToSelectTier,
+        priceItem._price?.unchanged_price_display_in_journeys,
+      );
+      break;
+    case PricingModel.externalGetAG:
+      itemValues = computeExternalGetAGItemValues(
+        price?.get_ag!,
+        currency,
+        isTaxInclusive,
+        unitAmountMultiplier!,
+        quantityToSelectTier,
+        externalFeeAmountDecimal,
+        priceTax!,
+      );
+      break;
+    default:
+      itemValues = computePriceItemValues(
+        unitAmountDecimal,
+        currency,
+        isTaxInclusive,
+        unitAmountMultiplier!,
+        priceTax!,
+      );
+  }
 
   return {
     ...priceItem,

@@ -1,4 +1,4 @@
-import DineroFactory from 'dinero.js';
+import type { Dinero } from 'dinero.js';
 
 import { toDinero } from '../formatters';
 import {
@@ -14,8 +14,6 @@ import { OperationType, timeFrequencyNormalizerMatrix } from './constants';
 
 export { TimeFrequencyNormalizerMatrix, timeFrequencyNormalizerMatrix } from './constants';
 
-type NormalizePriceMappingInput = (priceMapping: PriceInputMapping, price: Price) => DineroFactory.Dinero | null;
-
 /**
  * This function takes in a quantity, block mapping number, block mapping frequency, price, and parent quantity
  * and returns the normalized quantity. The block mapping number and block mapping frequency are used to
@@ -29,7 +27,7 @@ type NormalizePriceMappingInput = (priceMapping: PriceInputMapping, price: Price
  * @param price - The price to be used to calculate the normalized quantity
  * @returns The normalized quantity
  */
-export const normalizePriceMappingInput: NormalizePriceMappingInput = (priceMapping, price) => {
+export const normalizePriceMappingInput = (priceMapping?: PriceInputMapping, price?: Price): Dinero | null => {
   if (!price || !priceMapping || (typeof priceMapping.value !== 'number' && !priceMapping.frequency_unit)) {
     return null;
   }

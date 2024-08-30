@@ -91,7 +91,7 @@ type PriceComponent = NonNullable<CompositePriceItemDto['item_components']>[numb
 };
 
 export const isCompositePrice = (priceItem: PriceItemDto | CompositePriceItemDto): priceItem is CompositePriceItemDto =>
-  Boolean(priceItem?.is_composite_price || priceItem?._price?.is_composite_price);
+  Boolean(priceItem.is_composite_price || priceItem._price?.is_composite_price);
 
 export const computePriceComponent = (
   priceItemComponent: PriceItemDto,
@@ -220,7 +220,7 @@ export const extractPricingEntitiesBySlug = (
  */
 export const computeCompositePrice = (
   priceItem: CompositePriceItemDto,
-  compositePrice: CompositePrice,
+  compositePrice?: CompositePrice,
 ): CompositePriceItem => {
   const priceComponents = getPriceComponents(priceItem) || [];
   const itemComponents: PriceItemDto[] = priceComponents.reduce((itemComponentsResult: PriceItemDto[], component) => {
@@ -294,16 +294,23 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
   };
 
   const priceDetails: PricingDetails = priceItems.reduce((details, priceItem) => {
-    if (isCompositePrice(priceItem)) {
+    if (
+      /**
+       * priceItem should never be nullish but since optional check was removed
+       * from isCompositePrice we should make the check before calling it
+       */
+      priceItem &&
+      isCompositePrice(priceItem)
+    ) {
       const price = priceItem._price;
-      const compositePriceItemToAppend = computeCompositePrice(priceItem, price!);
+      const compositePriceItemToAppend = computeCompositePrice(priceItem, price);
       const itemBreakdown = computeCompositePriceBreakDown(compositePriceItemToAppend);
       const updatedTotals = recomputeDetailTotalsFromCompositePrice(details, compositePriceItemToAppend);
 
       return {
         ...updatedTotals,
         items: [
-          ...details.items!,
+          ...(details.items ?? []),
           {
             ...compositePriceItemToAppend,
             ...itemBreakdown,
@@ -313,14 +320,16 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
             ...(typeof itemBreakdown?.amount_total === 'number' && {
               amount_total_decimal: d(itemBreakdown.amount_total).toUnit().toString(),
             }),
-            item_components: convertPriceComponentsPrecision(compositePriceItemToAppend.item_components!, 2),
+            item_components: convertPriceComponentsPrecision(compositePriceItemToAppend.item_components ?? [], 2),
           },
         ],
       } as PricingDetails;
     } else {
       const price = priceItem._price;
       const tax = priceItem.taxes?.[0]?.tax;
-      const priceMapping = priceItem.price_mappings?.find(({ price_id }) => priceItem._price!._id === price_id);
+      const priceMapping = priceItem._price
+        ? priceItem.price_mappings?.find(({ price_id }) => priceItem._price!._id === price_id)
+        : undefined;
 
       const externalFeeMapping = priceItem.external_fees_mappings?.find(
         ({ price_id }) => priceItem._price!._id === price_id,
@@ -384,19 +393,16 @@ export const computePriceDetails = (price: Price): PricingDetails => {
     _price: price,
   };
 
-  return computeAggregatedAndPriceTotals([priceItem]);
+  return computePriceItemDetails(priceItem);
 };
 
 /**
  * Computes all the pricing total amounts to integers with a decimal precision of DECIMAL_PRECISION.
  */
 const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemToAppend: PriceItem): PricingDetails => {
-  const taxes = details?.total_details?.breakdown?.taxes || [];
-  const itemTax =
-    priceItemToAppend.taxes?.[0]?.tax ||
-    ({
-      rate: +priceItemToAppend.taxes?.[0]?.rateValue!,
-    } as Partial<Tax>);
+  const taxes = details.total_details?.breakdown?.taxes || [];
+  const firstTax = priceItemToAppend.taxes?.[0];
+  const itemTax = firstTax?.tax || ({ rate: Number(firstTax?.rateValue) } as Partial<Tax>);
 
   /**
    * itemRateValue is only used for outdated prices, not migrated yet
@@ -406,13 +412,13 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
     (item) =>
       (item.tax?._id && itemTax?._id && item.tax?._id === itemTax?._id) ||
       item.tax?.rate === itemTax?.rate ||
-      item.tax!.rate === itemRateValue,
+      item.tax?.rate === itemRateValue,
   );
 
-  const recurrences = [...details?.total_details?.breakdown?.recurrences!] || [];
+  const recurrences = [...(details.total_details?.breakdown?.recurrences ?? [])];
   const recurrence = getPriceRecurrence(price, recurrences);
 
-  const recurrencesByTax = [...details?.total_details?.breakdown?.recurrencesByTax!] || [];
+  const recurrencesByTax = [...(details.total_details?.breakdown?.recurrencesByTax ?? [])];
   const recurrenceByTax = getPriceRecurrenceByTax(price, recurrencesByTax, tax?.tax?.rate ?? itemTax?.rate);
 
   const total = d(details.amount_total!);
@@ -428,7 +434,7 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
   const priceTax = d(priceItemToAppend?.taxes?.[0]?.amount || 0.0);
 
   if (!tax) {
-    itemTax &&
+    if (itemTax) {
       taxes.push({
         tax: {
           ...(itemTax._id && { _id: itemTax._id }),
@@ -437,6 +443,7 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
         },
         amount: priceTax.getAmount(),
       });
+    }
   } else {
     tax.amount = d(tax.amount!).add(priceTax).getAmount();
 
@@ -454,7 +461,7 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
     const type = price?.type || priceItemToAppend?.type;
 
     recurrences.push({
-      type: ['one_time', 'recurring'].includes(type!) ? type : 'one_time',
+      type: type === 'recurring' ? type : 'one_time',
       ...(price?.type === 'recurring' && { billing_period: price?.billing_period }),
       unit_amount_gross: priceUnitAmountGross.getAmount(),
       unit_amount_net: priceUnitAmountNet?.getAmount() ?? undefined,
@@ -538,7 +545,7 @@ const recomputeDetailTotalsFromCompositePrice = (
     },
   };
 
-  return compositePriceItem?.item_components?.reduce((detailTotals, itemComponent) => {
+  return compositePriceItem.item_components?.reduce((detailTotals, itemComponent) => {
     const updatedTotals = isUnitAmountApproved(
       itemComponent,
       itemComponent._price?.price_display_in_journeys,
@@ -633,15 +640,15 @@ export const computePriceItem = (
   externalFeeMapping?: ExternalFeeMapping,
 ): PriceItem => {
   const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase() as Currency;
-  const priceItemDescription = priceItem?.description ?? price?.description;
+  const priceItemDescription = priceItem.description ?? price?.description;
 
-  const unitAmountDecimal = priceItem?.unit_amount_decimal || price?.unit_amount_decimal || '0.0';
-  const priceTax = getPriceTax(applicableTax, price!, priceItem?.taxes);
+  const unitAmountDecimal = priceItem.unit_amount_decimal || price?.unit_amount_decimal || '0.0';
+  const priceTax = getPriceTax(applicableTax, price, priceItem.taxes);
   const isTaxInclusive =
-    priceItem.is_tax_inclusive !== undefined ? priceItem.is_tax_inclusive : isTaxInclusivePrice(price!);
+    priceItem.is_tax_inclusive !== undefined ? priceItem.is_tax_inclusive : isTaxInclusivePrice(price);
 
   const { safeQuantity, quantityToSelectTier, unitAmountMultiplier, isUsingPriceMappingToSelectTier } =
-    computeQuantities(price!, quantity, priceMapping);
+    computeQuantities(price, quantity, priceMapping);
 
   const externalFeeAmountDecimal = computeExternalFee(
     externalFeeMapping,
@@ -651,7 +658,7 @@ export const computePriceItem = (
   const itemValues =
     price?.pricing_model === PricingModel.tieredVolume
       ? computeTieredVolumePriceItemValues(
-          price.tiers!,
+          price.tiers,
           currency,
           isTaxInclusive,
           quantityToSelectTier,
@@ -661,7 +668,7 @@ export const computePriceItem = (
         )
       : price?.pricing_model === PricingModel.tieredFlatFee
       ? computeTieredFlatFeePriceItemValues(
-          price.tiers!,
+          price.tiers,
           currency,
           isTaxInclusive,
           quantityToSelectTier,
@@ -672,7 +679,7 @@ export const computePriceItem = (
         )
       : price?.pricing_model === PricingModel.tieredGraduated
       ? computeTieredGraduatedPriceItemValues(
-          price.tiers!,
+          price.tiers,
           currency,
           isTaxInclusive,
           quantityToSelectTier,
@@ -797,8 +804,13 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
     }),
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isPricingDetails = (details: any): details is PricingDetails => details.amount_tax !== undefined;
+const isPricingDetails = (details: unknown): details is PricingDetails =>
+  Boolean(
+    details &&
+      typeof details === 'object' &&
+      'amount_tax' in details &&
+      (details as { amount_tax: unknown }).amount_tax !== undefined,
+  );
 
 const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem, precision: number): PricingDetails => {
   return {
@@ -866,11 +878,7 @@ const convertPricingPrecision = (details: PricingDetails, precision: number): Pr
 /**
  * Gets a price tax with the proper tax behavior override
  */
-export const getPriceTax = (
-  applicableTax: Tax | undefined,
-  price?: Price,
-  priceItemTaxes?: TaxAmountDto[],
-): Tax | undefined => {
+export const getPriceTax = (applicableTax?: Tax, price?: Price, priceItemTaxes?: TaxAmountDto[]): Tax | undefined => {
   if (applicableTax) {
     return applicableTax;
   }
@@ -889,7 +897,7 @@ export const getPriceTax = (
   return applicableTax;
 };
 
-const getPriceRecurrence = (price: Price, recurrences: RecurrenceAmount[]) => {
+const getPriceRecurrence = (price: Price | undefined, recurrences: RecurrenceAmount[]) => {
   if (price?.type === 'recurring') {
     return recurrences.find(
       (recurrenceItem) => recurrenceItem.type === price.type && recurrenceItem.billing_period === price.billing_period,
@@ -899,7 +907,11 @@ const getPriceRecurrence = (price: Price, recurrences: RecurrenceAmount[]) => {
   return recurrences.find((recurrenceItem) => recurrenceItem.type === 'one_time');
 };
 
-const getPriceRecurrenceByTax = (price: Price, recurrencesByTax: RecurrenceAmountWithTax[], taxRate?: number) => {
+const getPriceRecurrenceByTax = (
+  price: Price | undefined,
+  recurrencesByTax: RecurrenceAmountWithTax[],
+  taxRate?: number,
+) => {
   if (price?.type === 'recurring') {
     return recurrencesByTax.find(
       (recurrenceItem) =>
@@ -935,12 +947,12 @@ const isUnitAmountApproved = (
   return priceDisplayInJourneys !== 'show_as_on_request' || priceItem?.on_request_approved;
 };
 
-export const computeQuantities = (price: Price, quantity?: number, priceMapping?: PriceInputMapping) => {
-  const safeQuantity = isNaN(quantity!) ? 1 : quantity;
-  const normalizedPriceMappingInput = normalizePriceMappingInput(priceMapping!, price);
+export const computeQuantities = (price: Price | undefined, quantity: number, priceMapping?: PriceInputMapping) => {
+  const safeQuantity = isNaN(quantity) ? 1 : quantity;
+  const normalizedPriceMappingInput = normalizePriceMappingInput(priceMapping, price);
   const quantityToSelectTier = normalizedPriceMappingInput ? normalizedPriceMappingInput.toUnit() : 1;
   const unitAmountMultiplier = normalizedPriceMappingInput
-    ? normalizedPriceMappingInput.multiply(safeQuantity!).toUnit()
+    ? normalizedPriceMappingInput.multiply(safeQuantity).toUnit()
     : safeQuantity;
 
   return {

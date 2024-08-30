@@ -1,5 +1,4 @@
 import { Components } from '@epilot/pricing-client';
-import type { Dinero } from 'dinero.js';
 
 export type Price = Components.Schemas.Price;
 export type PriceItem = Components.Schemas.PriceItem;
@@ -31,22 +30,3 @@ export type PriceTierEnhanced = Components.Schemas.PriceTierEnhanced;
 export type PriceTierDisplayMode = Components.Schemas.PriceTierDisplayMode;
 export type PriceGetAg = Components.Schemas.PriceGetAg;
 export type TierDetails = Components.Schemas.TierDetails;
-export type NormalizeTimeFrequency = (
-  timeValue: number | string,
-  timeValueFrequency: TimeFrequency,
-  targetTimeFrequency: TimeFrequency,
-  precision?: number,
-) => number;
-export type NormalizeValueToFrequencyUnit = (
-  timeValue: number | string,
-  timeValueFrequency: TimeFrequency,
-  targetTimeFrequency: TimeFrequency,
-  precision?: number,
-) => number | string;
-
-export type NormalizeTimeFrequencyToDinero = (
-  timeValue: number | string,
-  timeValueFrequency: TimeFrequency,
-  targetTimeFrequency: TimeFrequency,
-  precision?: number,
-) => Dinero;

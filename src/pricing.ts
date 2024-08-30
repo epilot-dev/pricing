@@ -260,7 +260,7 @@ export const computeCompositePrice = (
   return {
     ...priceItem,
     ...(priceItem?._product && { _product: mapToProductSnapshot(priceItem._product!) }),
-    _price: mapToPriceSnapshot(priceItem._price! as Price),
+    _price: mapToPriceSnapshot(priceItem._price as Price | undefined),
     currency: priceItem._price!.unit_amount_currency || DEFAULT_CURRENCY,
     ...(itemDescription && { description: itemDescription }),
     item_components: [...computedItemComponents],
@@ -579,18 +579,20 @@ const isArrayOfPrices = (prices: unknown): prices is Price[] => Array.isArray(pr
 /**
  * Converts a Price entity into a PriceDTO without all fields present on the entity fields exclusion list.
  */
-export const mapToPriceSnapshot = (price: Price): Price =>
-  Object.fromEntries(
-    Object.entries(price)
-      .filter(([key]) => !ENTITY_FIELDS_EXCLUSION_LIST.has(key))
-      .map(([key, value]) => {
-        if (key === 'price_components' && isArrayOfPrices(value)) {
-          return [key, value.map((price) => mapToPriceSnapshot(price))];
-        } else {
-          return [key, value];
-        }
-      }),
-  ) as Price;
+export const mapToPriceSnapshot = (price?: Price): Price =>
+  price
+    ? (Object.fromEntries(
+        Object.entries(price)
+          .filter(([key]) => !ENTITY_FIELDS_EXCLUSION_LIST.has(key))
+          .map(([key, value]) => {
+            if (key === 'price_components' && isArrayOfPrices(value)) {
+              return [key, value.map((price) => mapToPriceSnapshot(price))];
+            } else {
+              return [key, value];
+            }
+          }),
+      ) as Price)
+    : ({} as Price);
 
 /**
  * Converts a Product entity into a ProductDTO without all fields present on the entity fields exclusion list.
@@ -707,7 +709,7 @@ export const computePriceItem = (
     ],
     ...(priceItem?._product && { _product: mapToProductSnapshot(priceItem._product) }),
     _price: {
-      ...mapToPriceSnapshot(price!),
+      ...mapToPriceSnapshot(price),
       ...(itemValues.displayMode && {
         price_display_in_journeys: itemValues.displayMode ?? price?.price_display_in_journeys,
         unchanged_price_display_in_journeys:

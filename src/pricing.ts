@@ -711,6 +711,8 @@ export const computePriceItem = (
       unitAmountDecimal && { unit_amount_decimal: unitAmountDecimal }),
     amount_subtotal: itemValues.amountSubtotal,
     amount_total: itemValues.amountTotal,
+    ...(itemValues.discountAmount && { discount_amout: itemValues.discountAmount }),
+    ...(itemValues.afterDiscountAmountTotal && { after_discount_amount_total: itemValues.afterDiscountAmountTotal }),
     amount_tax: itemValues.taxAmount,
     ...(itemValues.tiers_details && {
       tiers_details: itemValues.tiers_details.map((tier) => ({

@@ -5672,7 +5672,7 @@ export const resultCompositePriceWithTotalDetails = {
 export const computedPriceWithFixedDiscount = {
   amount_subtotal: 331704,
   amount_tax: 63024,
-  amount_total: 394728,
+  amount_total: 393728,
   currency: 'EUR',
   items: [
     {
@@ -5764,8 +5764,8 @@ export const computedPriceWithFixedDiscount = {
           amount_subtotal: 331704,
           amount_subtotal_decimal: '3317.04295990201',
           amount_tax: 63024,
-          amount_total: 394728,
-          amount_total_decimal: '3947.28112228339',
+          amount_total: 393728,
+          amount_total_decimal: '3937.28112228339',
           type: 'one_time',
           unit_amount_gross: 78946,
           unit_amount_net: 66341,
@@ -5775,7 +5775,7 @@ export const computedPriceWithFixedDiscount = {
         {
           amount_subtotal: 331704,
           amount_tax: 63024,
-          amount_total: 394728,
+          amount_total: 393728,
           tax: {
             amount: 63024,
             tax: {
@@ -5807,7 +5807,7 @@ export const computedPriceWithFixedDiscount = {
 export const computedPriceWithPercentageDiscount = {
   amount_subtotal: 331704,
   amount_tax: 63024,
-  amount_total: 394728,
+  amount_total: 294072,
   currency: 'EUR',
   items: [
     {
@@ -5837,12 +5837,13 @@ export const computedPriceWithPercentageDiscount = {
       _product: {
         _tags: ['product-tag-1', 'product-tag-2'],
       },
-      // "after_discount_amount_total": 3947281122282390,
       amount_subtotal: 331704,
       amount_subtotal_decimal: '3317.04295990201',
       amount_tax: 63024,
-      amount_total: 394728,
-      amount_total_decimal: '3947.28112228339',
+      amount_total: 294072,
+      amount_total_decimal: '2940.724436101126',
+      before_discount_amount_total: 394728,
+      before_discount_amount_total_decimal: '3947.28112228339',
       coupons: [
         {
           _id: 'coupon#1',
@@ -5859,8 +5860,6 @@ export const computedPriceWithPercentageDiscount = {
       currency: 'EUR',
       discount_amount: 100656,
       discount_amount_decimal: '1006.556686182264',
-      after_discount_amount_total: 294072,
-      after_discount_amount_total_decimal: '2940.724436101126',
       discount_percentage: 25.5,
       description: 'Winter Sale',
       is_tax_inclusive: true,
@@ -5899,8 +5898,8 @@ export const computedPriceWithPercentageDiscount = {
           amount_subtotal: 331704,
           amount_subtotal_decimal: '3317.04295990201',
           amount_tax: 63024,
-          amount_total: 394728,
-          amount_total_decimal: '3947.28112228339',
+          amount_total: 294072,
+          amount_total_decimal: '2940.724436101126',
           type: 'one_time',
           unit_amount_gross: 78946,
           unit_amount_net: 66341,
@@ -5910,7 +5909,7 @@ export const computedPriceWithPercentageDiscount = {
         {
           amount_subtotal: 331704,
           amount_tax: 63024,
-          amount_total: 394728,
+          amount_total: 294072,
           tax: {
             amount: 63024,
             tax: {

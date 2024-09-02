@@ -28,13 +28,9 @@ import {
   computeTieredGraduatedPriceItemValues,
   computeTieredVolumePriceItemValues,
   isTaxInclusivePrice,
+  PriceItemsTotals,
 } from './utils';
 
-/**
- * @deprecated
- * @todo Remove safely
- */
-export const DEFAULT_INTEGER_AMOUNT_PRECISION = 2;
 export const BillingPeriods = new Set(['weekly', 'monthly', 'every_quarter', 'every_6_months', 'yearly'] as const);
 
 export const TaxRates = Object.freeze({
@@ -145,19 +141,19 @@ const isValidPrice = (priceComponent: Price): boolean => {
   return true;
 };
 
+const ensureComponentWithValidPrice = (itemComponent: PriceItemDto): PriceItemDto => ({
+  ...itemComponent,
+  unit_amount: Number.isInteger(itemComponent.unit_amount) ? itemComponent.unit_amount : 0,
+  unit_amount_decimal:
+    typeof itemComponent.unit_amount_decimal !== 'undefined' ? itemComponent.unit_amount_decimal : '0.0',
+});
+
 const getPriceComponents = (priceItem: CompositePriceItemDto): PriceComponent[] => {
   if (!Array.isArray(priceItem?.item_components)) {
     return Array.isArray(priceItem?._price?.price_components)
       ? priceItem._price!.price_components.filter(isValidPrice)
       : [];
   }
-
-  const ensureComponentWithValidPrice = (itemComponent: PriceItemDto): PriceItemDto => ({
-    ...itemComponent,
-    unit_amount: Number.isInteger(itemComponent.unit_amount) ? itemComponent.unit_amount : 0,
-    unit_amount_decimal:
-      typeof itemComponent.unit_amount_decimal !== 'undefined' ? itemComponent.unit_amount_decimal : '0.0',
-  });
 
   return priceItem.item_components.map<PriceComponent>((itemComponent) => ({
     _itemRef: ensureComponentWithValidPrice(itemComponent),
@@ -222,8 +218,8 @@ export const computeCompositePrice = (
   priceItem: CompositePriceItemDto,
   compositePrice?: CompositePrice,
 ): CompositePriceItem => {
-  const priceComponents = getPriceComponents(priceItem) || [];
-  const itemComponents: PriceItemDto[] = priceComponents.reduce((itemComponentsResult: PriceItemDto[], component) => {
+  const priceComponents = getPriceComponents(priceItem);
+  const computedItemComponents = priceComponents.map((component) => {
     const componentTax = Array.isArray(component.tax) ? component.tax : [];
     const itemTaxRate: TaxAmountDto = (componentTax?.[0] && { tax: componentTax?.[0] }) || { rate: 'nontaxable' };
 
@@ -250,19 +246,21 @@ export const computeCompositePrice = (
       ],
     };
 
-    return [...itemComponentsResult, itemComponent];
-  }, []);
-
-  const computedItemComponents = itemComponents.map((priceRelation) => computePriceComponent(priceRelation, priceItem));
+    return computePriceComponent(itemComponent, priceItem);
+  });
 
   const itemDescription = priceItem?.description ?? compositePrice?.description ?? null;
 
   return {
     ...priceItem,
     ...(priceItem?._product && { _product: mapToProductSnapshot(priceItem._product!) }),
-    _price: mapToPriceSnapshot(priceItem._price! as Price),
+    _price: mapToPriceSnapshot(priceItem._price as Price | undefined),
     currency: priceItem._price!.unit_amount_currency || DEFAULT_CURRENCY,
     ...(itemDescription && { description: itemDescription }),
+    /**
+     * @todo It might not be necessary to spread the price components here,
+     * investigate whether it's being mutated elsewhere
+     */
     item_components: [...computedItemComponents],
   };
 };
@@ -382,18 +380,13 @@ export const computePriceItemDetails = (priceItem: PriceItemDto | CompositePrice
 
 /**
  * Computes the pricing details for a given Price in isolation.
- *
- * @param price - the price to compute
- * @returns - the pricing details
  */
 export const computePriceDetails = (price: Price): PricingDetails => {
-  const priceItem: PriceItem = {
+  return computePriceItemDetails({
     quantity: 1,
     ...(price.pricing_model && { pricing_model: price.pricing_model }),
     _price: price,
-  };
-
-  return computePriceItemDetails(priceItem);
+  });
 };
 
 /**
@@ -584,49 +577,35 @@ export const ENTITY_FIELDS_EXCLUSION_LIST: Set<keyof Price> = new Set([
 ]);
 
 /**
+ * @todo Should narrow down the checks to ensure each item matches the Price type
+ */
+const isArrayOfPrices = (prices: unknown): prices is Price[] => Array.isArray(prices);
+
+/**
  * Converts a Price entity into a PriceDTO without all fields present on the entity fields exclusion list.
  */
-export const mapToPriceSnapshot = (price: Price): Price => {
-  /**
-   *? @todo We should define _price as not being an optional key in PriceItemDto since there is no case where is optional
-   */
-
-  const mappedPricing: Price = {} as Price;
-
-  for (const key in price) {
-    const currValue = price[key];
-
-    if (!ENTITY_FIELDS_EXCLUSION_LIST.has(key)) {
-      mappedPricing[key] = currValue;
-    }
-
-    // Checks if price has price_components and if so iterates over them to extract whitelisted keys
-    if (key === 'price_components' && currValue && Array.isArray(currValue)) {
-      mappedPricing[key] = currValue.map((el: Price) => mapToPriceSnapshot(el));
-    }
-  }
-
-  return mappedPricing;
-};
+export const mapToPriceSnapshot = (price?: Price): Price =>
+  price
+    ? (Object.fromEntries(
+        Object.entries(price)
+          .filter(([key]) => !ENTITY_FIELDS_EXCLUSION_LIST.has(key))
+          .map(([key, value]) => {
+            if (key === 'price_components' && isArrayOfPrices(value)) {
+              return [key, value.map((price) => mapToPriceSnapshot(price))];
+            } else {
+              return [key, value];
+            }
+          }),
+      ) as Price)
+    : ({} as Price);
 
 /**
  * Converts a Product entity into a ProductDTO without all fields present on the entity fields exclusion list.
  */
-export const mapToProductSnapshot = (product?: Product): Product | undefined => {
-  if (!product) return undefined;
-
-  const mappedProduct = {} as NonNullable<Product>;
-
-  for (const key in product) {
-    const currValue = product[key];
-
-    if (!ENTITY_FIELDS_EXCLUSION_LIST.has(key)) {
-      mappedProduct[key] = currValue;
-    }
-  }
-
-  return mappedProduct;
-};
+export const mapToProductSnapshot = (product?: Product): Product | undefined =>
+  product
+    ? (Object.fromEntries(Object.entries(product).filter(([key]) => !ENTITY_FIELDS_EXCLUSION_LIST.has(key))) as Product)
+    : undefined;
 
 /**
  * Computes all price item total amounts to integers with a decimal precision of DECIMAL_PRECISION.
@@ -655,50 +634,64 @@ export const computePriceItem = (
     priceItem.billing_period || price?.billing_period,
   );
 
-  const itemValues =
-    price?.pricing_model === PricingModel.tieredVolume
-      ? computeTieredVolumePriceItemValues(
-          price.tiers,
-          currency,
-          isTaxInclusive,
-          quantityToSelectTier,
-          priceTax,
-          unitAmountMultiplier!,
-          priceItem._price?.unchanged_price_display_in_journeys,
-        )
-      : price?.pricing_model === PricingModel.tieredFlatFee
-      ? computeTieredFlatFeePriceItemValues(
-          price.tiers,
-          currency,
-          isTaxInclusive,
-          quantityToSelectTier,
-          priceTax!,
-          safeQuantity!,
-          isUsingPriceMappingToSelectTier,
-          priceItem._price?.unchanged_price_display_in_journeys,
-        )
-      : price?.pricing_model === PricingModel.tieredGraduated
-      ? computeTieredGraduatedPriceItemValues(
-          price.tiers,
-          currency,
-          isTaxInclusive,
-          quantityToSelectTier,
-          priceTax!,
-          safeQuantity!,
-          isUsingPriceMappingToSelectTier,
-          priceItem._price?.unchanged_price_display_in_journeys,
-        )
-      : price?.pricing_model === PricingModel.externalGetAG
-      ? computeExternalGetAGItemValues(
-          price?.get_ag!,
-          currency,
-          isTaxInclusive,
-          unitAmountMultiplier!,
-          quantityToSelectTier,
-          externalFeeAmountDecimal,
-          priceTax!,
-        )
-      : computePriceItemValues(unitAmountDecimal, currency, isTaxInclusive, unitAmountMultiplier!, priceTax!);
+  let itemValues: PriceItemsTotals;
+
+  switch (price?.pricing_model) {
+    case PricingModel.tieredVolume:
+      itemValues = computeTieredVolumePriceItemValues(
+        price.tiers,
+        currency,
+        isTaxInclusive,
+        quantityToSelectTier,
+        priceTax,
+        unitAmountMultiplier!,
+        priceItem._price?.unchanged_price_display_in_journeys,
+      );
+      break;
+    case PricingModel.tieredFlatFee:
+      itemValues = computeTieredFlatFeePriceItemValues(
+        price.tiers,
+        currency,
+        isTaxInclusive,
+        quantityToSelectTier,
+        priceTax!,
+        safeQuantity!,
+        isUsingPriceMappingToSelectTier,
+        priceItem._price?.unchanged_price_display_in_journeys,
+      );
+      break;
+    case PricingModel.tieredGraduated:
+      itemValues = computeTieredGraduatedPriceItemValues(
+        price.tiers,
+        currency,
+        isTaxInclusive,
+        quantityToSelectTier,
+        priceTax!,
+        safeQuantity!,
+        isUsingPriceMappingToSelectTier,
+        priceItem._price?.unchanged_price_display_in_journeys,
+      );
+      break;
+    case PricingModel.externalGetAG:
+      itemValues = computeExternalGetAGItemValues(
+        price?.get_ag!,
+        currency,
+        isTaxInclusive,
+        unitAmountMultiplier!,
+        quantityToSelectTier,
+        externalFeeAmountDecimal,
+        priceTax!,
+      );
+      break;
+    default:
+      itemValues = computePriceItemValues(
+        unitAmountDecimal,
+        currency,
+        isTaxInclusive,
+        unitAmountMultiplier!,
+        priceTax!,
+      );
+  }
 
   return {
     ...priceItem,
@@ -735,7 +728,7 @@ export const computePriceItem = (
     ],
     ...(priceItem?._product && { _product: mapToProductSnapshot(priceItem._product) }),
     _price: {
-      ...mapToPriceSnapshot(price!),
+      ...mapToPriceSnapshot(price),
       ...(itemValues.displayMode && {
         price_display_in_journeys: itemValues.displayMode ?? price?.price_display_in_journeys,
         unchanged_price_display_in_journeys:

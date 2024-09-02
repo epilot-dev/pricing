@@ -51,7 +51,7 @@ function formatWithSubunit(formattedDineroObject: string, subunit: { symbol: str
  *
  * @returns {Object} The subunit and symbol of the currency, as well as the subunit pluralized if necessary.
  */
-export const getFormattedCurrencySubunit = (
+const getFormattedCurrencySubunit = (
   currency: Currency,
   locale: string,
   amount: number | string,

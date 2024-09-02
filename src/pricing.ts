@@ -620,7 +620,7 @@ export const computePriceItem = (
   quantity: number,
   priceMapping?: PriceInputMapping,
   externalFeeMapping?: ExternalFeeMapping,
-  coupons?: ReadonlyArray<Coupon>,
+  coupons: ReadonlyArray<Coupon> = [],
 ): PriceItem => {
   const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase() as Currency;
   const priceItemDescription = priceItem.description ?? price?.description;

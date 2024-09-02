@@ -1,4 +1,4 @@
-import { Currency } from 'dinero.js';
+import type { Currency, Dinero } from 'dinero.js';
 
 import { d, toDinero } from '../formatters';
 import { MarkupPricingModel, TypeGetAg } from '../pricing';
@@ -115,21 +115,18 @@ export const computePriceItemValues = (
 
   const [coupon] = coupons;
 
-  let discountAmount;
-  let afterDiscountAmountTotal;
+  let discountAmount: Dinero | undefined;
+  let afterDiscountAmountTotal: Dinero | undefined;
 
   if (coupon && isValidCoupon(coupon)) {
     if (isPercentageCoupon(coupon)) {
-      discountAmount = amountTotal.multiply(Number(coupon.percentage_value)).divide(100);
+      discountAmount = amountTotal.multiply(Number(coupon.percentage_value) / 100);
     } else {
-      discountAmount = d(coupon.fixed_value);
+      discountAmount = d(coupon.fixed_value, coupon.fixed_value_currency);
     }
 
-    /* Totals before discount  */
-    const beforeDiscountTotalAmount = amountTotal;
-
     /* Totals after discount */
-    afterDiscountAmountTotal = beforeDiscountTotalAmount.subtract(discountAmount);
+    afterDiscountAmountTotal = amountTotal.subtract(discountAmount);
   }
 
   return {
@@ -141,8 +138,8 @@ export const computePriceItemValues = (
     amountSubtotal: amountSubtotal.getAmount(),
     amountTotal: amountTotal.getAmount(),
     taxAmount: taxAmount.getAmount(),
-    discountAmount: discountAmount ? discountAmount.getAmount() : undefined,
-    afterDiscountAmountTotal: afterDiscountAmountTotal ? afterDiscountAmountTotal.getAmount() : undefined,
+    discountAmount: discountAmount?.getAmount(),
+    afterDiscountAmountTotal: afterDiscountAmountTotal?.getAmount(),
   };
 };
 

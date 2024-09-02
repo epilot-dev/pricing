@@ -4,7 +4,7 @@ import { d, toDinero } from '../formatters';
 import { MarkupPricingModel, TypeGetAg } from '../pricing';
 import { Price, PriceGetAg, PriceTier, Tax } from '../types';
 
-type PriceItemsTotals = {
+export type PriceItemsTotals = {
   unitAmount?: number;
   unitAmountNet?: number;
   unitAmountNetDecimal?: string;

@@ -4,8 +4,6 @@ import { d, toDinero } from '../formatters';
 import { MarkupPricingModel, TypeGetAg } from '../pricing';
 import { Price, PriceGetAg, PriceTier, Tax } from '../types';
 
-type GetTaxValue = (tax?: Tax) => number;
-
 type PriceItemsTotals = {
   unitAmount?: number;
   unitAmountNet?: number;
@@ -35,7 +33,7 @@ export const TaxRates = Object.freeze({
   nontaxable: 0,
 });
 
-export const getTaxValue: GetTaxValue = (tax) => {
+export const getTaxValue = (tax?: Tax): number => {
   if (Array.isArray(tax)) {
     return (+tax?.[0]?.rate || 0.0) / 100;
   }

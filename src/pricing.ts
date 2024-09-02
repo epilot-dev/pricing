@@ -30,11 +30,6 @@ import {
   isTaxInclusivePrice,
 } from './utils';
 
-/**
- * @deprecated
- * @todo Remove safely
- */
-export const DEFAULT_INTEGER_AMOUNT_PRECISION = 2;
 export const BillingPeriods = new Set(['weekly', 'monthly', 'every_quarter', 'every_6_months', 'yearly'] as const);
 
 export const TaxRates = Object.freeze({

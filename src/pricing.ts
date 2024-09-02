@@ -107,7 +107,7 @@ export const computePriceComponent = (
   return computePriceItem(
     priceItemComponent,
     priceItemComponent._price,
-    tax!,
+    tax,
     quantity,
     priceMapping,
     externalFeeMapping,
@@ -168,7 +168,7 @@ const getPriceComponents = (priceItem: CompositePriceItemDto): PriceComponent[] 
  * @returns the product and price relations from the price items grouped by their slug.
  */
 export const extractPricingEntitiesBySlug = (
-  priceItems: (PriceItem | CompositePriceItem)[],
+  priceItems?: (PriceItem | CompositePriceItem)[],
 ): PricingEntitiesExtractResult => {
   const productRelations = [] as RelationAttributeValue['$relation'];
   const priceRelations = [] as RelationAttributeValue['$relation'];
@@ -274,7 +274,9 @@ export const computeCompositePrice = (
  */
 
 export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): PricingDetails => {
-  const initialPricingDetails: PricingDetails = {
+  const initialPricingDetails: Omit<PricingDetails, 'items'> & {
+    items: NonNullable<PricingDetails['items']>;
+  } = {
     items: [],
     amount_subtotal: 0,
     amount_total: 0,
@@ -291,7 +293,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
     currency: DEFAULT_CURRENCY,
   };
 
-  const priceDetails: PricingDetails = priceItems.reduce((details, priceItem) => {
+  const priceDetails = priceItems.reduce((details, priceItem) => {
     if (
       /**
        * priceItem should never be nullish but since optional check was removed
@@ -302,13 +304,13 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
     ) {
       const price = priceItem._price;
       const compositePriceItemToAppend = computeCompositePrice(priceItem, price);
-      const itemBreakdown = computeCompositePriceBreakDown(compositePriceItemToAppend);
+      const itemBreakdown = recomputeDetailTotalsFromCompositePrice(undefined, compositePriceItemToAppend);
       const updatedTotals = recomputeDetailTotalsFromCompositePrice(details, compositePriceItemToAppend);
 
       return {
         ...updatedTotals,
         items: [
-          ...(details.items ?? []),
+          ...details.items,
           {
             ...compositePriceItemToAppend,
             ...itemBreakdown,
@@ -321,7 +323,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
             item_components: convertPriceComponentsPrecision(compositePriceItemToAppend.item_components ?? [], 2),
           },
         ],
-      } as PricingDetails;
+      };
     } else {
       const price = priceItem._price;
       const tax = priceItem.taxes?.[0]?.tax;
@@ -336,7 +338,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
       const priceItemToAppend = computePriceItem(
         priceItem as PriceItemDto,
         price,
-        tax!,
+        tax,
         priceItem.quantity!,
         priceMapping,
         externalFeeMapping,
@@ -345,7 +347,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
       const updatedTotals = isUnitAmountApproved(
         priceItem,
         priceItemToAppend?._price?.price_display_in_journeys ?? price?.price_display_in_journeys,
-        null!,
+        undefined,
       )
         ? recomputeDetailTotals(details, price!, priceItemToAppend)
         : {
@@ -357,12 +359,12 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
 
       return {
         ...updatedTotals,
-        items: [...details.items!, convertPriceItemPrecision(priceItemToAppend, 2)],
-      } as PricingDetails;
+        items: [...details.items, convertPriceItemPrecision(priceItemToAppend, 2)],
+      };
     }
   }, initialPricingDetails);
 
-  priceDetails.currency = (priceDetails?.items?.[0]?.currency as Currency) || DEFAULT_CURRENCY;
+  priceDetails.currency = (priceDetails.items[0]?.currency as Currency) || DEFAULT_CURRENCY;
 
   return convertPricingPrecision(priceDetails, 2);
 };
@@ -374,9 +376,8 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
  * @param priceItem - the price item to compute
  * @returns the pricing details
  */
-export const computePriceItemDetails = (priceItem: PriceItemDto | CompositePriceItemDto): PricingDetails => {
-  return computeAggregatedAndPriceTotals([priceItem]);
-};
+export const computePriceItemDetails = (priceItem: PriceItemDto | CompositePriceItemDto): PricingDetails =>
+  computeAggregatedAndPriceTotals([priceItem]);
 
 /**
  * Computes all the pricing total amounts to integers with a decimal precision of DECIMAL_PRECISION.
@@ -505,13 +506,10 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
   };
 };
 
-const computeCompositePriceBreakDown = (compositePriceItem: CompositePriceItem): PricingDetails | undefined =>
-  recomputeDetailTotalsFromCompositePrice(undefined, compositePriceItem);
-
 const recomputeDetailTotalsFromCompositePrice = (
   details: PricingDetails | undefined,
   compositePriceItem: CompositePriceItem,
-): PricingDetails | undefined => {
+): PricingDetails => {
   const initialPricingDetails: PricingDetails = {
     items: [],
     amount_subtotal: 0,
@@ -527,7 +525,7 @@ const recomputeDetailTotalsFromCompositePrice = (
     },
   };
 
-  return compositePriceItem.item_components?.reduce((detailTotals, itemComponent) => {
+  return (compositePriceItem.item_components ?? []).reduce((detailTotals, itemComponent) => {
     const updatedTotals = isUnitAmountApproved(
       itemComponent,
       itemComponent._price?.price_display_in_journeys,
@@ -602,7 +600,7 @@ export const mapToProductSnapshot = (product?: Product): Product | undefined =>
 export const computePriceItem = (
   priceItem: PriceItemDto,
   price: Price | undefined,
-  applicableTax: Tax,
+  applicableTax: Tax | undefined,
   quantity: number,
   priceMapping?: PriceInputMapping,
   externalFeeMapping?: ExternalFeeMapping,
@@ -914,7 +912,7 @@ const isUnitAmountApproved = (
   parentPriceItem?: CompositePriceItem,
 ) => {
   if (parentPriceItem) {
-    const parentHasHiddenPriceComponents = parentPriceItem.item_components!.some(
+    const parentHasHiddenPriceComponents = (parentPriceItem.item_components ?? []).some(
       (component) => component._price?.price_display_in_journeys === 'show_as_on_request',
     );
     const parentPriceIsHiddenPrice = parentPriceItem._price?.price_display_in_journeys === 'show_as_on_request';

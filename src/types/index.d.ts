@@ -7,8 +7,8 @@ export type PriceItem = Components.Schemas.PriceItem & {
   discount_amount?: number;
   discount_amount_decimal?: string;
   discount_percentage?: number;
-  after_discount_amount_total?: number;
-  after_discount_amount_total_decimal?: string;
+  before_discount_amount_total?: number;
+  before_discount_amount_total_decimal?: string;
 };
 export type PriceItemDto = Components.Schemas.PriceItemDto;
 export type Product = Components.Schemas.Product;

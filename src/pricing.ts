@@ -713,7 +713,7 @@ export const computePriceItem = (
     amount_total: itemValues.amountTotal,
     ...(itemValues.discountAmount && { discount_amount: itemValues.discountAmount }),
     ...(itemValues.discountPercentage && { discount_percentage: itemValues.discountPercentage }),
-    ...(itemValues.afterDiscountAmountTotal && { after_discount_amount_total: itemValues.afterDiscountAmountTotal }),
+    ...(itemValues.beforeDiscountAmountTotal && { before_discount_amount_total: itemValues.beforeDiscountAmountTotal }),
     amount_tax: itemValues.taxAmount,
     ...(itemValues.tiers_details && {
       tiers_details: itemValues.tiers_details.map((tier) => ({
@@ -779,9 +779,9 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
     discount_amount_decimal: d(priceItem.discount_amount!).toUnit().toString(),
   }),
   ...(typeof priceItem.discount_percentage === 'number' && { discount_percentage: priceItem.discount_percentage }),
-  ...(typeof priceItem.after_discount_amount_total === 'number' && {
-    after_discount_amount_total: d(priceItem.after_discount_amount_total!).convertPrecision(precision).getAmount(),
-    after_discount_amount_total_decimal: d(priceItem.after_discount_amount_total!).toUnit().toString(),
+  ...(typeof priceItem.before_discount_amount_total === 'number' && {
+    before_discount_amount_total: d(priceItem.before_discount_amount_total!).convertPrecision(precision).getAmount(),
+    before_discount_amount_total_decimal: d(priceItem.before_discount_amount_total!).toUnit().toString(),
   }),
   amount_tax: d(priceItem.amount_tax!).convertPrecision(precision).getAmount(),
   taxes: priceItem.taxes!.map((tax) => ({

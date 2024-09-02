@@ -17,7 +17,7 @@ export type PriceItemsTotals = {
   taxAmount: number;
   discountAmount?: number;
   discountPercentage?: number;
-  afterDiscountAmountTotal?: number;
+  beforeDiscountAmountTotal?: number;
   displayMode?: Price['price_display_in_journeys'];
   getAg?: PriceGetAg;
   tiers_details?: {
@@ -111,14 +111,14 @@ export const computePriceItemValues = (
   const unitAmountGross = unitAmountNet.add(unitTaxAmount);
 
   const amountSubtotal = unitAmountNet.multiply(unitAmountMultiplier);
-  const amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
+  let amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
   const taxAmount = unitTaxAmount.multiply(unitAmountMultiplier);
 
   const [coupon] = coupons;
 
   let discountAmount: Dinero | undefined;
   let discountPercentage: number | undefined;
-  let afterDiscountAmountTotal: Dinero | undefined;
+  let beforeDiscountAmountTotal: Dinero | undefined;
 
   if (coupon && isValidCoupon(coupon)) {
     if (isPercentageCoupon(coupon)) {
@@ -128,8 +128,8 @@ export const computePriceItemValues = (
       discountAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
     }
 
-    /* Totals after discount */
-    afterDiscountAmountTotal = amountTotal.subtract(discountAmount);
+    beforeDiscountAmountTotal = amountTotal;
+    amountTotal = amountTotal.subtract(discountAmount);
   }
 
   return {
@@ -143,7 +143,7 @@ export const computePriceItemValues = (
     taxAmount: taxAmount.getAmount(),
     discountAmount: discountAmount?.getAmount(),
     discountPercentage: discountPercentage,
-    afterDiscountAmountTotal: afterDiscountAmountTotal?.getAmount(),
+    beforeDiscountAmountTotal: beforeDiscountAmountTotal?.getAmount(),
   };
 };
 

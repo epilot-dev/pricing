@@ -6326,12 +6326,11 @@ export const computedPriceWithFixedDiscount = {
       _product: {
         _tags: ['product-tag-1', 'product-tag-2'],
       },
-      // "after_discount_amount_total": 3947281122282390,
       amount_subtotal: 331704,
       amount_subtotal_decimal: '3317.04295990201',
       amount_tax: 63024,
-      amount_total: 394728,
-      amount_total_decimal: '3947.28112228339',
+      amount_total: 393728,
+      amount_total_decimal: '3937.28112228339',
       coupons: [
         {
           _created_at: '2022-06-15T09:17:06.510Z',
@@ -6350,8 +6349,8 @@ export const computedPriceWithFixedDiscount = {
       currency: 'EUR',
       discount_amount: 1000,
       discount_amount_decimal: '10',
-      after_discount_amount_total: 393728,
-      after_discount_amount_total_decimal: '3937.28112228339',
+      before_discount_amount_total: 394728,
+      before_discount_amount_total_decimal: '3947.28112228339',
       description: 'Winter Sale',
       is_tax_inclusive: true,
       price_id: 'price#1',

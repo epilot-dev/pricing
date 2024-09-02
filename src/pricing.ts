@@ -254,7 +254,7 @@ export const computeCompositePrice = (
   return {
     ...priceItem,
     ...(priceItem?._product && { _product: mapToProductSnapshot(priceItem._product!) }),
-    _price: mapToPriceSnapshot(priceItem._price! as Price),
+    _price: mapToPriceSnapshot(priceItem._price as Price | undefined),
     currency: priceItem._price!.unit_amount_currency || DEFAULT_CURRENCY,
     ...(itemDescription && { description: itemDescription }),
     /**
@@ -371,18 +371,13 @@ export const computePriceItemDetails = (priceItem: PriceItemDto | CompositePrice
 
 /**
  * Computes the pricing details for a given Price in isolation.
- *
- * @param price - the price to compute
- * @returns - the pricing details
  */
 export const computePriceDetails = (price: Price): PricingDetails => {
-  const priceItem: PriceItem = {
+  return computePriceItemDetails({
     quantity: 1,
     ...(price.pricing_model && { pricing_model: price.pricing_model }),
     _price: price,
-  };
-
-  return computeAggregatedAndPriceTotals([priceItem]);
+  });
 };
 
 /**
@@ -575,49 +570,35 @@ export const ENTITY_FIELDS_EXCLUSION_LIST: Set<keyof Price> = new Set([
 ]);
 
 /**
+ * @todo Should narrow down the checks to ensure each item matches the Price type
+ */
+const isArrayOfPrices = (prices: unknown): prices is Price[] => Array.isArray(prices);
+
+/**
  * Converts a Price entity into a PriceDTO without all fields present on the entity fields exclusion list.
  */
-export const mapToPriceSnapshot = (price: Price): Price => {
-  /**
-   *? @todo We should define _price as not being an optional key in PriceItemDto since there is no case where is optional
-   */
-
-  const mappedPricing: Price = {} as Price;
-
-  for (const key in price) {
-    const currValue = price[key];
-
-    if (!ENTITY_FIELDS_EXCLUSION_LIST.has(key)) {
-      mappedPricing[key] = currValue;
-    }
-
-    // Checks if price has price_components and if so iterates over them to extract whitelisted keys
-    if (key === 'price_components' && currValue && Array.isArray(currValue)) {
-      mappedPricing[key] = currValue.map((el: Price) => mapToPriceSnapshot(el));
-    }
-  }
-
-  return mappedPricing;
-};
+export const mapToPriceSnapshot = (price?: Price): Price =>
+  price
+    ? (Object.fromEntries(
+        Object.entries(price)
+          .filter(([key]) => !ENTITY_FIELDS_EXCLUSION_LIST.has(key))
+          .map(([key, value]) => {
+            if (key === 'price_components' && isArrayOfPrices(value)) {
+              return [key, value.map((price) => mapToPriceSnapshot(price))];
+            } else {
+              return [key, value];
+            }
+          }),
+      ) as Price)
+    : ({} as Price);
 
 /**
  * Converts a Product entity into a ProductDTO without all fields present on the entity fields exclusion list.
  */
-export const mapToProductSnapshot = (product?: Product): Product | undefined => {
-  if (!product) return undefined;
-
-  const mappedProduct = {} as NonNullable<Product>;
-
-  for (const key in product) {
-    const currValue = product[key];
-
-    if (!ENTITY_FIELDS_EXCLUSION_LIST.has(key)) {
-      mappedProduct[key] = currValue;
-    }
-  }
-
-  return mappedProduct;
-};
+export const mapToProductSnapshot = (product?: Product): Product | undefined =>
+  product
+    ? (Object.fromEntries(Object.entries(product).filter(([key]) => !ENTITY_FIELDS_EXCLUSION_LIST.has(key))) as Product)
+    : undefined;
 
 /**
  * Computes all price item total amounts to integers with a decimal precision of DECIMAL_PRECISION.
@@ -740,7 +721,7 @@ export const computePriceItem = (
     ],
     ...(priceItem?._product && { _product: mapToProductSnapshot(priceItem._product) }),
     _price: {
-      ...mapToPriceSnapshot(price!),
+      ...mapToPriceSnapshot(price),
       ...(itemValues.displayMode && {
         price_display_in_journeys: itemValues.displayMode ?? price?.price_display_in_journeys,
         unchanged_price_display_in_journeys:

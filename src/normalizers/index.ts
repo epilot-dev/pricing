@@ -1,20 +1,11 @@
-import DineroFactory from 'dinero.js';
+import type { Dinero } from 'dinero.js';
 
 import { toDinero } from '../formatters';
-import {
-  NormalizeTimeFrequency,
-  NormalizeTimeFrequencyToDinero,
-  NormalizeValueToFrequencyUnit,
-  Price,
-  PriceInputMapping,
-  TimeFrequency,
-} from '../types';
+import type { Price, PriceInputMapping, TimeFrequency } from '../types';
 
 import { OperationType, timeFrequencyNormalizerMatrix } from './constants';
 
 export { TimeFrequencyNormalizerMatrix, timeFrequencyNormalizerMatrix } from './constants';
-
-type NormalizePriceMappingInput = (priceMapping: PriceInputMapping, price: Price) => DineroFactory.Dinero | null;
 
 /**
  * This function takes in a quantity, block mapping number, block mapping frequency, price, and parent quantity
@@ -29,11 +20,15 @@ type NormalizePriceMappingInput = (priceMapping: PriceInputMapping, price: Price
  * @param price - The price to be used to calculate the normalized quantity
  * @returns The normalized quantity
  */
-export const normalizePriceMappingInput: NormalizePriceMappingInput = (priceMapping, price) => {
+export const normalizePriceMappingInput = (priceMapping?: PriceInputMapping, price?: Price): Dinero | null => {
   if (!price || !priceMapping || (typeof priceMapping.value !== 'number' && !priceMapping.frequency_unit)) {
     return null;
   }
 
+  /**
+   * @todo Remove non-nullish assertion and do instead
+   * priceMapping.value === 'number' && isNaN(priceMapping.value) ? 1 : priceMapping.value;
+   */
   const safeValue = isNaN(priceMapping.value!) ? 1 : priceMapping.value;
   const isFrequencyUnitNormalizationNeeded = price.type !== 'one_time' && priceMapping.value;
 
@@ -62,11 +57,11 @@ export const normalizePriceMappingInput: NormalizePriceMappingInput = (priceMapp
  *
  * See also {@link TimeFrequency}
  */
-export const normalizeTimeFrequencyToDinero: NormalizeTimeFrequencyToDinero = (
-  timeValue,
-  timeValueFrequency,
-  targetTimeFrequency,
-) => {
+export const normalizeTimeFrequencyToDinero = (
+  timeValue: number | string,
+  timeValueFrequency: TimeFrequency,
+  targetTimeFrequency: TimeFrequency,
+): Dinero => {
   const dineroInputValue = toDinero(String(timeValue));
 
   if (
@@ -103,12 +98,12 @@ export const normalizeTimeFrequencyToDinero: NormalizeTimeFrequencyToDinero = (
  * @deprecated The method will be removed in the next major version. Use normalizeValueToFrequencyUnit instead.
  * See also {@link TimeFrequency}
  */
-export const normalizeTimeFrequency: NormalizeTimeFrequency = (
-  timeValue,
-  timeValueFrequency,
-  targetTimeFrequency,
+export const normalizeTimeFrequency = (
+  timeValue: number | string,
+  timeValueFrequency: TimeFrequency,
+  targetTimeFrequency: TimeFrequency,
   precision = 4,
-) => {
+): number => {
   const targetPrecision = typeof precision !== undefined && precision >= 0 ? precision : 4;
 
   return Number(
@@ -136,12 +131,12 @@ export const normalizeTimeFrequency: NormalizeTimeFrequency = (
  * @returns {number | string} normalized value
  * See also {@link TimeFrequency}
  */
-export const normalizeValueToFrequencyUnit: NormalizeValueToFrequencyUnit = (
-  value,
-  timeValueFrequency,
-  targetTimeFrequency,
-  precision,
-) => {
+export const normalizeValueToFrequencyUnit = (
+  value: number | string,
+  timeValueFrequency: TimeFrequency,
+  targetTimeFrequency: TimeFrequency,
+  precision?: number,
+): number | string => {
   const safePrecision = precision ? precision : typeof value === 'number' ? 4 : 12;
 
   const normalizedValue = normalizeTimeFrequencyToDinero(

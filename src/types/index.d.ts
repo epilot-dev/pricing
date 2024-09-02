@@ -1,4 +1,4 @@
-import { Components } from '@epilot/pricing-client';
+import type { Components } from '@epilot/pricing-client';
 
 export type Price = Components.Schemas.Price;
 export type PriceItem = Components.Schemas.PriceItem;

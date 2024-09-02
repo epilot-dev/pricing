@@ -11,6 +11,7 @@ export {
   toDinero,
   d as toDineroFromInteger,
   toIntegerAmount,
+  addSeparatorToDineroString,
 } from './formatters';
 export { DECIMAL_PRECISION, GENERIC_UNIT_DISPLAY_LABEL } from './formatters/constants';
 export {
@@ -39,5 +40,15 @@ export {
   getDisplayTiersByQuantity,
   getTierDescription,
 } from './tiers';
-export type { PriceTierDisplayMode, PricingDetails, Tax, TaxAmountBreakdown, TimeFrequency } from './types';
+export type {
+  Product,
+  CompositePrice,
+  PriceTierDisplayMode,
+  RecurrenceAmountWithTax,
+  PricingDetails,
+  Tax,
+  TaxAmountBreakdown,
+  TimeFrequency,
+  BillingPeriod,
+} from './types';
 export { isTaxInclusivePrice } from './utils';

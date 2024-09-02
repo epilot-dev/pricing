@@ -3440,3 +3440,46 @@ export const compositePriceWithNumberInputEqualsToZero: CompositePriceItemDto = 
     },
   ],
 } as CompositePriceItemDto;
+
+export const priceItemWithFixedDiscounts: PriceItemDto = {
+  quantity: 5,
+  product_id: 'prod-id#12324',
+  price_id: 'price#1',
+  taxes: [
+    {
+      tax: tax19percent,
+    },
+  ],
+  _price: {
+    _id: 'price#1',
+    unit_amount: 78946,
+    unit_amount_currency: 'EUR',
+    unit_amount_decimal: '789.456224456678',
+    type: 'one_time',
+    tax: [tax19percent],
+    is_tax_inclusive: true,
+    description: 'Winter Sale',
+    _title: 'Winter Sale',
+    pricing_model: 'per_unit',
+  },
+  _product: {
+    _tags: ['product-tag-1', 'product-tag-2'],
+  },
+  pricing_model: 'per_unit',
+  is_tax_inclusive: true,
+  coupons: [
+    {
+      _id: 'coupon#1',
+      _schema: 'coupon',
+      _org: 'org#1',
+      _created_at: '2022-06-15T09:17:06.510Z',
+      _updated_at: '2022-06-17T11:48:20.104Z',
+      _title: 'Winter Sale',
+      name: 'Winter Sale',
+      type: 'fixed',
+      fixed_value: 1000,
+      fixed_value_decimal: '10.00',
+      fixed_value_currency: 'EUR',
+    },
+  ],
+};

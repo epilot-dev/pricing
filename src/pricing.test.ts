@@ -419,6 +419,14 @@ describe('computeAggregatedAndPriceTotals', () => {
       });
     });
   });
+
+  describe('when coupons are applied', () => {
+    it('should return the right result when there is a fixed-amount coupon', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithFixedDiscounts]);
+
+      expect(result).toEqual(results.computedPriceWithFixedDiscount);
+    });
+  });
 });
 
 describe('computeCompositePrice', () => {

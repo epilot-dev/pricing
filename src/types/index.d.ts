@@ -1,7 +1,15 @@
 import { Components } from '@epilot/pricing-client';
+import { Currency } from 'dinero.js';
 
 export type Price = Components.Schemas.Price;
-export type PriceItem = Components.Schemas.PriceItem;
+/* Change after types on OpenAPI spec have been updated */
+export type PriceItem = Components.Schemas.PriceItem & {
+  discount_amount?: number;
+  discount_amount_decimal?: string;
+  discount_percentage?: number;
+  after_discount_amount_total?: number;
+  after_discount_amount_total_decimal?: string;
+};
 export type PriceItemDto = Components.Schemas.PriceItemDto;
 export type Product = Components.Schemas.Product;
 export type Coupon = Components.Schemas.Coupon;

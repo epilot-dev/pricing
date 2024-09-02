@@ -16,6 +16,7 @@ export type PriceItemsTotals = {
   amountTotal: number;
   taxAmount: number;
   discountAmount?: number;
+  discountPercentage?: number;
   afterDiscountAmountTotal?: number;
   displayMode?: Price['price_display_in_journeys'];
   getAg?: PriceGetAg;
@@ -116,13 +117,15 @@ export const computePriceItemValues = (
   const [coupon] = coupons;
 
   let discountAmount: Dinero | undefined;
+  let discountPercentage: number | undefined;
   let afterDiscountAmountTotal: Dinero | undefined;
 
   if (coupon && isValidCoupon(coupon)) {
     if (isPercentageCoupon(coupon)) {
-      discountAmount = amountTotal.multiply(Number(coupon.percentage_value) / 100);
+      discountPercentage = Number(coupon.percentage_value);
+      discountAmount = amountTotal.multiply(discountPercentage / 100);
     } else {
-      discountAmount = d(coupon.fixed_value, coupon.fixed_value_currency);
+      discountAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
     }
 
     /* Totals after discount */
@@ -139,6 +142,7 @@ export const computePriceItemValues = (
     amountTotal: amountTotal.getAmount(),
     taxAmount: taxAmount.getAmount(),
     discountAmount: discountAmount?.getAmount(),
+    discountPercentage: discountPercentage,
     afterDiscountAmountTotal: afterDiscountAmountTotal?.getAmount(),
   };
 };

@@ -711,7 +711,8 @@ export const computePriceItem = (
       unitAmountDecimal && { unit_amount_decimal: unitAmountDecimal }),
     amount_subtotal: itemValues.amountSubtotal,
     amount_total: itemValues.amountTotal,
-    ...(itemValues.discountAmount && { discount_amout: itemValues.discountAmount }),
+    ...(itemValues.discountAmount && { discount_amount: itemValues.discountAmount }),
+    ...(itemValues.discountPercentage && { discount_percentage: itemValues.discountPercentage }),
     ...(itemValues.afterDiscountAmountTotal && { after_discount_amount_total: itemValues.afterDiscountAmountTotal }),
     amount_tax: itemValues.taxAmount,
     ...(itemValues.tiers_details && {
@@ -773,6 +774,15 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
   amount_subtotal_decimal: d(priceItem.amount_subtotal!).toUnit().toString(),
   amount_total: d(priceItem.amount_total!).convertPrecision(precision).getAmount(),
   amount_total_decimal: d(priceItem.amount_total!).toUnit().toString(),
+  ...(typeof priceItem.discount_amount === 'number' && {
+    discount_amount: d(priceItem.discount_amount!).convertPrecision(precision).getAmount(),
+    discount_amount_decimal: d(priceItem.discount_amount!).toUnit().toString(),
+  }),
+  ...(typeof priceItem.discount_percentage === 'number' && { discount_percentage: priceItem.discount_percentage }),
+  ...(typeof priceItem.after_discount_amount_total === 'number' && {
+    after_discount_amount_total: d(priceItem.after_discount_amount_total!).convertPrecision(precision).getAmount(),
+    after_discount_amount_total_decimal: d(priceItem.after_discount_amount_total!).toUnit().toString(),
+  }),
   amount_tax: d(priceItem.amount_tax!).convertPrecision(precision).getAmount(),
   taxes: priceItem.taxes!.map((tax) => ({
     ...tax,

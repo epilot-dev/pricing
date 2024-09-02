@@ -421,10 +421,14 @@ describe('computeAggregatedAndPriceTotals', () => {
   });
 
   describe('when coupons are applied', () => {
-    it('should return the right result when there is a fixed-amount coupon', () => {
-      const result = computeAggregatedAndPriceTotals([samples.priceItemWithFixedDiscounts]);
-
+    it('should return the right result when there is a fixed-amount discount coupon', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithFixedDiscount]);
       expect(result).toEqual(results.computedPriceWithFixedDiscount);
+    });
+
+    it('should return the right result when there is a percentage discount coupon', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageDiscount]);
+      expect(result).toEqual(results.computedPriceWithPercentageDiscount);
     });
   });
 });

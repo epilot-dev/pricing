@@ -1,7 +1,6 @@
 import type { Components } from '@epilot/pricing-client';
 
 export type Price = Components.Schemas.Price;
-/* Change after types on OpenAPI spec have been updated */
 export type PriceItem = Components.Schemas.PriceItem;
 export type PriceItemDto = Components.Schemas.PriceItemDto;
 export type Product = Components.Schemas.Product;

@@ -4,7 +4,6 @@ import {
   ENTITY_FIELDS_EXCLUSION_LIST,
   computeAggregatedAndPriceTotals,
   computeCompositePrice,
-  computePriceDetails,
   computePriceItemDetails,
   extractPricingEntitiesBySlug,
   isCompositePrice,
@@ -469,20 +468,6 @@ describe('computePriceItemDetails', () => {
     const result = computePriceItemDetails(samples.compositePriceWithTaxChanges);
 
     expect(result).toStrictEqual(results.priceDetailsForCompositePriceWithTaxChanges);
-  });
-});
-
-describe('computePriceDetails', () => {
-  it('computes the pricing details for a simple price', () => {
-    const result = computePriceDetails(samples.priceItem1._price as Price);
-
-    expect(result).toStrictEqual(results.resultsForSimplePrice);
-  });
-
-  it('computes the pricing details for a composite price', () => {
-    const result = computePriceDetails(samples.compositePrice._price as Price);
-
-    expect(result).toStrictEqual(results.resultsWithCompositePrices);
   });
 });
 

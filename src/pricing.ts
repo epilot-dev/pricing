@@ -59,7 +59,7 @@ export enum TypeGetAg {
 
 export type ComputeAggregatedAndPriceTotals = typeof computeAggregatedAndPriceTotals;
 
-export type RelationAttributeValue = {
+type RelationAttributeValue = {
   $relation: { entity_id: string; _schema: string; _tags: string[] }[];
 };
 
@@ -379,17 +379,6 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
  */
 export const computePriceItemDetails = (priceItem: PriceItemDto | CompositePriceItemDto): PricingDetails => {
   return computeAggregatedAndPriceTotals([priceItem]);
-};
-
-/**
- * Computes the pricing details for a given Price in isolation.
- */
-export const computePriceDetails = (price: Price): PricingDetails => {
-  return computePriceItemDetails({
-    quantity: 1,
-    ...(price.pricing_model && { pricing_model: price.pricing_model }),
-    _price: price,
-  });
 };
 
 /**
@@ -888,7 +877,7 @@ const convertPricingPrecision = (details: PricingDetails, precision: number): Pr
 /**
  * Gets a price tax with the proper tax behavior override
  */
-export const getPriceTax = (applicableTax?: Tax, price?: Price, priceItemTaxes?: TaxAmountDto[]): Tax | undefined => {
+const getPriceTax = (applicableTax?: Tax, price?: Price, priceItemTaxes?: TaxAmountDto[]): Tax | undefined => {
   if (applicableTax) {
     return applicableTax;
   }
@@ -973,7 +962,7 @@ export const computeQuantities = (price: Price | undefined, quantity: number, pr
   };
 };
 
-export const computeExternalFee = (
+const computeExternalFee = (
   externalFeeMapping: ExternalFeeMapping | undefined,
   priceBillingPeriod: TimeFrequency | undefined,
 ): string | undefined => {

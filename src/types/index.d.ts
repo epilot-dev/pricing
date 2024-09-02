@@ -1,5 +1,4 @@
-import { Components } from '@epilot/pricing-client';
-import { Currency } from 'dinero.js';
+import type { Components } from '@epilot/pricing-client';
 
 export type Price = Components.Schemas.Price;
 /* Change after types on OpenAPI spec have been updated */

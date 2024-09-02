@@ -170,33 +170,30 @@ export function getTierDescription(
         )
       : tier.flat_fee_amount_decimal!;
 
-  const formatedAmountString =
-    showUnitAmount &&
-    formatAmountFromString({
-      ...formatOptions,
-      decimalAmount: unitAmountDecimal!,
-    });
+  const formatedAmountString = showUnitAmount
+    ? formatAmountFromString({
+        ...formatOptions,
+        decimalAmount: unitAmountDecimal!,
+      })
+    : '';
 
-  const formatedFlatFeeString =
-    showFlatFeeAmount &&
-    formatAmountFromString({
-      ...formatOptions,
-      decimalAmount: flatFeeAmountDecimal || '0',
-    });
+  const formatedFlatFeeString = showFlatFeeAmount
+    ? formatAmountFromString({
+        ...formatOptions,
+        decimalAmount: flatFeeAmountDecimal || '0',
+      })
+    : '';
 
   const formatedUnitString =
-    showUnitAmount &&
-    isNotPieceUnit(unit) &&
-    `/${t(`selectvalues.Price.unit.${unit || 'unit'}`, {
-      ns: 'entity',
-    })}`;
+    showUnitAmount && isNotPieceUnit(unit)
+      ? `/${t(`selectvalues.Price.unit.${unit || 'unit'}`, {
+          ns: 'entity',
+        })}`
+      : '';
 
-  return (
-    (startsAt ? startsAt + ' ' : '') +
-    (formatedAmountString || '') +
-    (formatedUnitString || '') +
-    (formatedFlatFeeString || '')
-  );
+  const prefix = startsAt ? `${startsAt} ` : '';
+
+  return prefix + formatedAmountString + formatedUnitString + formatedFlatFeeString;
 }
 
 /**

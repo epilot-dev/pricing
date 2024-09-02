@@ -2,13 +2,7 @@ import type { Components } from '@epilot/pricing-client';
 
 export type Price = Components.Schemas.Price;
 /* Change after types on OpenAPI spec have been updated */
-export type PriceItem = Components.Schemas.PriceItem & {
-  discount_amount?: number;
-  discount_amount_decimal?: string;
-  discount_percentage?: number;
-  before_discount_amount_total?: number;
-  before_discount_amount_total_decimal?: string;
-};
+export type PriceItem = Components.Schemas.PriceItem;
 export type PriceItemDto = Components.Schemas.PriceItemDto;
 export type Product = Components.Schemas.Product;
 export type Coupon = Components.Schemas.Coupon;

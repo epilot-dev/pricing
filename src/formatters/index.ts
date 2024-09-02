@@ -1,4 +1,5 @@
-import dinero, { Currency, Dinero } from 'dinero.js';
+import dinero from 'dinero.js';
+import type { Currency, Dinero } from 'dinero.js';
 
 import { CURRENCIES_SUBUNITS, DEFAULT_CURRENCY, DEFAULT_SUBUNIT } from '../currencies';
 import { Price } from '../types';
@@ -12,56 +13,6 @@ import {
   GENERIC_UNIT_DISPLAY_LABEL,
   MAX_SUPPORTED_FORMAT_PRECISION,
 } from './constants';
-
-export type AmountFormatter = ({
-  amount,
-  currency,
-  format,
-  locale,
-}: {
-  amount: number | string;
-  currency?: Currency;
-  format?: string;
-  locale?: string;
-  enableSubunitDisplay?: boolean;
-}) => string;
-
-export type AmountFormatterFromString = ({
-  decimalAmount,
-  precision,
-  currency,
-  format,
-  locale,
-  useRealPrecision,
-}: {
-  decimalAmount: string;
-  precision?: number;
-  currency?: Currency;
-  format?: string;
-  locale?: string;
-  useRealPrecision?: boolean;
-  enableSubunitDisplay?: boolean;
-}) => string;
-
-export type AmountFormatterFromDinero = ({
-  decimalAmount,
-  precision,
-  currency,
-  format,
-  locale,
-  useRealPrecision,
-}: {
-  decimalAmount: Dinero;
-  precision?: number;
-  currency?: Currency;
-  format?: string;
-  locale?: string;
-  useRealPrecision?: boolean;
-  enableSubunitDisplay?: boolean;
-}) => string;
-
-export type DineroConvertor = (unitAmountDecimal: string, currency?: Currency) => dinero.Dinero;
-export type FormatPriceUnit = (unit: Price['unit'], hideGenericUnitLabel?: boolean) => string;
 
 const getCurrencySymbol = (currency: Currency, locale: string) => {
   return new Intl.NumberFormat(locale, { style: 'currency', currency })
@@ -129,7 +80,19 @@ export const getFormattedCurrencySubunit = (
 //  * @param params: { amount, currency, format }: amount - representing the integer/string amount, currency – a currency in the ISO code format, and format – a dinerojs format.
 //  * @returns the formatted amount
 //  */
-export const formatAmount: AmountFormatter = ({ amount, currency, format, locale, enableSubunitDisplay }) => {
+export const formatAmount = ({
+  amount,
+  currency,
+  format,
+  locale,
+  enableSubunitDisplay,
+}: {
+  amount: number | string;
+  currency?: Currency;
+  format?: string;
+  locale?: string;
+  enableSubunitDisplay?: boolean;
+}): string => {
   let integerAmount = 0;
 
   try {
@@ -163,6 +126,8 @@ export const formatAmount: AmountFormatter = ({ amount, currency, format, locale
 
   return dAmount.setLocale(locale || DEFAULT_LOCALE).toFormat(format || DEFAULT_FORMAT);
 };
+
+export type AmountFormatter = typeof formatAmount;
 
 /**
  * Gets the precision and format from a decimal amount (string)
@@ -207,7 +172,7 @@ function getPrecisionAndFormatFromStringAmount(
  * @param {boolean} enableSubunitDisplay - When true, the amount won't be displayed as the subunit (e.g. cents)
  * @return {string} - The user-displayable formatted amount
  */
-export const formatAmountFromString: AmountFormatterFromString = ({
+export const formatAmountFromString = ({
   decimalAmount,
   precision,
   currency,
@@ -215,7 +180,15 @@ export const formatAmountFromString: AmountFormatterFromString = ({
   locale,
   useRealPrecision = false,
   enableSubunitDisplay = false,
-}) => {
+}: {
+  decimalAmount: string;
+  precision?: number;
+  currency?: Currency;
+  format?: string;
+  locale?: string;
+  useRealPrecision?: boolean;
+  enableSubunitDisplay?: boolean;
+}): string => {
   /**
    * Decimal amounts can sometimes come in an invalid format, such as 1.000.000,00.
    * In an attempt to build some resiliency into our library, this function will parse the decimal amount to a valid format, such as 1000000.00.
@@ -280,13 +253,15 @@ export function addSeparatorToDineroString(dineroString: string) {
 /**
  * Convert an amount decimal and currency into a dinero object.
  */
-export const toDinero: DineroConvertor = (unitAmountDecimal, currency = 'EUR') => {
+export const toDinero = (unitAmountDecimal: string, currency: Currency = 'EUR'): Dinero => {
   const [amountInteger = '0', amountDecimal = '0'] = (unitAmountDecimal || '0').split('.');
   const truncatedDecimal = amountDecimal.substr(0, DECIMAL_PRECISION).padEnd(DECIMAL_PRECISION, '0');
   const unitAmountInteger = Number(`${amountInteger}${truncatedDecimal}`);
 
   return d(unitAmountInteger, currency);
 };
+
+export type DineroConvertor = typeof toDinero;
 
 /**
  * Converts a string decimal amount to an integer amount with 2 digits precision.
@@ -300,7 +275,7 @@ export const toIntegerAmount: (decimalAmount: string) => number = (decimalAmount
 /**
  * Utility mapper from Integer amount into DineroJS object using DECIMAL_PRECISION (12).
  */
-export const d: (integerAmount: number, currency?: Currency) => dinero.Dinero = (integerAmount, currency = 'EUR') =>
+export const d: (integerAmount: number, currency?: Currency) => Dinero = (integerAmount, currency = 'EUR') =>
   dinero({ amount: integerAmount, precision: DECIMAL_PRECISION, ...(currency && { currency }) });
 
 /**
@@ -308,7 +283,7 @@ export const d: (integerAmount: number, currency?: Currency) => dinero.Dinero = 
  *
  * @returns {string} the formatted unit
  */
-export const formatPriceUnit: FormatPriceUnit = (unit, hideGenericUnitLabel) => {
+export const formatPriceUnit = (unit: Price['unit'], hideGenericUnitLabel?: boolean) => {
   if (!hideGenericUnitLabel && !unit?.trim()) {
     return unitDisplayLabels.none;
   }

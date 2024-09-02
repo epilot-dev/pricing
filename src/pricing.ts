@@ -141,19 +141,19 @@ const isValidPrice = (priceComponent: Price): boolean => {
   return true;
 };
 
+const ensureComponentWithValidPrice = (itemComponent: PriceItemDto): PriceItemDto => ({
+  ...itemComponent,
+  unit_amount: Number.isInteger(itemComponent.unit_amount) ? itemComponent.unit_amount : 0,
+  unit_amount_decimal:
+    typeof itemComponent.unit_amount_decimal !== 'undefined' ? itemComponent.unit_amount_decimal : '0.0',
+});
+
 const getPriceComponents = (priceItem: CompositePriceItemDto): PriceComponent[] => {
   if (!Array.isArray(priceItem?.item_components)) {
     return Array.isArray(priceItem?._price?.price_components)
       ? priceItem._price!.price_components.filter(isValidPrice)
       : [];
   }
-
-  const ensureComponentWithValidPrice = (itemComponent: PriceItemDto): PriceItemDto => ({
-    ...itemComponent,
-    unit_amount: Number.isInteger(itemComponent.unit_amount) ? itemComponent.unit_amount : 0,
-    unit_amount_decimal:
-      typeof itemComponent.unit_amount_decimal !== 'undefined' ? itemComponent.unit_amount_decimal : '0.0',
-  });
 
   return priceItem.item_components.map<PriceComponent>((itemComponent) => ({
     _itemRef: ensureComponentWithValidPrice(itemComponent),
@@ -218,8 +218,8 @@ export const computeCompositePrice = (
   priceItem: CompositePriceItemDto,
   compositePrice: CompositePrice,
 ): CompositePriceItem => {
-  const priceComponents = getPriceComponents(priceItem) || [];
-  const itemComponents: PriceItemDto[] = priceComponents.reduce((itemComponentsResult: PriceItemDto[], component) => {
+  const priceComponents = getPriceComponents(priceItem);
+  const computedItemComponents = priceComponents.map((component) => {
     const componentTax = Array.isArray(component.tax) ? component.tax : [];
     const itemTaxRate: TaxAmountDto = (componentTax?.[0] && { tax: componentTax?.[0] }) || { rate: 'nontaxable' };
 
@@ -246,10 +246,8 @@ export const computeCompositePrice = (
       ],
     };
 
-    return [...itemComponentsResult, itemComponent];
-  }, []);
-
-  const computedItemComponents = itemComponents.map((priceRelation) => computePriceComponent(priceRelation, priceItem));
+    return computePriceComponent(itemComponent, priceItem);
+  });
 
   const itemDescription = priceItem?.description ?? compositePrice?.description ?? null;
 
@@ -259,6 +257,10 @@ export const computeCompositePrice = (
     _price: mapToPriceSnapshot(priceItem._price! as Price),
     currency: priceItem._price!.unit_amount_currency || DEFAULT_CURRENCY,
     ...(itemDescription && { description: itemDescription }),
+    /**
+     * @todo It might not be necessary to spread the price components here,
+     * investigate whether it's being mutated elsewhere
+     */
     item_components: [...computedItemComponents],
   };
 };

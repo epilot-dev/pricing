@@ -20,7 +20,7 @@ export { TimeFrequencyNormalizerMatrix, timeFrequencyNormalizerMatrix } from './
  * @param price - The price to be used to calculate the normalized quantity
  * @returns The normalized quantity
  */
-export const normalizePriceMappingInput = (priceMapping: PriceInputMapping, price: Price): Dinero | null => {
+export const normalizePriceMappingInput = (priceMapping?: PriceInputMapping, price?: Price): Dinero | null => {
   if (!price || !priceMapping || (typeof priceMapping.value !== 'number' && !priceMapping.frequency_unit)) {
     return null;
   }

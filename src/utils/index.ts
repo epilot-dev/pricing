@@ -1,8 +1,10 @@
-import { Currency } from 'dinero.js';
+import type { Currency, Dinero } from 'dinero.js';
 
 import { d, toDinero } from '../formatters';
 import { MarkupPricingModel, TypeGetAg } from '../pricing';
-import { Price, PriceGetAg, PriceTier, Tax } from '../types';
+import { Coupon, Price, PriceGetAg, PriceTier, Tax } from '../types';
+
+import { isPercentageCoupon, isValidCoupon } from './guards/coupon';
 
 export type PriceItemsTotals = {
   unitAmount?: number;
@@ -13,6 +15,9 @@ export type PriceItemsTotals = {
   amountSubtotal: number;
   amountTotal: number;
   taxAmount: number;
+  discountAmount?: number;
+  discountPercentage?: number;
+  beforeDiscountAmountTotal?: number;
   displayMode?: Price['price_display_in_journeys'];
   getAg?: PriceGetAg;
   tiers_details?: {
@@ -92,6 +97,7 @@ export const computePriceItemValues = (
   isTaxInclusive: boolean,
   unitAmountMultiplier: number,
   tax?: Tax,
+  coupons: ReadonlyArray<Coupon> = [],
 ): PriceItemsTotals => {
   const unitAmount = toDinero(unitAmountDecimal, currency);
   const taxRate = getTaxValue(tax);
@@ -105,8 +111,26 @@ export const computePriceItemValues = (
   const unitAmountGross = unitAmountNet.add(unitTaxAmount);
 
   const amountSubtotal = unitAmountNet.multiply(unitAmountMultiplier);
-  const amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
+  let amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
   const taxAmount = unitTaxAmount.multiply(unitAmountMultiplier);
+
+  const [coupon] = coupons;
+
+  let discountAmount: Dinero | undefined;
+  let discountPercentage: number | undefined;
+  let beforeDiscountAmountTotal: Dinero | undefined;
+
+  if (coupon && isValidCoupon(coupon)) {
+    if (isPercentageCoupon(coupon)) {
+      discountPercentage = Number(coupon.percentage_value);
+      discountAmount = amountTotal.multiply(discountPercentage / 100);
+    } else {
+      discountAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
+    }
+
+    beforeDiscountAmountTotal = amountTotal;
+    amountTotal = amountTotal.subtract(discountAmount);
+  }
 
   return {
     unitAmount: unitAmount.getAmount(),
@@ -117,6 +141,9 @@ export const computePriceItemValues = (
     amountSubtotal: amountSubtotal.getAmount(),
     amountTotal: amountTotal.getAmount(),
     taxAmount: taxAmount.getAmount(),
+    discountAmount: discountAmount?.getAmount(),
+    discountPercentage: discountPercentage,
+    beforeDiscountAmountTotal: beforeDiscountAmountTotal?.getAmount(),
   };
 };
 

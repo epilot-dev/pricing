@@ -7,6 +7,7 @@ import type {
   CompositePrice,
   CompositePriceItem,
   CompositePriceItemDto,
+  Coupon,
   ExternalFeeMapping,
   Price,
   PriceInputMapping,
@@ -326,6 +327,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
       };
     } else {
       const price = priceItem._price;
+      const coupons = priceItem.coupons;
       const tax = priceItem.taxes?.[0]?.tax;
       const priceMapping = priceItem._price
         ? priceItem.price_mappings?.find(({ price_id }) => priceItem._price!._id === price_id)
@@ -342,6 +344,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
         priceItem.quantity!,
         priceMapping,
         externalFeeMapping,
+        coupons,
       );
 
       const updatedTotals = isUnitAmountApproved(
@@ -604,6 +607,7 @@ export const computePriceItem = (
   quantity: number,
   priceMapping?: PriceInputMapping,
   externalFeeMapping?: ExternalFeeMapping,
+  coupons: ReadonlyArray<Coupon> = [],
 ): PriceItem => {
   const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase() as Currency;
   const priceItemDescription = priceItem.description ?? price?.description;
@@ -677,6 +681,7 @@ export const computePriceItem = (
         isTaxInclusive,
         unitAmountMultiplier!,
         priceTax!,
+        coupons,
       );
   }
 
@@ -693,6 +698,9 @@ export const computePriceItem = (
       unitAmountDecimal && { unit_amount_decimal: unitAmountDecimal }),
     amount_subtotal: itemValues.amountSubtotal,
     amount_total: itemValues.amountTotal,
+    ...(itemValues.discountAmount && { discount_amount: itemValues.discountAmount }),
+    ...(itemValues.discountPercentage && { discount_percentage: itemValues.discountPercentage }),
+    ...(itemValues.beforeDiscountAmountTotal && { before_discount_amount_total: itemValues.beforeDiscountAmountTotal }),
     amount_tax: itemValues.taxAmount,
     ...(itemValues.tiers_details && {
       tiers_details: itemValues.tiers_details.map((tier) => ({
@@ -753,6 +761,15 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
   amount_subtotal_decimal: d(priceItem.amount_subtotal!).toUnit().toString(),
   amount_total: d(priceItem.amount_total!).convertPrecision(precision).getAmount(),
   amount_total_decimal: d(priceItem.amount_total!).toUnit().toString(),
+  ...(typeof priceItem.discount_amount === 'number' && {
+    discount_amount: d(priceItem.discount_amount!).convertPrecision(precision).getAmount(),
+    discount_amount_decimal: d(priceItem.discount_amount!).toUnit().toString(),
+  }),
+  ...(typeof priceItem.discount_percentage === 'number' && { discount_percentage: priceItem.discount_percentage }),
+  ...(typeof priceItem.before_discount_amount_total === 'number' && {
+    before_discount_amount_total: d(priceItem.before_discount_amount_total!).convertPrecision(precision).getAmount(),
+    before_discount_amount_total_decimal: d(priceItem.before_discount_amount_total!).toUnit().toString(),
+  }),
   amount_tax: d(priceItem.amount_tax!).convertPrecision(precision).getAmount(),
   taxes: priceItem.taxes!.map((tax) => ({
     ...tax,

@@ -5665,3 +5665,272 @@ export const resultCompositePriceWithTotalDetails = {
     },
   },
 };
+
+/**
+ * Simple price with a coupon applied to it resulting in a fixed discount
+ */
+export const computedPriceWithFixedDiscount = {
+  amount_subtotal: 331704,
+  amount_tax: 63024,
+  amount_total: 393728,
+  currency: 'EUR',
+  items: [
+    {
+      _price: {
+        _id: 'price#1',
+        _title: 'Winter Sale',
+        description: 'Winter Sale',
+        is_tax_inclusive: true,
+        pricing_model: 'per_unit',
+        tax: [
+          {
+            _created_at: '2022-06-29T20:26:19.020Z',
+            _id: '19',
+            _org: '739224',
+            _schema: 'tax',
+            _title: '',
+            _updated_at: '2022-06-29T20:26:19.020Z',
+            rate: 19,
+            type: 'VAT',
+          },
+        ],
+        type: 'one_time',
+        unit_amount: 78946,
+        unit_amount_currency: 'EUR',
+        unit_amount_decimal: '789.456224456678',
+      },
+      _product: {
+        _tags: ['product-tag-1', 'product-tag-2'],
+      },
+      amount_subtotal: 331704,
+      amount_subtotal_decimal: '3317.04295990201',
+      amount_tax: 63024,
+      amount_total: 393728,
+      amount_total_decimal: '3937.28112228339',
+      coupons: [
+        {
+          _created_at: '2022-06-15T09:17:06.510Z',
+          _id: 'coupon#1',
+          _org: 'org#1',
+          _schema: 'coupon',
+          _title: 'Winter Sale',
+          _updated_at: '2022-06-17T11:48:20.104Z',
+          fixed_value: 1000,
+          fixed_value_currency: 'EUR',
+          fixed_value_decimal: '10.00',
+          name: 'Winter Sale',
+          type: 'fixed',
+        },
+      ],
+      currency: 'EUR',
+      discount_amount: 1000,
+      discount_amount_decimal: '10',
+      before_discount_amount_total: 394728,
+      before_discount_amount_total_decimal: '3947.28112228339',
+      description: 'Winter Sale',
+      is_tax_inclusive: true,
+      price_id: 'price#1',
+      pricing_model: 'per_unit',
+      product_id: 'prod-id#12324',
+      quantity: 5,
+      taxes: [
+        {
+          amount: 63024,
+          tax: {
+            _created_at: '2022-06-29T20:26:19.020Z',
+            _id: '19',
+            _org: '739224',
+            _schema: 'tax',
+            _title: '',
+            _updated_at: '2022-06-29T20:26:19.020Z',
+            rate: 19,
+            type: 'VAT',
+          },
+        },
+      ],
+      unit_amount: 78946,
+      unit_amount_decimal: '789.456224456678',
+      unit_amount_gross: 78946,
+      unit_amount_gross_decimal: '789.456224456678',
+      unit_amount_net: 66341,
+      unit_amount_net_decimal: '663.408591980402',
+    },
+  ],
+  total_details: {
+    amount_tax: 63024,
+    breakdown: {
+      recurrences: [
+        {
+          amount_subtotal: 331704,
+          amount_subtotal_decimal: '3317.04295990201',
+          amount_tax: 63024,
+          amount_total: 393728,
+          amount_total_decimal: '3937.28112228339',
+          type: 'one_time',
+          unit_amount_gross: 78946,
+          unit_amount_net: 66341,
+        },
+      ],
+      recurrencesByTax: [
+        {
+          amount_subtotal: 331704,
+          amount_tax: 63024,
+          amount_total: 393728,
+          tax: {
+            amount: 63024,
+            tax: {
+              _id: '19',
+              rate: 19,
+              type: 'VAT',
+            },
+          },
+          type: 'one_time',
+        },
+      ],
+      taxes: [
+        {
+          amount: 63024,
+          tax: {
+            _id: '19',
+            rate: 19,
+            type: 'VAT',
+          },
+        },
+      ],
+    },
+  },
+};
+
+/**
+ * Simple price with a coupon applied to it resulting in a percentage discount
+ */
+export const computedPriceWithPercentageDiscount = {
+  amount_subtotal: 331704,
+  amount_tax: 63024,
+  amount_total: 294072,
+  currency: 'EUR',
+  items: [
+    {
+      _price: {
+        _id: 'price#1',
+        _title: 'Winter Sale',
+        description: 'Winter Sale',
+        is_tax_inclusive: true,
+        pricing_model: 'per_unit',
+        tax: [
+          {
+            _created_at: '2022-06-29T20:26:19.020Z',
+            _id: '19',
+            _org: '739224',
+            _schema: 'tax',
+            _title: '',
+            _updated_at: '2022-06-29T20:26:19.020Z',
+            rate: 19,
+            type: 'VAT',
+          },
+        ],
+        type: 'one_time',
+        unit_amount: 78946,
+        unit_amount_currency: 'EUR',
+        unit_amount_decimal: '789.456224456678',
+      },
+      _product: {
+        _tags: ['product-tag-1', 'product-tag-2'],
+      },
+      amount_subtotal: 331704,
+      amount_subtotal_decimal: '3317.04295990201',
+      amount_tax: 63024,
+      amount_total: 294072,
+      amount_total_decimal: '2940.724436101126',
+      before_discount_amount_total: 394728,
+      before_discount_amount_total_decimal: '3947.28112228339',
+      coupons: [
+        {
+          _id: 'coupon#1',
+          _schema: 'coupon',
+          _org: 'org#1',
+          _created_at: '2022-06-15T09:17:06.510Z',
+          _updated_at: '2022-06-17T11:48:20.104Z',
+          _title: 'Winter Sale',
+          name: 'Winter Sale',
+          type: 'percentage',
+          percentage_value: '25.5',
+        },
+      ],
+      currency: 'EUR',
+      discount_amount: 100656,
+      discount_amount_decimal: '1006.556686182264',
+      discount_percentage: 25.5,
+      description: 'Winter Sale',
+      is_tax_inclusive: true,
+      price_id: 'price#1',
+      pricing_model: 'per_unit',
+      product_id: 'prod-id#12324',
+      quantity: 5,
+      taxes: [
+        {
+          amount: 63024,
+          tax: {
+            _created_at: '2022-06-29T20:26:19.020Z',
+            _id: '19',
+            _org: '739224',
+            _schema: 'tax',
+            _title: '',
+            _updated_at: '2022-06-29T20:26:19.020Z',
+            rate: 19,
+            type: 'VAT',
+          },
+        },
+      ],
+      unit_amount: 78946,
+      unit_amount_decimal: '789.456224456678',
+      unit_amount_gross: 78946,
+      unit_amount_gross_decimal: '789.456224456678',
+      unit_amount_net: 66341,
+      unit_amount_net_decimal: '663.408591980402',
+    },
+  ],
+  total_details: {
+    amount_tax: 63024,
+    breakdown: {
+      recurrences: [
+        {
+          amount_subtotal: 331704,
+          amount_subtotal_decimal: '3317.04295990201',
+          amount_tax: 63024,
+          amount_total: 294072,
+          amount_total_decimal: '2940.724436101126',
+          type: 'one_time',
+          unit_amount_gross: 78946,
+          unit_amount_net: 66341,
+        },
+      ],
+      recurrencesByTax: [
+        {
+          amount_subtotal: 331704,
+          amount_tax: 63024,
+          amount_total: 294072,
+          tax: {
+            amount: 63024,
+            tax: {
+              _id: '19',
+              rate: 19,
+              type: 'VAT',
+            },
+          },
+          type: 'one_time',
+        },
+      ],
+      taxes: [
+        {
+          amount: 63024,
+          tax: {
+            _id: '19',
+            rate: 19,
+            type: 'VAT',
+          },
+        },
+      ],
+    },
+  },
+};

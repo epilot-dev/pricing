@@ -123,7 +123,7 @@ export const computePriceItemValues = (
   if (coupon && isValidCoupon(coupon)) {
     if (isPercentageCoupon(coupon)) {
       discountPercentage = Number(coupon.percentage_value);
-      discountAmount = amountTotal.multiply(discountPercentage / 100);
+      discountAmount = amountTotal.multiply(discountPercentage).divide(100);
     } else {
       discountAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
     }

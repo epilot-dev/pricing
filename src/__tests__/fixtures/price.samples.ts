@@ -3018,7 +3018,7 @@ export const priceItemWithFixedDiscount: PriceItemDto = {
   },
   pricing_model: 'per_unit',
   is_tax_inclusive: true,
-  coupons: [
+  _coupons: [
     {
       _id: 'coupon#1',
       _schema: 'coupon',
@@ -3061,7 +3061,7 @@ export const priceItemWithPercentageDiscount: PriceItemDto = {
   },
   pricing_model: 'per_unit',
   is_tax_inclusive: true,
-  coupons: [
+  _coupons: [
     {
       _id: 'coupon#1',
       _schema: 'coupon',

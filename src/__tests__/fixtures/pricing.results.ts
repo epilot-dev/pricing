@@ -5707,7 +5707,7 @@ export const computedPriceWithFixedDiscount = {
       amount_tax: 63024,
       amount_total: 393728,
       amount_total_decimal: '3937.28112228339',
-      coupons: [
+      _coupons: [
         {
           _created_at: '2022-06-15T09:17:06.510Z',
           _id: 'coupon#1',
@@ -5844,7 +5844,7 @@ export const computedPriceWithPercentageDiscount = {
       amount_total_decimal: '2940.724436101125',
       before_discount_amount_total: 394728,
       before_discount_amount_total_decimal: '3947.28112228339',
-      coupons: [
+      _coupons: [
         {
           _id: 'coupon#1',
           _schema: 'coupon',

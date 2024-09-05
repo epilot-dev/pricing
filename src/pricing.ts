@@ -327,7 +327,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
       };
     } else {
       const price = priceItem._price;
-      const coupons = priceItem.coupons;
+      const coupons = priceItem._coupons;
       const tax = priceItem.taxes?.[0]?.tax;
       const priceMapping = priceItem._price
         ? priceItem.price_mappings?.find(({ price_id }) => priceItem._price!._id === price_id)

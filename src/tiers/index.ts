@@ -3,7 +3,7 @@ import { Currency, Dinero } from 'dinero.js';
 
 import { DEFAULT_CURRENCY } from '../currencies';
 import { addSeparatorToDineroString, formatAmountFromString, toDinero } from '../formatters';
-import { DEFAULT_LOCALE } from '../formatters/constants';
+import { DEFAULT_INTEGER_AMOUNT_PRECISION, DEFAULT_LOCALE } from '../formatters/constants';
 import { PricingModel } from '../pricing';
 import { Price, PriceTier, PriceTierEnhanced, Tax } from '../types';
 import { getQuantityForTier, getTaxValue, isNotPieceUnit } from '../utils';
@@ -304,7 +304,7 @@ export const computeCumulativeValue = (
       formatAmountFromString({
         decimalAmount: addSeparatorToDineroString(amountTotal.getAmount().toString()),
         ...formatOptions,
-        precision: 2,
+        precision: DEFAULT_INTEGER_AMOUNT_PRECISION,
         useRealPrecision: false,
       }),
     totalWithPrecision:
@@ -316,7 +316,7 @@ export const computeCumulativeValue = (
     average: `${formatAmountFromString({
       decimalAmount: addSeparatorToDineroString(average),
       ...formatOptions,
-      precision: 2,
+      precision: DEFAULT_INTEGER_AMOUNT_PRECISION,
       useRealPrecision: false,
     })}${formattedUnit ? `/${formattedUnit}` : ''}`,
     subtotal:
@@ -324,7 +324,7 @@ export const computeCumulativeValue = (
       formatAmountFromString({
         decimalAmount: addSeparatorToDineroString(amountSubtotal.getAmount().toString()),
         ...formatOptions,
-        precision: 2,
+        precision: DEFAULT_INTEGER_AMOUNT_PRECISION,
         useRealPrecision: false,
       }),
     subtotalWithPrecision:
@@ -336,7 +336,7 @@ export const computeCumulativeValue = (
     subAverage: `${formatAmountFromString({
       decimalAmount: addSeparatorToDineroString(subAverage!),
       ...formatOptions,
-      precision: 2,
+      precision: DEFAULT_INTEGER_AMOUNT_PRECISION,
       useRealPrecision: false,
     })}${formattedUnit ? `/${formattedUnit}` : ''}`,
     breakdown,

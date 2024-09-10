@@ -2,6 +2,7 @@ import type { Currency } from 'dinero.js';
 
 import { DEFAULT_CURRENCY } from './currencies';
 import { d, toDinero } from './formatters';
+import { DEFAULT_INTEGER_AMOUNT_PRECISION } from './formatters/constants';
 import { normalizePriceMappingInput, normalizeValueToFrequencyUnit } from './normalizers';
 import type {
   CompositePrice,
@@ -321,7 +322,10 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
             ...(typeof itemBreakdown?.amount_total === 'number' && {
               amount_total_decimal: d(itemBreakdown.amount_total).toUnit().toString(),
             }),
-            item_components: convertPriceComponentsPrecision(compositePriceItemToAppend.item_components ?? [], 2),
+            item_components: convertPriceComponentsPrecision(
+              compositePriceItemToAppend.item_components ?? [],
+              DEFAULT_INTEGER_AMOUNT_PRECISION,
+            ),
           },
         ],
       };
@@ -362,14 +366,14 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
 
       return {
         ...updatedTotals,
-        items: [...details.items, convertPriceItemPrecision(priceItemToAppend, 2)],
+        items: [...details.items, convertPriceItemPrecision(priceItemToAppend, DEFAULT_INTEGER_AMOUNT_PRECISION)],
       };
     }
   }, initialPricingDetails);
 
   priceDetails.currency = (priceDetails.items[0]?.currency as Currency) || DEFAULT_CURRENCY;
 
-  return convertPricingPrecision(priceDetails, 2);
+  return convertPricingPrecision(priceDetails, DEFAULT_INTEGER_AMOUNT_PRECISION);
 };
 
 /**
@@ -734,7 +738,7 @@ export const computePriceItem = (
   };
 };
 
-const convertPriceComponentsPrecision = (items: PriceItem[], precision = 2): PriceItem[] =>
+const convertPriceComponentsPrecision = (items: PriceItem[], precision?: number): PriceItem[] =>
   items.map((component) => convertPriceItemPrecision(component, precision));
 
 /**
@@ -742,7 +746,7 @@ const convertPriceComponentsPrecision = (items: PriceItem[], precision = 2): Pri
  * e.g: 10.00 with precision DECIMAL_PRECISION, represented as 10(+12 zeros) with precision 2
  * would be 1000(only 2 zeros on the decimal component).
  */
-const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceItem => ({
+const convertPriceItemPrecision = (priceItem: PriceItem, precision = DEFAULT_INTEGER_AMOUNT_PRECISION): PriceItem => ({
   ...priceItem,
   ...(typeof priceItem.unit_amount === 'number' && {
     unit_amount: d(priceItem.unit_amount).convertPrecision(precision).getAmount(),

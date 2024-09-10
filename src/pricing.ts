@@ -421,6 +421,12 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
     : null;
   const priceSubtotal = d(priceItemToAppend.amount_subtotal!);
   const priceTotal = d(priceItemToAppend.amount_total!);
+  const priceDiscountAmount =
+    typeof priceItemToAppend.discount_amount !== 'undefined' ? d(priceItemToAppend.discount_amount!) : undefined;
+  const priceBeforeDiscountAmountTotal =
+    typeof priceItemToAppend.before_discount_amount_total !== 'undefined'
+      ? d(priceItemToAppend.before_discount_amount_total!)
+      : undefined;
   const priceTax = d(priceItemToAppend?.taxes?.[0]?.amount || 0.0);
 
   if (!tax) {
@@ -460,6 +466,14 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
       amount_subtotal_decimal: priceSubtotal.toUnit().toString(),
       amount_total_decimal: priceTotal.toUnit().toString(),
       amount_tax: priceTax.getAmount(),
+      ...(priceBeforeDiscountAmountTotal && {
+        before_discount_amount_total: priceBeforeDiscountAmountTotal?.getAmount(),
+        before_discount_amount_total_decimal: priceBeforeDiscountAmountTotal?.toUnit().toString(),
+      }),
+      ...(priceDiscountAmount && {
+        discount_amount: priceDiscountAmount?.getAmount(),
+        discount_amount_decimal: priceDiscountAmount?.toUnit().toString(),
+      }),
     });
   } else {
     const unitAmountGrossAmount = d(recurrence.unit_amount_gross!);
@@ -467,6 +481,12 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
     const subTotalAmount = d(recurrence.amount_subtotal);
     const totalAmount = d(recurrence.amount_total);
     const taxAmount = d(recurrence.amount_tax!);
+    const beforeDiscountAmountTotal =
+      typeof recurrence.before_discount_amount_total !== 'undefined'
+        ? d(recurrence.before_discount_amount_total)
+        : undefined;
+    const discountAmount =
+      typeof recurrence.discount_amount !== 'undefined' ? d(recurrence.discount_amount) : undefined;
     recurrence.unit_amount_gross = unitAmountGrossAmount.add(priceUnitAmountGross).getAmount();
     recurrence.unit_amount_net = unitAmountNetAmount?.add(priceUnitAmountNet!).getAmount() ?? undefined;
     recurrence.amount_subtotal = subTotalAmount.add(priceSubtotal).getAmount();
@@ -474,6 +494,19 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
     recurrence.amount_subtotal_decimal = subTotalAmount.add(priceSubtotal).toUnit().toString();
     recurrence.amount_total_decimal = totalAmount.add(priceTotal).toUnit().toString();
     recurrence.amount_tax = taxAmount.add(priceTax).getAmount();
+    if (beforeDiscountAmountTotal) {
+      recurrence.before_discount_amount_total = beforeDiscountAmountTotal
+        .add(priceBeforeDiscountAmountTotal!)
+        .getAmount();
+      recurrence.before_discount_amount_total_decimal = beforeDiscountAmountTotal
+        .add(priceBeforeDiscountAmountTotal!)
+        .toUnit()
+        .toString();
+    }
+    if (discountAmount) {
+      recurrence.discount_amount = discountAmount.add(priceDiscountAmount!).getAmount();
+      recurrence.discount_amount_decimal = discountAmount.add(priceDiscountAmount!).toUnit().toString();
+    }
   }
 
   const recurrenceTax = !tax && itemTax ? taxes?.[taxes?.length - 1] : tax;
@@ -837,6 +870,14 @@ const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem,
             amount_subtotal: d(recurrence.amount_subtotal).convertPrecision(precision).getAmount(),
             amount_total: d(recurrence.amount_total).convertPrecision(precision).getAmount(),
             amount_tax: d(recurrence.amount_tax!).convertPrecision(precision).getAmount(),
+            ...(Number.isInteger(recurrence.discount_amount) && {
+              discount_amount: d(recurrence.discount_amount!).convertPrecision(precision).getAmount(),
+            }),
+            ...(Number.isInteger(recurrence.before_discount_amount_total) && {
+              before_discount_amount_total: d(recurrence.before_discount_amount_total!)
+                .convertPrecision(precision)
+                .getAmount(),
+            }),
           };
         }),
         recurrencesByTax: details.total_details?.breakdown?.recurrencesByTax!.map((recurrence) => {

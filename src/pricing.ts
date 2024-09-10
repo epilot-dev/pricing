@@ -481,10 +481,12 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
     const subTotalAmount = d(recurrence.amount_subtotal);
     const totalAmount = d(recurrence.amount_total);
     const taxAmount = d(recurrence.amount_tax!);
-    const beforeDiscountAmountTotal = recurrence.before_discount_amount_total
-      ? d(recurrence.before_discount_amount_total!)
-      : undefined;
-    const discountAmount = recurrence.discount_amount ? d(recurrence.discount_amount!) : undefined;
+    const beforeDiscountAmountTotal =
+      typeof recurrence.before_discount_amount_total !== 'undefined'
+        ? d(recurrence.before_discount_amount_total)
+        : undefined;
+    const discountAmount =
+      typeof recurrence.discount_amount !== 'undefined' ? d(recurrence.discount_amount) : undefined;
     recurrence.unit_amount_gross = unitAmountGrossAmount.add(priceUnitAmountGross).getAmount();
     recurrence.unit_amount_net = unitAmountNetAmount?.add(priceUnitAmountNet!).getAmount() ?? undefined;
     recurrence.amount_subtotal = subTotalAmount.add(priceSubtotal).getAmount();

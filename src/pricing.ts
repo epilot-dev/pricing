@@ -819,15 +819,15 @@ const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem,
     amount_total: d(details.amount_total!).convertPrecision(precision).getAmount(),
     ...(isPricingDetails(details) && { amount_tax: d(details.amount_tax!).convertPrecision(precision).getAmount() }),
     total_details: {
-      ...details?.total_details,
-      amount_tax: d(details?.total_details?.amount_tax!).convertPrecision(precision).getAmount(),
+      ...details.total_details,
+      amount_tax: d(details.total_details?.amount_tax!).convertPrecision(precision).getAmount(),
       breakdown: {
-        ...details?.total_details?.breakdown,
-        taxes: details?.total_details?.breakdown?.taxes!.map((tax) => ({
+        ...details.total_details?.breakdown,
+        taxes: details.total_details?.breakdown?.taxes!.map((tax) => ({
           ...tax,
           amount: d(tax.amount!).convertPrecision(precision).getAmount(),
         })),
-        recurrences: details?.total_details?.breakdown?.recurrences!.map((recurrence) => {
+        recurrences: details.total_details?.breakdown?.recurrences!.map((recurrence) => {
           return {
             ...recurrence,
             unit_amount_gross: d(recurrence.unit_amount_gross!).convertPrecision(precision).getAmount(),
@@ -839,7 +839,7 @@ const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem,
             amount_tax: d(recurrence.amount_tax!).convertPrecision(precision).getAmount(),
           };
         }),
-        recurrencesByTax: details?.total_details?.breakdown?.recurrencesByTax!.map((recurrence) => {
+        recurrencesByTax: details.total_details?.breakdown?.recurrencesByTax!.map((recurrence) => {
           return {
             ...recurrence,
             amount_total: d(recurrence.amount_total).convertPrecision(precision).getAmount(),

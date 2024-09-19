@@ -21,7 +21,7 @@ export const fixedDiscountCoupon: Coupon = {
   _title: 'Winter Sale',
   name: 'Winter Sale',
   type: 'fixed',
-  fixed_value: 1000,
-  fixed_value_decimal: '10.00',
+  fixed_value: 500,
+  fixed_value_decimal: '5.00',
   fixed_value_currency: 'EUR',
 };

@@ -258,7 +258,7 @@ export const toDinero = (unitAmountDecimal: string, currency: Currency = 'EUR'):
   const truncatedDecimal = amountDecimal.substr(0, DECIMAL_PRECISION).padEnd(DECIMAL_PRECISION, '0');
   const unitAmountInteger = Number(`${amountInteger}${truncatedDecimal}`);
 
-  return d(unitAmountInteger, currency);
+  return toDineroFromInteger(unitAmountInteger, currency);
 };
 
 export type DineroConvertor = typeof toDinero;
@@ -275,8 +275,10 @@ export const toIntegerAmount: (decimalAmount: string) => number = (decimalAmount
 /**
  * Utility mapper from Integer amount into DineroJS object using DECIMAL_PRECISION (12).
  */
-export const d: (integerAmount: number, currency?: Currency) => Dinero = (integerAmount, currency = 'EUR') =>
-  dinero({ amount: integerAmount, precision: DECIMAL_PRECISION, ...(currency && { currency }) });
+export const toDineroFromInteger: (integerAmount: number, currency?: Currency) => Dinero = (
+  integerAmount,
+  currency = 'EUR',
+) => dinero({ amount: integerAmount, precision: DECIMAL_PRECISION, ...(currency && { currency }) });
 
 /**
  * Formats built-in price units into a displayable representation. Eg. kw -> kW

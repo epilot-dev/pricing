@@ -102,11 +102,16 @@ export const computePriceItemValues = (
   const unitAmount = toDinero(unitAmountDecimal, currency);
   const taxRate = getTaxValue(tax);
 
-  const unitAmountNet = isTaxInclusive ? unitAmount.divide(1 + taxRate) : unitAmount;
+  let unitAmountNet: Dinero;
+  let unitTaxAmount: Dinero;
 
-  const unitTaxAmount = isTaxInclusive
-    ? unitAmount.subtract(unitAmount.divide(1 + taxRate))
-    : unitAmount.multiply(taxRate);
+  if (isTaxInclusive) {
+    unitAmountNet = unitAmount.divide(1 + taxRate);
+    unitTaxAmount = unitAmount.subtract(unitAmountNet);
+  } else {
+    unitAmountNet = unitAmount;
+    unitTaxAmount = unitAmount.multiply(taxRate);
+  }
 
   const unitAmountGross = unitAmountNet.add(unitTaxAmount);
 
@@ -289,7 +294,7 @@ export const computeTieredGraduatedPriceItemValues = (
   currency: Currency,
   isTaxInclusive: boolean,
   quantityToSelectTier: number,
-  tax: Tax,
+  tax: Tax | undefined,
   quantity: number,
   isUsingPriceMappingToSelectTier: boolean,
   unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'],

@@ -9,7 +9,7 @@ export {
   isPriceBuiltInUnit,
   parseDecimalValue,
   toDinero,
-  d as toDineroFromInteger,
+  toDineroFromInteger,
   toIntegerAmount,
   addSeparatorToDineroString,
 } from './formatters';

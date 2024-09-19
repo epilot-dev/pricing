@@ -1,7 +1,7 @@
 import type { Currency } from 'dinero.js';
 
 import { DEFAULT_CURRENCY } from './currencies';
-import { d, toDinero } from './formatters';
+import { toDineroFromInteger, toDinero } from './formatters';
 import { normalizePriceMappingInput, normalizeValueToFrequencyUnit } from './normalizers';
 import type {
   CompositePrice,
@@ -316,10 +316,10 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
             ...compositePriceItemToAppend,
             ...itemBreakdown,
             ...(typeof itemBreakdown?.amount_subtotal === 'number' && {
-              amount_subtotal_decimal: d(itemBreakdown.amount_subtotal).toUnit().toString(),
+              amount_subtotal_decimal: toDineroFromInteger(itemBreakdown.amount_subtotal).toUnit().toString(),
             }),
             ...(typeof itemBreakdown?.amount_total === 'number' && {
-              amount_total_decimal: d(itemBreakdown.amount_total).toUnit().toString(),
+              amount_total_decimal: toDineroFromInteger(itemBreakdown.amount_total).toUnit().toString(),
             }),
             item_components: convertPriceComponentsPrecision(compositePriceItemToAppend.item_components ?? [], 2),
           },
@@ -407,23 +407,25 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
   const recurrencesByTax = [...(details.total_details?.breakdown?.recurrencesByTax ?? [])];
   const recurrenceByTax = getPriceRecurrenceByTax(price, recurrencesByTax, tax?.tax?.rate ?? itemTax?.rate);
 
-  const total = d(details.amount_total!);
-  const subtotal = d(details.amount_subtotal!);
-  const totalTax = d(details?.total_details?.amount_tax!);
+  const total = toDineroFromInteger(details.amount_total!);
+  const subtotal = toDineroFromInteger(details.amount_subtotal!);
+  const totalTax = toDineroFromInteger(details?.total_details?.amount_tax!);
 
-  const priceUnitAmountGross = d(priceItemToAppend.unit_amount_gross!);
+  const priceUnitAmountGross = toDineroFromInteger(priceItemToAppend.unit_amount_gross!);
   const priceUnitAmountNet = Number.isInteger(priceItemToAppend.unit_amount_net)
-    ? d(priceItemToAppend.unit_amount_net!)
+    ? toDineroFromInteger(priceItemToAppend.unit_amount_net!)
     : null;
-  const priceSubtotal = d(priceItemToAppend.amount_subtotal!);
-  const priceTotal = d(priceItemToAppend.amount_total!);
+  const priceSubtotal = toDineroFromInteger(priceItemToAppend.amount_subtotal!);
+  const priceTotal = toDineroFromInteger(priceItemToAppend.amount_total!);
   const priceDiscountAmount =
-    typeof priceItemToAppend.discount_amount !== 'undefined' ? d(priceItemToAppend.discount_amount!) : undefined;
+    typeof priceItemToAppend.discount_amount !== 'undefined'
+      ? toDineroFromInteger(priceItemToAppend.discount_amount!)
+      : undefined;
   const priceBeforeDiscountAmountTotal =
     typeof priceItemToAppend.before_discount_amount_total !== 'undefined'
-      ? d(priceItemToAppend.before_discount_amount_total!)
+      ? toDineroFromInteger(priceItemToAppend.before_discount_amount_total!)
       : undefined;
-  const priceTax = d(priceItemToAppend?.taxes?.[0]?.amount || 0.0);
+  const priceTax = toDineroFromInteger(priceItemToAppend?.taxes?.[0]?.amount || 0.0);
 
   if (!tax) {
     if (itemTax) {
@@ -437,7 +439,7 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
       });
     }
   } else {
-    tax.amount = d(tax.amount!).add(priceTax).getAmount();
+    tax.amount = toDineroFromInteger(tax.amount!).add(priceTax).getAmount();
 
     // Populates missing data in deprecated taxes
     if (!tax?.tax?._id && itemTax?._id) {
@@ -472,17 +474,19 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
       }),
     });
   } else {
-    const unitAmountGrossAmount = d(recurrence.unit_amount_gross!);
-    const unitAmountNetAmount = recurrence.unit_amount_net ? d(recurrence.unit_amount_net) : undefined;
-    const subTotalAmount = d(recurrence.amount_subtotal);
-    const totalAmount = d(recurrence.amount_total);
-    const taxAmount = d(recurrence.amount_tax!);
+    const unitAmountGrossAmount = toDineroFromInteger(recurrence.unit_amount_gross!);
+    const unitAmountNetAmount = recurrence.unit_amount_net
+      ? toDineroFromInteger(recurrence.unit_amount_net)
+      : undefined;
+    const subTotalAmount = toDineroFromInteger(recurrence.amount_subtotal);
+    const totalAmount = toDineroFromInteger(recurrence.amount_total);
+    const taxAmount = toDineroFromInteger(recurrence.amount_tax!);
     const beforeDiscountAmountTotal =
       typeof recurrence.before_discount_amount_total !== 'undefined'
-        ? d(recurrence.before_discount_amount_total)
+        ? toDineroFromInteger(recurrence.before_discount_amount_total)
         : undefined;
     const discountAmount =
-      typeof recurrence.discount_amount !== 'undefined' ? d(recurrence.discount_amount) : undefined;
+      typeof recurrence.discount_amount !== 'undefined' ? toDineroFromInteger(recurrence.discount_amount) : undefined;
     recurrence.unit_amount_gross = unitAmountGrossAmount.add(priceUnitAmountGross).getAmount();
     recurrence.unit_amount_net = unitAmountNetAmount?.add(priceUnitAmountNet!).getAmount() ?? undefined;
     recurrence.amount_subtotal = subTotalAmount.add(priceSubtotal).getAmount();
@@ -519,9 +523,9 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
       tax: recurrenceTax ?? { amount: 0, rate: 'nontaxable', rateValue: 0, tax: { rate: 0 } },
     });
   } else {
-    const totalAmount = d(recurrenceByTax.amount_total);
-    const subTotalAmount = d(recurrenceByTax.amount_subtotal);
-    const taxAmount = d(recurrenceByTax.amount_tax!);
+    const totalAmount = toDineroFromInteger(recurrenceByTax.amount_total);
+    const subTotalAmount = toDineroFromInteger(recurrenceByTax.amount_subtotal);
+    const taxAmount = toDineroFromInteger(recurrenceByTax.amount_tax!);
     recurrenceByTax.amount_total = totalAmount.add(priceTotal).getAmount();
     recurrenceByTax.amount_subtotal = subTotalAmount.add(priceSubtotal).getAmount();
     recurrenceByTax.amount_tax = taxAmount.add(priceTax).getAmount();
@@ -778,45 +782,49 @@ const convertPriceComponentsPrecision = (items: PriceItem[], precision = 2): Pri
 const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceItem => ({
   ...priceItem,
   ...(typeof priceItem.unit_amount === 'number' && {
-    unit_amount: d(priceItem.unit_amount).convertPrecision(precision).getAmount(),
+    unit_amount: toDineroFromInteger(priceItem.unit_amount).convertPrecision(precision).getAmount(),
   }),
   ...(typeof priceItem.unit_amount_net === 'number' && {
-    unit_amount_net: d(priceItem.unit_amount_net).convertPrecision(precision).getAmount(),
+    unit_amount_net: toDineroFromInteger(priceItem.unit_amount_net).convertPrecision(precision).getAmount(),
   }),
   ...(typeof priceItem.unit_amount_net === 'number' && {
-    unit_amount_net_decimal: d(priceItem.unit_amount_net!).toUnit().toString(),
+    unit_amount_net_decimal: toDineroFromInteger(priceItem.unit_amount_net!).toUnit().toString(),
   }),
   ...(typeof priceItem.unit_amount_gross === 'number' && {
-    unit_amount_gross_decimal: d(priceItem.unit_amount_gross!).toUnit().toString(),
+    unit_amount_gross_decimal: toDineroFromInteger(priceItem.unit_amount_gross!).toUnit().toString(),
   }),
-  unit_amount_gross: d(priceItem.unit_amount_gross!).convertPrecision(precision).getAmount(),
-  amount_subtotal: d(priceItem.amount_subtotal!).convertPrecision(precision).getAmount(),
-  amount_subtotal_decimal: d(priceItem.amount_subtotal!).toUnit().toString(),
-  amount_total: d(priceItem.amount_total!).convertPrecision(precision).getAmount(),
-  amount_total_decimal: d(priceItem.amount_total!).toUnit().toString(),
+  unit_amount_gross: toDineroFromInteger(priceItem.unit_amount_gross!).convertPrecision(precision).getAmount(),
+  amount_subtotal: toDineroFromInteger(priceItem.amount_subtotal!).convertPrecision(precision).getAmount(),
+  amount_subtotal_decimal: toDineroFromInteger(priceItem.amount_subtotal!).toUnit().toString(),
+  amount_total: toDineroFromInteger(priceItem.amount_total!).convertPrecision(precision).getAmount(),
+  amount_total_decimal: toDineroFromInteger(priceItem.amount_total!).toUnit().toString(),
   ...(typeof priceItem.discount_amount === 'number' && {
-    discount_amount: d(priceItem.discount_amount!).convertPrecision(precision).getAmount(),
-    discount_amount_decimal: d(priceItem.discount_amount!).toUnit().toString(),
+    discount_amount: toDineroFromInteger(priceItem.discount_amount!).convertPrecision(precision).getAmount(),
+    discount_amount_decimal: toDineroFromInteger(priceItem.discount_amount!).toUnit().toString(),
   }),
   ...(typeof priceItem.discount_percentage === 'number' && { discount_percentage: priceItem.discount_percentage }),
   ...(typeof priceItem.before_discount_amount_total === 'number' && {
-    before_discount_amount_total: d(priceItem.before_discount_amount_total!).convertPrecision(precision).getAmount(),
-    before_discount_amount_total_decimal: d(priceItem.before_discount_amount_total!).toUnit().toString(),
+    before_discount_amount_total: toDineroFromInteger(priceItem.before_discount_amount_total!)
+      .convertPrecision(precision)
+      .getAmount(),
+    before_discount_amount_total_decimal: toDineroFromInteger(priceItem.before_discount_amount_total!)
+      .toUnit()
+      .toString(),
   }),
-  amount_tax: d(priceItem.amount_tax!).convertPrecision(precision).getAmount(),
+  amount_tax: toDineroFromInteger(priceItem.amount_tax!).convertPrecision(precision).getAmount(),
   taxes: priceItem.taxes!.map((tax) => ({
     ...tax,
-    amount: d(tax.amount!).convertPrecision(precision).getAmount(),
+    amount: toDineroFromInteger(tax.amount!).convertPrecision(precision).getAmount(),
   })),
   ...(priceItem.tiers_details && {
     tiers_details: priceItem.tiers_details?.map((tier) => {
       return {
         ...tier,
-        unit_amount_gross: d(tier.unit_amount_gross).convertPrecision(precision).getAmount(),
-        unit_amount_net: d(tier.unit_amount_net).convertPrecision(precision).getAmount(),
-        amount_total: d(tier.amount_total).convertPrecision(precision).getAmount(),
-        amount_subtotal: d(tier.amount_subtotal).convertPrecision(precision).getAmount(),
-        amount_tax: d(tier.amount_tax).convertPrecision(precision).getAmount(),
+        unit_amount_gross: toDineroFromInteger(tier.unit_amount_gross).convertPrecision(precision).getAmount(),
+        unit_amount_net: toDineroFromInteger(tier.unit_amount_net).convertPrecision(precision).getAmount(),
+        amount_total: toDineroFromInteger(tier.amount_total).convertPrecision(precision).getAmount(),
+        amount_subtotal: toDineroFromInteger(tier.amount_subtotal).convertPrecision(precision).getAmount(),
+        amount_tax: toDineroFromInteger(tier.amount_tax).convertPrecision(precision).getAmount(),
       };
     }),
   }),
@@ -824,12 +832,16 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
     priceItem.pricing_model === PricingModel.externalGetAG && {
       get_ag: {
         ...priceItem.get_ag,
-        unit_amount_net: d(priceItem.get_ag.unit_amount_net).convertPrecision(precision).getAmount(),
-        unit_amount_gross: d(priceItem.get_ag.unit_amount_gross).convertPrecision(precision).getAmount(),
-        unit_amount_net_decimal: d(priceItem.get_ag.unit_amount_net).toUnit().toString(),
-        unit_amount_gross_decimal: d(priceItem.get_ag.unit_amount_gross).toUnit().toString(),
-        markup_amount_net: d(priceItem.get_ag.markup_amount_net!).convertPrecision(precision).getAmount(),
-        markup_amount_net_decimal: d(priceItem.get_ag.markup_amount_net!).toUnit().toString(),
+        unit_amount_net: toDineroFromInteger(priceItem.get_ag.unit_amount_net).convertPrecision(precision).getAmount(),
+        unit_amount_gross: toDineroFromInteger(priceItem.get_ag.unit_amount_gross)
+          .convertPrecision(precision)
+          .getAmount(),
+        unit_amount_net_decimal: toDineroFromInteger(priceItem.get_ag.unit_amount_net).toUnit().toString(),
+        unit_amount_gross_decimal: toDineroFromInteger(priceItem.get_ag.unit_amount_gross).toUnit().toString(),
+        markup_amount_net: toDineroFromInteger(priceItem.get_ag.markup_amount_net!)
+          .convertPrecision(precision)
+          .getAmount(),
+        markup_amount_net_decimal: toDineroFromInteger(priceItem.get_ag.markup_amount_net!).toUnit().toString(),
       },
     }),
 });
@@ -844,33 +856,37 @@ const isPricingDetails = (details: unknown): details is PricingDetails =>
 
 const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem, precision: number): PricingDetails => {
   return {
-    amount_subtotal: d(details.amount_subtotal!).convertPrecision(precision).getAmount(),
-    amount_total: d(details.amount_total!).convertPrecision(precision).getAmount(),
-    ...(isPricingDetails(details) && { amount_tax: d(details.amount_tax!).convertPrecision(precision).getAmount() }),
+    amount_subtotal: toDineroFromInteger(details.amount_subtotal!).convertPrecision(precision).getAmount(),
+    amount_total: toDineroFromInteger(details.amount_total!).convertPrecision(precision).getAmount(),
+    ...(isPricingDetails(details) && {
+      amount_tax: toDineroFromInteger(details.amount_tax!).convertPrecision(precision).getAmount(),
+    }),
     total_details: {
       ...details.total_details,
-      amount_tax: d(details.total_details?.amount_tax!).convertPrecision(precision).getAmount(),
+      amount_tax: toDineroFromInteger(details.total_details?.amount_tax!).convertPrecision(precision).getAmount(),
       breakdown: {
         ...details.total_details?.breakdown,
         taxes: details.total_details?.breakdown?.taxes!.map((tax) => ({
           ...tax,
-          amount: d(tax.amount!).convertPrecision(precision).getAmount(),
+          amount: toDineroFromInteger(tax.amount!).convertPrecision(precision).getAmount(),
         })),
         recurrences: details.total_details?.breakdown?.recurrences!.map((recurrence) => {
           return {
             ...recurrence,
-            unit_amount_gross: d(recurrence.unit_amount_gross!).convertPrecision(precision).getAmount(),
+            unit_amount_gross: toDineroFromInteger(recurrence.unit_amount_gross!)
+              .convertPrecision(precision)
+              .getAmount(),
             unit_amount_net: Number.isInteger(recurrence.unit_amount_net)
-              ? d(recurrence.unit_amount_net!).convertPrecision(precision).getAmount()
+              ? toDineroFromInteger(recurrence.unit_amount_net!).convertPrecision(precision).getAmount()
               : undefined,
-            amount_subtotal: d(recurrence.amount_subtotal).convertPrecision(precision).getAmount(),
-            amount_total: d(recurrence.amount_total).convertPrecision(precision).getAmount(),
-            amount_tax: d(recurrence.amount_tax!).convertPrecision(precision).getAmount(),
+            amount_subtotal: toDineroFromInteger(recurrence.amount_subtotal).convertPrecision(precision).getAmount(),
+            amount_total: toDineroFromInteger(recurrence.amount_total).convertPrecision(precision).getAmount(),
+            amount_tax: toDineroFromInteger(recurrence.amount_tax!).convertPrecision(precision).getAmount(),
             ...(Number.isInteger(recurrence.discount_amount) && {
-              discount_amount: d(recurrence.discount_amount!).convertPrecision(precision).getAmount(),
+              discount_amount: toDineroFromInteger(recurrence.discount_amount!).convertPrecision(precision).getAmount(),
             }),
             ...(Number.isInteger(recurrence.before_discount_amount_total) && {
-              before_discount_amount_total: d(recurrence.before_discount_amount_total!)
+              before_discount_amount_total: toDineroFromInteger(recurrence.before_discount_amount_total!)
                 .convertPrecision(precision)
                 .getAmount(),
             }),
@@ -879,12 +895,12 @@ const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem,
         recurrencesByTax: details.total_details?.breakdown?.recurrencesByTax!.map((recurrence) => {
           return {
             ...recurrence,
-            amount_total: d(recurrence.amount_total).convertPrecision(precision).getAmount(),
-            amount_subtotal: d(recurrence.amount_subtotal).convertPrecision(precision).getAmount(),
-            amount_tax: d(recurrence.amount_tax!).convertPrecision(precision).getAmount(),
+            amount_total: toDineroFromInteger(recurrence.amount_total).convertPrecision(precision).getAmount(),
+            amount_subtotal: toDineroFromInteger(recurrence.amount_subtotal).convertPrecision(precision).getAmount(),
+            amount_tax: toDineroFromInteger(recurrence.amount_tax!).convertPrecision(precision).getAmount(),
             tax: {
               ...recurrence.tax,
-              amount: d(recurrence.tax?.amount!).convertPrecision(precision).getAmount(),
+              amount: toDineroFromInteger(recurrence.tax?.amount!).convertPrecision(precision).getAmount(),
             },
           };
         }),

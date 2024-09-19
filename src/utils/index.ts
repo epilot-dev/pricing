@@ -1,6 +1,6 @@
 import type { Currency, Dinero } from 'dinero.js';
 
-import { d, toDinero } from '../formatters';
+import { toDineroFromInteger, toDinero } from '../formatters';
 import { MarkupPricingModel, TypeGetAg } from '../pricing';
 import { Coupon, Price, PriceGetAg, PriceTier, Tax } from '../types';
 
@@ -222,11 +222,11 @@ export const computeTieredVolumePriceItemValues = (
         taxAmount: tierValues.taxAmount || 0,
       },
     ],
-    unitAmountGross: d(tierValues.unitAmountGross!).getAmount(),
-    unitAmountNet: d(tierValues.unitAmountNet!).getAmount(),
-    amountSubtotal: d(tierValues.amountSubtotal).getAmount(),
-    amountTotal: d(tierValues.amountTotal).getAmount(),
-    taxAmount: d(tierValues.taxAmount).getAmount(),
+    unitAmountGross: toDineroFromInteger(tierValues.unitAmountGross!).getAmount(),
+    unitAmountNet: toDineroFromInteger(tierValues.unitAmountNet!).getAmount(),
+    amountSubtotal: toDineroFromInteger(tierValues.amountSubtotal).getAmount(),
+    amountTotal: toDineroFromInteger(tierValues.amountTotal).getAmount(),
+    taxAmount: toDineroFromInteger(tierValues.taxAmount).getAmount(),
     displayMode,
   };
 };
@@ -269,14 +269,17 @@ export const computeTieredFlatFeePriceItemValues = (
         unitAmountGross: tierValues.unitAmountGross || 0,
         amountSubtotal: tierValues.unitAmountNet || 0,
         amountTotal: tierValues.unitAmountGross || 0,
-        taxAmount: d(tierValues.unitAmountGross!).subtract(d(tierValues.unitAmountNet!)).getAmount() || 0,
+        taxAmount:
+          toDineroFromInteger(tierValues.unitAmountGross!)
+            .subtract(toDineroFromInteger(tierValues.unitAmountNet!))
+            .getAmount() || 0,
       },
     ],
-    unitAmountGross: d(tierValues.unitAmountGross!).getAmount(),
-    unitAmountNet: d(tierValues.unitAmountNet!).getAmount(),
-    amountSubtotal: d(tierValues.amountSubtotal).getAmount(),
-    amountTotal: d(tierValues.amountTotal).getAmount(),
-    taxAmount: d(tierValues.taxAmount).getAmount(),
+    unitAmountGross: toDineroFromInteger(tierValues.unitAmountGross!).getAmount(),
+    unitAmountNet: toDineroFromInteger(tierValues.unitAmountNet!).getAmount(),
+    amountSubtotal: toDineroFromInteger(tierValues.amountSubtotal).getAmount(),
+    amountTotal: toDineroFromInteger(tierValues.amountTotal).getAmount(),
+    taxAmount: toDineroFromInteger(tierValues.taxAmount).getAmount(),
     displayMode,
   };
 };
@@ -324,11 +327,19 @@ export const computeTieredGraduatedPriceItemValues = (
             taxAmount: tierValues.taxAmount || 0,
           },
         ],
-        unitAmountGross: d(totals.unitAmountGross!).add(d(tierValues.unitAmountGross!)).getAmount(),
-        unitAmountNet: d(totals.unitAmountNet!).add(d(tierValues.unitAmountNet!)).getAmount(),
-        amountSubtotal: d(totals.amountSubtotal).add(d(tierValues.amountSubtotal)).getAmount(),
-        amountTotal: d(totals.amountTotal).add(d(tierValues.amountTotal)).getAmount(),
-        taxAmount: d(totals.taxAmount).add(d(tierValues.taxAmount)).getAmount(),
+        unitAmountGross: toDineroFromInteger(totals.unitAmountGross!)
+          .add(toDineroFromInteger(tierValues.unitAmountGross!))
+          .getAmount(),
+        unitAmountNet: toDineroFromInteger(totals.unitAmountNet!)
+          .add(toDineroFromInteger(tierValues.unitAmountNet!))
+          .getAmount(),
+        amountSubtotal: toDineroFromInteger(totals.amountSubtotal)
+          .add(toDineroFromInteger(tierValues.amountSubtotal))
+          .getAmount(),
+        amountTotal: toDineroFromInteger(totals.amountTotal)
+          .add(toDineroFromInteger(tierValues.amountTotal))
+          .getAmount(),
+        taxAmount: toDineroFromInteger(totals.taxAmount).add(toDineroFromInteger(tierValues.taxAmount)).getAmount(),
         displayMode,
       };
     },
@@ -343,9 +354,9 @@ export const computeTieredGraduatedPriceItemValues = (
 
   return {
     ...totals,
-    amountSubtotal: d(totals.amountSubtotal).multiply(quantityToMultiply).getAmount(),
-    amountTotal: d(totals.amountTotal).multiply(quantityToMultiply).getAmount(),
-    taxAmount: d(totals.taxAmount).multiply(quantityToMultiply).getAmount(),
+    amountSubtotal: toDineroFromInteger(totals.amountSubtotal).multiply(quantityToMultiply).getAmount(),
+    amountTotal: toDineroFromInteger(totals.amountTotal).multiply(quantityToMultiply).getAmount(),
+    taxAmount: toDineroFromInteger(totals.taxAmount).multiply(quantityToMultiply).getAmount(),
   };
 };
 
@@ -414,11 +425,11 @@ export const computeExternalGetAGItemValues = (
   const unitAmountGetAgFeeGross = unitAmountGetAgFeeNet.multiply(1 + taxRate);
 
   // Unit Amount = Markup amount + Fee Amount
-  const unitAmountNet = unitAmountGetAgFeeNet.add(d(markupValues.unitAmountNet || 0));
+  const unitAmountNet = unitAmountGetAgFeeNet.add(toDineroFromInteger(markupValues.unitAmountNet || 0));
 
   const unitAmountGross = unitAmountNet.multiply(1 + taxRate);
   const unitTaxAmount = unitAmountGross.subtract(unitAmountNet);
-  const unitAmountMarkupNet = d(markupValues.unitAmountNet || 0);
+  const unitAmountMarkupNet = toDineroFromInteger(markupValues.unitAmountNet || 0);
 
   // Amount Subtotal = Unit Amount Net * Quantity
   const amountSubtotal =

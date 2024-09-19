@@ -3023,21 +3023,21 @@ export const priceItemWithFixedDiscount: PriceItemDto = {
 };
 
 export const priceItemWithPercentageDiscount: PriceItemDto = {
-  quantity: 5,
+  quantity: 1,
   product_id: 'prod-id#12324',
   price_id: 'price#1',
   taxes: [
     {
-      tax: tax19percent,
+      tax: tax10percent,
     },
   ],
   _price: {
     _id: 'price#1',
-    unit_amount: 78946,
+    unit_amount: 10000,
     unit_amount_currency: 'EUR',
-    unit_amount_decimal: '789.456224456678',
+    unit_amount_decimal: '100',
     type: 'one_time',
-    tax: [tax19percent],
+    tax: [tax10percent],
     is_tax_inclusive: true,
     description: 'Winter Sale',
     _title: 'Winter Sale',

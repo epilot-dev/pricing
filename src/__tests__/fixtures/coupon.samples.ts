@@ -9,7 +9,7 @@ export const percentageDiscountCoupon: Coupon = {
   _title: 'Winter Sale',
   name: 'Winter Sale',
   type: 'percentage',
-  percentage_value: '25.5',
+  percentage_value: '25',
 };
 
 export const fixedDiscountCoupon: Coupon = {

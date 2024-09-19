@@ -5752,7 +5752,7 @@ export const computedPriceWithFixedDiscount = {
       is_tax_inclusive: true,
       _coupons: [
         {
-          _id: 'coupon#1',
+          _id: 'coupon#2',
           _schema: 'coupon',
           _org: 'org#1',
           _created_at: '2022-06-15T09:17:06.510Z',

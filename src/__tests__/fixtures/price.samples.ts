@@ -7,6 +7,7 @@ import {
   PriceItemDto,
   TaxAmount,
 } from '../../types';
+import { fixedDiscountCoupon, percentageDiscountCoupon } from './coupon.samples';
 
 import { tax10percent, tax19percent, tax6percent } from './tax.samples';
 
@@ -3018,21 +3019,7 @@ export const priceItemWithFixedDiscount: PriceItemDto = {
   },
   pricing_model: 'per_unit',
   is_tax_inclusive: true,
-  _coupons: [
-    {
-      _id: 'coupon#1',
-      _schema: 'coupon',
-      _org: 'org#1',
-      _created_at: '2022-06-15T09:17:06.510Z',
-      _updated_at: '2022-06-17T11:48:20.104Z',
-      _title: 'Winter Sale',
-      name: 'Winter Sale',
-      type: 'fixed',
-      fixed_value: 1000,
-      fixed_value_decimal: '10.00',
-      fixed_value_currency: 'EUR',
-    },
-  ],
+  _coupons: [fixedDiscountCoupon],
 };
 
 export const priceItemWithPercentageDiscount: PriceItemDto = {
@@ -3061,17 +3048,5 @@ export const priceItemWithPercentageDiscount: PriceItemDto = {
   },
   pricing_model: 'per_unit',
   is_tax_inclusive: true,
-  _coupons: [
-    {
-      _id: 'coupon#1',
-      _schema: 'coupon',
-      _org: 'org#1',
-      _created_at: '2022-06-15T09:17:06.510Z',
-      _updated_at: '2022-06-17T11:48:20.104Z',
-      _title: 'Winter Sale',
-      name: 'Winter Sale',
-      type: 'percentage',
-      percentage_value: '25.5',
-    },
-  ],
+  _coupons: [percentageDiscountCoupon],
 };

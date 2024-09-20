@@ -430,16 +430,24 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(result).toEqual(results.computedPriceWithPercentageDiscount);
     });
 
-    it.skip('should compute discounts and totals correctly when the quantity is higher than 1', () => {
-      /**
-       * @todo Build test
-       */
+    it('should compute discounts and totals correctly when there is a percentage discount coupon and quantity is higher than 1', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageDiscountAndHighQuantity]);
+      expect(result).toEqual(results.computedPriceWithPercentageDiscountAndHighQuantity);
     });
 
-    it.skip('should compute discounts and totals correctly regardless of tax in price', () => {
-      /**
-       * @todo Build test
-       */
+    it('should compute discounts and totals correctly when there is a fixed discount coupon and quantity is higher than 1', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithFixedDiscountAndHighQuantity]);
+      expect(result).toEqual(results.computedPriceWithFixedDiscountAndHighQuantity);
+    });
+
+    it('should compute discounts and totals correctly for prices without tax', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageDiscountAndNoTax]);
+      expect(result).toEqual(results.computedPriceWithFixedDiscountAndNoTax);
+    });
+
+    it('should compute discounts and totals correctly when there is a percentage discount coupon', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageDiscountAndExclusiveTax]);
+      expect(result).toEqual(results.computedPriceWithPercentageDiscountAndExclusiveTax);
     });
   });
 });

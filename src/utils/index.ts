@@ -99,7 +99,27 @@ export const computePriceItemValues = (
   tax?: Tax,
   coupons: ReadonlyArray<Coupon> = [],
 ): PriceItemsTotals => {
-  const unitAmount = toDinero(unitAmountDecimal, currency);
+  const [coupon] = coupons;
+
+  let unitAmount = toDinero(unitAmountDecimal, currency);
+
+  let unitAmountBeforeDiscount: Dinero | undefined;
+  let discountPercentage: number | undefined;
+  let unitDiscountAmount: Dinero | undefined;
+
+  if (coupon && isValidCoupon(coupon)) {
+    unitAmountBeforeDiscount = unitAmount;
+
+    if (isPercentageCoupon(coupon)) {
+      discountPercentage = Number(coupon.percentage_value);
+      unitDiscountAmount = unitAmount.multiply(discountPercentage).divide(100);
+    } else {
+      unitDiscountAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
+    }
+
+    unitAmount = unitAmount.subtract(unitDiscountAmount);
+  }
+
   const taxRate = getTaxValue(tax);
 
   let unitAmountNet: Dinero;
@@ -115,27 +135,11 @@ export const computePriceItemValues = (
 
   const unitAmountGross = unitAmountNet.add(unitTaxAmount);
 
+  const discountAmount = unitDiscountAmount?.multiply(unitAmountMultiplier);
   const amountSubtotal = unitAmountNet.multiply(unitAmountMultiplier);
-  let amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
+  const amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
   const taxAmount = unitTaxAmount.multiply(unitAmountMultiplier);
-
-  const [coupon] = coupons;
-
-  let discountAmount: Dinero | undefined;
-  let discountPercentage: number | undefined;
-  let beforeDiscountAmountTotal: Dinero | undefined;
-
-  if (coupon && isValidCoupon(coupon)) {
-    if (isPercentageCoupon(coupon)) {
-      discountPercentage = Number(coupon.percentage_value);
-      discountAmount = amountTotal.multiply(discountPercentage).divide(100);
-    } else {
-      discountAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
-    }
-
-    beforeDiscountAmountTotal = amountTotal;
-    amountTotal = amountTotal.subtract(discountAmount);
-  }
+  const beforeDiscountAmountTotal = unitAmountBeforeDiscount?.multiply(unitAmountMultiplier);
 
   return {
     unitAmount: unitAmount.getAmount(),

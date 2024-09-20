@@ -3018,6 +3018,11 @@ export const priceItemWithFixedDiscount: PriceItemDto = {
   _coupons: [fixedDiscountCoupon],
 };
 
+export const priceItemWithFixedDiscountAndHighQuantity: PriceItemDto = {
+  ...priceItemWithFixedDiscount,
+  quantity: 5,
+};
+
 export const priceItemWithPercentageDiscount: PriceItemDto = {
   quantity: 1,
   product_id: 'prod-id#12324',
@@ -3041,4 +3046,27 @@ export const priceItemWithPercentageDiscount: PriceItemDto = {
   pricing_model: 'per_unit',
   is_tax_inclusive: true,
   _coupons: [percentageDiscountCoupon],
+};
+
+export const priceItemWithPercentageDiscountAndHighQuantity: PriceItemDto = {
+  ...priceItemWithPercentageDiscount,
+  quantity: 5,
+};
+
+export const priceItemWithPercentageDiscountAndNoTax: PriceItemDto = {
+  ...priceItemWithPercentageDiscount,
+  taxes: [],
+  _price: {
+    ...priceItemWithPercentageDiscount._price!,
+    tax: [],
+  },
+};
+
+export const priceItemWithPercentageDiscountAndExclusiveTax = {
+  ...priceItemWithPercentageDiscount,
+  _price: {
+    ...priceItemWithPercentageDiscount._price!,
+    is_tax_inclusive: false,
+  },
+  is_tax_inclusive: false,
 };

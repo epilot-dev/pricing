@@ -103,13 +103,12 @@ export const computePriceItemValues = (
 
   let unitAmount = toDinero(unitAmountDecimal, currency);
 
-  let unitDiscountAmount: Dinero | undefined;
-  // let unitAmountBeforeDiscount: Dinero | undefined;
-
+  let unitAmountBeforeDiscount: Dinero | undefined;
   let discountPercentage: number | undefined;
+  let unitDiscountAmount: Dinero | undefined;
 
   if (coupon && isValidCoupon(coupon)) {
-    // unitAmountBeforeDiscount = unitAmount;
+    unitAmountBeforeDiscount = unitAmount;
 
     if (isPercentageCoupon(coupon)) {
       discountPercentage = Number(coupon.percentage_value);
@@ -136,17 +135,11 @@ export const computePriceItemValues = (
 
   const unitAmountGross = unitAmountNet.add(unitTaxAmount);
 
+  const discountAmount = unitDiscountAmount?.multiply(unitAmountMultiplier);
   const amountSubtotal = unitAmountNet.multiply(unitAmountMultiplier);
   const amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
   const taxAmount = unitTaxAmount.multiply(unitAmountMultiplier);
-
-  const discountAmount = unitDiscountAmount?.multiply(unitAmountMultiplier);
-
-  let beforeDiscountAmountTotal: Dinero | undefined;
-
-  if (discountAmount) {
-    beforeDiscountAmountTotal = unitAmount.multiply(unitAmountMultiplier);
-  }
+  const beforeDiscountAmountTotal = unitAmountBeforeDiscount?.multiply(unitAmountMultiplier);
 
   return {
     unitAmount: unitAmount.getAmount(),

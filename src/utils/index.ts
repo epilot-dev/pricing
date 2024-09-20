@@ -8,8 +8,12 @@ import { isPercentageCoupon, isValidCoupon } from './guards/coupon';
 
 export type PriceItemsTotals = {
   unitAmount?: number;
+  unitDiscountAmount?: number;
+  unitDiscountAmountDecimal?: string;
   unitAmountNet?: number;
   unitAmountNetDecimal?: string;
+  unitDiscountAmountNet?: number;
+  unitDiscountAmountNetDecimal?: string;
   unitAmountGross?: number;
   unitAmountGrossDecimal?: string;
   amountSubtotal: number;
@@ -106,6 +110,7 @@ export const computePriceItemValues = (
   let unitAmountBeforeDiscount: Dinero | undefined;
   let discountPercentage: number | undefined;
   let unitDiscountAmount: Dinero | undefined;
+  let unitDiscountAmountNet: Dinero | undefined;
 
   if (coupon && isValidCoupon(coupon)) {
     unitAmountBeforeDiscount = unitAmount;
@@ -127,9 +132,11 @@ export const computePriceItemValues = (
 
   if (isTaxInclusive) {
     unitAmountNet = unitAmount.divide(1 + taxRate);
+    unitDiscountAmountNet = unitDiscountAmount?.divide(1 + taxRate);
     unitTaxAmount = unitAmount.subtract(unitAmountNet);
   } else {
     unitAmountNet = unitAmount;
+    unitDiscountAmountNet = unitDiscountAmount;
     unitTaxAmount = unitAmount.multiply(taxRate);
   }
 
@@ -143,8 +150,12 @@ export const computePriceItemValues = (
 
   return {
     unitAmount: unitAmount.getAmount(),
+    unitDiscountAmount: unitDiscountAmount?.getAmount(),
+    unitDiscountAmountDecimal: unitDiscountAmount?.toUnit().toString(),
     unitAmountNet: unitAmountNet.getAmount(),
     unitAmountNetDecimal: unitAmountNet.toUnit().toString(),
+    unitDiscountAmountNet: unitDiscountAmountNet?.getAmount(),
+    unitDiscountAmountNetDecimal: unitDiscountAmountNet?.toUnit().toString(),
     unitAmountGross: unitAmountGross.getAmount(),
     unitAmountGrossDecimal: unitAmountGross.toUnit().toString(),
     amountSubtotal: amountSubtotal.getAmount(),

@@ -727,8 +727,18 @@ export const computePriceItem = (
     currency,
     ...(priceItemDescription && { description: priceItemDescription }),
     ...(Number.isInteger(itemValues.unitAmount) && { unit_amount: itemValues.unitAmount }),
+    ...(Number.isInteger(itemValues.unitDiscountAmount) && { unit_discount_amount: itemValues.unitDiscountAmount }),
+    ...(itemValues.unitDiscountAmountDecimal && {
+      unit_discount_amount_decimal: itemValues.unitDiscountAmountDecimal,
+    }),
     ...(Number.isInteger(itemValues.unitAmountNet) && { unit_amount_net: itemValues.unitAmountNet }),
     ...(itemValues.unitAmountNetDecimal && { unit_amount_net_decimal: itemValues.unitAmountNetDecimal }),
+    ...(Number.isInteger(itemValues.unitDiscountAmountNet) && {
+      unit_discount_amount_net: itemValues.unitDiscountAmountNet,
+    }),
+    ...(itemValues.unitDiscountAmountNetDecimal && {
+      unit_discount_amount_net_decimal: itemValues.unitDiscountAmountNetDecimal,
+    }),
     ...(Number.isInteger(itemValues.unitAmountGross) && { unit_amount_gross: itemValues.unitAmountGross }),
     ...(itemValues.unitAmountGrossDecimal && { unit_amount_gross_decimal: itemValues.unitAmountGrossDecimal }),
     ...(price?.pricing_model === PricingModel.perUnit &&
@@ -784,11 +794,21 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
   ...(typeof priceItem.unit_amount === 'number' && {
     unit_amount: toDineroFromInteger(priceItem.unit_amount).convertPrecision(precision).getAmount(),
   }),
+  ...(typeof priceItem.unit_discount_amount === 'number' && {
+    unit_discount_amount: toDineroFromInteger(priceItem.unit_discount_amount).convertPrecision(precision).getAmount(),
+    unit_discount_amount_decimal: toDineroFromInteger(priceItem.unit_discount_amount).toUnit().toString(),
+  }),
   ...(typeof priceItem.unit_amount_net === 'number' && {
     unit_amount_net: toDineroFromInteger(priceItem.unit_amount_net).convertPrecision(precision).getAmount(),
   }),
   ...(typeof priceItem.unit_amount_net === 'number' && {
     unit_amount_net_decimal: toDineroFromInteger(priceItem.unit_amount_net!).toUnit().toString(),
+  }),
+  ...(typeof priceItem.unit_discount_amount_net === 'number' && {
+    unit_discount_amount_net: toDineroFromInteger(priceItem.unit_discount_amount_net)
+      .convertPrecision(precision)
+      .getAmount(),
+    unit_discount_amount_net_decimal: toDineroFromInteger(priceItem.unit_discount_amount_net).toUnit().toString(),
   }),
   ...(typeof priceItem.unit_amount_gross === 'number' && {
     unit_amount_gross_decimal: toDineroFromInteger(priceItem.unit_amount_gross!).toUnit().toString(),

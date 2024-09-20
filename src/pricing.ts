@@ -672,7 +672,7 @@ export const computePriceItem = (
         isTaxInclusive,
         quantityToSelectTier,
         priceTax,
-        unitAmountMultiplier!,
+        unitAmountMultiplier,
         priceItem._price?.unchanged_price_display_in_journeys,
       );
       break;
@@ -682,8 +682,8 @@ export const computePriceItem = (
         currency,
         isTaxInclusive,
         quantityToSelectTier,
-        priceTax!,
-        safeQuantity!,
+        priceTax,
+        safeQuantity,
         isUsingPriceMappingToSelectTier,
         priceItem._price?.unchanged_price_display_in_journeys,
       );
@@ -694,8 +694,8 @@ export const computePriceItem = (
         currency,
         isTaxInclusive,
         quantityToSelectTier,
-        priceTax!,
-        safeQuantity!,
+        priceTax,
+        safeQuantity,
         isUsingPriceMappingToSelectTier,
         priceItem._price?.unchanged_price_display_in_journeys,
       );
@@ -705,10 +705,10 @@ export const computePriceItem = (
         price?.get_ag!,
         currency,
         isTaxInclusive,
-        unitAmountMultiplier!,
+        unitAmountMultiplier,
         quantityToSelectTier,
         externalFeeAmountDecimal,
-        priceTax!,
+        priceTax,
       );
       break;
     default:
@@ -716,8 +716,8 @@ export const computePriceItem = (
         unitAmountDecimal,
         currency,
         isTaxInclusive,
-        unitAmountMultiplier!,
-        priceTax!,
+        unitAmountMultiplier,
+        priceTax,
         coupons,
       );
   }

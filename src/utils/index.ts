@@ -10,6 +10,7 @@ export type PriceItemsTotals = {
   unitAmount?: number;
   unitDiscountAmount?: number;
   unitDiscountAmountDecimal?: string;
+  beforeDiscountUnitAmount?: number;
   unitAmountNet?: number;
   unitAmountNetDecimal?: string;
   unitDiscountAmountNet?: number;
@@ -19,6 +20,10 @@ export type PriceItemsTotals = {
   amountSubtotal: number;
   amountTotal: number;
   taxAmount: number;
+  taxDiscountAmount?: number;
+  taxDiscountAmountDecimal?: string;
+  beforeDiscountTaxAmount?: number;
+  beforeDiscountTaxAmountDecimal?: string;
   discountAmount?: number;
   discountPercentage?: number;
   beforeDiscountAmountTotal?: number;
@@ -142,16 +147,19 @@ export const computePriceItemValues = (
 
   const unitAmountGross = unitAmountNet.add(unitTaxAmount);
 
+  const taxDiscountAmount = unitDiscountAmount?.subtract(unitDiscountAmountNet!);
+  const taxAmount = unitTaxAmount.multiply(unitAmountMultiplier);
+  const beforeDiscountTaxAmount = unitAmountBeforeDiscount?.subtract(unitAmountBeforeDiscount.divide(1 + taxRate));
   const discountAmount = unitDiscountAmount?.multiply(unitAmountMultiplier);
   const amountSubtotal = unitAmountNet.multiply(unitAmountMultiplier);
   const amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
-  const taxAmount = unitTaxAmount.multiply(unitAmountMultiplier);
   const beforeDiscountAmountTotal = unitAmountBeforeDiscount?.multiply(unitAmountMultiplier);
 
   return {
     unitAmount: unitAmount.getAmount(),
     unitDiscountAmount: unitDiscountAmount?.getAmount(),
     unitDiscountAmountDecimal: unitDiscountAmount?.toUnit().toString(),
+    beforeDiscountUnitAmount: unitAmountBeforeDiscount?.getAmount(),
     unitAmountNet: unitAmountNet.getAmount(),
     unitAmountNetDecimal: unitAmountNet.toUnit().toString(),
     unitDiscountAmountNet: unitDiscountAmountNet?.getAmount(),
@@ -161,6 +169,10 @@ export const computePriceItemValues = (
     amountSubtotal: amountSubtotal.getAmount(),
     amountTotal: amountTotal.getAmount(),
     taxAmount: taxAmount.getAmount(),
+    taxDiscountAmount: taxDiscountAmount?.getAmount(),
+    taxDiscountAmountDecimal: taxDiscountAmount?.toUnit().toString(),
+    beforeDiscountTaxAmount: beforeDiscountTaxAmount?.getAmount(),
+    beforeDiscountTaxAmountDecimal: beforeDiscountTaxAmount?.toUnit().toString(),
     discountAmount: discountAmount?.getAmount(),
     discountPercentage: discountPercentage,
     beforeDiscountAmountTotal: beforeDiscountAmountTotal?.getAmount(),

@@ -727,6 +727,9 @@ export const computePriceItem = (
     currency,
     ...(priceItemDescription && { description: priceItemDescription }),
     ...(Number.isInteger(itemValues.unitAmount) && { unit_amount: itemValues.unitAmount }),
+    ...(Number.isInteger(itemValues.beforeDiscountUnitAmount) && {
+      before_discount_unit_amount: itemValues.beforeDiscountUnitAmount,
+    }),
     ...(Number.isInteger(itemValues.unitDiscountAmount) && { unit_discount_amount: itemValues.unitDiscountAmount }),
     ...(itemValues.unitDiscountAmountDecimal && {
       unit_discount_amount_decimal: itemValues.unitDiscountAmountDecimal,
@@ -749,6 +752,18 @@ export const computePriceItem = (
     ...(itemValues.discountPercentage && { discount_percentage: itemValues.discountPercentage }),
     ...(itemValues.beforeDiscountAmountTotal && { before_discount_amount_total: itemValues.beforeDiscountAmountTotal }),
     amount_tax: itemValues.taxAmount,
+    ...(Number.isInteger(itemValues.taxDiscountAmount) && {
+      tax_discount_amount: itemValues.taxDiscountAmount,
+    }),
+    ...(itemValues.taxDiscountAmountDecimal && {
+      tax_discount_amount_decimal: itemValues.taxDiscountAmountDecimal,
+    }),
+    ...(Number.isInteger(itemValues.beforeDiscountTaxAmount) && {
+      before_discount_tax_amount: itemValues.beforeDiscountTaxAmount,
+    }),
+    ...(itemValues.beforeDiscountTaxAmountDecimal && {
+      before_discount_tax_amount_decimal: itemValues.beforeDiscountTaxAmountDecimal,
+    }),
     ...(itemValues.tiers_details && {
       tiers_details: itemValues.tiers_details.map((tier) => ({
         quantity: tier.quantity,
@@ -794,6 +809,11 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
   ...(typeof priceItem.unit_amount === 'number' && {
     unit_amount: toDineroFromInteger(priceItem.unit_amount).convertPrecision(precision).getAmount(),
   }),
+  ...(typeof priceItem.before_discount_unit_amount === 'number' && {
+    before_discount_unit_amount: toDineroFromInteger(priceItem.before_discount_unit_amount)
+      .convertPrecision(precision)
+      .getAmount(),
+  }),
   ...(typeof priceItem.unit_discount_amount === 'number' && {
     unit_discount_amount: toDineroFromInteger(priceItem.unit_discount_amount).convertPrecision(precision).getAmount(),
     unit_discount_amount_decimal: toDineroFromInteger(priceItem.unit_discount_amount).toUnit().toString(),
@@ -832,6 +852,17 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
       .toString(),
   }),
   amount_tax: toDineroFromInteger(priceItem.amount_tax!).convertPrecision(precision).getAmount(),
+
+  ...(typeof priceItem.tax_discount_amount === 'number' && {
+    tax_discount_amount: toDineroFromInteger(priceItem.tax_discount_amount!).convertPrecision(precision).getAmount(),
+    tax_discount_amount_decimal: toDineroFromInteger(priceItem.tax_discount_amount!).toUnit().toString(),
+  }),
+  ...(typeof priceItem.before_discount_tax_amount === 'number' && {
+    before_discount_tax_amount: toDineroFromInteger(priceItem.before_discount_tax_amount)
+      .convertPrecision(precision)
+      .getAmount(),
+    before_discount_tax_amount_decimal: toDineroFromInteger(priceItem.before_discount_tax_amount).toUnit().toString(),
+  }),
   taxes: priceItem.taxes!.map((tax) => ({
     ...tax,
     amount: toDineroFromInteger(tax.amount!).convertPrecision(precision).getAmount(),

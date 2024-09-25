@@ -449,6 +449,15 @@ describe('computeAggregatedAndPriceTotals', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageDiscountAndExclusiveTax]);
       expect(result).toEqual(results.computedPriceWithPercentageDiscountAndExclusiveTax);
     });
+
+    it('should compute discounts and totals correctly when there are multiple prices', () => {
+      const result = computeAggregatedAndPriceTotals([
+        samples.priceItemWithPercentageDiscount,
+        samples.priceItemWithPercentageDiscount,
+        samples.priceItem,
+      ]);
+      expect(result).toEqual(results.computedResultWithPricesWithAndWithoutCoupons);
+    });
   });
 });
 

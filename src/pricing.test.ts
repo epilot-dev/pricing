@@ -425,6 +425,28 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(result).toEqual(results.computedPriceWithFixedDiscount);
     });
 
+    it('should not output negative totals when fixed discount is higher than unit price', () => {
+      const result = computeAggregatedAndPriceTotals([
+        {
+          ...samples.priceItemWithFixedDiscount,
+          _coupons: [
+            {
+              ...samples.priceItemWithFixedDiscount._coupons?.[0]!,
+              /* Discount is 50x higher */
+              fixed_value: 500_000,
+              fixed_value_decimal: '5000.00',
+            },
+          ],
+        },
+      ]);
+      const item = result.items?.[0];
+      if (!item) {
+        throw new Error('Expected at least one item resulting from computation');
+      }
+      expect(item.amount_total).toEqual(0);
+      expect(item.before_discount_unit_amount).toEqual(item.unit_discount_amount);
+    });
+
     it('should compute discounts and totals correctly when there is a percentage discount coupon', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageDiscount]);
       expect(result).toEqual(results.computedPriceWithPercentageDiscount);

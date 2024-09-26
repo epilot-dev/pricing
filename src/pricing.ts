@@ -749,7 +749,7 @@ export const computePriceItem = (
     amount_subtotal: itemValues.amountSubtotal,
     amount_total: itemValues.amountTotal,
     ...(itemValues.discountAmount && { discount_amount: itemValues.discountAmount }),
-    ...(itemValues.discountPercentage && { discount_percentage: itemValues.discountPercentage }),
+    ...(Number.isInteger(itemValues.discountPercentage) && { discount_percentage: itemValues.discountPercentage }),
     ...(itemValues.beforeDiscountAmountTotal && { before_discount_amount_total: itemValues.beforeDiscountAmountTotal }),
     amount_tax: itemValues.taxAmount,
     ...(Number.isInteger(itemValues.taxDiscountAmount) && {

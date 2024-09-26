@@ -100,6 +100,8 @@ export const getQuantityForTier = (tierMinQuantity: number, tierMaxQuantity: num
   return toDinero(normalizedQuantity.toString(), 'EUR').subtract(toDinero(tierMinQuantity.toString(), 'EUR')).toUnit();
 };
 
+const clamp = (value: number, minimum: number, maximum: number) => Math.min(Math.max(value, minimum), maximum);
+
 export const computePriceItemValues = (
   unitAmountDecimal: string,
   currency: Currency,
@@ -121,7 +123,7 @@ export const computePriceItemValues = (
     unitAmountBeforeDiscount = unitAmount;
 
     if (isPercentageCoupon(coupon)) {
-      discountPercentage = Number(coupon.percentage_value);
+      discountPercentage = clamp(Number(coupon.percentage_value), 0, 100);
       unitDiscountAmount = unitAmount.multiply(discountPercentage).divide(100);
     } else {
       unitDiscountAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
@@ -147,7 +149,8 @@ export const computePriceItemValues = (
 
   const unitAmountGross = unitAmountNet.add(unitTaxAmount);
 
-  const taxDiscountAmount = unitDiscountAmount?.subtract(unitDiscountAmountNet!);
+  const taxDiscountAmount =
+    unitDiscountAmountNet && unitDiscountAmount ? unitDiscountAmount.subtract(unitDiscountAmountNet) : undefined;
   const taxAmount = unitTaxAmount.multiply(unitAmountMultiplier);
   const beforeDiscountTaxAmount = unitAmountBeforeDiscount?.subtract(unitAmountBeforeDiscount.divide(1 + taxRate));
   const discountAmount = unitDiscountAmount?.multiply(unitAmountMultiplier);
@@ -174,7 +177,7 @@ export const computePriceItemValues = (
     beforeDiscountTaxAmount: beforeDiscountTaxAmount?.getAmount(),
     beforeDiscountTaxAmountDecimal: beforeDiscountTaxAmount?.toUnit().toString(),
     discountAmount: discountAmount?.getAmount(),
-    discountPercentage: discountPercentage,
+    discountPercentage,
     beforeDiscountAmountTotal: beforeDiscountAmountTotal?.getAmount(),
   };
 };

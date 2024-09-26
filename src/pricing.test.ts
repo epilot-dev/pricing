@@ -430,6 +430,35 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(result).toEqual(results.computedPriceWithPercentageDiscount);
     });
 
+    it('should ensure percentage discounts do not go below 0% and above 100%', () => {
+      /* For discounts above 100% */
+      const resultMaximum = computeAggregatedAndPriceTotals([
+        {
+          ...samples.priceItemWithPercentageDiscount,
+          _coupons: [
+            {
+              ...samples.priceItemWithPercentageDiscount._coupons?.[0]!,
+              percentage_value: '150',
+            },
+          ],
+        },
+      ]);
+      expect(resultMaximum.items?.[0]?.discount_percentage).toEqual(100);
+      /* For discounts below 0% */
+      const resultMinimum = computeAggregatedAndPriceTotals([
+        {
+          ...samples.priceItemWithPercentageDiscount,
+          _coupons: [
+            {
+              ...samples.priceItemWithPercentageDiscount._coupons?.[0]!,
+              percentage_value: '-35',
+            },
+          ],
+        },
+      ]);
+      expect(resultMinimum.items?.[0]?.discount_percentage).toEqual(0);
+    });
+
     it('should compute discounts and totals correctly when there is a percentage discount coupon and quantity is higher than 1', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageDiscountAndHighQuantity]);
       expect(result).toEqual(results.computedPriceWithPercentageDiscountAndHighQuantity);

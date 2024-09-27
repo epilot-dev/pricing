@@ -126,7 +126,8 @@ export const computePriceItemValues = (
       discountPercentage = clamp(Number(coupon.percentage_value), 0, 100);
       unitDiscountAmount = unitAmount.multiply(discountPercentage).divide(100);
     } else {
-      unitDiscountAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
+      const fixedDiscountAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
+      unitDiscountAmount = fixedDiscountAmount.greaterThan(unitAmount) ? unitAmount : fixedDiscountAmount;
     }
 
     unitAmount = unitAmount.subtract(unitDiscountAmount);

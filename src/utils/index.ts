@@ -151,9 +151,13 @@ export const computePriceItemValues = (
   const unitAmountGross = unitAmountNet.add(unitTaxAmount);
 
   const taxDiscountAmount =
-    unitDiscountAmountNet && unitDiscountAmount ? unitDiscountAmount.subtract(unitDiscountAmountNet) : undefined;
+    unitDiscountAmountNet && unitDiscountAmount
+      ? unitDiscountAmount.subtract(unitDiscountAmountNet).multiply(unitAmountMultiplier)
+      : undefined;
   const taxAmount = unitTaxAmount.multiply(unitAmountMultiplier);
-  const beforeDiscountTaxAmount = unitAmountBeforeDiscount?.subtract(unitAmountBeforeDiscount.divide(1 + taxRate));
+  const beforeDiscountTaxAmount = unitAmountBeforeDiscount
+    ?.subtract(unitAmountBeforeDiscount.divide(1 + taxRate))
+    .multiply(unitAmountMultiplier);
   const discountAmount = unitDiscountAmount?.multiply(unitAmountMultiplier);
   const amountSubtotal = unitAmountNet.multiply(unitAmountMultiplier);
   const amountTotal = unitAmountGross.multiply(unitAmountMultiplier);

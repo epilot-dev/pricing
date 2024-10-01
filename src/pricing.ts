@@ -494,18 +494,16 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
     recurrence.amount_subtotal_decimal = subTotalAmount.add(priceSubtotal).toUnit().toString();
     recurrence.amount_total_decimal = totalAmount.add(priceTotal).toUnit().toString();
     recurrence.amount_tax = taxAmount.add(priceTax).getAmount();
-    if (beforeDiscountAmountTotal && priceBeforeDiscountAmountTotal) {
-      recurrence.before_discount_amount_total = beforeDiscountAmountTotal
-        .add(priceBeforeDiscountAmountTotal)
-        .getAmount();
-      recurrence.before_discount_amount_total_decimal = beforeDiscountAmountTotal
-        .add(priceBeforeDiscountAmountTotal)
-        .toUnit()
-        .toString();
+    if (priceBeforeDiscountAmountTotal) {
+      const recurrenceBeforeDiscountAmountTotal =
+        beforeDiscountAmountTotal?.add(priceBeforeDiscountAmountTotal) ?? priceBeforeDiscountAmountTotal;
+      recurrence.before_discount_amount_total = recurrenceBeforeDiscountAmountTotal.getAmount();
+      recurrence.before_discount_amount_total_decimal = recurrenceBeforeDiscountAmountTotal.toUnit().toString();
     }
-    if (discountAmount && priceDiscountAmount) {
-      recurrence.discount_amount = discountAmount.add(priceDiscountAmount).getAmount();
-      recurrence.discount_amount_decimal = discountAmount.add(priceDiscountAmount).toUnit().toString();
+    if (priceDiscountAmount) {
+      const recurrenceDiscountAmount = discountAmount?.add(priceDiscountAmount) ?? priceDiscountAmount;
+      recurrence.discount_amount = recurrenceDiscountAmount.getAmount();
+      recurrence.discount_amount_decimal = recurrenceDiscountAmount.toUnit().toString();
     }
   }
 

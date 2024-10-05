@@ -5932,7 +5932,16 @@ export const computedPriceWithPercentageDiscountAndHighQuantity = {
   total_details: {
     amount_tax: 3409,
     breakdown: {
-      taxes: [{ tax: { _id: '10', type: 'VAT', rate: 10 }, amount: 3409 }],
+      taxes: [
+        {
+          tax: {
+            _id: '10',
+            type: 'VAT',
+            rate: 10,
+          },
+          amount: 3409,
+        },
+      ],
       recurrences: [
         {
           type: 'one_time',
@@ -5955,7 +5964,14 @@ export const computedPriceWithPercentageDiscountAndHighQuantity = {
           amount_total: 37500,
           amount_subtotal: 34091,
           amount_tax: 3409,
-          tax: { tax: { _id: '10', type: 'VAT', rate: 10 }, amount: 3409 },
+          tax: {
+            tax: {
+              _id: '10',
+              type: 'VAT',
+              rate: 10,
+            },
+            amount: 3409,
+          },
         },
       ],
     },
@@ -6003,7 +6019,9 @@ export const computedPriceWithPercentageDiscountAndHighQuantity = {
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
       },
-      _product: { _tags: ['product-tag-1', 'product-tag-2'] },
+      _product: {
+        _tags: ['product-tag-1', 'product-tag-2'],
+      },
       pricing_model: 'per_unit',
       is_tax_inclusive: true,
       _coupons: [
@@ -6058,7 +6076,16 @@ export const computedPriceWithFixedDiscountAndHighQuantity = {
   total_details: {
     amount_tax: 4318,
     breakdown: {
-      taxes: [{ tax: { _id: '10', type: 'VAT', rate: 10 }, amount: 4318 }],
+      taxes: [
+        {
+          tax: {
+            _id: '10',
+            type: 'VAT',
+            rate: 10,
+          },
+          amount: 4318,
+        },
+      ],
       recurrences: [
         {
           type: 'one_time',
@@ -6081,7 +6108,14 @@ export const computedPriceWithFixedDiscountAndHighQuantity = {
           amount_total: 47500,
           amount_subtotal: 43182,
           amount_tax: 4318,
-          tax: { tax: { _id: '10', type: 'VAT', rate: 10 }, amount: 4318 },
+          tax: {
+            tax: {
+              _id: '10',
+              type: 'VAT',
+              rate: 10,
+            },
+            amount: 4318,
+          },
         },
       ],
     },
@@ -6129,7 +6163,9 @@ export const computedPriceWithFixedDiscountAndHighQuantity = {
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
       },
-      _product: { _tags: ['product-tag-1', 'product-tag-2'] },
+      _product: {
+        _tags: ['product-tag-1', 'product-tag-2'],
+      },
       pricing_model: 'per_unit',
       is_tax_inclusive: true,
       _coupons: [
@@ -6289,7 +6325,16 @@ export const computedPriceWithPercentageDiscountAndExclusiveTax = {
   total_details: {
     amount_tax: 750,
     breakdown: {
-      taxes: [{ tax: { _id: '10', type: 'VAT', rate: 10 }, amount: 750 }],
+      taxes: [
+        {
+          tax: {
+            _id: '10',
+            type: 'VAT',
+            rate: 10,
+          },
+          amount: 750,
+        },
+      ],
       recurrences: [
         {
           type: 'one_time',
@@ -6300,8 +6345,8 @@ export const computedPriceWithPercentageDiscountAndExclusiveTax = {
           amount_subtotal_decimal: '75',
           amount_total_decimal: '82.5',
           amount_tax: 750,
-          before_discount_amount_total: 10000,
-          before_discount_amount_total_decimal: '100',
+          before_discount_amount_total: 11000,
+          before_discount_amount_total_decimal: '110',
           discount_amount: 2500,
           discount_amount_decimal: '25',
         },
@@ -6312,7 +6357,14 @@ export const computedPriceWithPercentageDiscountAndExclusiveTax = {
           amount_total: 8250,
           amount_subtotal: 7500,
           amount_tax: 750,
-          tax: { tax: { _id: '10', type: 'VAT', rate: 10 }, amount: 750 },
+          tax: {
+            tax: {
+              _id: '10',
+              type: 'VAT',
+              rate: 10,
+            },
+            amount: 750,
+          },
         },
       ],
     },
@@ -6360,7 +6412,9 @@ export const computedPriceWithPercentageDiscountAndExclusiveTax = {
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
       },
-      _product: { _tags: ['product-tag-1', 'product-tag-2'] },
+      _product: {
+        _tags: ['product-tag-1', 'product-tag-2'],
+      },
       pricing_model: 'per_unit',
       is_tax_inclusive: false,
       _coupons: [
@@ -6393,16 +6447,16 @@ export const computedPriceWithPercentageDiscountAndExclusiveTax = {
       amount_total: 8250,
       discount_amount: 2500,
       discount_percentage: 25,
-      before_discount_amount_total: 10000,
+      before_discount_amount_total: 11000,
       amount_tax: 750,
       tax_discount_amount: 0,
       tax_discount_amount_decimal: '0',
-      before_discount_tax_amount: 909,
-      before_discount_tax_amount_decimal: '9.090909090909',
+      before_discount_tax_amount: 1000,
+      before_discount_tax_amount_decimal: '10',
       amount_subtotal_decimal: '75',
       amount_total_decimal: '82.5',
       discount_amount_decimal: '25',
-      before_discount_amount_total_decimal: '100',
+      before_discount_amount_total_decimal: '110',
     },
   ],
   currency: 'EUR',

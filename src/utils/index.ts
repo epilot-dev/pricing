@@ -137,15 +137,22 @@ export const computePriceItemValues = (
 
   let unitAmountNet: Dinero;
   let unitTaxAmount: Dinero;
+  let unitAmountBeforeDiscountNet: Dinero | undefined;
+  let beforeDiscountUnitTaxAmount: Dinero | undefined;
 
   if (isTaxInclusive) {
     unitAmountNet = unitAmount.divide(1 + taxRate);
     unitDiscountAmountNet = unitDiscountAmount?.divide(1 + taxRate);
+    unitAmountBeforeDiscountNet = unitAmountBeforeDiscount?.divide(1 + taxRate);
     unitTaxAmount = unitAmount.subtract(unitAmountNet);
+    beforeDiscountUnitTaxAmount =
+      unitAmountBeforeDiscountNet && unitAmountBeforeDiscount?.subtract(unitAmountBeforeDiscountNet);
   } else {
     unitAmountNet = unitAmount;
+    unitAmountBeforeDiscountNet = unitAmountBeforeDiscount;
     unitDiscountAmountNet = unitDiscountAmount;
     unitTaxAmount = unitAmount.multiply(taxRate);
+    beforeDiscountUnitTaxAmount = unitAmountBeforeDiscount?.multiply(taxRate);
   }
 
   const unitAmountGross = unitAmountNet.add(unitTaxAmount);
@@ -155,13 +162,14 @@ export const computePriceItemValues = (
       ? unitDiscountAmount.subtract(unitDiscountAmountNet).multiply(unitAmountMultiplier)
       : undefined;
   const taxAmount = unitTaxAmount.multiply(unitAmountMultiplier);
-  const beforeDiscountTaxAmount = unitAmountBeforeDiscount
-    ?.subtract(unitAmountBeforeDiscount.divide(1 + taxRate))
-    .multiply(unitAmountMultiplier);
+  const beforeDiscountTaxAmount = beforeDiscountUnitTaxAmount?.multiply(unitAmountMultiplier);
+  const beforeDiscountUnitAmountGross =
+    beforeDiscountUnitTaxAmount && unitAmountBeforeDiscountNet?.add(beforeDiscountUnitTaxAmount);
   const discountAmount = unitDiscountAmount?.multiply(unitAmountMultiplier);
   const amountSubtotal = unitAmountNet.multiply(unitAmountMultiplier);
   const amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
-  const beforeDiscountAmountTotal = unitAmountBeforeDiscount?.multiply(unitAmountMultiplier);
+
+  const beforeDiscountAmountTotal = beforeDiscountUnitAmountGross?.multiply(unitAmountMultiplier);
 
   return {
     unitAmount: unitAmount.getAmount(),

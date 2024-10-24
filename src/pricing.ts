@@ -724,68 +724,70 @@ export const computePriceItem = (
     ...priceItem,
     currency,
     ...(priceItemDescription && { description: priceItemDescription }),
-    ...(Number.isInteger(itemValues.unitAmount) && { unit_amount: itemValues.unitAmount }),
-    ...(Number.isInteger(itemValues.beforeDiscountUnitAmount) && {
-      before_discount_unit_amount: itemValues.beforeDiscountUnitAmount,
+    ...(Number.isInteger(itemValues.unit_amount) && { unit_amount: itemValues.unit_amount }),
+    ...(Number.isInteger(itemValues.before_discount_unit_amount) && {
+      before_discount_unit_amount: itemValues.before_discount_unit_amount,
     }),
-    ...(Number.isInteger(itemValues.unitDiscountAmount) && { unit_discount_amount: itemValues.unitDiscountAmount }),
-    ...(itemValues.unitDiscountAmountDecimal && {
-      unit_discount_amount_decimal: itemValues.unitDiscountAmountDecimal,
+    ...(Number.isInteger(itemValues.unit_discount_amount) && { unit_discount_amount: itemValues.unit_discount_amount }),
+    ...(itemValues.unit_discount_amount_decimal && {
+      unit_discount_amount_decimal: itemValues.unit_discount_amount_decimal,
     }),
-    ...(Number.isInteger(itemValues.unitAmountNet) && { unit_amount_net: itemValues.unitAmountNet }),
-    ...(itemValues.unitAmountNetDecimal && { unit_amount_net_decimal: itemValues.unitAmountNetDecimal }),
-    ...(Number.isInteger(itemValues.unitDiscountAmountNet) && {
-      unit_discount_amount_net: itemValues.unitDiscountAmountNet,
+    ...(Number.isInteger(itemValues.unit_amount_net) && { unit_amount_net: itemValues.unit_amount_net }),
+    ...(itemValues.unit_amount_net_decimal && { unit_amount_net_decimal: itemValues.unit_amount_net_decimal }),
+    ...(Number.isInteger(itemValues.unit_discount_amount_net) && {
+      unit_discount_amount_net: itemValues.unit_discount_amount_net,
     }),
-    ...(itemValues.unitDiscountAmountNetDecimal && {
-      unit_discount_amount_net_decimal: itemValues.unitDiscountAmountNetDecimal,
+    ...(itemValues.unit_discount_amount_net_decimal && {
+      unit_discount_amount_net_decimal: itemValues.unit_discount_amount_net_decimal,
     }),
-    ...(Number.isInteger(itemValues.unitAmountGross) && { unit_amount_gross: itemValues.unitAmountGross }),
-    ...(itemValues.unitAmountGrossDecimal && { unit_amount_gross_decimal: itemValues.unitAmountGrossDecimal }),
+    ...(Number.isInteger(itemValues.unit_amount_gross) && { unit_amount_gross: itemValues.unit_amount_gross }),
+    ...(itemValues.unit_amount_gross_decimal && { unit_amount_gross_decimal: itemValues.unit_amount_gross_decimal }),
     ...(price?.pricing_model === PricingModel.perUnit &&
       unitAmountDecimal && { unit_amount_decimal: unitAmountDecimal }),
-    amount_subtotal: itemValues.amountSubtotal,
-    amount_total: itemValues.amountTotal,
-    ...(itemValues.discountAmount && { discount_amount: itemValues.discountAmount }),
-    ...(typeof itemValues.discountPercentage === 'number' && { discount_percentage: itemValues.discountPercentage }),
-    ...(itemValues.beforeDiscountAmountTotal && { before_discount_amount_total: itemValues.beforeDiscountAmountTotal }),
-    amount_tax: itemValues.taxAmount,
-    ...(Number.isInteger(itemValues.taxDiscountAmount) && {
-      tax_discount_amount: itemValues.taxDiscountAmount,
+    amount_subtotal: itemValues.amount_subtotal,
+    amount_total: itemValues.amount_total,
+    ...(itemValues.discount_amount && { discount_amount: itemValues.discount_amount }),
+    ...(typeof itemValues.discount_percentage === 'number' && { discount_percentage: itemValues.discount_percentage }),
+    ...(itemValues.before_discount_amount_total && {
+      before_discount_amount_total: itemValues.before_discount_amount_total,
     }),
-    ...(itemValues.taxDiscountAmountDecimal && {
-      tax_discount_amount_decimal: itemValues.taxDiscountAmountDecimal,
+    amount_tax: itemValues.amount_tax,
+    ...(Number.isInteger(itemValues.tax_discount_amount) && {
+      tax_discount_amount: itemValues.tax_discount_amount,
     }),
-    ...(Number.isInteger(itemValues.beforeDiscountTaxAmount) && {
-      before_discount_tax_amount: itemValues.beforeDiscountTaxAmount,
+    ...(itemValues.tax_discount_amount_decimal && {
+      tax_discount_amount_decimal: itemValues.tax_discount_amount_decimal,
     }),
-    ...(itemValues.beforeDiscountTaxAmountDecimal && {
-      before_discount_tax_amount_decimal: itemValues.beforeDiscountTaxAmountDecimal,
+    ...(Number.isInteger(itemValues.before_discount_tax_amount) && {
+      before_discount_tax_amount: itemValues.before_discount_tax_amount,
+    }),
+    ...(itemValues.before_discount_tax_amount_decimal && {
+      before_discount_tax_amount_decimal: itemValues.before_discount_tax_amount_decimal,
     }),
     ...(itemValues.tiers_details && {
       tiers_details: itemValues.tiers_details.map((tier) => ({
         quantity: tier.quantity,
-        unit_amount: tier.unitAmount,
-        unit_amount_decimal: tier.unitAmountDecimal,
-        unit_amount_gross: tier.unitAmountGross,
-        unit_amount_net: tier.unitAmountNet,
-        amount_subtotal: tier.amountSubtotal,
-        amount_total: tier.amountTotal,
-        amount_tax: tier.taxAmount,
+        unit_amount: tier.unit_amount,
+        unit_amount_decimal: tier.unit_amount_decimal,
+        unit_amount_gross: tier.unit_amount_gross,
+        unit_amount_net: tier.unit_amount_net,
+        amount_subtotal: tier.amount_subtotal,
+        amount_total: tier.amount_total,
+        amount_tax: tier.amount_tax,
       })),
     }),
-    ...(itemValues.getAg && { get_ag: itemValues.getAg }),
+    ...(itemValues.get_ag && { get_ag: itemValues.get_ag }),
     taxes: [
       {
         ...(priceTax ? { tax: priceTax } : { rate: 'nontaxable', rateValue: 0 }),
-        amount: itemValues.taxAmount,
+        amount: itemValues.amount_tax,
       },
     ],
     ...(priceItem?._product && { _product: mapToProductSnapshot(priceItem._product) }),
     _price: {
       ...mapToPriceSnapshot(price),
-      ...(itemValues.displayMode && {
-        price_display_in_journeys: itemValues.displayMode ?? price?.price_display_in_journeys,
+      ...(itemValues.price_display_in_journeys && {
+        price_display_in_journeys: itemValues.price_display_in_journeys ?? price?.price_display_in_journeys,
         unchanged_price_display_in_journeys:
           priceItem._price?.unchanged_price_display_in_journeys ?? price?.price_display_in_journeys,
       }),

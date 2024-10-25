@@ -1,5 +1,4 @@
 import * as samples from './__tests__/fixtures/price.samples';
-import * as results from './__tests__/fixtures/pricing.results';
 import {
   ENTITY_FIELDS_EXCLUSION_LIST,
   computeAggregatedAndPriceTotals,
@@ -22,7 +21,7 @@ describe('computeAggregatedAndPriceTotals', () => {
         samples.priceItem6,
       ];
 
-      expect(computeAggregatedAndPriceTotals(priceItems)).toStrictEqual(results.oneItemPerRecurrenceTotals);
+      expect(computeAggregatedAndPriceTotals(priceItems)).toMatchSnapshot();
     });
 
     it('should return 0 when number input is 0', () => {
@@ -56,7 +55,7 @@ describe('computeAggregatedAndPriceTotals', () => {
 
       const result = computeAggregatedAndPriceTotals(priceItems);
 
-      expect(result).toStrictEqual(results.severalItemsPerRecurrenceTotals);
+      expect(result).toMatchSnapshot();
     });
 
     it('should return the right result when the price is not provided ', () => {
@@ -64,7 +63,7 @@ describe('computeAggregatedAndPriceTotals', () => {
 
       const result = computeAggregatedAndPriceTotals(priceItems);
 
-      expect(result).toEqual(results.resultsWhenNoPricesProvided);
+      expect(result).toMatchSnapshot();
     });
 
     it('should return the right result when the price is nontaxable', () => {
@@ -217,7 +216,7 @@ describe('computeAggregatedAndPriceTotals', () => {
 
       const result = computeAggregatedAndPriceTotals(priceItems);
 
-      expect(result).toEqual(results.priceWithDisplayOnRequestAndSimplePrices);
+      expect(result).toMatchSnapshot();
     });
   });
 
@@ -246,7 +245,7 @@ describe('computeAggregatedAndPriceTotals', () => {
 
       const result = computeAggregatedAndPriceTotals(priceItems);
 
-      expect(result).toEqual(results.compositePriceWithDisplayOnRequest);
+      expect(result).toMatchSnapshot();
     });
 
     it('should return the right result when there is one composite price with display mode "On Request"', () => {
@@ -262,7 +261,7 @@ describe('computeAggregatedAndPriceTotals', () => {
 
       const result = computeAggregatedAndPriceTotals(priceItems);
 
-      expect(result).toEqual(results.compositePriceWithDisplayOnRequestAndOthers);
+      expect(result).toMatchSnapshot();
     });
 
     it('should return the right result when there is one component with display mode "Show as starting price"', () => {
@@ -299,7 +298,7 @@ describe('computeAggregatedAndPriceTotals', () => {
 
       const result = computeAggregatedAndPriceTotals(priceItems);
 
-      expect(result).toEqual(results.resultCompositePriceQuantity2);
+      expect(result).toMatchSnapshot();
     });
 
     it('should return the right result when there is one composite price with total_details already set', () => {
@@ -307,7 +306,7 @@ describe('computeAggregatedAndPriceTotals', () => {
 
       const result = computeAggregatedAndPriceTotals(priceItems);
 
-      expect(result).toEqual(results.resultCompositePriceWithTotalDetails);
+      expect(result).toMatchSnapshot();
     });
 
     it('should return the right result when there is one composite price with unit_amount=0', () => {
@@ -315,7 +314,7 @@ describe('computeAggregatedAndPriceTotals', () => {
 
       const result = computeAggregatedAndPriceTotals(priceItems);
 
-      expect(result).toEqual(results.compositePricesUnitAmountZeroResult);
+      expect(result).toMatchSnapshot();
     });
 
     describe('when price component has is_tax_inclusive = false', () => {
@@ -422,7 +421,7 @@ describe('computeAggregatedAndPriceTotals', () => {
   describe('when coupons are applied', () => {
     it('should compute discounts and totals correctly when there is a fixed-amount discount coupon', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithFixedDiscount]);
-      expect(result).toEqual(results.computedPriceWithFixedDiscount);
+      expect(result).toMatchSnapshot();
     });
 
     it('should not output negative totals when fixed discount is higher than unit price', () => {
@@ -449,7 +448,7 @@ describe('computeAggregatedAndPriceTotals', () => {
 
     it('should compute discounts and totals correctly when there is a percentage discount coupon', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageDiscount]);
-      expect(result).toEqual(results.computedPriceWithPercentageDiscount);
+      expect(result).toMatchSnapshot();
     });
 
     it('should ensure percentage discounts do not go below 0% and above 100%', () => {
@@ -483,22 +482,22 @@ describe('computeAggregatedAndPriceTotals', () => {
 
     it('should compute discounts and totals correctly when there is a percentage discount coupon and quantity is higher than 1', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageDiscountAndHighQuantity]);
-      expect(result).toEqual(results.computedPriceWithPercentageDiscountAndHighQuantity);
+      expect(result).toMatchSnapshot();
     });
 
     it('should compute discounts and totals correctly when there is a fixed discount coupon and quantity is higher than 1', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithFixedDiscountAndHighQuantity]);
-      expect(result).toEqual(results.computedPriceWithFixedDiscountAndHighQuantity);
+      expect(result).toMatchSnapshot();
     });
 
     it('should compute discounts and totals correctly for prices without tax', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageDiscountAndNoTax]);
-      expect(result).toEqual(results.computedPriceWithFixedDiscountAndNoTax);
+      expect(result).toMatchSnapshot();
     });
 
     it('should compute discounts and totals correctly when there is a percentage discount coupon', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageDiscountAndExclusiveTax]);
-      expect(result).toEqual(results.computedPriceWithPercentageDiscountAndExclusiveTax);
+      expect(result).toMatchSnapshot();
     });
 
     it('should compute discounts and totals correctly when there are multiple prices', () => {
@@ -507,7 +506,7 @@ describe('computeAggregatedAndPriceTotals', () => {
         samples.priceItemWithPercentageDiscount,
         samples.priceItem,
       ]);
-      expect(result).toEqual(results.computedResultWithPricesWithAndWithoutCoupons);
+      expect(result).toMatchSnapshot();
     });
   });
 });
@@ -519,7 +518,7 @@ describe('computeCompositePrice', () => {
       compositePrice._price as CompositePrice,
     );
 
-    expect(result).toStrictEqual(results.computedCompositePrice);
+    expect(result).toMatchSnapshot();
   });
   it.each([samples.fullCompositePrice])('computes the composite price correctly #2', (compositePrice) => {
     const result = computeCompositePrice(
@@ -527,7 +526,7 @@ describe('computeCompositePrice', () => {
       compositePrice._price as CompositePrice,
     );
 
-    expect(result).toStrictEqual(results.computedCompositePrice);
+    expect(result).toMatchSnapshot();
   });
 });
 
@@ -535,19 +534,19 @@ describe('computePriceItemDetails', () => {
   it('computes the pricing details for a simple price', () => {
     const result = computePriceItemDetails(samples.priceItem1);
 
-    expect(result).toStrictEqual(results.priceDetailsForOnePrice);
+    expect(result).toMatchSnapshot();
   });
 
   it('computes the pricing details for a composite price', () => {
     const result = computePriceItemDetails(samples.compositePrice);
 
-    expect(result).toStrictEqual(results.priceDetailsForCompositePrice);
+    expect(result).toMatchSnapshot();
   });
 
   it('computes the pricing details for a composite price that one component has changed its tax', () => {
     const result = computePriceItemDetails(samples.compositePriceWithTaxChanges);
 
-    expect(result).toStrictEqual(results.priceDetailsForCompositePriceWithTaxChanges);
+    expect(result).toMatchSnapshot();
   });
 });
 

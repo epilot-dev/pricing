@@ -1,4 +1,15 @@
-import type { Components } from '@epilot/pricing-client';
+import type { Components, ExternalProduct } from '@epilot/pricing-client';
+
+type ExternalProductData = {
+  integrationId: string;
+  data: ExternalProduct;
+  pricingDetails: PricingDetails;
+};
+
+type PriceItemDtoWithExternalProduct = Components.Schemas.PriceItemDto & { _external_data?: ExternalProductData };
+type CompositePriceItemDtoWithExternalProduct = Components.Schemas.CompositePriceItemDto & {
+  _external_data?: ExternalProductData;
+};
 
 export type Price = Components.Schemas.Price;
 export type PriceItem = Components.Schemas.PriceItem;
@@ -7,7 +18,7 @@ export type Product = Components.Schemas.Product;
 export type Coupon = Components.Schemas.Coupon;
 export type PricingDetails = Components.Schemas.PricingDetails;
 export type PriceItems = Components.Schemas.PriceItems;
-export type PriceItemsDto = Components.Schemas.PriceItemsDto;
+export type PriceItemsDto = (PriceItemDtoWithExternalProduct | CompositePriceItemDtoWithExternalProduct)[];
 export type Tax = Components.Schemas.Tax;
 export type TaxAmountDto = Components.Schemas.TaxAmountDto;
 export type TaxAmount = Components.Schemas.TaxAmount;

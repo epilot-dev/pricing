@@ -2764,6 +2764,382 @@ export const internalSimplePrice: PriceItemDto = {
   }
 } as any;
 
-export const pricesWithExternalData: PriceItemDto[] = [externalCompositePrice, internalSimplePrice];
+export const internalSimplePriceV2: PriceItemDto = {
+    "_id": "efe9ff76-865c-4287-8de9-422cfc741ff9-v2",
+    "description": "Basic Model - With Wifi.",
+    "type": "one_time",
+    "unit_amount_decimal": "250.4524",
+    "unit_amount_currency": "EUR",
+    "active": true,
+    "sales_tax": "standard",
+    "tax_behavior": "inclusive",
+    "_schema": "price",
+    "_org": "739224",
+    "_created_at": "2021-12-15T12:34:59.579Z",
+    "_updated_at": "2023-01-06T17:11:35.981Z",
+    "_title": "Basic Model - With Wifi.",
+    "_tags": [
+        "basic-model",
+        "wifi"
+    ],
+    "unit_amount": 25045,
+    "price_display_in_journeys": "show_price",
+    "tax": [
+        {
+            "type": "VAT",
+            "description": "19%",
+            "rate": "19",
+            "region": "DE",
+            "_id": "19cfacd1-d22a-4d92-99dd-397961288588",
+            "_org": "739224",
+            "_owners": [
+                {
+                    "org_id": "739224",
+                    "user_id": "10009151"
+                }
+            ],
+            "_created_at": "2024-10-25T07:36:34.026Z",
+            "_updated_at": "2024-10-25T07:36:34.026Z",
+            "_title": "19%",
+            "_acl": {
+                "view": [
+                    "org_739224"
+                ],
+                "edit": [
+                    "org_739224"
+                ],
+                "delete": [
+                    "org_739224"
+                ]
+            }
+        }
+    ],
+    "variable_price": true,
+    "unit": "m",
+    "billing_period": "weekly",
+    "billing_duration_unit": "months",
+    "notice_time_unit": "months",
+    "termination_time_unit": "months",
+    "renewal_duration_unit": "months",
+    "is_tax_inclusive": true,
+    "pricing_model": "per_unit",
+    "_owners": [
+        {
+            "org_id": "739224",
+            "user_id": "10009151"
+        }
+    ],
+    "_acl": {
+        "view": [
+            "org_739224"
+        ],
+        "edit": [
+            "org_739224"
+        ],
+        "delete": [
+            "org_739224"
+        ]
+    },
+    "internal_description": "Basic Model - With Wifi.",
+    "_relations": [
+        {
+            "entity_id": "beefa9f1-29a8-448e-94d5-ebf1963428f8",
+            "_acl": {
+                "view": [
+                    "org_739224"
+                ],
+                "edit": [
+                    "org_739224"
+                ],
+                "delete": [
+                    "org_739224"
+                ]
+            }
+        }
+    ],
+    "_viewers": {},
+    "_coupons": [],
+    "blockMappingData": {},
+    "quantity": 1,
+    "_price": {
+        "_id": "efe9ff76-865c-4287-8de9-422cfc741ff9-v2",
+        "description": "Basic Model - With Wifi.",
+        "type": "one_time",
+        "unit_amount_decimal": "250.4524",
+        "unit_amount_currency": "EUR",
+        "active": true,
+        "sales_tax": "standard",
+        "tax_behavior": "inclusive",
+        "_schema": "price",
+        "_org": "739224",
+        "_created_at": "2021-12-15T12:34:59.579Z",
+        "_updated_at": "2023-01-06T17:11:35.981Z",
+        "_title": "Basic Model - With Wifi.",
+        "_tags": [
+            "basic-model",
+            "wifi"
+        ],
+        "unit_amount": 25045,
+        "price_display_in_journeys": "show_price",
+        "tax": [
+            {
+                "type": "VAT",
+                "description": "19%",
+                "rate": "19",
+                "region": "DE",
+                "_id": "19cfacd1-d22a-4d92-99dd-397961288588",
+                "_org": "739224",
+                "_owners": [
+                    {
+                        "org_id": "739224",
+                        "user_id": "10009151"
+                    }
+                ],
+                "_created_at": "2024-10-25T07:36:34.026Z",
+                "_updated_at": "2024-10-25T07:36:34.026Z",
+                "_title": "19%",
+                "_acl": {
+                    "view": [
+                        "org_739224"
+                    ],
+                    "edit": [
+                        "org_739224"
+                    ],
+                    "delete": [
+                        "org_739224"
+                    ]
+                }
+            }
+        ],
+        "variable_price": true,
+        "unit": "m",
+        "billing_period": "weekly",
+        "billing_duration_unit": "months",
+        "notice_time_unit": "months",
+        "termination_time_unit": "months",
+        "renewal_duration_unit": "months",
+        "is_tax_inclusive": true,
+        "pricing_model": "per_unit",
+        "_owners": [
+            {
+                "org_id": "739224",
+                "user_id": "10009151"
+            }
+        ],
+        "_acl": {
+            "view": [
+                "org_739224"
+            ],
+            "edit": [
+                "org_739224"
+            ],
+            "delete": [
+                "org_739224"
+            ]
+        },
+        "internal_description": "Basic Model - With Wifi.",
+        "_relations": [
+            {
+                "entity_id": "beefa9f1-29a8-448e-94d5-ebf1963428f8",
+                "_acl": {
+                    "view": [
+                        "org_739224"
+                    ],
+                    "edit": [
+                        "org_739224"
+                    ],
+                    "delete": [
+                        "org_739224"
+                    ]
+                }
+            }
+        ],
+        "_viewers": {},
+        "_coupons": [],
+        "blockMappingData": {}
+    },
+    "_product": {
+        "name": "epilot Wallbox e-Prime",
+        "type": "product",
+        "code": "PWB",
+        "active": true,
+        "feature": [
+            {
+                "feature": "Wifi enabled"
+            }
+        ],
+        "price_options": [
+            {
+                "_id": "efe9ff76-865c-4287-8de9-422cfc741ff9-v2",
+                "description": "Basic Model - With Wifi.",
+                "type": "one_time",
+                "unit_amount_decimal": "250.4524",
+                "unit_amount_currency": "EUR",
+                "active": true,
+                "sales_tax": "standard",
+                "tax_behavior": "inclusive",
+                "_schema": "price",
+                "_org": "739224",
+                "_created_at": "2021-12-15T12:34:59.579Z",
+                "_updated_at": "2023-01-06T17:11:35.981Z",
+                "_title": "Basic Model - With Wifi.",
+                "_tags": [
+                    "basic-model",
+                    "wifi"
+                ],
+                "unit_amount": 25045,
+                "price_display_in_journeys": "show_price",
+                "tax": [
+                    {
+                        "type": "VAT",
+                        "description": "19%",
+                        "rate": "19",
+                        "region": "DE",
+                        "_id": "19cfacd1-d22a-4d92-99dd-397961288588",
+                        "_org": "739224",
+                        "_owners": [
+                            {
+                                "org_id": "739224",
+                                "user_id": "10009151"
+                            }
+                        ],
+                        "_created_at": "2024-10-25T07:36:34.026Z",
+                        "_updated_at": "2024-10-25T07:36:34.026Z",
+                        "_title": "19%",
+                        "_acl": {
+                            "view": [
+                                "org_739224"
+                            ],
+                            "edit": [
+                                "org_739224"
+                            ],
+                            "delete": [
+                                "org_739224"
+                            ]
+                        }
+                    }
+                ],
+                "variable_price": true,
+                "unit": "m",
+                "billing_period": "weekly",
+                "billing_duration_unit": "months",
+                "notice_time_unit": "months",
+                "termination_time_unit": "months",
+                "renewal_duration_unit": "months",
+                "is_tax_inclusive": true,
+                "pricing_model": "per_unit",
+                "_owners": [
+                    {
+                        "org_id": "739224",
+                        "user_id": "10009151"
+                    }
+                ],
+                "_acl": {
+                    "view": [
+                        "org_739224"
+                    ],
+                    "edit": [
+                        "org_739224"
+                    ],
+                    "delete": [
+                        "org_739224"
+                    ]
+                },
+                "internal_description": "Basic Model - With Wifi.",
+                "_relations": [
+                    {
+                        "entity_id": "beefa9f1-29a8-448e-94d5-ebf1963428f8",
+                        "_acl": {
+                            "view": [
+                                "org_739224"
+                            ],
+                            "edit": [
+                                "org_739224"
+                            ],
+                            "delete": [
+                                "org_739224"
+                            ]
+                        }
+                    }
+                ],
+                "_viewers": {},
+                "_coupons": [],
+                "blockMappingData": {}
+            }
+        ],
+        "_schema": "product",
+        "_id": "beefa9f1-29a8-448e-94d5-ebf1963428f8",
+        "_org": "739224",
+        "_created_at": "2021-12-15T12:35:08.438Z",
+        "_updated_at": "2022-12-06T11:50:42.367Z",
+        "_title": "epilot Wallbox e-Prime",
+        "_tags": [
+            "wallbox",
+            "e-prime"
+        ],
+        "_images": {
+            "public_url": "https://example.com/image.png"
+        },
+        "_files": [
+            {
+                "public_url": "https://example.com/manual.pdf"
+            }
+        ],
+        "_attachments": {
+            "public_url": "https://example.com/attachment.zip"
+        },
+        "__images": [
+            {
+                "public_url": "https://example.com/image.png"
+            }
+        ],
+        "attachments": {
+            "public_url": "https://example.com/attachment.zip"
+        },
+        "internal_name": "epilot Wallbox e-Prime",
+        "_owners": [
+            {
+                "org_id": "739224",
+                "user_id": "10009151"
+            }
+        ],
+        "_acl": {
+            "view": [
+                "org_739224"
+            ],
+            "edit": [
+                "org_739224"
+            ],
+            "delete": [
+                "org_739224"
+            ]
+        },
+        "_relations": [
+            {
+                "entity_id": "03182c3e-a8f7-4dad-adad-5e061483a3fc",
+                "_acl": {
+                    "view": [
+                        "org_739224",
+                        "org_911486"
+                    ],
+                    "edit": [
+                        "org_739224"
+                    ],
+                    "delete": [
+                        "org_739224"
+                    ]
+                }
+            }
+        ],
+        "_viewers": {}
+    },
+    "blockConfiguration": {
+        "isRequired": false,
+        "showQuantity": false,
+        "blockPath": "3/Cross Products/ProductSelectionControl"
+    }
+} as any;
+
+export const pricesWithExternalData: PriceItemDto[] = [externalCompositePrice, internalCompositePrice, internalSimplePrice, internalSimplePriceV2];
 
 

@@ -271,8 +271,27 @@ export const computeCompositePrice = (
  * All totals are computed with a decimal precision of DECIMAL_PRECISION.
  * After the calculations the integer amounts are scaled to a precision of 2.
  *
- * This compute function computes both line items and aggregated totals.
+ * This function computes both line items and aggregated totals.
  */
+
+const externalPriceItemAmountsToDinero = (externalPriceItem: PriceItem | CompositePriceItem) => {
+  const convertAmounts = (item: PriceItem | CompositePriceItem) => {
+    item.amount_total = toDinero(item.amount_total_decimal || '0').getAmount();
+    item.amount_subtotal = toDinero(item.amount_subtotal_decimal || '0').getAmount();
+    item.unit_amount_gross = toDinero(item.unit_amount_gross_decimal || '0').getAmount();
+    item.unit_amount_net = toDinero(item.unit_amount_net_decimal || '0').getAmount();
+  };
+
+  if (externalPriceItem.is_composite_price) {
+    const compositePriceItemToAppend = externalPriceItem as CompositePriceItem;
+    convertAmounts(compositePriceItemToAppend);
+    compositePriceItemToAppend.item_components?.forEach((component) => {
+      convertAmounts(component);
+    });
+  } else {
+    convertAmounts(externalPriceItem);
+  }
+};
 
 export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): PricingDetails => {
   const initialPricingDetails: Omit<PricingDetails, 'items'> & {
@@ -298,27 +317,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
     const externalPriceItem = priceItem._external_data?.pricingDetails?.items?.[0];
 
     if (externalPriceItem) {
-      if (externalPriceItem.is_composite_price) {
-        const compositePriceItemToAppend = externalPriceItem as CompositePriceItem;
-
-        const totalAmount = toDinero(compositePriceItemToAppend.amount_total_decimal || '0');
-        const subtotalAmount = toDinero(compositePriceItemToAppend.amount_subtotal_decimal || '0');
-
-        compositePriceItemToAppend.amount_total = totalAmount.getAmount();
-        compositePriceItemToAppend.amount_subtotal = subtotalAmount.getAmount();
-
-        compositePriceItemToAppend.item_components?.forEach((component) => {
-          component.amount_total = toDinero(component.amount_total_decimal || '0').getAmount();
-          component.amount_subtotal = toDinero(component.amount_subtotal_decimal || '0').getAmount();
-          component.unit_amount_gross = toDinero(component.unit_amount_gross_decimal || '0').getAmount();
-          component.unit_amount_net = toDinero(component.unit_amount_net_decimal || '0').getAmount();
-        });
-      } else {
-        externalPriceItem.amount_total = toDinero(externalPriceItem.amount_total_decimal || '0').getAmount();
-        externalPriceItem.amount_subtotal = toDinero(externalPriceItem.amount_subtotal_decimal || '0').getAmount();
-        externalPriceItem.unit_amount_gross = toDinero(externalPriceItem.unit_amount_gross_decimal || '0').getAmount();
-        externalPriceItem.unit_amount_net = toDinero(externalPriceItem.unit_amount_net_decimal || '0').getAmount();
-      }
+      externalPriceItemAmountsToDinero(externalPriceItem);
     }
 
     if (

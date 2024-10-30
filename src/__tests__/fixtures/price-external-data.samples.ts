@@ -3768,4 +3768,151 @@ export const internalSimplePriceV2: PriceItemDto = {
     }
 } as any;
 
-export const pricesWithExternalData: PriceItemDto[] = [externalCompositePrice, internalCompositePrice, internalSimplePrice, internalSimplePriceV2];
+export const externalSimplePrice: PriceItemDto = {
+    "_id": "price-73f857a4-0fbc-4aa6-983f-87c0d6d410a6",
+    "unit_amount_currency": "EUR",
+    "description": "Single Price",
+    "is_tax_inclusive": true,
+    "unit_amount": 2500,
+    "unit_amount_decimal": "25",
+    "type": "one_time",
+    "active": true,
+    "is_composite_price": false,
+    "pricing_model": "per_unit",
+    "price_display_in_journeys": "show_price",
+    "blockMappingData": {},
+    "quantity": 1,
+    "_price": {
+        "_id": "price-73f857a4-0fbc-4aa6-983f-87c0d6d410a6",
+        "unit_amount_currency": "EUR",
+        "description": "Single Price",
+        "is_tax_inclusive": true,
+        "unit_amount": 2500,
+        "unit_amount_decimal": "25",
+        "type": "one_time",
+        "active": true,
+        "is_composite_price": false,
+        "pricing_model": "per_unit",
+        "price_display_in_journeys": "show_price",
+        "blockMappingData": {}
+    },
+    "_product": {
+        "_id": "73f857a4-0fbc-4aa6-983f-87c0d6d410a6",
+        "name": "Solar Panel X2",
+        "description": "High-efficiency solar panel for residential use",
+        "type": "product",
+        "feature": [],
+        "product_images": [
+            {
+                "public_url": "https://epilot-dev-user-content.s3.eu-central-1.amazonaws.com/739224/temp/379c442c-6e9b-40b9-806e-30ee5802754c/2-20-2-21-23-39-29m.jpeg",
+                "access_control": "public-read",
+                "_id": "",
+                "_created_at": "2024-10-30T11:05:23.670Z",
+                "_updated_at": "2024-10-30T11:05:23.670Z",
+                "mime_type": "image/*",
+                "filename": "2-20-2-21-23-39-29m.jpeg",
+                "versions": [],
+                "_schema": "file",
+                "_org": "epilot"
+            }
+        ],
+        "product_downloads": [],
+        "_title": "Solar Panel X2",
+        "is_external": true
+    },
+    "_coupons": [],
+    "_external_data": {
+        "integrationId": "ikom",
+        "data": {
+            "id": "73f857a4-0fbc-4aa6-983f-87c0d6d410a6",
+            "name": "Solar Panel X2",
+            "description": "High-efficiency solar panel for residential use",
+            "product_image_urls": [
+                "https://epilot-dev-user-content.s3.eu-central-1.amazonaws.com/739224/temp/379c442c-6e9b-40b9-806e-30ee5802754c/2-20-2-21-23-39-29m.jpeg"
+            ],
+            "recommendation_settings": {
+                "is_recommended": true,
+                "recommended_label": "Best Value",
+                "recommended_color": "#00FF00",
+                "recommended_label_color": "#FFFFFF"
+            },
+            "price": {
+                "name": "Single Price",
+                "is_composite_price": false,
+                "currency": "EUR",
+                "type": "one_time",
+                "unit_amount_net_decimal": "25",
+                "unit_amount_gross_decimal": "25",
+                "amount_subtotal_decimal": "25",
+                "amount_total_decimal": "25"
+            }
+        },
+        "pricingDetails": {
+            "items": [
+                {
+                    "_id": "price-73f857a4-0fbc-4aa6-983f-87c0d6d410a6",
+                    "price_id": "price-73f857a4-0fbc-4aa6-983f-87c0d6d410a6",
+                    "active": true,
+                    "description": "Single Price",
+                    "is_tax_inclusive": true,
+                    "amount_total_decimal": "25",
+                    "amount_total": 2500,
+                    "amount_subtotal_decimal": "25",
+                    "amount_subtotal": 2500,
+                    "unit_amount": 2500,
+                    "unit_amount_gross": 2500,
+                    "unit_amount_gross_decimal": "25",
+                    "unit_amount_net": 2500,
+                    "unit_amount_net_decimal": "25",
+                    "type": "one_time",
+                    "taxes": [
+                        {
+                            "rate": "nontaxable",
+                            "rateValue": 0,
+                            "amount": 0
+                        }
+                    ],
+                    "is_composite_price": false,
+                    "pricing_model": "per_unit",
+                    "_price": {
+                        "_id": "price-73f857a4-0fbc-4aa6-983f-87c0d6d410a6",
+                        "unit_amount_currency": "EUR",
+                        "description": "Single Price",
+                        "is_tax_inclusive": true,
+                        "unit_amount": 2500,
+                        "unit_amount_decimal": "25",
+                        "type": "one_time",
+                        "active": true,
+                        "is_composite_price": false,
+                        "pricing_model": "per_unit",
+                        "price_display_in_journeys": "show_price"
+                    }
+                }
+            ],
+            "amount_subtotal": 2500,
+            "amount_total": 2500,
+            "unit_amount_gross": 2500,
+            "unit_amount_net": 2500,
+            "total_details": {
+                "breakdown": {
+                    "recurrences": [
+                        {
+                            "amount_subtotal": 2500,
+                            "amount_total": 2500,
+                            "amount_subtotal_decimal": "25",
+                            "amount_total_decimal": "25",
+                            "type": "one_time"
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "blockConfiguration": {
+        "isRequired": true,
+        "showQuantity": false,
+        "blockPath": "2/Products Block Name/ProductSelectionControl"
+    }
+} as any;
+
+export const pricesWithExternalData: PriceItemDto[] = [externalCompositePrice, internalCompositePrice, internalSimplePrice, internalSimplePriceV2, externalSimplePrice];

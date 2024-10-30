@@ -1752,7 +1752,6 @@ export const internalSimplePrice: PriceItemDto = {
   "unit_amount_currency": "EUR",
   "active": true,
   "sales_tax": "standard",
-  "tax_behavior": "inclusive",
   "_schema": "price",
   "_org": "739224",
   "_created_at": "2021-12-15T12:34:59.579Z",
@@ -1871,7 +1870,6 @@ export const internalSimplePrice: PriceItemDto = {
       "unit_amount_currency": "EUR",
       "active": true,
       "sales_tax": "standard",
-      "tax_behavior": "inclusive",
       "_schema": "price",
       "_org": "739224",
       "_created_at": "2021-12-15T12:34:59.579Z",
@@ -2006,7 +2004,6 @@ export const internalSimplePrice: PriceItemDto = {
               "unit_amount_currency": "EUR",
               "active": true,
               "sales_tax": "standard",
-              "tax_behavior": "inclusive",
               "_schema": "price",
               "_org": "739224",
               "_created_at": "2021-12-15T12:34:59.579Z",
@@ -2092,7 +2089,6 @@ export const internalSimplePrice: PriceItemDto = {
               "renewal_duration_unit": "years",
               "active": true,
               "sales_tax": "standard",
-              "tax_behavior": "inclusive",
               "_schema": "price",
               "_org": "739224",
               "_created_at": "2021-12-15T12:36:25.031Z",
@@ -2160,7 +2156,6 @@ export const internalSimplePrice: PriceItemDto = {
               "unit_amount_currency": "EUR",
               "active": true,
               "sales_tax": "reduced",
-              "tax_behavior": "exclusive",
               "_tags": [
                   "satellitecon",
                   "wifi",
@@ -2208,7 +2203,6 @@ export const internalSimplePrice: PriceItemDto = {
               "unit_amount_currency": "EUR",
               "unit_amount_decimal": "200",
               "sales_tax": "standard",
-              "tax_behavior": "inclusive",
               "price_display_in_journeys": "show_price",
               "type": "one_time",
               "description": "test",
@@ -2252,7 +2246,6 @@ export const internalSimplePrice: PriceItemDto = {
               "unit_amount_currency": "EUR",
               "unit_amount_decimal": "10.00",
               "sales_tax": "standard",
-              "tax_behavior": "inclusive",
               "price_display_in_journeys": "show_price",
               "type": "one_time",
               "_schema": "price",
@@ -2323,7 +2316,6 @@ export const internalSimplePrice: PriceItemDto = {
               "unit_amount_currency": "EUR",
               "unit_amount_decimal": "10.00",
               "sales_tax": "standard",
-              "tax_behavior": "inclusive",
               "price_display_in_journeys": "show_price",
               "type": "one_time",
               "_schema": "price",
@@ -2765,52 +2757,50 @@ export const internalSimplePrice: PriceItemDto = {
 } as any;
 
 export const internalSimplePriceV2: PriceItemDto = {
-    "_id": "efe9ff76-865c-4287-8de9-422cfc741ff9-v2",
-    "description": "Basic Model - With Wifi.",
+    "_id": "efe9ff76-865c-4287-8de9-422cfc741ff8",
+    "description": "Advanced Model- With Wifi.",
     "type": "one_time",
-    "unit_amount_decimal": "250.4524",
+    "unit_amount_decimal": "240.4524",
     "unit_amount_currency": "EUR",
     "active": true,
     "sales_tax": "standard",
-    "tax_behavior": "inclusive",
     "_schema": "price",
     "_org": "739224",
     "_created_at": "2021-12-15T12:34:59.579Z",
     "_updated_at": "2023-01-06T17:11:35.981Z",
-    "_title": "Basic Model - With Wifi.",
+    "_title": "Advanced Model- With Wifi.",
     "_tags": [
         "basic-model",
         "wifi"
     ],
-    "unit_amount": 25045,
+    "unit_amount": 24045,
     "price_display_in_journeys": "show_price",
     "tax": [
         {
+            "_id": "d05c030b-1515-4c38-85fa-d2b9c3114608",
             "type": "VAT",
-            "description": "19%",
-            "rate": "19",
+            "description": "MwSt.",
+            "rate": 7,
+            "behavior": "Inclusive",
+            "active": true,
             "region": "DE",
-            "_id": "19cfacd1-d22a-4d92-99dd-397961288588",
+            "region_label": "All Regions",
+            "_schema": "tax",
             "_org": "739224",
+            "_created_at": "2021-09-22T23:23:15.195Z",
+            "_updated_at": "2023-06-28T15:35:50.057Z",
+            "_title": "MwSt.",
+            "_tags": [
+                "german - tax"
+            ],
             "_owners": [
                 {
-                    "org_id": "739224",
-                    "user_id": "10009151"
+                    "org_id": "739224"
                 }
             ],
-            "_created_at": "2024-10-25T07:36:34.026Z",
-            "_updated_at": "2024-10-25T07:36:34.026Z",
-            "_title": "19%",
-            "_acl": {
-                "view": [
-                    "org_739224"
-                ],
-                "edit": [
-                    "org_739224"
-                ],
-                "delete": [
-                    "org_739224"
-                ]
+            "_acl": {},
+            "$relation": {
+                "entity_id": "d05c030b-1515-4c38-85fa-d2b9c3114608"
             }
         }
     ],
@@ -2825,8 +2815,7 @@ export const internalSimplePriceV2: PriceItemDto = {
     "pricing_model": "per_unit",
     "_owners": [
         {
-            "org_id": "739224",
-            "user_id": "10009151"
+            "org_id": "739224"
         }
     ],
     "_acl": {
@@ -2840,7 +2829,7 @@ export const internalSimplePriceV2: PriceItemDto = {
             "org_739224"
         ]
     },
-    "internal_description": "Basic Model - With Wifi.",
+    "internal_description": "Advanced Model- With Wifi.",
     "_relations": [
         {
             "entity_id": "beefa9f1-29a8-448e-94d5-ebf1963428f8",
@@ -2855,6 +2844,30 @@ export const internalSimplePriceV2: PriceItemDto = {
                     "org_739224"
                 ]
             }
+        },
+        {
+            "entity_id": "664336ec-40b1-466e-95c9-3fad17ec4ddd"
+        },
+        {
+            "entity_id": "5b59969f-65d1-4720-ae32-373baeb8cc43"
+        },
+        {
+            "entity_id": "50861ec7-4d29-4584-9192-6b136caa76da"
+        },
+        {
+            "entity_id": "eb6c4b62-0e07-411d-8a14-1374424e5246"
+        },
+        {
+            "entity_id": "e678b007-893e-440d-974b-c02e81132a61"
+        },
+        {
+            "entity_id": "0fe794f6-e7b5-4ec6-93cf-a881e7d0d37d"
+        },
+        {
+            "entity_id": "9b267200-35e3-46ed-9d52-2030b9ec0b05"
+        },
+        {
+            "entity_id": "acc8a9db-53d4-4063-bcd0-69eed979a31c"
         }
     ],
     "_viewers": {},
@@ -2862,52 +2875,50 @@ export const internalSimplePriceV2: PriceItemDto = {
     "blockMappingData": {},
     "quantity": 1,
     "_price": {
-        "_id": "efe9ff76-865c-4287-8de9-422cfc741ff9-v2",
-        "description": "Basic Model - With Wifi.",
+        "_id": "efe9ff76-865c-4287-8de9-422cfc741ff8",
+        "description": "Advanced Model- With Wifi.",
         "type": "one_time",
-        "unit_amount_decimal": "250.4524",
+        "unit_amount_decimal": "240.4524",
         "unit_amount_currency": "EUR",
         "active": true,
         "sales_tax": "standard",
-        "tax_behavior": "inclusive",
         "_schema": "price",
         "_org": "739224",
         "_created_at": "2021-12-15T12:34:59.579Z",
         "_updated_at": "2023-01-06T17:11:35.981Z",
-        "_title": "Basic Model - With Wifi.",
+        "_title": "Advanced Model- With Wifi.",
         "_tags": [
             "basic-model",
             "wifi"
         ],
-        "unit_amount": 25045,
+        "unit_amount": 24045,
         "price_display_in_journeys": "show_price",
         "tax": [
             {
+                "_id": "d05c030b-1515-4c38-85fa-d2b9c3114608",
                 "type": "VAT",
-                "description": "19%",
-                "rate": "19",
+                "description": "MwSt.",
+                "rate": 7,
+                "behavior": "Inclusive",
+                "active": true,
                 "region": "DE",
-                "_id": "19cfacd1-d22a-4d92-99dd-397961288588",
+                "region_label": "All Regions",
+                "_schema": "tax",
                 "_org": "739224",
+                "_created_at": "2021-09-22T23:23:15.195Z",
+                "_updated_at": "2023-06-28T15:35:50.057Z",
+                "_title": "MwSt.",
+                "_tags": [
+                    "german - tax"
+                ],
                 "_owners": [
                     {
-                        "org_id": "739224",
-                        "user_id": "10009151"
+                        "org_id": "739224"
                     }
                 ],
-                "_created_at": "2024-10-25T07:36:34.026Z",
-                "_updated_at": "2024-10-25T07:36:34.026Z",
-                "_title": "19%",
-                "_acl": {
-                    "view": [
-                        "org_739224"
-                    ],
-                    "edit": [
-                        "org_739224"
-                    ],
-                    "delete": [
-                        "org_739224"
-                    ]
+                "_acl": {},
+                "$relation": {
+                    "entity_id": "d05c030b-1515-4c38-85fa-d2b9c3114608"
                 }
             }
         ],
@@ -2922,8 +2933,7 @@ export const internalSimplePriceV2: PriceItemDto = {
         "pricing_model": "per_unit",
         "_owners": [
             {
-                "org_id": "739224",
-                "user_id": "10009151"
+                "org_id": "739224"
             }
         ],
         "_acl": {
@@ -2937,7 +2947,7 @@ export const internalSimplePriceV2: PriceItemDto = {
                 "org_739224"
             ]
         },
-        "internal_description": "Basic Model - With Wifi.",
+        "internal_description": "Advanced Model- With Wifi.",
         "_relations": [
             {
                 "entity_id": "beefa9f1-29a8-448e-94d5-ebf1963428f8",
@@ -2952,6 +2962,30 @@ export const internalSimplePriceV2: PriceItemDto = {
                         "org_739224"
                     ]
                 }
+            },
+            {
+                "entity_id": "664336ec-40b1-466e-95c9-3fad17ec4ddd"
+            },
+            {
+                "entity_id": "5b59969f-65d1-4720-ae32-373baeb8cc43"
+            },
+            {
+                "entity_id": "50861ec7-4d29-4584-9192-6b136caa76da"
+            },
+            {
+                "entity_id": "eb6c4b62-0e07-411d-8a14-1374424e5246"
+            },
+            {
+                "entity_id": "e678b007-893e-440d-974b-c02e81132a61"
+            },
+            {
+                "entity_id": "0fe794f6-e7b5-4ec6-93cf-a881e7d0d37d"
+            },
+            {
+                "entity_id": "9b267200-35e3-46ed-9d52-2030b9ec0b05"
+            },
+            {
+                "entity_id": "acc8a9db-53d4-4063-bcd0-69eed979a31c"
             }
         ],
         "_viewers": {},
@@ -2959,64 +2993,64 @@ export const internalSimplePriceV2: PriceItemDto = {
         "blockMappingData": {}
     },
     "_product": {
-        "name": "epilot Wallbox e-Prime",
+        "name": "epilot Wallbox e-Prime V2",
         "type": "product",
         "code": "PWB",
         "active": true,
         "feature": [
             {
-                "feature": "Wifi enabled"
+                "_tags": [],
+                "feature": "Pure Energon Fueled"
+            },
+            {
+                "_tags": [],
+                "feature": "Mobile App Available"
             }
         ],
         "price_options": [
             {
-                "_id": "efe9ff76-865c-4287-8de9-422cfc741ff9-v2",
-                "description": "Basic Model - With Wifi.",
+                "_id": "efe9ff76-865c-4287-8de9-422cfc741ff8",
+                "description": "Advanced Model- With Wifi.",
                 "type": "one_time",
-                "unit_amount_decimal": "250.4524",
+                "unit_amount_decimal": "240.4524",
                 "unit_amount_currency": "EUR",
                 "active": true,
                 "sales_tax": "standard",
-                "tax_behavior": "inclusive",
                 "_schema": "price",
                 "_org": "739224",
                 "_created_at": "2021-12-15T12:34:59.579Z",
                 "_updated_at": "2023-01-06T17:11:35.981Z",
-                "_title": "Basic Model - With Wifi.",
+                "_title": "Advanced Model- With Wifi.",
                 "_tags": [
                     "basic-model",
                     "wifi"
                 ],
-                "unit_amount": 25045,
+                "unit_amount": 24045,
                 "price_display_in_journeys": "show_price",
                 "tax": [
                     {
                         "type": "VAT",
-                        "description": "19%",
-                        "rate": "19",
+                        "description": "MwSt.",
+                        "rate": 7,
+                        "behavior": "Inclusive",
+                        "active": true,
                         "region": "DE",
-                        "_id": "19cfacd1-d22a-4d92-99dd-397961288588",
+                        "region_label": "All Regions",
+                        "_id": "d05c030b-1515-4c38-85fa-d2b9c3114608",
+                        "_schema": "tax",
                         "_org": "739224",
+                        "_created_at": "2021-09-22T23:23:15.195Z",
+                        "_updated_at": "2023-06-28T15:35:50.057Z",
+                        "_title": "MwSt.",
+                        "_tags": [
+                            "german - tax"
+                        ],
                         "_owners": [
                             {
-                                "org_id": "739224",
-                                "user_id": "10009151"
+                                "org_id": "739224"
                             }
                         ],
-                        "_created_at": "2024-10-25T07:36:34.026Z",
-                        "_updated_at": "2024-10-25T07:36:34.026Z",
-                        "_title": "19%",
-                        "_acl": {
-                            "view": [
-                                "org_739224"
-                            ],
-                            "edit": [
-                                "org_739224"
-                            ],
-                            "delete": [
-                                "org_739224"
-                            ]
-                        }
+                        "_acl": {}
                     }
                 ],
                 "variable_price": true,
@@ -3030,8 +3064,7 @@ export const internalSimplePriceV2: PriceItemDto = {
                 "pricing_model": "per_unit",
                 "_owners": [
                     {
-                        "org_id": "739224",
-                        "user_id": "10009151"
+                        "org_id": "739224"
                     }
                 ],
                 "_acl": {
@@ -3045,26 +3078,293 @@ export const internalSimplePriceV2: PriceItemDto = {
                         "org_739224"
                     ]
                 },
-                "internal_description": "Basic Model - With Wifi.",
-                "_relations": [
+                "internal_description": "Advanced Model- With Wifi.",
+                "$relation": {
+                    "entity_id": "efe9ff76-865c-4287-8de9-422cfc741ff8"
+                }
+            },
+            {
+                "_id": "799e6138-1969-4fe0-83a2-5acffa069db5",
+                "description": "Optimus Prime E-Box",
+                "type": "recurring",
+                "unit_amount": 64000,
+                "unit_amount_decimal": "640.00",
+                "unit_amount_currency": "EUR",
+                "billing_period": "every_6_months",
+                "billing_duration_amount": "1",
+                "billing_duration_unit": "years",
+                "notice_time_amount": "1",
+                "notice_time_unit": "months",
+                "termination_time_amount": "1",
+                "termination_time_unit": "months",
+                "renewal_duration_amount": "1",
+                "renewal_duration_unit": "years",
+                "active": true,
+                "sales_tax": "standard",
+                "_schema": "price",
+                "_org": "739224",
+                "_created_at": "2021-12-15T12:36:25.031Z",
+                "_updated_at": "2022-02-11T14:32:08.757Z",
+                "_title": "Optimus Prime E-Box",
+                "_tags": [
+                    "energon",
+                    "flash sale (-50% off)"
+                ],
+                "price_display_in_journeys": "show_price",
+                "tax": [
                     {
-                        "entity_id": "beefa9f1-29a8-448e-94d5-ebf1963428f8",
-                        "_acl": {
-                            "view": [
-                                "org_739224"
-                            ],
-                            "edit": [
-                                "org_739224"
-                            ],
-                            "delete": [
-                                "org_739224"
-                            ]
-                        }
+                        "type": "VAT",
+                        "description": "MwSt.",
+                        "rate": 7,
+                        "behavior": "Inclusive",
+                        "active": true,
+                        "region": "DE",
+                        "region_label": "All Regions",
+                        "_id": "d05c030b-1515-4c38-85fa-d2b9c3114608",
+                        "_schema": "tax",
+                        "_org": "739224",
+                        "_created_at": "2021-09-22T23:23:15.195Z",
+                        "_updated_at": "2023-06-28T15:35:50.057Z",
+                        "_title": "MwSt.",
+                        "_tags": [
+                            "german - tax"
+                        ],
+                        "_owners": [
+                            {
+                                "org_id": "739224"
+                            }
+                        ],
+                        "_acl": {}
                     }
                 ],
-                "_viewers": {},
-                "_coupons": [],
-                "blockMappingData": {}
+                "internal_description": "Optimus Prime E-Box",
+                "_owners": [
+                    {
+                        "org_id": "739224"
+                    }
+                ],
+                "pricing_model": "per_unit",
+                "is_tax_inclusive": true,
+                "_acl": {
+                    "view": [
+                        "org_739224"
+                    ],
+                    "edit": [
+                        "org_739224"
+                    ],
+                    "delete": [
+                        "org_739224"
+                    ]
+                },
+                "$relation": {
+                    "entity_id": "799e6138-1969-4fe0-83a2-5acffa069db5"
+                }
+            },
+            {
+                "_id": "2dc8c8e3-1957-4890-b39b-d87ba29338e1",
+                "description": "E-Box w/ Satellite Connection ~ Test1 12 ",
+                "unit_amount": 1340035,
+                "unit_amount_decimal": "13400.3455",
+                "unit_amount_currency": "EUR",
+                "active": true,
+                "sales_tax": "reduced",
+                "_tags": [
+                    "satellitecon",
+                    "wifi",
+                    "eco-boost",
+                    "premium"
+                ],
+                "_schema": "price",
+                "_org": "739224",
+                "_created_at": "2021-12-15T12:45:20.049Z",
+                "_updated_at": "2022-01-05T15:23:35.956Z",
+                "type": "one_time",
+                "_title": "E-Box w/ Satellite Connection ~ Test1 12",
+                "price_display_in_journeys": "show_price",
+                "billing_period": "weekly",
+                "billing_duration_unit": "months",
+                "notice_time_unit": "months",
+                "termination_time_unit": "months",
+                "renewal_duration_unit": "months",
+                "internal_description": "E-Box w/ Satellite Connection ~ Test1 12 ",
+                "_owners": [
+                    {
+                        "org_id": "739224"
+                    }
+                ],
+                "pricing_model": "per_unit",
+                "is_tax_inclusive": true,
+                "_acl": {
+                    "view": [
+                        "org_739224"
+                    ],
+                    "edit": [
+                        "org_739224"
+                    ],
+                    "delete": [
+                        "org_739224"
+                    ]
+                },
+                "$relation": {
+                    "entity_id": "2dc8c8e3-1957-4890-b39b-d87ba29338e1"
+                }
+            },
+            {
+                "_id": "864841b8-93c8-471b-bbe5-c06187fe1522",
+                "unit_amount": 20000,
+                "unit_amount_currency": "EUR",
+                "unit_amount_decimal": "200",
+                "sales_tax": "standard",
+                "price_display_in_journeys": "show_price",
+                "type": "one_time",
+                "description": "test",
+                "_schema": "price",
+                "_org": "739224",
+                "_created_at": "2022-01-05T15:04:39.482Z",
+                "_updated_at": "2022-01-13T08:31:11.622Z",
+                "_title": "test",
+                "active": true,
+                "billing_period": "weekly",
+                "billing_duration_unit": "months",
+                "notice_time_unit": "months",
+                "termination_time_unit": "months",
+                "renewal_duration_unit": "months",
+                "internal_description": "test",
+                "_owners": [
+                    {
+                        "org_id": "739224"
+                    }
+                ],
+                "pricing_model": "per_unit",
+                "is_tax_inclusive": true,
+                "_acl": {
+                    "view": [
+                        "org_739224"
+                    ],
+                    "edit": [
+                        "org_739224"
+                    ],
+                    "delete": [
+                        "org_739224"
+                    ]
+                },
+                "$relation": {
+                    "entity_id": "864841b8-93c8-471b-bbe5-c06187fe1522"
+                }
+            },
+            {
+                "_id": "35618f02-f8e9-4c51-8035-655680cab2ee",
+                "unit_amount": 1000,
+                "unit_amount_currency": "EUR",
+                "unit_amount_decimal": "10.00",
+                "sales_tax": "standard",
+                "price_display_in_journeys": "show_price",
+                "type": "one_time",
+                "_schema": "price",
+                "_title": "Test With No Behaviour",
+                "description": "Test With No Behaviour",
+                "tax": [
+                    {
+                        "type": "VAT",
+                        "description": "MwSt.",
+                        "rate": 7,
+                        "behavior": "Inclusive",
+                        "active": true,
+                        "region": "DE",
+                        "region_label": "All Regions",
+                        "_id": "d05c030b-1515-4c38-85fa-d2b9c3114608",
+                        "_schema": "tax",
+                        "_org": "739224",
+                        "_created_at": "2021-09-22T23:23:15.195Z",
+                        "_updated_at": "2023-06-28T15:35:50.057Z",
+                        "_title": "MwSt.",
+                        "_tags": [
+                            "german - tax"
+                        ],
+                        "_owners": [
+                            {
+                                "org_id": "739224"
+                            }
+                        ],
+                        "_acl": {}
+                    }
+                ],
+                "_org": "739224",
+                "_created_at": "2022-02-07T14:42:47.451Z",
+                "_updated_at": "2022-02-07T14:42:47.451Z",
+                "billing_period": "weekly",
+                "billing_duration_unit": "months",
+                "notice_time_unit": "months",
+                "termination_time_unit": "months",
+                "renewal_duration_unit": "months",
+                "internal_description": "Test With No Behaviour",
+                "_owners": [
+                    {
+                        "org_id": "739224"
+                    }
+                ],
+                "pricing_model": "per_unit",
+                "is_tax_inclusive": true,
+                "active": true,
+                "_acl": {
+                    "view": [
+                        "org_739224"
+                    ],
+                    "edit": [
+                        "org_739224"
+                    ],
+                    "delete": [
+                        "org_739224"
+                    ]
+                },
+                "$relation": {
+                    "entity_id": "35618f02-f8e9-4c51-8035-655680cab2ee",
+                    "_tags": []
+                }
+            },
+            {
+                "_id": "dfbe996b-5c71-45b4-b33f-d20aae994f60",
+                "unit_amount": 1000,
+                "unit_amount_currency": "EUR",
+                "unit_amount_decimal": "10.00",
+                "sales_tax": "standard",
+                "price_display_in_journeys": "show_price",
+                "type": "one_time",
+                "_schema": "price",
+                "_title": "Test New Price Add Item",
+                "description": "Test New Price Add Item",
+                "_org": "739224",
+                "_created_at": "2022-02-09T10:12:55.666Z",
+                "_updated_at": "2022-12-06T11:46:22.862Z",
+                "billing_period": "weekly",
+                "billing_duration_unit": "months",
+                "notice_time_unit": "months",
+                "termination_time_unit": "months",
+                "renewal_duration_unit": "months",
+                "active": true,
+                "internal_description": "Test New Price Add Item",
+                "_owners": [
+                    {
+                        "org_id": "739224"
+                    }
+                ],
+                "pricing_model": "per_unit",
+                "is_tax_inclusive": true,
+                "_acl": {
+                    "view": [
+                        "org_739224"
+                    ],
+                    "edit": [
+                        "org_739224"
+                    ],
+                    "delete": [
+                        "org_739224"
+                    ]
+                },
+                "$relation": {
+                    "entity_id": "dfbe996b-5c71-45b4-b33f-d20aae994f60",
+                    "_tags": []
+                }
             }
         ],
         "_schema": "product",
@@ -3072,35 +3372,206 @@ export const internalSimplePriceV2: PriceItemDto = {
         "_org": "739224",
         "_created_at": "2021-12-15T12:35:08.438Z",
         "_updated_at": "2022-12-06T11:50:42.367Z",
-        "_title": "epilot Wallbox e-Prime",
+        "_title": "epilot Wallbox e-Prime V2",
         "_tags": [
-            "wallbox",
-            "e-prime"
+            "energon",
+            "eco-friendly",
+            "wallbox"
         ],
         "_images": {
-            "public_url": "https://example.com/image.png"
+            "type": "image",
+            "attachments": [
+                {
+                    "key": "files/ckx7iukw9000009mq55z5fhvn/original",
+                    "mime": "image/jpeg",
+                    "name": "l-intro-1618185316.jpeg",
+                    "size": 416684,
+                    "image_url": "https://avkhavsdjq.cloudimg.io/v7/e-mage-sam-bucket-dev.s3.eu-central-1.amazonaws.com/files/ckx7iukw9000009mq55z5fhvn/original?w=100",
+                    "download_url": "https://e-mage-sam-bucket-dev.s3.eu-central-1.amazonaws.com/files/ckx7iukw9000009mq55z5fhvn/original",
+                    "alt_text": ""
+                },
+                {
+                    "key": "files/ckx7iuqb4000208mp2tt2c04u/original",
+                    "mime": "image/jpeg",
+                    "name": "Optimus_Prime-Transformers_2007-Ketchup.jpeg",
+                    "size": 376077,
+                    "image_url": "https://avkhavsdjq.cloudimg.io/v7/e-mage-sam-bucket-dev.s3.eu-central-1.amazonaws.com/files/ckx7iuqb4000208mp2tt2c04u/original?w=100",
+                    "download_url": "https://e-mage-sam-bucket-dev.s3.eu-central-1.amazonaws.com/files/ckx7iuqb4000208mp2tt2c04u/original",
+                    "alt_text": ""
+                },
+                {
+                    "key": "files/ckx7iv2ix000408i919ju74v8/original",
+                    "mime": "image/png",
+                    "name": "TUV-1000x1000.png",
+                    "size": 265639,
+                    "image_url": "https://avkhavsdjq.cloudimg.io/v7/e-mage-sam-bucket-dev.s3.eu-central-1.amazonaws.com/files/ckx7iv2ix000408i919ju74v8/original?w=100",
+                    "download_url": "https://e-mage-sam-bucket-dev.s3.eu-central-1.amazonaws.com/files/ckx7iv2ix000408i919ju74v8/original",
+                    "alt_text": ""
+                },
+                {
+                    "key": "files/ckx7iv80s000408mp1v7rfe2t/original",
+                    "mime": "image/jpeg",
+                    "name": "wallbox_i9lcd_app_principal-1000x1000.jpeg",
+                    "size": 98006,
+                    "image_url": "https://avkhavsdjq.cloudimg.io/v7/e-mage-sam-bucket-dev.s3.eu-central-1.amazonaws.com/files/ckx7iv80s000408mp1v7rfe2t/original?w=100",
+                    "download_url": "https://e-mage-sam-bucket-dev.s3.eu-central-1.amazonaws.com/files/ckx7iv80s000408mp1v7rfe2t/original",
+                    "alt_text": ""
+                },
+                {
+                    "key": "files/ckx7iva48000508mpgvr62jxv/original",
+                    "mime": "image/jpeg",
+                    "name": "wallbox_i9lcd_suporte-1000x1000.jpeg",
+                    "size": 109652,
+                    "image_url": "https://avkhavsdjq.cloudimg.io/v7/e-mage-sam-bucket-dev.s3.eu-central-1.amazonaws.com/files/ckx7iva48000508mpgvr62jxv/original?w=100",
+                    "download_url": "https://e-mage-sam-bucket-dev.s3.eu-central-1.amazonaws.com/files/ckx7iva48000508mpgvr62jxv/original",
+                    "alt_text": ""
+                },
+                {
+                    "key": "files/ckx7ivcc9000608mp3hyhat6a/original",
+                    "mime": "image/jpeg",
+                    "name": "wallbox_i9lcd_tec2-1000x1000.jpeg",
+                    "size": 117114,
+                    "image_url": "https://avkhavsdjq.cloudimg.io/v7/e-mage-sam-bucket-dev.s3.eu-central-1.amazonaws.com/files/ckx7ivcc9000608mp3hyhat6a/original?w=100",
+                    "download_url": "https://e-mage-sam-bucket-dev.s3.eu-central-1.amazonaws.com/files/ckx7ivcc9000608mp3hyhat6a/original",
+                    "alt_text": ""
+                },
+                {
+                    "key": "files/ckx7ive5p000708mp4w046ypa/original",
+                    "mime": "image/jpeg",
+                    "name": "wallbox-pulsar-plus-48-review.jpeg",
+                    "size": 68647,
+                    "image_url": "https://avkhavsdjq.cloudimg.io/v7/e-mage-sam-bucket-dev.s3.eu-central-1.amazonaws.com/files/ckx7ive5p000708mp4w046ypa/original?w=100",
+                    "download_url": "https://e-mage-sam-bucket-dev.s3.eu-central-1.amazonaws.com/files/ckx7ive5p000708mp4w046ypa/original",
+                    "alt_text": ""
+                },
+                {
+                    "key": "files/ckx7ivg07000808mp14228hy6/original",
+                    "mime": "image/jpeg",
+                    "name": "wallboxlcd_i9principal-1000x1000.jpeg",
+                    "size": 80604,
+                    "image_url": "https://avkhavsdjq.cloudimg.io/v7/e-mage-sam-bucket-dev.s3.eu-central-1.amazonaws.com/files/ckx7ivg07000808mp14228hy6/original?w=100",
+                    "download_url": "https://e-mage-sam-bucket-dev.s3.eu-central-1.amazonaws.com/files/ckx7ivg07000808mp14228hy6/original",
+                    "alt_text": ""
+                }
+            ]
         },
         "_files": [
             {
-                "public_url": "https://example.com/manual.pdf"
+                "_id": "d0b1b647-10e6-4787-9754-fa89c6a57946",
+                "filename": "solar_panel_ph.jpeg",
+                "access_control": "private",
+                "size_bytes": 15256,
+                "mime_type": "image/jpeg",
+                "readable_size": "14.9 KB",
+                "type": "image",
+                "public_url": "https://epilot-dev-user-content.s3.eu-central-1.amazonaws.com/739224/507c47a5-a80d-4aa8-9410-91df79e7bdcd/solar_panel_ph.jpeg",
+                "versions": [
+                    {
+                        "s3ref": {
+                            "bucket": "epilot-dev-user-content",
+                            "key": "739224/507c47a5-a80d-4aa8-9410-91df79e7bdcd/solar_panel_ph.jpeg"
+                        },
+                        "filename": "solar_panel_ph.jpeg",
+                        "access_control": "private",
+                        "size_bytes": 15256,
+                        "mime_type": "image/jpeg",
+                        "readable_size": "14.9 KB",
+                        "type": "image",
+                        "public_url": "https://epilot-dev-user-content.s3.eu-central-1.amazonaws.com/739224/507c47a5-a80d-4aa8-9410-91df79e7bdcd/solar_panel_ph.jpeg"
+                    }
+                ],
+                "_schema": "file",
+                "_org": "739224",
+                "_created_at": "2022-01-10T16:09:55.722Z",
+                "_updated_at": "2022-01-10T16:09:55.722Z",
+                "_title": "solar_panel_ph.jpeg",
+                "$relation": {
+                    "entity_id": "d0b1b647-10e6-4787-9754-fa89c6a57946",
+                    "_schema": "file",
+                    "relationText": "solar_panel_ph.jpeg",
+                    "size_bytes": 15256,
+                    "mime_type": "image/jpeg",
+                    "filename": "solar_panel_ph.jpeg",
+                    "s3ref": {
+                        "bucket": "epilot-dev-user-content",
+                        "key": "739224/507c47a5-a80d-4aa8-9410-91df79e7bdcd/solar_panel_ph.jpeg"
+                    },
+                    "access_control": "private"
+                }
             }
         ],
         "_attachments": {
-            "public_url": "https://example.com/attachment.zip"
+            "type": "file",
+            "attachments": [
+                {
+                    "key": "files/ckx7ixjwk000c08mpe7624d1u/original",
+                    "mime": "application/pdf",
+                    "name": "Copper-Series 22Kw Wallbox Pack (Adjustable 6A to 32A) 3-phase.pdf",
+                    "size": 889078,
+                    "image_url": "https://avkhavsdjq.cloudimg.io/v7/e-mage-sam-bucket-dev.s3.eu-central-1.amazonaws.com/files/ckx7ixjwk000c08mpe7624d1u/original?w=100",
+                    "download_url": "https://e-mage-sam-bucket-dev.s3.eu-central-1.amazonaws.com/files/ckx7ixjwk000c08mpe7624d1u/original",
+                    "alt_text": ""
+                }
+            ]
         },
         "__images": [
             {
-                "public_url": "https://example.com/image.png"
+                "access_control": "private",
+                "filename": "2-20-2-21-23-39-29m.jpeg",
+                "mime_type": "image/jpeg",
+                "readable_size": "37.87 KB",
+                "size_bytes": 38775,
+                "type": "image",
+                "file_entity_id": "beaf8166-a052-4767-b19b-d1a89306287b",
+                "s3ref": {
+                    "bucket": "epilot-dev-user-content",
+                    "key": "739224/cf3caa8b-9b16-43b4-ad47-249187b5271a/2-20-2-21-23-39-29m.jpeg"
+                }
+            },
+            {
+                "access_control": "private",
+                "filename": "0a3ad697-afec-4e0d-8dd1-c5a1a9ee2425_How-to-get-started-with-Google-AdWords-for-your-marketplace.-.jpg",
+                "mime_type": "image/jpeg",
+                "readable_size": "610.83 KB",
+                "size_bytes": 625488,
+                "type": "image",
+                "file_entity_id": "657c1afd-58d2-483f-96fb-6b31ce0fe5de",
+                "s3ref": {
+                    "bucket": "epilot-dev-user-content",
+                    "key": "739224/88e96835-5d17-48b3-aeaf-3d72c0f733b8/0a3ad697-afec-4e0d-8dd1-c5a1a9ee2425_How-to-get-started-with-Google-AdWords-for-your-marketplace.-.jpg"
+                }
             }
         ],
         "attachments": {
-            "public_url": "https://example.com/attachment.zip"
+            "_images": [
+                {
+                    "entity_id": "9c4de5db-53ca-49cc-b677-8dace3117099",
+                    "size_bytes": 97378,
+                    "mime_type": "image/webp",
+                    "filename": "a077Rpv_700bwp.webp",
+                    "s3ref": {
+                        "bucket": "epilot-dev-user-content",
+                        "key": "739224/ab2818ab-4b90-42a2-bd55-324f4a3860bb/a077Rpv_700bwp.webp"
+                    },
+                    "access_control": "private"
+                },
+                {
+                    "entity_id": "665af01b-2490-4509-9706-9d2c2086bd87",
+                    "size_bytes": 33430,
+                    "mime_type": "image/webp",
+                    "filename": "aLv9566_700bwp.webp",
+                    "s3ref": {
+                        "bucket": "epilot-dev-user-content",
+                        "key": "739224/6c077ba7-db4c-4fab-91c0-65ce45bddc15/aLv9566_700bwp.webp"
+                    },
+                    "access_control": "private"
+                }
+            ]
         },
-        "internal_name": "epilot Wallbox e-Prime",
+        "internal_name": "epilot Wallbox e-Prime V2",
         "_owners": [
             {
-                "org_id": "739224",
-                "user_id": "10009151"
+                "org_id": "739224"
             }
         ],
         "_acl": {
@@ -3116,11 +3587,13 @@ export const internalSimplePriceV2: PriceItemDto = {
         },
         "_relations": [
             {
-                "entity_id": "03182c3e-a8f7-4dad-adad-5e061483a3fc",
+                "entity_id": "fa2a2681-b993-4676-82ec-f363c9bd71ec"
+            },
+            {
+                "entity_id": "efe9ff76-865c-4287-8de9-422cfc741ff8",
                 "_acl": {
                     "view": [
-                        "org_739224",
-                        "org_911486"
+                        "org_739224"
                     ],
                     "edit": [
                         "org_739224"
@@ -3129,6 +3602,161 @@ export const internalSimplePriceV2: PriceItemDto = {
                         "org_739224"
                     ]
                 }
+            },
+            {
+                "entity_id": "c3f4c90e-8236-4358-8b59-e3381c56d3d7",
+                "_acl": {
+                    "view": [
+                        "org_739224"
+                    ],
+                    "edit": [
+                        "org_739224"
+                    ],
+                    "delete": [
+                        "org_739224"
+                    ]
+                }
+            },
+            {
+                "entity_id": "d0b1b647-10e6-4787-9754-fa89c6a57946"
+            },
+            {
+                "entity_id": "dfbe996b-5c71-45b4-b33f-d20aae994f60",
+                "_acl": {
+                    "view": [
+                        "org_739224"
+                    ],
+                    "edit": [
+                        "org_739224"
+                    ],
+                    "delete": [
+                        "org_739224"
+                    ]
+                }
+            },
+            {
+                "entity_id": "c5b57511-d624-4b29-81aa-507056a1761f",
+                "_acl": {
+                    "view": [
+                        "org_739224"
+                    ],
+                    "edit": [
+                        "org_739224"
+                    ],
+                    "delete": [
+                        "org_739224"
+                    ]
+                }
+            },
+            {
+                "entity_id": "ccc5c742-e1c7-49c5-ac2e-5b11fd693c5a",
+                "_acl": {
+                    "view": [
+                        "org_739224"
+                    ],
+                    "edit": [
+                        "org_739224"
+                    ],
+                    "delete": [
+                        "org_739224"
+                    ]
+                }
+            },
+            {
+                "entity_id": "c117a7aa-e559-4147-a815-f4042a40eba8"
+            },
+            {
+                "entity_id": "2dc8c8e3-1957-4890-b39b-d87ba29338e1",
+                "_acl": {
+                    "view": [
+                        "org_739224"
+                    ],
+                    "edit": [
+                        "org_739224"
+                    ],
+                    "delete": [
+                        "org_739224"
+                    ]
+                }
+            },
+            {
+                "entity_id": "35618f02-f8e9-4c51-8035-655680cab2ee",
+                "_acl": {
+                    "view": [
+                        "org_739224"
+                    ],
+                    "edit": [
+                        "org_739224"
+                    ],
+                    "delete": [
+                        "org_739224"
+                    ]
+                }
+            },
+            {
+                "entity_id": "39066fe4-42a6-4ddf-b94a-630c0262a48f"
+            },
+            {
+                "entity_id": "1d0b36e0-395e-4c6a-96c7-7c30fa8824fe"
+            },
+            {
+                "entity_id": "799e6138-1969-4fe0-83a2-5acffa069db5",
+                "_acl": {
+                    "view": [
+                        "org_739224"
+                    ],
+                    "edit": [
+                        "org_739224"
+                    ],
+                    "delete": [
+                        "org_739224"
+                    ]
+                }
+            },
+            {
+                "entity_id": "a75092d4-43bf-464a-97cc-7e3fc4ef3837",
+                "_acl": {
+                    "view": [
+                        "org_739224"
+                    ],
+                    "edit": [
+                        "org_739224"
+                    ],
+                    "delete": [
+                        "org_739224"
+                    ]
+                }
+            },
+            {
+                "entity_id": "864841b8-93c8-471b-bbe5-c06187fe1522",
+                "_acl": {
+                    "view": [
+                        "org_739224"
+                    ],
+                    "edit": [
+                        "org_739224"
+                    ],
+                    "delete": [
+                        "org_739224"
+                    ]
+                }
+            },
+            {
+                "entity_id": "4d06c007-d6e7-43ae-af70-c7129c89ec76",
+                "_acl": {
+                    "view": [
+                        "org_739224"
+                    ],
+                    "edit": [
+                        "org_739224"
+                    ],
+                    "delete": [
+                        "org_739224"
+                    ]
+                }
+            },
+            {
+                "entity_id": "455d903e-f87d-4b03-a46a-82edfa877416"
             }
         ],
         "_viewers": {}
@@ -3141,5 +3769,3 @@ export const internalSimplePriceV2: PriceItemDto = {
 } as any;
 
 export const pricesWithExternalData: PriceItemDto[] = [externalCompositePrice, internalCompositePrice, internalSimplePrice, internalSimplePriceV2];
-
-

@@ -25,8 +25,10 @@ describe('External Data - computeAggregatedAndPriceTotals', () => {
       const oneTimeExternalCompositePriceRecurrence = externalCompositePriceTotalDetailsBreakdown?.recurrences?.find((recurrence) => recurrence.type === 'one_time');
       const monthlyExternalCompositePriceRecurrence = externalCompositePriceTotalDetailsBreakdown?.recurrences?.find((recurrence) => recurrence.type === 'recurring' && recurrence.billing_period === 'monthly');
 
-      expect(oneTimeTotalRecurrence?.amount_total).toBe(50090);
+      expect(oneTimeTotalRecurrence?.amount_total).toBe(49090);
+      expect(oneTimeTotalRecurrence?.amount_total_decimal).toBe("490.9048");
       expect(monthlyTotalRecurrence?.amount_total).toBe(32000);
+      expect(monthlyTotalRecurrence?.amount_total_decimal).toBe("320");
       expect(oneTimeExternalCompositePriceRecurrence?.amount_total).toBe(1000);
       expect(oneTimeExternalCompositePriceRecurrence?.amount_subtotal).toBe(840);
       expect(monthlyExternalCompositePriceRecurrence?.amount_total).toBe(16000);

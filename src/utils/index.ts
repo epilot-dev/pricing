@@ -4,7 +4,7 @@ import { toDineroFromInteger, toDinero } from '../formatters';
 import { MarkupPricingModel, TypeGetAg } from '../pricing';
 import { Coupon, Price, PriceGetAg, PriceTier, Tax } from '../types';
 
-import { isPercentageCoupon, isValidCoupon } from './guards/coupon';
+import { isPercentageCoupon, isValidCoupon, isBonusCoupon, isFixedValueCoupon } from './guards/coupon';
 
 /**
  * @todo Inherit from Components.Schemas.PriceItem rather than duplicating the type
@@ -30,6 +30,8 @@ export type PriceItemsTotals = {
   discount_amount?: number;
   discount_percentage?: number;
   before_discount_amount_total?: number;
+  bonus_amount?: number;
+  bonus_amount_decimal?: string;
   price_display_in_journeys?: Price['price_display_in_journeys'];
   get_ag?: PriceGetAg;
   tiers_details?: {
@@ -113,7 +115,7 @@ export const computePriceItemValues = (
   tax?: Tax,
   coupons: ReadonlyArray<Coupon> = [],
 ): PriceItemsTotals => {
-  const [coupon] = coupons;
+  const [coupon] = coupons.filter(isValidCoupon);
 
   let unitAmount = toDinero(unitAmountDecimal, currency);
 
@@ -121,19 +123,30 @@ export const computePriceItemValues = (
   let discountPercentage: number | undefined;
   let unitDiscountAmount: Dinero | undefined;
   let unitDiscountAmountNet: Dinero | undefined;
+  let bonusAmount: Dinero | undefined;
 
-  if (coupon && isValidCoupon(coupon)) {
-    unitAmountBeforeDiscount = unitAmount;
-
-    if (isPercentageCoupon(coupon)) {
-      discountPercentage = clamp(Number(coupon.percentage_value), 0, 100);
-      unitDiscountAmount = unitAmount.multiply(discountPercentage).divide(100);
+  if (coupon) {
+    if (isBonusCoupon(coupon)) {
+      if (isFixedValueCoupon(coupon)) {
+        bonusAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
+      } else {
+        /**
+         * It was decided that for now coupons with the bonus category should only be fixed value coupons.
+         * Later, we should consider the scenario in which we have percentage coupons with the bonus category.
+         * @todo Compute bonusAmount based on percentage value
+         */
+      }
     } else {
-      const fixedDiscountAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
-      unitDiscountAmount = fixedDiscountAmount.greaterThan(unitAmount) ? unitAmount : fixedDiscountAmount;
+      unitAmountBeforeDiscount = unitAmount;
+      if (isPercentageCoupon(coupon)) {
+        discountPercentage = clamp(Number(coupon.percentage_value), 0, 100);
+        unitDiscountAmount = unitAmount.multiply(discountPercentage).divide(100);
+      } else {
+        const fixedDiscountAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
+        unitDiscountAmount = fixedDiscountAmount.greaterThan(unitAmount) ? unitAmount : fixedDiscountAmount;
+      }
+      unitAmount = unitAmount.subtract(unitDiscountAmount);
     }
-
-    unitAmount = unitAmount.subtract(unitDiscountAmount);
   }
 
   const taxRate = getTaxValue(tax);
@@ -196,6 +209,10 @@ export const computePriceItemValues = (
       discount_amount: discountAmount?.getAmount(),
       discount_percentage: discountPercentage,
       before_discount_amount_total: beforeDiscountAmountTotal?.getAmount(),
+    }),
+    ...(bonusAmount && {
+      bonus_amount: bonusAmount.getAmount(),
+      bonus_amount_decimal: bonusAmount.toUnit().toString(),
     }),
   };
 };

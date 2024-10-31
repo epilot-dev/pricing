@@ -7,7 +7,7 @@ import {
   PriceItemDto,
   TaxAmount,
 } from '../../types';
-import { fixedDiscountCoupon, percentageDiscountCoupon } from './coupon.samples';
+import { fixedBonusCoupon, fixedDiscountCoupon, percentageDiscountCoupon } from './coupon.samples';
 
 import { tax10percent, tax19percent, tax6percent } from './tax.samples';
 
@@ -2993,7 +2993,7 @@ export const compositePriceWithNumberInputEqualsToZero: CompositePriceItemDto = 
   ],
 } as CompositePriceItemDto;
 
-export const priceItemWithFixedDiscount: PriceItemDto = {
+const baseForPriceItemWithDiscount: PriceItemDto = {
   quantity: 1,
   product_id: 'prod-id#12324',
   price_id: 'price#1',
@@ -3015,6 +3015,10 @@ export const priceItemWithFixedDiscount: PriceItemDto = {
   },
   pricing_model: 'per_unit',
   is_tax_inclusive: true,
+};
+
+export const priceItemWithFixedDiscount: PriceItemDto = {
+  ...baseForPriceItemWithDiscount,
   _coupons: [fixedDiscountCoupon],
 };
 
@@ -3024,27 +3028,7 @@ export const priceItemWithFixedDiscountAndHighQuantity: PriceItemDto = {
 };
 
 export const priceItemWithPercentageDiscount: PriceItemDto = {
-  quantity: 1,
-  product_id: 'prod-id#12324',
-  price_id: 'price#1',
-  taxes: [{ tax: tax10percent }],
-  _price: {
-    _id: 'price#1',
-    unit_amount: 10000,
-    unit_amount_currency: 'EUR',
-    unit_amount_decimal: '100',
-    type: 'one_time',
-    tax: [tax10percent],
-    is_tax_inclusive: true,
-    description: 'Winter Sale',
-    _title: 'Winter Sale',
-    pricing_model: 'per_unit',
-  },
-  _product: {
-    _tags: ['product-tag-1', 'product-tag-2'],
-  },
-  pricing_model: 'per_unit',
-  is_tax_inclusive: true,
+  ...baseForPriceItemWithDiscount,
   _coupons: [percentageDiscountCoupon],
 };
 
@@ -3069,4 +3053,9 @@ export const priceItemWithPercentageDiscountAndExclusiveTax = {
     is_tax_inclusive: false,
   },
   is_tax_inclusive: false,
+};
+
+export const priceItemWithBonusCoupon = {
+  ...baseForPriceItemWithDiscount,
+  _coupons: [fixedBonusCoupon],
 };

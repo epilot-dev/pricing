@@ -802,6 +802,10 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
       .toUnit()
       .toString(),
   }),
+  ...(typeof priceItem.bonus_amount === 'number' && {
+    bonus_amount: toDineroFromInteger(priceItem.bonus_amount).convertPrecision(precision).getAmount(),
+    bonus_amount_decimal: toDineroFromInteger(priceItem.bonus_amount).toUnit().toString(),
+  }),
   amount_tax: toDineroFromInteger(priceItem.amount_tax!).convertPrecision(precision).getAmount(),
   ...(typeof priceItem.tax_discount_amount === 'number' && {
     tax_discount_amount: toDineroFromInteger(priceItem.tax_discount_amount).convertPrecision(precision).getAmount(),

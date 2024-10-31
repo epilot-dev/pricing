@@ -772,7 +772,7 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
     unit_amount_net: toDineroFromInteger(priceItem.unit_amount_net).convertPrecision(precision).getAmount(),
   }),
   ...(typeof priceItem.unit_amount_net === 'number' && {
-    unit_amount_net_decimal: toDineroFromInteger(priceItem.unit_amount_net!).toUnit().toString(),
+    unit_amount_net_decimal: toDineroFromInteger(priceItem.unit_amount_net).toUnit().toString(),
   }),
   ...(typeof priceItem.unit_discount_amount_net === 'number' && {
     unit_discount_amount_net: toDineroFromInteger(priceItem.unit_discount_amount_net)
@@ -781,7 +781,7 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
     unit_discount_amount_net_decimal: toDineroFromInteger(priceItem.unit_discount_amount_net).toUnit().toString(),
   }),
   ...(typeof priceItem.unit_amount_gross === 'number' && {
-    unit_amount_gross_decimal: toDineroFromInteger(priceItem.unit_amount_gross!).toUnit().toString(),
+    unit_amount_gross_decimal: toDineroFromInteger(priceItem.unit_amount_gross).toUnit().toString(),
   }),
   unit_amount_gross: toDineroFromInteger(priceItem.unit_amount_gross!).convertPrecision(precision).getAmount(),
   amount_subtotal: toDineroFromInteger(priceItem.amount_subtotal!).convertPrecision(precision).getAmount(),
@@ -789,23 +789,22 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
   amount_total: toDineroFromInteger(priceItem.amount_total!).convertPrecision(precision).getAmount(),
   amount_total_decimal: toDineroFromInteger(priceItem.amount_total!).toUnit().toString(),
   ...(typeof priceItem.discount_amount === 'number' && {
-    discount_amount: toDineroFromInteger(priceItem.discount_amount!).convertPrecision(precision).getAmount(),
-    discount_amount_decimal: toDineroFromInteger(priceItem.discount_amount!).toUnit().toString(),
+    discount_amount: toDineroFromInteger(priceItem.discount_amount).convertPrecision(precision).getAmount(),
+    discount_amount_decimal: toDineroFromInteger(priceItem.discount_amount).toUnit().toString(),
   }),
   ...(typeof priceItem.discount_percentage === 'number' && { discount_percentage: priceItem.discount_percentage }),
   ...(typeof priceItem.before_discount_amount_total === 'number' && {
-    before_discount_amount_total: toDineroFromInteger(priceItem.before_discount_amount_total!)
+    before_discount_amount_total: toDineroFromInteger(priceItem.before_discount_amount_total)
       .convertPrecision(precision)
       .getAmount(),
-    before_discount_amount_total_decimal: toDineroFromInteger(priceItem.before_discount_amount_total!)
+    before_discount_amount_total_decimal: toDineroFromInteger(priceItem.before_discount_amount_total)
       .toUnit()
       .toString(),
   }),
   amount_tax: toDineroFromInteger(priceItem.amount_tax!).convertPrecision(precision).getAmount(),
-
   ...(typeof priceItem.tax_discount_amount === 'number' && {
-    tax_discount_amount: toDineroFromInteger(priceItem.tax_discount_amount!).convertPrecision(precision).getAmount(),
-    tax_discount_amount_decimal: toDineroFromInteger(priceItem.tax_discount_amount!).toUnit().toString(),
+    tax_discount_amount: toDineroFromInteger(priceItem.tax_discount_amount).convertPrecision(precision).getAmount(),
+    tax_discount_amount_decimal: toDineroFromInteger(priceItem.tax_discount_amount).toUnit().toString(),
   }),
   ...(typeof priceItem.before_discount_tax_amount === 'number' && {
     before_discount_tax_amount: toDineroFromInteger(priceItem.before_discount_tax_amount)
@@ -818,7 +817,7 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
     amount: toDineroFromInteger(tax.amount!).convertPrecision(precision).getAmount(),
   })),
   ...(priceItem.tiers_details && {
-    tiers_details: priceItem.tiers_details?.map((tier) => {
+    tiers_details: priceItem.tiers_details.map((tier) => {
       return {
         ...tier,
         unit_amount_gross: toDineroFromInteger(tier.unit_amount_gross).convertPrecision(precision).getAmount(),

@@ -9,6 +9,7 @@ import type {
   CompositePriceItemDto,
   Coupon,
   ExternalFeeMapping,
+  ExternalProductData,
   Price,
   PriceInputMapping,
   PriceItem,
@@ -266,6 +267,34 @@ export const computeCompositePrice = (
   };
 };
 
+const convertAmounts = (item: PriceItem | CompositePriceItem) => {
+  item.amount_total = toDinero(item.amount_total_decimal || '0').getAmount();
+  item.amount_subtotal = toDinero(item.amount_subtotal_decimal || '0').getAmount();
+  item.unit_amount_gross = toDinero(item.unit_amount_gross_decimal || '0').getAmount();
+  item.unit_amount_net = toDinero(item.unit_amount_net_decimal || '0').getAmount();
+};
+
+const getExternalPriceItem = (externalData: ExternalProductData | undefined) => {
+  const externalPriceItem = externalData?.pricingDetails?.items?.[0];
+
+  // Converts the decimal amounts to dinero integers for totals calculations purposes
+  if (externalPriceItem) {
+    if (externalPriceItem.is_composite_price) {
+      const compositePriceItemToAppend = externalPriceItem as CompositePriceItem;
+      convertAmounts(compositePriceItemToAppend);
+      compositePriceItemToAppend.item_components?.forEach((component) => {
+        convertAmounts(component);
+      });
+    } else {
+      convertAmounts(externalPriceItem);
+    }
+
+    return externalPriceItem;
+  }
+
+  return undefined;
+};
+
 /**
  * Computes all the integer amounts for the price items using the string decimal representation defined on prices unit_amount field.
  * All totals are computed with a decimal precision of DECIMAL_PRECISION.
@@ -273,26 +302,6 @@ export const computeCompositePrice = (
  *
  * This function computes both line items and aggregated totals.
  */
-
-const externalPriceItemAmountsToDinero = (externalPriceItem: PriceItem | CompositePriceItem) => {
-  const convertAmounts = (item: PriceItem | CompositePriceItem) => {
-    item.amount_total = toDinero(item.amount_total_decimal || '0').getAmount();
-    item.amount_subtotal = toDinero(item.amount_subtotal_decimal || '0').getAmount();
-    item.unit_amount_gross = toDinero(item.unit_amount_gross_decimal || '0').getAmount();
-    item.unit_amount_net = toDinero(item.unit_amount_net_decimal || '0').getAmount();
-  };
-
-  if (externalPriceItem.is_composite_price) {
-    const compositePriceItemToAppend = externalPriceItem as CompositePriceItem;
-    convertAmounts(compositePriceItemToAppend);
-    compositePriceItemToAppend.item_components?.forEach((component) => {
-      convertAmounts(component);
-    });
-  } else {
-    convertAmounts(externalPriceItem);
-  }
-};
-
 export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): PricingDetails => {
   const initialPricingDetails: Omit<PricingDetails, 'items'> & {
     items: NonNullable<PricingDetails['items']>;
@@ -314,11 +323,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
   };
 
   const priceDetails = priceItems.reduce((details, priceItem) => {
-    const externalPriceItem = priceItem._external_data?.pricingDetails?.items?.[0];
-
-    if (externalPriceItem) {
-      externalPriceItemAmountsToDinero(externalPriceItem);
-    }
+    const externalPriceItem = getExternalPriceItem(priceItem._external_data);
 
     if (
       /**

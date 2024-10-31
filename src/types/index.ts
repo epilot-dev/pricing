@@ -1,6 +1,6 @@
 import type { Components, ExternalProduct } from '@epilot/pricing-client';
 
-type ExternalProductData = {
+export type ExternalProductData = {
   integrationId: string;
   data: ExternalProduct;
   pricingDetails: PricingDetails;

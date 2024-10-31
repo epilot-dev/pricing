@@ -388,7 +388,7 @@ export const computePriceItemDetails = (priceItem: PriceItemDto | CompositePrice
 const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemToAppend: PriceItem): PricingDetails => {
   const taxes = details.total_details?.breakdown?.taxes || [];
   const firstTax = priceItemToAppend.taxes?.[0];
-  const itemTax = firstTax?.tax || ({ rate: Number(firstTax?.rateValue) } as Partial<Tax>);
+  const itemTax = firstTax?.tax ?? ({ rate: Number(firstTax?.rateValue) } as Partial<Tax>);
 
   /**
    * itemRateValue is only used for outdated prices, not migrated yet
@@ -427,28 +427,29 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
       : undefined;
   const priceTax = toDineroFromInteger(priceItemToAppend?.taxes?.[0]?.amount || 0.0);
 
-  if (!tax) {
-    if (itemTax) {
-      taxes.push({
-        tax: {
-          ...(itemTax._id && { _id: itemTax._id }),
-          ...(itemTax.type && { type: itemTax.type }),
-          rate: itemTax.rate,
-        },
-        amount: priceTax.getAmount(),
-      });
-    }
-  } else {
+  if (tax) {
     tax.amount = toDineroFromInteger(tax.amount!).add(priceTax).getAmount();
 
-    // Populates missing data in deprecated taxes
-    if (!tax?.tax?._id && itemTax?._id) {
-      tax.tax!._id = itemTax._id;
-    }
+    if (tax.tax && itemTax) {
+      // Populates missing data in deprecated taxes
+      if (!tax.tax._id && itemTax._id) {
+        tax.tax._id = itemTax._id;
+      }
 
-    if (!tax?.tax?.type && itemTax?.type) {
-      tax.tax!.type = itemTax.type;
+      if (!tax.tax.type && itemTax.type) {
+        tax.tax.type = itemTax.type;
+      }
     }
+  } else if (itemTax) {
+    const { _id, type, rate } = itemTax;
+    taxes.push({
+      tax: {
+        ...(_id && { _id }),
+        ...(type && { type }),
+        rate,
+      },
+      amount: priceTax.getAmount(),
+    });
   }
 
   if (!recurrence) {

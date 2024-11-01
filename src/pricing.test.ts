@@ -509,6 +509,16 @@ describe('computeAggregatedAndPriceTotals', () => {
       ]);
       expect(result).toEqual(results.computedResultWithPricesWithAndWithoutCoupons);
     });
+
+    it('should compute cashbacks and totals correctly', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithFixedAmountCashbackCoupon]);
+      expect(result).toEqual(results.computedPriceWithFixedAmountCashbackCoupon);
+    });
+
+    it('should compute cashbacks and totals correctly', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageCashbackCoupon]);
+      expect(result).toEqual(results.computedPriceWithPercentageCashbackCoupon);
+    });
   });
 });
 

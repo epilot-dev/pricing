@@ -802,6 +802,10 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
       .toUnit()
       .toString(),
   }),
+  ...(typeof priceItem.cashback_amount === 'number' && {
+    cashback_amount: toDineroFromInteger(priceItem.cashback_amount).convertPrecision(precision).getAmount(),
+    cashback_amount_decimal: toDineroFromInteger(priceItem.cashback_amount).toUnit().toString(),
+  }),
   amount_tax: toDineroFromInteger(priceItem.amount_tax!).convertPrecision(precision).getAmount(),
   ...(typeof priceItem.tax_discount_amount === 'number' && {
     tax_discount_amount: toDineroFromInteger(priceItem.tax_discount_amount).convertPrecision(precision).getAmount(),

@@ -16,6 +16,10 @@ type FixedValueCoupon = Omit<BaseCoupon, 'percentage_value'> & {
   fixed_value_currency: NonNullable<Coupon['fixed_value_currency']> & Currency;
 };
 
+type CashbackCoupon = BaseCoupon & {
+  category: 'cashback';
+};
+
 type PercentageCoupon = Omit<BaseCoupon, 'fixed_value'> & {
   type: 'percentage';
   percentage_value: NonNullable<Coupon['percentage_value']>;
@@ -35,3 +39,5 @@ export const isPercentageCoupon = (coupon: Coupon): coupon is PercentageCoupon =
 /* Typeguard that ensures validity of coupon and asserts value with correct type */
 export const isValidCoupon = (coupon: Coupon): coupon is FixedValueCoupon | PercentageCoupon =>
   isFixedValueCoupon(coupon) || isPercentageCoupon(coupon);
+
+export const isCashbackCoupon = (coupon: Coupon): coupon is CashbackCoupon => coupon.category === 'cashback';

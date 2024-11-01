@@ -6739,7 +6739,7 @@ export const computedResultWithPricesWithAndWithoutCoupons = {
 /**
  * Simple price with a coupon applied to it resulting in a fixed discount
  */
-export const computedPriceWithBonusCoupon = {
+export const computedPriceWithCashbackCoupon = {
   amount_subtotal: 9091,
   amount_total: 10000,
   amount_tax: 909,
@@ -6841,10 +6841,10 @@ export const computedPriceWithBonusCoupon = {
           _org: 'org#1',
           _created_at: '2022-06-15T09:17:06.510Z',
           _updated_at: '2022-06-17T11:48:20.104Z',
-          _title: 'Summer Bonus',
-          name: 'Summer Bonus',
+          _title: 'Summer Cashback',
+          name: 'Summer Cashback',
           type: 'fixed',
-          category: 'bonus',
+          category: 'cashback',
           fixed_value: 1000,
           fixed_value_decimal: '10.00',
           fixed_value_currency: 'EUR',
@@ -6858,8 +6858,8 @@ export const computedPriceWithBonusCoupon = {
       amount_subtotal: 9091,
       amount_total: 10000,
       amount_tax: 909,
-      bonus_amount: 1000,
-      bonus_amount_decimal: '10',
+      cashback_amount: 1000,
+      cashback_amount_decimal: '10',
       currency: 'EUR',
       description: 'Winter Sale',
       unit_amount_decimal: '100',

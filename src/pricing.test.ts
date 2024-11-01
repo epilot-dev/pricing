@@ -510,9 +510,9 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(result).toEqual(results.computedResultWithPricesWithAndWithoutCoupons);
     });
 
-    it('should compute bonuses and totals correctly', () => {
-      const result = computeAggregatedAndPriceTotals([samples.priceItemWithBonusCoupon]);
-      expect(result).toEqual(results.computedPriceWithBonusCoupon);
+    it('should compute cashbacks and totals correctly', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithCashbackCoupon]);
+      expect(result).toEqual(results.computedPriceWithCashbackCoupon);
     });
   });
 });

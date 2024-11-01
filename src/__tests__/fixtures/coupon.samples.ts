@@ -49,7 +49,7 @@ export const percentageCashbackCoupon: Coupon = {
   _updated_at: '2022-06-17T11:48:20.104Z',
   _title: 'Summer Cashback',
   name: 'Summer Cashback',
-  type: 'fixed',
+  type: 'percentage',
   category: 'cashback',
   percentage_value: '10',
 };

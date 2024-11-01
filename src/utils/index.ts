@@ -130,11 +130,8 @@ export const computePriceItemValues = (
       if (isFixedValueCoupon(coupon)) {
         cashbackAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
       } else {
-        /**
-         * It was decided that for now coupons with the cashback category should only be fixed value coupons.
-         * Later, we should consider the scenario in which we have percentage coupons with the cashback category.
-         * @todo Compute cashbackAmount based on percentage value
-         */
+        const cashbackPercentage = clamp(Number(coupon.percentage_value), 0, 100);
+        cashbackAmount = unitAmount.multiply(cashbackPercentage).divide(100);
       }
     } else {
       unitAmountBeforeDiscount = unitAmount;

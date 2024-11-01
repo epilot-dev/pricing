@@ -7,7 +7,12 @@ import {
   PriceItemDto,
   TaxAmount,
 } from '../../types';
-import { fixedCashbackCoupon, fixedDiscountCoupon, percentageDiscountCoupon } from './coupon.samples';
+import {
+  fixedCashbackCoupon,
+  fixedDiscountCoupon,
+  percentageCashbackCoupon,
+  percentageDiscountCoupon,
+} from './coupon.samples';
 
 import { tax10percent, tax19percent, tax6percent } from './tax.samples';
 
@@ -3055,7 +3060,12 @@ export const priceItemWithPercentageDiscountAndExclusiveTax = {
   is_tax_inclusive: false,
 };
 
-export const priceItemWithCashbackCoupon = {
+export const priceItemWithFixedAmountCashbackCoupon = {
   ...baseForPriceItemWithDiscount,
   _coupons: [fixedCashbackCoupon],
+};
+
+export const priceItemWithPercentageCashbackCoupon = {
+  ...baseForPriceItemWithDiscount,
+  _coupons: [percentageCashbackCoupon],
 };

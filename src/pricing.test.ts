@@ -511,8 +511,13 @@ describe('computeAggregatedAndPriceTotals', () => {
     });
 
     it('should compute cashbacks and totals correctly', () => {
-      const result = computeAggregatedAndPriceTotals([samples.priceItemWithCashbackCoupon]);
-      expect(result).toEqual(results.computedPriceWithCashbackCoupon);
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithFixedAmountCashbackCoupon]);
+      expect(result).toEqual(results.computedPriceWithFixedAmountCashbackCoupon);
+    });
+
+    it('should compute cashbacks and totals correctly', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageCashbackCoupon]);
+      expect(result).toEqual(results.computedPriceWithPercentageCashbackCoupon);
     });
   });
 });

@@ -6737,9 +6737,9 @@ export const computedResultWithPricesWithAndWithoutCoupons = {
 };
 
 /**
- * Simple price with a coupon applied to it resulting in a fixed discount
+ * Simple price with a fixed amount cashback coupon applied to it
  */
-export const computedPriceWithCashbackCoupon = {
+export const computedPriceWithFixedAmountCashbackCoupon = {
   amount_subtotal: 9091,
   amount_total: 10000,
   amount_tax: 909,
@@ -6860,6 +6860,135 @@ export const computedPriceWithCashbackCoupon = {
       amount_tax: 909,
       cashback_amount: 1000,
       cashback_amount_decimal: '10',
+      currency: 'EUR',
+      description: 'Winter Sale',
+      unit_amount_decimal: '100',
+      amount_subtotal_decimal: '90.909090909091',
+      amount_total_decimal: '100',
+    },
+  ],
+  currency: 'EUR',
+};
+/**
+ * Simple price with a fixed amount cashback coupon applied to it
+ */
+export const computedPriceWithPercentageCashbackCoupon = {
+  amount_subtotal: 9091,
+  amount_total: 10000,
+  amount_tax: 909,
+  total_details: {
+    amount_tax: 909,
+    breakdown: {
+      taxes: [
+        {
+          tax: {
+            _id: '10',
+            type: 'VAT',
+            rate: 10,
+          },
+          amount: 909,
+        },
+      ],
+      recurrences: [
+        {
+          type: 'one_time',
+          unit_amount_gross: 10000,
+          unit_amount_net: 9091,
+          amount_subtotal: 9091,
+          amount_total: 10000,
+          amount_subtotal_decimal: '90.909090909091',
+          amount_total_decimal: '100',
+          amount_tax: 909,
+        },
+      ],
+      recurrencesByTax: [
+        {
+          type: 'one_time',
+          amount_total: 10000,
+          amount_subtotal: 9091,
+          amount_tax: 909,
+          tax: {
+            tax: {
+              _id: '10',
+              type: 'VAT',
+              rate: 10,
+            },
+            amount: 909,
+          },
+        },
+      ],
+    },
+  },
+  items: [
+    {
+      quantity: 1,
+      product_id: 'prod-id#12324',
+      price_id: 'price#1',
+      taxes: [
+        {
+          tax: {
+            _id: '10',
+            rate: 10,
+            type: 'VAT',
+            _schema: 'tax',
+            _org: '739224',
+            _title: '',
+            _created_at: '2022-06-29T20:26:19.020Z',
+            _updated_at: '2022-06-29T20:26:19.020Z',
+          },
+          amount: 909,
+        },
+      ],
+      _price: {
+        _id: 'price#1',
+        unit_amount: 10000,
+        unit_amount_currency: 'EUR',
+        unit_amount_decimal: '100',
+        type: 'one_time',
+        tax: [
+          {
+            _id: '10',
+            rate: 10,
+            type: 'VAT',
+            _schema: 'tax',
+            _org: '739224',
+            _title: '',
+            _created_at: '2022-06-29T20:26:19.020Z',
+            _updated_at: '2022-06-29T20:26:19.020Z',
+          },
+        ],
+        is_tax_inclusive: true,
+        description: 'Winter Sale',
+        _title: 'Winter Sale',
+        pricing_model: 'per_unit',
+      },
+      _product: {
+        _tags: ['product-tag-1', 'product-tag-2'],
+      },
+      pricing_model: 'per_unit',
+      is_tax_inclusive: true,
+      _coupons: [
+        {
+          _id: 'coupon#3',
+          _schema: 'coupon',
+          _org: 'org#1',
+          _created_at: '2022-06-15T09:17:06.510Z',
+          _updated_at: '2022-06-17T11:48:20.104Z',
+          _title: 'Summer Cashback',
+          name: 'Summer Cashback',
+          type: 'fixed',
+          category: 'cashback',
+          percentage_value: '10',
+        },
+      ],
+      unit_amount: 10000,
+      unit_amount_net: 9091,
+      unit_amount_net_decimal: '90.909090909091',
+      unit_amount_gross: 10000,
+      unit_amount_gross_decimal: '100',
+      amount_subtotal: 9091,
+      amount_total: 10000,
+      amount_tax: 909,
       currency: 'EUR',
       description: 'Winter Sale',
       unit_amount_decimal: '100',

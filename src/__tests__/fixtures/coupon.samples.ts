@@ -40,3 +40,16 @@ export const fixedCashbackCoupon: Coupon = {
   fixed_value_decimal: '10.00',
   fixed_value_currency: 'EUR',
 };
+
+export const percentageCashbackCoupon: Coupon = {
+  _id: 'coupon#3',
+  _schema: 'coupon',
+  _org: 'org#1',
+  _created_at: '2022-06-15T09:17:06.510Z',
+  _updated_at: '2022-06-17T11:48:20.104Z',
+  _title: 'Summer Cashback',
+  name: 'Summer Cashback',
+  type: 'fixed',
+  category: 'cashback',
+  percentage_value: '10',
+};

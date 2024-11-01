@@ -1,8 +1,37 @@
 import { computeAggregatedAndPriceTotals } from './pricing';
-import { pricesWithExternalData } from './__tests__/fixtures/price-external-data.samples';
+import { pricesWithExternalData, pricesWithExternalDataSingleSimple, pricesWithExternalDataSingleComposite } from './__tests__/fixtures/price-external-data.samples';
 import { CompositePriceItem, PriceItem } from './types';
 
 describe('External Data - computeAggregatedAndPriceTotals', () => {
+  describe('with external prices', () => {
+    it('returns the correct totals and items for simple price', () => {
+      // when
+      const result = computeAggregatedAndPriceTotals(pricesWithExternalDataSingleSimple);
+
+      const totalDetailsBreakdown = result.total_details?.breakdown;
+      const oneTimeTotalRecurrence = totalDetailsBreakdown?.recurrences?.find((recurrence) => recurrence.type === 'one_time');
+
+      expect(oneTimeTotalRecurrence?.amount_total).toBe(2500);
+      expect(oneTimeTotalRecurrence?.amount_total_decimal).toBe("25");
+    });
+    it('returns the correct totals and items for composite price', () => {
+      // when
+      const result = computeAggregatedAndPriceTotals(pricesWithExternalDataSingleComposite);
+      const totalDetailsBreakdown = result.total_details?.breakdown;
+
+      const oneTimeTotalRecurrence = totalDetailsBreakdown?.recurrences?.find((recurrence) => recurrence.type === 'one_time');
+      const monthlyTotalRecurrence = totalDetailsBreakdown?.recurrences?.find((recurrence) => recurrence.type === 'recurring' && recurrence.billing_period === 'monthly');
+
+      expect(oneTimeTotalRecurrence?.amount_total).toBe(1000);
+      expect(oneTimeTotalRecurrence?.amount_total_decimal).toBe("10");
+      expect(monthlyTotalRecurrence?.amount_total).toBe(16000);
+      expect(monthlyTotalRecurrence?.amount_total_decimal).toBe("160");
+
+    });
+  });
+
+
+
   describe('with internal and external prices', () => {
     it('returns the correct totals and items', () => {
       // when

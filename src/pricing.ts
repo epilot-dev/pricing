@@ -267,32 +267,35 @@ export const computeCompositePrice = (
   };
 };
 
-const convertAmounts = (item: PriceItem | CompositePriceItem) => {
-  item.amount_total = toDinero(item.amount_total_decimal || '0').getAmount();
-  item.amount_subtotal = toDinero(item.amount_subtotal_decimal || '0').getAmount();
-  item.unit_amount_gross = toDinero(item.unit_amount_gross_decimal || '0').getAmount();
-  item.unit_amount_net = toDinero(item.unit_amount_net_decimal || '0').getAmount();
+const convertAmountsToDinero = <Item extends PriceItem | CompositePriceItem>(item: Item): Item => {
+  return {
+    ...item,
+    amount_total: toDinero(item.amount_total_decimal || '0').getAmount(),
+    amount_subtotal: toDinero(item.amount_subtotal_decimal || '0').getAmount(),
+    unit_amount_gross: toDinero(item.unit_amount_gross_decimal || '0').getAmount(),
+    unit_amount_net: toDinero(item.unit_amount_net_decimal || '0').getAmount(),
+  };
 };
 
-const getExternalPriceItem = (externalData: ExternalProductData | undefined) => {
+const getExternalPriceItem = (
+  externalData: ExternalProductData | undefined,
+): PriceItem | CompositePriceItem | undefined => {
   const externalPriceItem = externalData?.pricingDetails?.items?.[0];
 
-  // Converts the decimal amounts to dinero integers for totals calculations purposes
-  if (externalPriceItem) {
-    if (externalPriceItem.is_composite_price) {
-      const compositePriceItemToAppend = externalPriceItem as CompositePriceItem;
-      convertAmounts(compositePriceItemToAppend);
-      compositePriceItemToAppend.item_components?.forEach((component) => {
-        convertAmounts(component);
-      });
-    } else {
-      convertAmounts(externalPriceItem);
-    }
-
-    return externalPriceItem;
+  if (!externalPriceItem) {
+    return undefined;
   }
 
-  return undefined;
+  if (externalPriceItem.is_composite_price) {
+    const compositePriceItem = externalPriceItem as CompositePriceItem;
+
+    return {
+      ...convertAmountsToDinero(compositePriceItem),
+      item_components: compositePriceItem.item_components?.map((component) => convertAmountsToDinero(component)),
+    };
+  }
+
+  return convertAmountsToDinero(externalPriceItem);
 };
 
 /**

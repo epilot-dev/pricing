@@ -3916,3 +3916,5 @@ export const externalSimplePrice: PriceItemDto = {
 } as any;
 
 export const pricesWithExternalData: PriceItemDto[] = [externalCompositePrice, internalCompositePrice, internalSimplePrice, internalSimplePriceV2, externalSimplePrice];
+export const pricesWithExternalDataSingleSimple: PriceItemDto[] = [externalSimplePrice];
+export const pricesWithExternalDataSingleComposite: PriceItemDto[] = [externalCompositePrice];

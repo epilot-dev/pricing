@@ -723,11 +723,65 @@ export const computePriceItem = (
 
   return {
     ...priceItem,
-    ...itemValues,
     currency,
     ...(priceItemDescription && { description: priceItemDescription }),
+    ...(Number.isInteger(itemValues.unit_amount) && { unit_amount: itemValues.unit_amount }),
+    ...(Number.isInteger(itemValues.before_discount_unit_amount) && {
+      before_discount_unit_amount: itemValues.before_discount_unit_amount,
+    }),
+    ...(Number.isInteger(itemValues.unit_discount_amount) && { unit_discount_amount: itemValues.unit_discount_amount }),
+    ...(itemValues.unit_discount_amount_decimal && {
+      unit_discount_amount_decimal: itemValues.unit_discount_amount_decimal,
+    }),
+    ...(Number.isInteger(itemValues.unit_amount_net) && { unit_amount_net: itemValues.unit_amount_net }),
+    ...(itemValues.unit_amount_net_decimal && { unit_amount_net_decimal: itemValues.unit_amount_net_decimal }),
+    ...(Number.isInteger(itemValues.unit_discount_amount_net) && {
+      unit_discount_amount_net: itemValues.unit_discount_amount_net,
+    }),
+    ...(itemValues.unit_discount_amount_net_decimal && {
+      unit_discount_amount_net_decimal: itemValues.unit_discount_amount_net_decimal,
+    }),
+    ...(Number.isInteger(itemValues.unit_amount_gross) && { unit_amount_gross: itemValues.unit_amount_gross }),
+    ...(itemValues.unit_amount_gross_decimal && { unit_amount_gross_decimal: itemValues.unit_amount_gross_decimal }),
     ...(price?.pricing_model === PricingModel.perUnit &&
       unitAmountDecimal && { unit_amount_decimal: unitAmountDecimal }),
+    amount_subtotal: itemValues.amount_subtotal,
+    amount_total: itemValues.amount_total,
+    ...(itemValues.discount_amount && { discount_amount: itemValues.discount_amount }),
+    ...(typeof itemValues.discount_percentage === 'number' && { discount_percentage: itemValues.discount_percentage }),
+    ...(Number.isInteger(itemValues.cashback_amount) && {
+      cashback_amount: itemValues.cashback_amount,
+    }),
+    ...(itemValues.cashback_amount_decimal && { cashback_amount_decimal: itemValues.cashback_amount_decimal }),
+    ...(itemValues.before_discount_amount_total && {
+      before_discount_amount_total: itemValues.before_discount_amount_total,
+    }),
+    amount_tax: itemValues.amount_tax,
+    ...(Number.isInteger(itemValues.tax_discount_amount) && {
+      tax_discount_amount: itemValues.tax_discount_amount,
+    }),
+    ...(itemValues.tax_discount_amount_decimal && {
+      tax_discount_amount_decimal: itemValues.tax_discount_amount_decimal,
+    }),
+    ...(Number.isInteger(itemValues.before_discount_tax_amount) && {
+      before_discount_tax_amount: itemValues.before_discount_tax_amount,
+    }),
+    ...(itemValues.before_discount_tax_amount_decimal && {
+      before_discount_tax_amount_decimal: itemValues.before_discount_tax_amount_decimal,
+    }),
+    ...(itemValues.tiers_details && {
+      tiers_details: itemValues.tiers_details.map((tier) => ({
+        quantity: tier.quantity,
+        unit_amount: tier.unit_amount,
+        unit_amount_decimal: tier.unit_amount_decimal,
+        unit_amount_gross: tier.unit_amount_gross,
+        unit_amount_net: tier.unit_amount_net,
+        amount_subtotal: tier.amount_subtotal,
+        amount_total: tier.amount_total,
+        amount_tax: tier.amount_tax,
+      })),
+    }),
+    ...(itemValues.get_ag && { get_ag: itemValues.get_ag }),
     taxes: [
       {
         ...(priceTax ? { tax: priceTax } : { rate: 'nontaxable', rateValue: 0 }),
@@ -737,7 +791,7 @@ export const computePriceItem = (
     ...(priceItem?._product && { _product: mapToProductSnapshot(priceItem._product) }),
     _price: {
       ...mapToPriceSnapshot(price),
-      ...(Boolean(itemValues.price_display_in_journeys) && {
+      ...(itemValues.price_display_in_journeys && {
         price_display_in_journeys: itemValues.price_display_in_journeys ?? price?.price_display_in_journeys,
         unchanged_price_display_in_journeys:
           priceItem._price?.unchanged_price_display_in_journeys ?? price?.price_display_in_journeys,

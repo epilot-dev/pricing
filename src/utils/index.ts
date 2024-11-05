@@ -172,7 +172,9 @@ export const computePriceItemValues = (
 
   const taxDiscountAmount =
     unitDiscountAmountNet && unitDiscountAmount
-      ? unitDiscountAmount.subtract(unitDiscountAmountNet).multiply(unitAmountMultiplier)
+      ? isTaxInclusive
+        ? unitDiscountAmount.subtract(unitDiscountAmountNet).multiply(unitAmountMultiplier)
+        : unitDiscountAmountNet.multiply(taxRate).multiply(unitAmountMultiplier)
       : undefined;
   const taxAmount = unitTaxAmount.multiply(unitAmountMultiplier);
   const beforeDiscountTaxAmount = beforeDiscountUnitTaxAmount?.multiply(unitAmountMultiplier);

@@ -496,9 +496,14 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(result).toEqual(results.computedPriceWithFixedDiscountAndNoTax);
     });
 
-    it('should compute discounts and totals correctly when there is a percentage discount coupon', () => {
+    it('should compute discounts and totals correctly when there is a percentage discount coupon and exclusive tax', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageDiscountAndExclusiveTax]);
       expect(result).toEqual(results.computedPriceWithPercentageDiscountAndExclusiveTax);
+    });
+
+    it('should compute discounts and totals correctly when there is a fixed discount coupon and exclusive tax', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithFixedDiscountAndExclusiveTax]);
+      expect(result).toEqual(results.computedPriceWithFixedDiscountAndExclusiveTax);
     });
 
     it('should compute discounts and totals correctly when there are multiple prices', () => {

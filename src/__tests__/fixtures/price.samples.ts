@@ -3060,6 +3060,15 @@ export const priceItemWithPercentageDiscountAndExclusiveTax = {
   is_tax_inclusive: false,
 };
 
+export const priceItemWithFixedDiscountAndExclusiveTax = {
+  ...priceItemWithFixedDiscount,
+  _price: {
+    ...priceItemWithFixedDiscount._price!,
+    is_tax_inclusive: false,
+  },
+  is_tax_inclusive: false,
+};
+
 export const priceItemWithFixedAmountCashbackCoupon = {
   ...baseForPriceItemWithDiscount,
   _coupons: [fixedCashbackCoupon],

@@ -9,7 +9,6 @@ import type {
   CompositePriceItemDto,
   Coupon,
   ExternalFeeMapping,
-  ExternalProductData,
   Price,
   PriceInputMapping,
   PriceItem,
@@ -277,17 +276,17 @@ const convertAmountsToDinero = <Item extends PriceItem | CompositePriceItem>(ite
   };
 };
 
-const getExternalPriceItem = (
-  externalData: ExternalProductData | undefined,
+const getImmutablePriceItem = (
+  immutablePricingDetails: PricingDetails | undefined,
 ): PriceItem | CompositePriceItem | undefined => {
-  const externalPriceItem = externalData?.pricingDetails?.items?.[0];
+  const immutablePriceItem = immutablePricingDetails?.items?.[0];
 
-  if (!externalPriceItem) {
+  if (!immutablePriceItem) {
     return undefined;
   }
 
-  if (externalPriceItem.is_composite_price) {
-    const compositePriceItem = externalPriceItem as CompositePriceItem;
+  if (immutablePriceItem.is_composite_price) {
+    const compositePriceItem = immutablePriceItem as CompositePriceItem;
 
     return {
       ...convertAmountsToDinero(compositePriceItem),
@@ -295,7 +294,7 @@ const getExternalPriceItem = (
     };
   }
 
-  return convertAmountsToDinero(externalPriceItem);
+  return convertAmountsToDinero(immutablePriceItem);
 };
 
 /**
@@ -326,7 +325,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
   };
 
   const priceDetails = priceItems.reduce((details, priceItem) => {
-    const externalPriceItem = getExternalPriceItem(priceItem._external_data);
+    const immutablePriceItem = getImmutablePriceItem(priceItem._immutable_pricing_details);
 
     if (
       /**
@@ -337,8 +336,8 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
       isCompositePrice(priceItem)
     ) {
       const price = priceItem._price;
-      const compositePriceItemToAppend = externalPriceItem
-        ? (externalPriceItem as CompositePriceItem)
+      const compositePriceItemToAppend = immutablePriceItem
+        ? (immutablePriceItem as CompositePriceItem)
         : computeCompositePrice(priceItem, price);
 
       const itemBreakdown = recomputeDetailTotalsFromCompositePrice(undefined, compositePriceItemToAppend);
@@ -373,8 +372,8 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
         ({ price_id }) => priceItem._price!._id === price_id,
       );
 
-      const priceItemToAppend = externalPriceItem
-        ? (externalPriceItem as PriceItemDto)
+      const priceItemToAppend = immutablePriceItem
+        ? (immutablePriceItem as PriceItemDto)
         : computePriceItem(
             priceItem as PriceItemDto,
             price,

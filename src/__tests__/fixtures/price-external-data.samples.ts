@@ -196,97 +196,9 @@ export const externalCompositePrice: PriceItemDto = {
       "is_external": true
   },
   "_coupons": [],
-  "_external_data": {
-      "integrationId": "ikom",
-      "data": {
-          "id": "12312414",
-          "name": "Home Energy Package",
-          "description": "Composite home energy solution with solar panels and battery",
-          "features": [
-              "4kW solar system",
-              "10kWh battery storage",
-              "Smart energy management"
-          ],
-          "product_image_urls": [
-              "https://epilot-dev-user-content.s3.eu-central-1.amazonaws.com/739224/13e79129-6087-4e6a-b801-3752e8e9490c/solar_panel_ph.jpeg"
-          ],
-          "product_downloads_urls": [
-              "https://epilot-dev-user-content.s3.eu-central-1.amazonaws.com/739224/b1289717-9266-4940-8f02-b665b98c34fd/september-order.pdf"
-          ],
-          "legal_footnotes": "Installation and permitting fees may vary by location.",
-          "price": {
-              "is_composite_price": true,
-              "name": "Home Energy Package Composite",
-              "price_components": [
-                  {
-                      "name": "Working Price",
-                      "is_composite_price": false,
-                      "type": "recurring",
-                      "billing_period": "monthly",
-                      "variable_price": true,
-                      "unit": "kWh",
-                      "amount_subtotal_decimal": "100",
-                      "amount_total_decimal": "100",
-                      "unit_amount_net_decimal": "0.10",
-                      "unit_amount_gross_decimal": "0.10",
-                      "currency": "EUR"
-                  },
-                  {
-                      "name": "Extra Monthly Price",
-                      "is_composite_pfrice": false,
-                      "type": "recurring",
-                      "billing_period": "monthly",
-                      "tax": {
-                          "name": "Custom VAT",
-                          "type": "VAT",
-                          "rate": 20,
-                          "region": "DE"
-                      },
-                      "amount_subtotal_decimal": "50",
-                      "amount_total_decimal": "60",
-                      "unit_amount_net_decimal": "50",
-                      "unit_amount_gross_decimal": "60",
-                      "currency": "EUR"
-                  },
-                  {
-                      "name": "Base Price",
-                      "is_composite_price": false,
-                      "type": "one_time",
-                      "tax": {
-                          "name": "German VAT",
-                          "type": "VAT",
-                          "rate": 19,
-                          "region": "DE"
-                      },
-                      "unit_amount_gross_decimal": "10",
-                      "unit_amount_net_decimal": "8.4",
-                      "amount_subtotal_decimal": "8.4",
-                      "amount_total_decimal": "10",
-                      "currency": "EUR"
-                  }
-              ],
-              "total_details": {
-                  "breakdown": {
-                      "recurrences": [
-                          {
-                              "type": "recurring",
-                              "billing_period": "monthly",
-                              "amount_subtotal_decimal": "150",
-                              "amount_total_decimal": "160"
-                          },
-                          {
-                              "type": "one_time",
-                              "amount_subtotal_decimal": "8.4",
-                              "amount_total_decimal": "10"
-                          }
-                      ]
-                  }
-              }
-          }
-      },
-      "pricingDetails": {
-          "items": [
-              {
+  "_immutable_pricing_details": {
+    "items": [
+      {
                   "_id": "price-12312414",
                   "price_id": "price-12312414",
                   "is_composite_price": true,
@@ -609,7 +521,6 @@ export const externalCompositePrice: PriceItemDto = {
                       }
                   ]
               }
-          }
       }
   },
   "blockConfiguration": {
@@ -3821,33 +3732,7 @@ export const externalSimplePrice: PriceItemDto = {
         "is_external": true
     },
     "_coupons": [],
-    "_external_data": {
-        "integrationId": "ikom",
-        "data": {
-            "id": "73f857a4-0fbc-4aa6-983f-87c0d6d410a6",
-            "name": "Solar Panel X2",
-            "description": "High-efficiency solar panel for residential use",
-            "product_image_urls": [
-                "https://epilot-dev-user-content.s3.eu-central-1.amazonaws.com/739224/temp/379c442c-6e9b-40b9-806e-30ee5802754c/2-20-2-21-23-39-29m.jpeg"
-            ],
-            "recommendation_settings": {
-                "is_recommended": true,
-                "recommended_label": "Best Value",
-                "recommended_color": "#00FF00",
-                "recommended_label_color": "#FFFFFF"
-            },
-            "price": {
-                "name": "Single Price",
-                "is_composite_price": false,
-                "currency": "EUR",
-                "type": "one_time",
-                "unit_amount_net_decimal": "25",
-                "unit_amount_gross_decimal": "25",
-                "amount_subtotal_decimal": "25",
-                "amount_total_decimal": "25"
-            }
-        },
-        "pricingDetails": {
+    "_immutable_pricing_details": {
             "items": [
                 {
                     "_id": "price-73f857a4-0fbc-4aa6-983f-87c0d6d410a6",
@@ -3905,7 +3790,6 @@ export const externalSimplePrice: PriceItemDto = {
                         }
                     ]
                 }
-            }
         }
     },
     "blockConfiguration": {

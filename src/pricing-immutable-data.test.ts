@@ -2,8 +2,8 @@ import { computeAggregatedAndPriceTotals } from './pricing';
 import { pricesWithExternalData, pricesWithExternalDataSingleSimple, pricesWithExternalDataSingleComposite } from './__tests__/fixtures/price-external-data.samples';
 import { CompositePriceItem, PriceItem } from './types';
 
-describe('External Data - computeAggregatedAndPriceTotals', () => {
-  describe('with external prices', () => {
+describe('Immutable data - computeAggregatedAndPriceTotals', () => {
+  describe('with external pricing details', () => {
     it('returns the correct totals and items for simple price', () => {
       // when
       const result = computeAggregatedAndPriceTotals(pricesWithExternalDataSingleSimple);
@@ -32,7 +32,7 @@ describe('External Data - computeAggregatedAndPriceTotals', () => {
 
 
 
-  describe('with internal and external prices', () => {
+  describe('with internal and external pricing details', () => {
     it('returns the correct totals and items', () => {
       // when
       const result = computeAggregatedAndPriceTotals(pricesWithExternalData);

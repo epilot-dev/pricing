@@ -3,48 +3,40 @@ import type { Currency, Dinero } from 'dinero.js';
 import { DEFAULT_CURRENCY } from '../currencies';
 import { toDineroFromInteger, toDinero } from '../formatters';
 import { MarkupPricingModel, TypeGetAg } from '../pricing';
-import { Coupon, Price, PriceGetAg, PriceTier, Tax } from '../types';
+import type { Coupon, Price, PriceGetAg, PriceItem, PriceTier, Tax } from '../types';
 
 import { isPercentageCoupon, isValidCoupon, isCashbackCoupon, isFixedValueCoupon } from './guards/coupon';
 
-/**
- * @todo Inherit from Components.Schemas.PriceItem rather than duplicating the type
- */
-export type PriceItemsTotals = {
-  unit_amount?: number;
-  unit_discount_amount?: number;
-  unit_discount_amount_decimal?: string;
-  before_discount_unit_amount?: number;
-  unit_amount_net?: number;
-  unit_amount_net_decimal?: string;
-  unit_discount_amount_net?: number;
-  unit_discount_amount_net_decimal?: string;
-  unit_amount_gross?: number;
-  unit_amount_gross_decimal?: string;
+export type PriceItemsTotals = Pick<
+  PriceItem,
+  | 'unit_amount'
+  | 'unit_discount_amount'
+  | 'unit_discount_amount_decimal'
+  | 'before_discount_unit_amount'
+  | 'unit_amount_net'
+  | 'unit_amount_net_decimal'
+  | 'unit_discount_amount_net'
+  | 'unit_discount_amount_net_decimal'
+  | 'unit_amount_gross'
+  | 'unit_amount_gross_decimal'
+  | 'tax_discount_amount'
+  | 'tax_discount_amount_decimal'
+  | 'before_discount_tax_amount'
+  | 'before_discount_tax_amount_decimal'
+  | 'discount_amount'
+  | 'discount_percentage'
+  | 'before_discount_amount_total'
+  | 'cashback_amount'
+  | 'cashback_amount_decimal'
+  | 'get_ag'
+  | 'tiers_details'
+> & {
+  /* These are marked as optional on the original type */
   amount_subtotal: number;
   amount_total: number;
   amount_tax: number;
-  tax_discount_amount?: number;
-  tax_discount_amount_decimal?: string;
-  before_discount_tax_amount?: number;
-  before_discount_tax_amount_decimal?: string;
-  discount_amount?: number;
-  discount_percentage?: number;
-  before_discount_amount_total?: number;
-  cashback_amount?: number;
-  cashback_amount_decimal?: string;
+  /* price_display_in_journeys arrives as unknown in PriceItem */
   price_display_in_journeys?: Price['price_display_in_journeys'];
-  get_ag?: PriceGetAg;
-  tiers_details?: {
-    quantity: number;
-    unit_amount: number;
-    unit_amount_decimal: string;
-    unit_amount_net: number;
-    unit_amount_gross: number;
-    amount_subtotal: number;
-    amount_total: number;
-    amount_tax: number;
-  }[];
 };
 
 export const TaxRates = Object.freeze({

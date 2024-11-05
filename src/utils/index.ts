@@ -1,5 +1,6 @@
 import type { Currency, Dinero } from 'dinero.js';
 
+import { DEFAULT_CURRENCY } from '../currencies';
 import { toDineroFromInteger, toDinero } from '../formatters';
 import { MarkupPricingModel, TypeGetAg } from '../pricing';
 import { Coupon, Price, PriceGetAg, PriceTier, Tax } from '../types';
@@ -99,10 +100,10 @@ export const getQuantityForTier = ({ min, max, quantity }: { min: number; max: n
   }
 
   if (quantity >= max) {
-    return toDinero(max.toString(), 'EUR').subtract(toDinero(min.toString(), 'EUR')).toUnit();
+    return toDinero(max.toString(), DEFAULT_CURRENCY).subtract(toDinero(min.toString(), DEFAULT_CURRENCY)).toUnit();
   }
 
-  return toDinero(quantity.toString(), 'EUR').subtract(toDinero(min.toString(), 'EUR')).toUnit();
+  return toDinero(quantity.toString(), DEFAULT_CURRENCY).subtract(toDinero(min.toString(), DEFAULT_CURRENCY)).toUnit();
 };
 
 const clamp = (value: number, minimum: number, maximum: number) => Math.min(Math.max(value, minimum), maximum);

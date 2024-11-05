@@ -1,5 +1,6 @@
 import type { Currency, Dinero } from 'dinero.js';
 
+import { DEFAULT_CURRENCY } from '../currencies';
 import { toDineroFromInteger, toDinero } from '../formatters';
 import { MarkupPricingModel, TypeGetAg } from '../pricing';
 import { Coupon, Price, PriceGetAg, PriceTier, Tax } from '../types';
@@ -76,33 +77,33 @@ export const isTaxInclusivePrice = (price?: Price): boolean => {
 
 /**
  * Gets the quantity for a specific tier.
- * @param tierMinQuantity The minimum quantity for the tier.
- * @param tierMaxQuantity The maximum quantity for the tier.
- * @param normalizedQuantity The normalized quantity.
+ * @param min The minimum quantity for the tier.
+ * @param max The maximum quantity for the tier.
+ * @param quantity The normalized quantity.
  * @returns The quantity to be considered for the tier totals computation.
  */
-export const getQuantityForTier = (tierMinQuantity: number, tierMaxQuantity: number, normalizedQuantity: number) => {
-  if (typeof tierMinQuantity !== 'number' || isNaN(tierMinQuantity)) {
+export const getQuantityForTier = ({ min, max, quantity }: { min: number; max: number; quantity: number }) => {
+  if (typeof min !== 'number' || isNaN(min)) {
     throw new Error('Tier min quantity must be a number');
   }
 
-  if (typeof tierMaxQuantity !== 'number' || isNaN(tierMaxQuantity)) {
+  if (typeof max !== 'number' || isNaN(max)) {
     throw new Error('Tier max quantity must be a number');
   }
 
-  if (tierMinQuantity >= tierMaxQuantity) {
+  if (min >= max) {
     throw new Error('Tier min quantity must be less than tier max quantity');
   }
 
-  if (normalizedQuantity < tierMinQuantity) {
+  if (quantity < min) {
     throw new Error('Normalized quantity must be greater than tier min quantity');
   }
 
-  if (normalizedQuantity >= tierMaxQuantity) {
-    return toDinero(tierMaxQuantity.toString(), 'EUR').subtract(toDinero(tierMinQuantity.toString(), 'EUR')).toUnit();
+  if (quantity >= max) {
+    return toDinero(max.toString(), DEFAULT_CURRENCY).subtract(toDinero(min.toString(), DEFAULT_CURRENCY)).toUnit();
   }
 
-  return toDinero(normalizedQuantity.toString(), 'EUR').subtract(toDinero(tierMinQuantity.toString(), 'EUR')).toUnit();
+  return toDinero(quantity.toString(), DEFAULT_CURRENCY).subtract(toDinero(min.toString(), DEFAULT_CURRENCY)).toUnit();
 };
 
 const clamp = (value: number, minimum: number, maximum: number) => Math.min(Math.max(value, minimum), maximum);
@@ -369,7 +370,11 @@ export const computeTieredGraduatedPriceItemValues = (
     (totals, tier, index) => {
       const tierMinQuantity = index === 0 ? 0 : tiers[index - 1].up_to;
       const tierMaxQuantity = tier.up_to || Infinity;
-      const graduatedQuantity = getQuantityForTier(tierMinQuantity!, tierMaxQuantity, quantityToSelectTier);
+      const graduatedQuantity = getQuantityForTier({
+        min: tierMinQuantity!,
+        max: tierMaxQuantity,
+        quantity: quantityToSelectTier,
+      });
 
       const tierValues = computePriceItemValues(
         tier.unit_amount_decimal!,

@@ -258,14 +258,44 @@ export const computeCompositePrice = (
   };
 };
 
+const convertAmountsToDinero = <Item extends PriceItem | CompositePriceItem>(item: Item): Item => {
+  return {
+    ...item,
+    amount_total: toDinero(item.amount_total_decimal || '0').getAmount(),
+    amount_subtotal: toDinero(item.amount_subtotal_decimal || '0').getAmount(),
+    unit_amount_gross: toDinero(item.unit_amount_gross_decimal || '0').getAmount(),
+    unit_amount_net: toDinero(item.unit_amount_net_decimal || '0').getAmount(),
+  };
+};
+
+const getImmutablePriceItem = (
+  immutablePricingDetails: PricingDetails | undefined,
+): PriceItem | CompositePriceItem | undefined => {
+  const immutablePriceItem = immutablePricingDetails?.items?.[0];
+
+  if (!immutablePriceItem) {
+    return undefined;
+  }
+
+  if (immutablePriceItem.is_composite_price) {
+    const compositePriceItem = immutablePriceItem as CompositePriceItem;
+
+    return {
+      ...convertAmountsToDinero(compositePriceItem),
+      item_components: compositePriceItem.item_components?.map((component) => convertAmountsToDinero(component)),
+    };
+  }
+
+  return convertAmountsToDinero(immutablePriceItem);
+};
+
 /**
  * Computes all the integer amounts for the price items using the string decimal representation defined on prices unit_amount field.
  * All totals are computed with a decimal precision of DECIMAL_PRECISION.
  * After the calculations the integer amounts are scaled to a precision of 2.
  *
- * This compute function computes both line items and aggregated totals.
+ * This function computes both line items and aggregated totals.
  */
-
 export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): PricingDetails => {
   const initialPricingDetails: Omit<PricingDetails, 'items'> & {
     items: NonNullable<PricingDetails['items']>;
@@ -287,6 +317,8 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
   };
 
   const priceDetails = priceItems.reduce((details, priceItem) => {
+    const immutablePriceItem = getImmutablePriceItem(priceItem._immutable_pricing_details);
+
     if (
       /**
        * priceItem should never be nullish but since optional check was removed
@@ -296,7 +328,10 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
       isCompositePrice(priceItem)
     ) {
       const price = priceItem._price;
-      const compositePriceItemToAppend = computeCompositePrice(priceItem, price);
+      const compositePriceItemToAppend = immutablePriceItem
+        ? (immutablePriceItem as CompositePriceItem)
+        : computeCompositePrice(priceItem, price);
+
       const itemBreakdown = recomputeDetailTotalsFromCompositePrice(undefined, compositePriceItemToAppend);
       const updatedTotals = recomputeDetailTotalsFromCompositePrice(details, compositePriceItemToAppend);
 
@@ -329,15 +364,17 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
         ({ price_id }) => priceItem._price!._id === price_id,
       );
 
-      const priceItemToAppend = computePriceItem(
-        priceItem as PriceItemDto,
-        price,
-        tax,
-        priceItem.quantity!,
-        priceMapping,
-        externalFeeMapping,
-        coupons,
-      );
+      const priceItemToAppend = immutablePriceItem
+        ? (immutablePriceItem as PriceItemDto)
+        : computePriceItem(
+            priceItem as PriceItemDto,
+            price,
+            tax,
+            priceItem.quantity!,
+            priceMapping,
+            externalFeeMapping,
+            coupons,
+          );
 
       const updatedTotals = isUnitAmountApproved(
         priceItem,
@@ -852,7 +889,9 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
     cashback_amount: toDineroFromInteger(priceItem.cashback_amount).convertPrecision(precision).getAmount(),
     cashback_amount_decimal: toDineroFromInteger(priceItem.cashback_amount).toUnit().toString(),
   }),
-  amount_tax: toDineroFromInteger(priceItem.amount_tax!).convertPrecision(precision).getAmount(),
+  amount_tax: toDineroFromInteger(priceItem.amount_tax || 0)
+    .convertPrecision(precision)
+    .getAmount(),
   ...(typeof priceItem.tax_discount_amount === 'number' && {
     tax_discount_amount: toDineroFromInteger(priceItem.tax_discount_amount).convertPrecision(precision).getAmount(),
     tax_discount_amount_decimal: toDineroFromInteger(priceItem.tax_discount_amount).toUnit().toString(),
@@ -865,7 +904,9 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
   }),
   taxes: priceItem.taxes!.map((tax) => ({
     ...tax,
-    amount: toDineroFromInteger(tax.amount!).convertPrecision(precision).getAmount(),
+    amount: toDineroFromInteger(tax.amount || 0)
+      .convertPrecision(precision)
+      .getAmount(),
   })),
   ...(priceItem.tiers_details && {
     tiers_details: priceItem.tiers_details.map((tier) => {

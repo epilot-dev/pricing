@@ -13,7 +13,7 @@ export {
   toIntegerAmount,
   addSeparatorToDineroString,
 } from './formatters';
-export { DECIMAL_PRECISION, GENERIC_UNIT_DISPLAY_LABEL } from './formatters/constants';
+export { DECIMAL_PRECISION, GENERIC_UNIT_DISPLAY_LABEL, BillingPeriods, TaxRates } from './formatters/constants';
 export {
   TimeFrequencyNormalizerMatrix,
   normalizePriceMappingInput,
@@ -23,11 +23,9 @@ export {
   normalizeValueToFrequencyUnit,
 } from './normalizers';
 export {
-  BillingPeriods,
   ComputeAggregatedAndPriceTotals,
   PricingEntitiesExtractResult,
   PricingModel,
-  TaxRates,
   computeAggregatedAndPriceTotals,
   computePriceComponent,
   computePriceItemDetails,

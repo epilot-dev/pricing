@@ -2,6 +2,7 @@ import type { Currency, Dinero } from 'dinero.js';
 
 import { DEFAULT_CURRENCY } from '../currencies';
 import { toDineroFromInteger, toDinero } from '../formatters';
+import { TaxRates } from '../formatters/constants';
 import { MarkupPricingModel, TypeGetAg } from '../pricing';
 import type { Coupon, Price, PriceGetAg, PriceItem, PriceTier, Tax } from '../types';
 
@@ -38,12 +39,6 @@ export type PriceItemsTotals = Pick<
   /* price_display_in_journeys arrives as unknown in PriceItem */
   price_display_in_journeys?: Price['price_display_in_journeys'];
 };
-
-export const TaxRates = Object.freeze({
-  standard: 0.19,
-  reduced: 0.07,
-  nontaxable: 0,
-});
 
 export const getTaxValue = (tax?: Tax): number => {
   if (Array.isArray(tax)) {

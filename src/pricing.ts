@@ -454,7 +454,7 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
     typeof priceItemToAppend.before_discount_amount_total !== 'undefined'
       ? toDineroFromInteger(priceItemToAppend.before_discount_amount_total!)
       : undefined;
-  const priceTax = toDineroFromInteger(priceItemToAppend?.taxes?.[0]?.amount || 0.0);
+  const priceTax = toDineroFromInteger(priceItemToAppend.taxes?.[0]?.amount || 0);
 
   if (tax) {
     tax.amount = toDineroFromInteger(tax.amount!).add(priceTax).getAmount();
@@ -482,7 +482,7 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
   }
 
   if (!recurrence) {
-    const type = price?.type || priceItemToAppend?.type;
+    const type = price?.type || priceItemToAppend.type;
 
     recurrences.push({
       type: type === 'recurring' ? type : 'one_time',
@@ -540,7 +540,7 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
   const recurrenceTax = !tax && itemTax ? taxes?.[taxes?.length - 1] : tax;
 
   if (!recurrenceByTax) {
-    const type = price?.type || priceItemToAppend?.type;
+    const type = price?.type || priceItemToAppend.type;
 
     recurrencesByTax.push({
       type: ['one_time', 'recurring'].includes(type!) ? type : 'one_time',

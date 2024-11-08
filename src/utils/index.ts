@@ -41,15 +41,15 @@ export type PriceItemsTotals = Pick<
 };
 
 export const getTaxValue = (tax?: Tax): number => {
+  if (!tax) {
+    return TaxRates.nontaxable;
+  }
+
   if (Array.isArray(tax)) {
-    return (+tax?.[0]?.rate || 0.0) / 100;
+    return (Number(tax[0]?.rate) || 0) / 100;
   }
 
-  if (tax) {
-    return (+tax?.rate || 0.0) / 100;
-  }
-
-  return TaxRates.nontaxable;
+  return (Number(tax.rate) || 0) / 100;
 };
 
 /**
@@ -69,7 +69,7 @@ export const isTaxInclusivePrice = (price?: Price): boolean => {
  * @param quantity The normalized quantity.
  * @returns The quantity to be considered for the tier totals computation.
  */
-export const getQuantityForTier = ({ min, max, quantity }: { min: number; max: number; quantity: number }) => {
+export const getQuantityForTier = ({ min, max, quantity }: { min?: number; max: number; quantity: number }) => {
   if (typeof min !== 'number' || isNaN(min)) {
     throw new Error('Tier min quantity must be a number');
   }
@@ -96,7 +96,7 @@ export const getQuantityForTier = ({ min, max, quantity }: { min: number; max: n
 const clamp = (value: number, minimum: number, maximum: number) => Math.min(Math.max(value, minimum), maximum);
 
 export const computePriceItemValues = (
-  unitAmountDecimal: string,
+  unitAmountDecimal: string | undefined,
   currency: Currency,
   isTaxInclusive: boolean,
   unitAmountMultiplier: number,
@@ -225,24 +225,13 @@ const byPriceTiersForQuantity = (tiers: PriceTier[], quantity: number) => (_: Pr
  * @param {number} quantity - The quantity.
  * @return {PriceTier[]} - The result price tiers.
  */
-export const getPriceTiersForQuantity = (tiers: PriceTier[], quantity: number): PriceTier[] => {
-  const selectedTiers = tiers?.filter(byPriceTiersForQuantity(tiers, quantity));
+export const getPriceTiersForQuantity = (tiers: PriceTier[], quantity: number): PriceTier[] =>
+  tiers.filter(byPriceTiersForQuantity(tiers, quantity));
 
-  if (selectedTiers?.length) {
-    return selectedTiers;
-  }
-
-  return [];
-};
-
-const getPriceTierForQuantity = (tiers: PriceTier[], quantity: number): PriceTier | null | undefined => {
+const getPriceTierForQuantity = (tiers: PriceTier[], quantity: number): PriceTier | null => {
   const selectedTiers = tiers.filter(byPriceTiersForQuantity(tiers, quantity));
 
-  if (selectedTiers.length) {
-    return selectedTiers.pop();
-  }
-
-  return null;
+  return selectedTiers[selectedTiers.length - 1] ?? null;
 };
 
 export const computeTieredVolumePriceItemValues = (
@@ -257,7 +246,7 @@ export const computeTieredVolumePriceItemValues = (
   const tier = getPriceTierForQuantity(tiers, quantityToSelectTier);
 
   const tierValues = computePriceItemValues(
-    tier?.unit_amount_decimal!,
+    tier?.unit_amount_decimal,
     currency,
     isTaxInclusive,
     unitAmountMultiplier,
@@ -306,7 +295,7 @@ export const computeTieredFlatFeePriceItemValues = (
   const quantityToMultiply = isUsingPriceMappingToSelectTier ? quantity : 1;
 
   const tierValues = computePriceItemValues(
-    tier?.flat_fee_amount_decimal!,
+    tier?.flat_fee_amount_decimal,
     currency,
     isTaxInclusive,
     quantityToMultiply,
@@ -355,16 +344,16 @@ export const computeTieredGraduatedPriceItemValues = (
 
   const totals = priceTiersForQuantity.reduce(
     (totals, tier, index) => {
-      const tierMinQuantity = index === 0 ? 0 : tiers[index - 1].up_to;
+      const tierMinQuantity = index === 0 ? 0 : tiers[index - 1].up_to ?? undefined;
       const tierMaxQuantity = tier.up_to || Infinity;
       const graduatedQuantity = getQuantityForTier({
-        min: tierMinQuantity!,
+        min: tierMinQuantity,
         max: tierMaxQuantity,
         quantity: quantityToSelectTier,
       });
 
       const tierValues = computePriceItemValues(
-        tier.unit_amount_decimal!,
+        tier.unit_amount_decimal,
         currency,
         isTaxInclusive,
         graduatedQuantity,
@@ -484,7 +473,7 @@ export const computeExternalGetAGItemValues = (
             : toDinero(getAg.markup_amount_decimal).getAmount(),
         } as PriceItemsTotals);
 
-  const relevantTier = markupValues.tiers_details?.[0];
+  const relevantTier = markupValues.tiers_details?.[0]; // Changed ?. to && since we need both checks
   const unitAmountGetAgFeeNet =
     getAg.type === TypeGetAg.basePrice
       ? toDinero(externalFeeAmountDecimal)

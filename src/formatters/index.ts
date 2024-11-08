@@ -73,6 +73,28 @@ const getFormattedCurrencySubunit = (
   };
 };
 
+const parseUnknownAmount = (
+  /**
+   * amount is typed as unknown to ensure the argument passed is handled
+   * even if the caller is asserting the value type incorrectly
+   */
+  amount: unknown,
+): number => {
+  const integerAmount = Number(amount);
+
+  if (isNaN(integerAmount)) {
+    /* Kept here for backwards compatibility */
+    console.error(
+      `formatAmount: expects an integer amount, received this instead "${amount}", fallbacks to zero.`,
+      new Error(`NaN error, unable to cast ${amount} to number.`),
+    );
+
+    return 0;
+  } else {
+    return integerAmount;
+  }
+};
+
 // /**
 //  * Formats an integer amount, optionally with a currency into a formatted text string.
 //  * If specified, a custom Dinero formatter can also be applied.
@@ -82,10 +104,10 @@ const getFormattedCurrencySubunit = (
 //  */
 export const formatAmount = ({
   amount,
-  currency,
+  currency = DEFAULT_CURRENCY,
   format,
-  locale,
-  enableSubunitDisplay,
+  locale = DEFAULT_LOCALE,
+  enableSubunitDisplay = false,
 }: {
   amount: number | string;
   currency?: Currency;
@@ -93,38 +115,28 @@ export const formatAmount = ({
   locale?: string;
   enableSubunitDisplay?: boolean;
 }): string => {
-  let integerAmount = 0;
-
-  try {
-    integerAmount = +amount;
-    if (isNaN(integerAmount)) {
-      throw new Error(`NaN error, unable to cast ${amount} to number.`);
-    }
-  } catch (e) {
-    integerAmount = 0;
-    console.error(`formatAmount: expects an integer amount, received this instead "${amount}", fallbacks to zero.`, e);
-  }
+  const integerAmount = parseUnknownAmount(amount);
 
   const dAmount = dinero({
     amount: integerAmount,
-    currency: currency || DEFAULT_CURRENCY,
+    currency,
     precision: DEFAULT_INTEGER_AMOUNT_PRECISION,
   });
 
   if (enableSubunitDisplay && shouldDisplayAmountAsCents(integerAmount, currency)) {
-    const subunit = getFormattedCurrencySubunit(currency || DEFAULT_CURRENCY, locale || DEFAULT_LOCALE, integerAmount);
+    const subunit = getFormattedCurrencySubunit(currency, locale, integerAmount);
 
     return formatWithSubunit(
       dAmount
         .multiply(100)
         .convertPrecision(DEFAULT_INTEGER_AMOUNT_PRECISION)
-        .setLocale(locale || DEFAULT_LOCALE)
+        .setLocale(locale)
         .toFormat(format || DEFAULT_SUBUNIT_FORMAT),
       subunit,
     );
   }
 
-  return dAmount.setLocale(locale || DEFAULT_LOCALE).toFormat(format || DEFAULT_FORMAT);
+  return dAmount.setLocale(locale).toFormat(format || DEFAULT_FORMAT);
 };
 
 export type AmountFormatter = typeof formatAmount;
@@ -253,7 +265,7 @@ export function addSeparatorToDineroString(dineroString: string) {
 /**
  * Convert an amount decimal and currency into a dinero object.
  */
-export const toDinero = (unitAmountDecimal: string, currency: Currency = 'EUR'): Dinero => {
+export const toDinero = (unitAmountDecimal?: string, currency: Currency = DEFAULT_CURRENCY): Dinero => {
   const [amountInteger = '0', amountDecimal = '0'] = (unitAmountDecimal || '0').split('.');
   const truncatedDecimal = amountDecimal.substr(0, DECIMAL_PRECISION).padEnd(DECIMAL_PRECISION, '0');
   const unitAmountInteger = Number(`${amountInteger}${truncatedDecimal}`);

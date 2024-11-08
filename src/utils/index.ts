@@ -96,7 +96,7 @@ export const getQuantityForTier = ({ min, max, quantity }: { min?: number; max: 
 const clamp = (value: number, minimum: number, maximum: number) => Math.min(Math.max(value, minimum), maximum);
 
 export const computePriceItemValues = (
-  unitAmountDecimal: string,
+  unitAmountDecimal: string | undefined,
   currency: Currency,
   isTaxInclusive: boolean,
   unitAmountMultiplier: number,
@@ -246,7 +246,7 @@ export const computeTieredVolumePriceItemValues = (
   const tier = getPriceTierForQuantity(tiers, quantityToSelectTier);
 
   const tierValues = computePriceItemValues(
-    tier?.unit_amount_decimal!,
+    tier?.unit_amount_decimal,
     currency,
     isTaxInclusive,
     unitAmountMultiplier,
@@ -295,7 +295,7 @@ export const computeTieredFlatFeePriceItemValues = (
   const quantityToMultiply = isUsingPriceMappingToSelectTier ? quantity : 1;
 
   const tierValues = computePriceItemValues(
-    tier?.flat_fee_amount_decimal!,
+    tier?.flat_fee_amount_decimal,
     currency,
     isTaxInclusive,
     quantityToMultiply,
@@ -353,7 +353,7 @@ export const computeTieredGraduatedPriceItemValues = (
       });
 
       const tierValues = computePriceItemValues(
-        tier.unit_amount_decimal!,
+        tier.unit_amount_decimal,
         currency,
         isTaxInclusive,
         graduatedQuantity,
@@ -473,7 +473,7 @@ export const computeExternalGetAGItemValues = (
             : toDinero(getAg.markup_amount_decimal).getAmount(),
         } as PriceItemsTotals);
 
-  const relevantTier = markupValues.tiers_details?.[0];
+  const relevantTier = markupValues.tiers_details?.[0]; // Changed ?. to && since we need both checks
   const unitAmountGetAgFeeNet =
     getAg.type === TypeGetAg.basePrice
       ? toDinero(externalFeeAmountDecimal)

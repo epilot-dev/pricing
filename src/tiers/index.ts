@@ -28,13 +28,13 @@ type CumulativePriceBreakdownItem = {
  * @returns {Price} The selected tier.
  */
 export function getDisplayTierByQuantity(
-  tiers: PriceTier[],
+  tiers: PriceTier[] | undefined,
   quantity: number,
   pricingModel: PricingModel | Price['pricing_model'],
   isTaxInclusive = true,
   tax?: Tax,
 ): PriceTierEnhanced | undefined {
-  if (!tiers || !tiers.length) {
+  if (!tiers?.length) {
     return;
   }
 
@@ -98,11 +98,11 @@ export function getDisplayTiersByQuantity(
  * @returns {string} The tier description.
  */
 export function getTierDescription(
-  pricingModel: PricingModel,
+  pricingModel: PricingModel | undefined,
   tier: PriceTier | undefined,
   unit: string | undefined,
-  locale: string,
-  currency: Currency | undefined,
+  locale: string = DEFAULT_LOCALE,
+  currency: Currency = DEFAULT_CURRENCY,
   t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
   options: { showStartsAt?: boolean; enableSubunitDisplay?: boolean; showOnRequest?: boolean } = {},
   tax: { isInclusive: boolean; rate: number } | undefined = undefined,
@@ -139,9 +139,9 @@ export function getTierDescription(
       defaultValue: 'Starts at',
     });
 
-  const formatOptions = {
-    currency: currency || DEFAULT_CURRENCY,
-    locale: locale || DEFAULT_LOCALE,
+  const formatOptions: Partial<Parameters<typeof formatAmountFromString>[0]> = {
+    currency,
+    locale,
     useRealPrecision: tax ? false : true,
     enableSubunitDisplay,
   };
@@ -151,24 +151,24 @@ export function getTierDescription(
       ? tier.unit_amount_decimal
       : tax?.isInclusive
       ? addSeparatorToDineroString(
-          toDinero(tier.unit_amount_decimal!, formatOptions.currency)
+          toDinero(tier.unit_amount_decimal, formatOptions.currency)
             .divide(1 + tax.rate / 100)
             .getAmount()
             .toString(),
         )
-      : tier.unit_amount_decimal!;
+      : tier.unit_amount_decimal;
 
   const flatFeeAmountDecimal =
     !showFlatFeeAmount || tax === undefined
       ? tier.flat_fee_amount_decimal
       : tax?.isInclusive
       ? addSeparatorToDineroString(
-          toDinero(tier.flat_fee_amount_decimal!, formatOptions.currency)
+          toDinero(tier.flat_fee_amount_decimal, formatOptions.currency)
             .divide(1 + tax.rate / 100)
             .getAmount()
             .toString(),
         )
-      : tier.flat_fee_amount_decimal!;
+      : tier.flat_fee_amount_decimal;
 
   const formatedAmountString =
     showUnitAmount &&
@@ -216,14 +216,14 @@ export const computeCumulativeValue = (
   tiers: PriceTier[] | undefined,
   quantityToSelectTier: number,
   unit: string | undefined,
-  locale: string,
-  currency: Currency | undefined,
+  locale: string = DEFAULT_LOCALE,
+  currency: Currency = DEFAULT_CURRENCY,
   t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
   isTaxInclusive = true,
   options: { showStartsAt?: boolean; showOnRequest?: boolean } = {},
   tax?: Tax,
 ) => {
-  if (!tiers || !tiers.length || quantityToSelectTier < 0) {
+  if (!tiers?.length || quantityToSelectTier < 0) {
     return;
   }
 
@@ -243,9 +243,9 @@ export const computeCumulativeValue = (
       })
     : '';
 
-  const formatOptions = {
-    currency: currency || DEFAULT_CURRENCY,
-    locale: locale || DEFAULT_LOCALE,
+  const formatOptions: Partial<Parameters<typeof formatAmountFromString>[0]> = {
+    currency,
+    locale,
     useRealPrecision: true,
     enableSubunitDisplay: true,
   };

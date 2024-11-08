@@ -228,7 +228,12 @@ export const computeCumulativeValue = (
   }
 
   const priceTiersForQuantity = getDisplayTiersByQuantity(tiers, quantityToSelectTier, PricingModel.tieredGraduated);
-  const onRequestTier = priceTiersForQuantity!.find((tier) => tier.display_mode === 'on_request');
+
+  if (!priceTiersForQuantity) {
+    throw new Error("Couldn't get tiers");
+  }
+
+  const onRequestTier = priceTiersForQuantity.find((tier) => tier.display_mode === 'on_request');
   if (onRequestTier && options.showOnRequest) {
     return t('show_as_on_request', {
       ns: '',
@@ -252,7 +257,7 @@ export const computeCumulativeValue = (
 
   const breakdown: CumulativePriceBreakdownItem[] = [];
 
-  const total = priceTiersForQuantity!.reduce((total: Dinero, tier: PriceTier, index: number) => {
+  const total = priceTiersForQuantity.reduce((total: Dinero, tier: PriceTier, index: number) => {
     const tierMinQuantity = index === 0 ? 0 : tiers[index - 1].up_to ?? undefined;
     const tierMaxQuantity = tier.up_to || Infinity;
     const graduatedQuantity = getQuantityForTier({

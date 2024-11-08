@@ -1,7 +1,16 @@
 import { Currency } from 'dinero.js';
 
+type CurrencySubunit = {
+  subunit: {
+    default: string;
+    [language: string]: string;
+  };
+};
+
 export const CURRENCIES_SUBUNITS: {
-  [key in Currency]?: { subunit: { [language: string]: string } };
+  [key in Currency]?: CurrencySubunit;
+} & {
+  [key in 'EUR' | 'USD' | 'CHF']: CurrencySubunit;
 } = Object.freeze({
   EUR: {
     subunit: {
@@ -24,4 +33,4 @@ export const CURRENCIES_SUBUNITS: {
 });
 
 export const DEFAULT_CURRENCY = 'EUR';
-export const DEFAULT_SUBUNIT = CURRENCIES_SUBUNITS[DEFAULT_CURRENCY]!.subunit;
+export const DEFAULT_SUBUNIT = CURRENCIES_SUBUNITS[DEFAULT_CURRENCY].subunit;

@@ -225,24 +225,13 @@ const byPriceTiersForQuantity = (tiers: PriceTier[], quantity: number) => (_: Pr
  * @param {number} quantity - The quantity.
  * @return {PriceTier[]} - The result price tiers.
  */
-export const getPriceTiersForQuantity = (tiers: PriceTier[], quantity: number): PriceTier[] => {
-  const selectedTiers = tiers?.filter(byPriceTiersForQuantity(tiers, quantity));
+export const getPriceTiersForQuantity = (tiers: PriceTier[], quantity: number): PriceTier[] =>
+  tiers.filter(byPriceTiersForQuantity(tiers, quantity));
 
-  if (selectedTiers?.length) {
-    return selectedTiers;
-  }
-
-  return [];
-};
-
-const getPriceTierForQuantity = (tiers: PriceTier[], quantity: number): PriceTier | null | undefined => {
+const getPriceTierForQuantity = (tiers: PriceTier[], quantity: number): PriceTier | null => {
   const selectedTiers = tiers.filter(byPriceTiersForQuantity(tiers, quantity));
 
-  if (selectedTiers.length) {
-    return selectedTiers.pop();
-  }
-
-  return null;
+  return selectedTiers[selectedTiers.length - 1] ?? null;
 };
 
 export const computeTieredVolumePriceItemValues = (

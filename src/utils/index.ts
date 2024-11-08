@@ -41,15 +41,15 @@ export type PriceItemsTotals = Pick<
 };
 
 export const getTaxValue = (tax?: Tax): number => {
+  if (!tax) {
+    return TaxRates.nontaxable;
+  }
+
   if (Array.isArray(tax)) {
-    return (+tax?.[0]?.rate || 0.0) / 100;
+    return (Number(tax[0]?.rate) || 0) / 100;
   }
 
-  if (tax) {
-    return (+tax?.rate || 0.0) / 100;
-  }
-
-  return TaxRates.nontaxable;
+  return (Number(tax.rate) || 0) / 100;
 };
 
 /**

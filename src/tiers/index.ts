@@ -60,13 +60,13 @@ export function getDisplayTierByQuantity(
  * @returns {Price} The selected tiers.
  */
 export function getDisplayTiersByQuantity(
-  tiers: PriceTier[],
-  quantity: number,
-  pricingModel: PricingModel | Price['pricing_model'],
+  tiers?: PriceTier[],
+  quantity?: number,
+  pricingModel?: PricingModel | Price['pricing_model'],
   isTaxInclusive = true,
   tax?: Tax,
 ): PriceTierEnhanced[] | undefined {
-  if (!tiers || !tiers.length) {
+  if (!tiers?.length) {
     return;
   }
 
@@ -253,10 +253,10 @@ export const computeCumulativeValue = (
   const breakdown: CumulativePriceBreakdownItem[] = [];
 
   const total = priceTiersForQuantity!.reduce((total: Dinero, tier: PriceTier, index: number) => {
-    const tierMinQuantity = index === 0 ? 0 : tiers[index - 1].up_to;
+    const tierMinQuantity = index === 0 ? 0 : tiers[index - 1].up_to ?? undefined;
     const tierMaxQuantity = tier.up_to || Infinity;
     const graduatedQuantity = getQuantityForTier({
-      min: tierMinQuantity!,
+      min: tierMinQuantity,
       max: tierMaxQuantity,
       quantity: quantityToSelectTier,
     });

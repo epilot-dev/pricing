@@ -69,7 +69,7 @@ export const isTaxInclusivePrice = (price?: Price): boolean => {
  * @param quantity The normalized quantity.
  * @returns The quantity to be considered for the tier totals computation.
  */
-export const getQuantityForTier = ({ min, max, quantity }: { min: number; max: number; quantity: number }) => {
+export const getQuantityForTier = ({ min, max, quantity }: { min?: number; max: number; quantity: number }) => {
   if (typeof min !== 'number' || isNaN(min)) {
     throw new Error('Tier min quantity must be a number');
   }
@@ -355,10 +355,10 @@ export const computeTieredGraduatedPriceItemValues = (
 
   const totals = priceTiersForQuantity.reduce(
     (totals, tier, index) => {
-      const tierMinQuantity = index === 0 ? 0 : tiers[index - 1].up_to;
+      const tierMinQuantity = index === 0 ? 0 : tiers[index - 1].up_to ?? undefined;
       const tierMaxQuantity = tier.up_to || Infinity;
       const graduatedQuantity = getQuantityForTier({
-        min: tierMinQuantity!,
+        min: tierMinQuantity,
         max: tierMaxQuantity,
         quantity: quantityToSelectTier,
       });

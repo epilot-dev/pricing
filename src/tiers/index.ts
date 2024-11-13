@@ -255,7 +255,11 @@ export const computeCumulativeValue = (
   const total = priceTiersForQuantity!.reduce((total: Dinero, tier: PriceTier, index: number) => {
     const tierMinQuantity = index === 0 ? 0 : tiers[index - 1].up_to;
     const tierMaxQuantity = tier.up_to || Infinity;
-    const graduatedQuantity = getQuantityForTier(tierMinQuantity!, tierMaxQuantity, quantityToSelectTier);
+    const graduatedQuantity = getQuantityForTier({
+      min: tierMinQuantity!,
+      max: tierMaxQuantity,
+      quantity: quantityToSelectTier,
+    });
     const tierAmount = toDinero(tier.unit_amount_decimal!, formatOptions.currency).multiply(graduatedQuantity);
 
     breakdown.push({

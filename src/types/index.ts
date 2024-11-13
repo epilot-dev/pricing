@@ -1,13 +1,5 @@
 import type { Components } from '@epilot/pricing-client';
 
-// TODO: Remove this once we have a new pricing client
-type CustomPriceItemDto = Components.Schemas.PriceItemDto & {
-  _immutable_pricing_details?: PricingDetails;
-};
-type CustomCompositePriceItemDto = Components.Schemas.CompositePriceItemDto & {
-  _immutable_pricing_details?: PricingDetails;
-};
-
 export type Price = Components.Schemas.Price;
 export type PriceItem = Components.Schemas.PriceItem;
 export type PriceItemDto = Components.Schemas.PriceItemDto;
@@ -15,7 +7,7 @@ export type Product = Components.Schemas.Product;
 export type Coupon = Components.Schemas.Coupon;
 export type PricingDetails = Components.Schemas.PricingDetails;
 export type PriceItems = Components.Schemas.PriceItems;
-export type PriceItemsDto = (CustomPriceItemDto | CustomCompositePriceItemDto)[];
+export type PriceItemsDto = Components.Schemas.PriceItemsDto;
 export type Tax = Components.Schemas.Tax;
 export type TaxAmountDto = Components.Schemas.TaxAmountDto;
 export type TaxAmount = Components.Schemas.TaxAmount;

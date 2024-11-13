@@ -1,56 +1,44 @@
 import type { Currency, Dinero } from 'dinero.js';
 
+import { DEFAULT_CURRENCY } from '../currencies';
 import { toDineroFromInteger, toDinero } from '../formatters';
+import { TaxRates } from '../formatters/constants';
 import { MarkupPricingModel, TypeGetAg } from '../pricing';
-import { Coupon, Price, PriceGetAg, PriceTier, Tax } from '../types';
+import type { Coupon, Price, PriceGetAg, PriceItem, PriceTier, Tax } from '../types';
 
 import { isPercentageCoupon, isValidCoupon, isCashbackCoupon, isFixedValueCoupon } from './guards/coupon';
 
-/**
- * @todo Inherit from Components.Schemas.PriceItem rather than duplicating the type
- */
-export type PriceItemsTotals = {
-  unit_amount?: number;
-  unit_discount_amount?: number;
-  unit_discount_amount_decimal?: string;
-  before_discount_unit_amount?: number;
-  unit_amount_net?: number;
-  unit_amount_net_decimal?: string;
-  unit_discount_amount_net?: number;
-  unit_discount_amount_net_decimal?: string;
-  unit_amount_gross?: number;
-  unit_amount_gross_decimal?: string;
+export type PriceItemsTotals = Pick<
+  PriceItem,
+  | 'unit_amount'
+  | 'unit_discount_amount'
+  | 'unit_discount_amount_decimal'
+  | 'before_discount_unit_amount'
+  | 'unit_amount_net'
+  | 'unit_amount_net_decimal'
+  | 'unit_discount_amount_net'
+  | 'unit_discount_amount_net_decimal'
+  | 'unit_amount_gross'
+  | 'unit_amount_gross_decimal'
+  | 'tax_discount_amount'
+  | 'tax_discount_amount_decimal'
+  | 'before_discount_tax_amount'
+  | 'before_discount_tax_amount_decimal'
+  | 'discount_amount'
+  | 'discount_percentage'
+  | 'before_discount_amount_total'
+  | 'cashback_amount'
+  | 'cashback_amount_decimal'
+  | 'get_ag'
+  | 'tiers_details'
+> & {
+  /* These are marked as optional on the original type */
   amount_subtotal: number;
   amount_total: number;
   amount_tax: number;
-  tax_discount_amount?: number;
-  tax_discount_amount_decimal?: string;
-  before_discount_tax_amount?: number;
-  before_discount_tax_amount_decimal?: string;
-  discount_amount?: number;
-  discount_percentage?: number;
-  before_discount_amount_total?: number;
-  cashback_amount?: number;
-  cashback_amount_decimal?: string;
+  /* price_display_in_journeys arrives as unknown in PriceItem */
   price_display_in_journeys?: Price['price_display_in_journeys'];
-  get_ag?: PriceGetAg;
-  tiers_details?: {
-    quantity: number;
-    unit_amount: number;
-    unit_amount_decimal: string;
-    unit_amount_net: number;
-    unit_amount_gross: number;
-    amount_subtotal: number;
-    amount_total: number;
-    amount_tax: number;
-  }[];
 };
-
-export const TaxRates = Object.freeze({
-  standard: 0.19,
-  reduced: 0.07,
-  nontaxable: 0,
-});
 
 export const getTaxValue = (tax?: Tax): number => {
   if (Array.isArray(tax)) {
@@ -76,33 +64,33 @@ export const isTaxInclusivePrice = (price?: Price): boolean => {
 
 /**
  * Gets the quantity for a specific tier.
- * @param tierMinQuantity The minimum quantity for the tier.
- * @param tierMaxQuantity The maximum quantity for the tier.
- * @param normalizedQuantity The normalized quantity.
+ * @param min The minimum quantity for the tier.
+ * @param max The maximum quantity for the tier.
+ * @param quantity The normalized quantity.
  * @returns The quantity to be considered for the tier totals computation.
  */
-export const getQuantityForTier = (tierMinQuantity: number, tierMaxQuantity: number, normalizedQuantity: number) => {
-  if (typeof tierMinQuantity !== 'number' && isNaN(tierMinQuantity)) {
+export const getQuantityForTier = ({ min, max, quantity }: { min: number; max: number; quantity: number }) => {
+  if (typeof min !== 'number' || isNaN(min)) {
     throw new Error('Tier min quantity must be a number');
   }
 
-  if (typeof tierMaxQuantity !== 'number' && isNaN(tierMaxQuantity)) {
+  if (typeof max !== 'number' || isNaN(max)) {
     throw new Error('Tier max quantity must be a number');
   }
 
-  if (tierMinQuantity >= tierMaxQuantity) {
+  if (min >= max) {
     throw new Error('Tier min quantity must be less than tier max quantity');
   }
 
-  if (normalizedQuantity < tierMinQuantity) {
+  if (quantity < min) {
     throw new Error('Normalized quantity must be greater than tier min quantity');
   }
 
-  if (normalizedQuantity >= tierMaxQuantity) {
-    return toDinero(tierMaxQuantity.toString(), 'EUR').subtract(toDinero(tierMinQuantity.toString(), 'EUR')).toUnit();
+  if (quantity >= max) {
+    return toDinero(max.toString(), DEFAULT_CURRENCY).subtract(toDinero(min.toString(), DEFAULT_CURRENCY)).toUnit();
   }
 
-  return toDinero(normalizedQuantity.toString(), 'EUR').subtract(toDinero(tierMinQuantity.toString(), 'EUR')).toUnit();
+  return toDinero(quantity.toString(), DEFAULT_CURRENCY).subtract(toDinero(min.toString(), DEFAULT_CURRENCY)).toUnit();
 };
 
 const clamp = (value: number, minimum: number, maximum: number) => Math.min(Math.max(value, minimum), maximum);
@@ -172,7 +160,9 @@ export const computePriceItemValues = (
 
   const taxDiscountAmount =
     unitDiscountAmountNet && unitDiscountAmount
-      ? unitDiscountAmount.subtract(unitDiscountAmountNet).multiply(unitAmountMultiplier)
+      ? isTaxInclusive
+        ? unitDiscountAmount.subtract(unitDiscountAmountNet).multiply(unitAmountMultiplier)
+        : unitDiscountAmountNet.multiply(taxRate).multiply(unitAmountMultiplier)
       : undefined;
   const taxAmount = unitTaxAmount.multiply(unitAmountMultiplier);
   const beforeDiscountTaxAmount = beforeDiscountUnitTaxAmount?.multiply(unitAmountMultiplier);
@@ -367,7 +357,11 @@ export const computeTieredGraduatedPriceItemValues = (
     (totals, tier, index) => {
       const tierMinQuantity = index === 0 ? 0 : tiers[index - 1].up_to;
       const tierMaxQuantity = tier.up_to || Infinity;
-      const graduatedQuantity = getQuantityForTier(tierMinQuantity!, tierMaxQuantity, quantityToSelectTier);
+      const graduatedQuantity = getQuantityForTier({
+        min: tierMinQuantity!,
+        max: tierMaxQuantity,
+        quantity: quantityToSelectTier,
+      });
 
       const tierValues = computePriceItemValues(
         tier.unit_amount_decimal!,

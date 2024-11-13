@@ -32,14 +32,6 @@ import {
   PriceItemsTotals,
 } from './utils';
 
-export const BillingPeriods = new Set(['weekly', 'monthly', 'every_quarter', 'every_6_months', 'yearly'] as const);
-
-export const TaxRates = Object.freeze({
-  standard: 0.19,
-  reduced: 0.07,
-  nontaxable: 0,
-});
-
 export enum PricingModel {
   perUnit = 'per_unit',
   tieredGraduated = 'tiered_graduated',

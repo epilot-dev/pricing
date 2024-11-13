@@ -910,12 +910,13 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
       .getAmount(),
     before_discount_tax_amount_decimal: toDineroFromInteger(priceItem.before_discount_tax_amount).toUnit().toString(),
   }),
-  taxes: priceItem.taxes!.map((tax) => ({
-    ...tax,
-    amount: toDineroFromInteger(tax.amount || 0)
-      .convertPrecision(precision)
-      .getAmount(),
-  })),
+  taxes:
+    priceItem.taxes?.map((tax) => ({
+      ...tax,
+      amount: toDineroFromInteger(tax.amount || 0)
+        .convertPrecision(precision)
+        .getAmount(),
+    })) || [],
   ...(priceItem.tiers_details && {
     tiers_details: priceItem.tiers_details.map((tier) => {
       return {
@@ -963,17 +964,20 @@ const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem,
     }),
     total_details: {
       ...details.total_details,
-      amount_tax: toDineroFromInteger(details.total_details?.amount_tax!).convertPrecision(precision).getAmount(),
+      amount_tax: toDineroFromInteger(details.total_details?.amount_tax || 0)
+        .convertPrecision(precision)
+        .getAmount(),
       breakdown: {
         ...details.total_details?.breakdown,
-        taxes: details.total_details?.breakdown?.taxes!.map((tax) => ({
-          ...tax,
-          amount: toDineroFromInteger(tax.amount!).convertPrecision(precision).getAmount(),
-        })),
+        taxes:
+          details.total_details?.breakdown?.taxes?.map((tax) => ({
+            ...tax,
+            amount: toDineroFromInteger(tax.amount!).convertPrecision(precision).getAmount(),
+          })) || [],
         recurrences: details.total_details?.breakdown?.recurrences!.map((recurrence) => {
           return {
             ...recurrence,
-            unit_amount_gross: toDineroFromInteger(recurrence.unit_amount_gross!)
+            unit_amount_gross: toDineroFromInteger(recurrence.unit_amount_gross || 0)
               .convertPrecision(precision)
               .getAmount(),
             unit_amount_net: Number.isInteger(recurrence.unit_amount_net)
@@ -981,7 +985,9 @@ const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem,
               : undefined,
             amount_subtotal: toDineroFromInteger(recurrence.amount_subtotal).convertPrecision(precision).getAmount(),
             amount_total: toDineroFromInteger(recurrence.amount_total).convertPrecision(precision).getAmount(),
-            amount_tax: toDineroFromInteger(recurrence.amount_tax!).convertPrecision(precision).getAmount(),
+            amount_tax: toDineroFromInteger(recurrence.amount_tax || 0)
+              .convertPrecision(precision)
+              .getAmount(),
             ...(Number.isInteger(recurrence.discount_amount) && {
               discount_amount: toDineroFromInteger(recurrence.discount_amount!).convertPrecision(precision).getAmount(),
             }),
@@ -992,18 +998,19 @@ const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem,
             }),
           };
         }),
-        recurrencesByTax: details.total_details?.breakdown?.recurrencesByTax!.map((recurrence) => {
-          return {
-            ...recurrence,
-            amount_total: toDineroFromInteger(recurrence.amount_total).convertPrecision(precision).getAmount(),
-            amount_subtotal: toDineroFromInteger(recurrence.amount_subtotal).convertPrecision(precision).getAmount(),
-            amount_tax: toDineroFromInteger(recurrence.amount_tax!).convertPrecision(precision).getAmount(),
-            tax: {
-              ...recurrence.tax,
-              amount: toDineroFromInteger(recurrence.tax?.amount!).convertPrecision(precision).getAmount(),
-            },
-          };
-        }),
+        recurrencesByTax:
+          details.total_details?.breakdown?.recurrencesByTax?.map((recurrence) => {
+            return {
+              ...recurrence,
+              amount_total: toDineroFromInteger(recurrence.amount_total).convertPrecision(precision).getAmount(),
+              amount_subtotal: toDineroFromInteger(recurrence.amount_subtotal).convertPrecision(precision).getAmount(),
+              amount_tax: toDineroFromInteger(recurrence.amount_tax!).convertPrecision(precision).getAmount(),
+              tax: {
+                ...recurrence.tax,
+                amount: toDineroFromInteger(recurrence.tax?.amount!).convertPrecision(precision).getAmount(),
+              },
+            };
+          }) || [],
       },
     },
   };

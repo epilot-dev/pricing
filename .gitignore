@@ -7,3 +7,5 @@ coverage
 .eslintcache
 .vscode
 .idea
+.yalc
+yalc.lock

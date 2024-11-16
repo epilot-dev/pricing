@@ -26,6 +26,7 @@ export const fixedDiscountCoupon: Coupon = {
   fixed_value_currency: 'EUR',
 };
 
+
 export const fixedCashbackCoupon: Coupon = {
   _id: 'coupon#3',
   _schema: 'coupon',
@@ -35,6 +36,7 @@ export const fixedCashbackCoupon: Coupon = {
   _title: 'Summer Cashback',
   name: 'Summer Cashback',
   type: 'fixed',
+  cashback_period: 0,
   category: 'cashback',
   fixed_value: 1000,
   fixed_value_decimal: '10.00',

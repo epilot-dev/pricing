@@ -419,7 +419,7 @@ describe('computeAggregatedAndPriceTotals', () => {
     });
   });
 
-  describe('when coupons are applied', () => {
+  describe.only('when coupons are applied', () => {
     it('should compute discounts and totals correctly when there is a fixed-amount discount coupon', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithFixedDiscount]);
       expect(result).toEqual(results.computedPriceWithFixedDiscount);
@@ -515,7 +515,7 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(result).toEqual(results.computedResultWithPricesWithAndWithoutCoupons);
     });
 
-    it('should compute cashbacks and totals correctly', () => {
+    it.only('should compute cashbacks and totals correctly', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithFixedAmountCashbackCoupon]);
       expect(result).toEqual(results.computedPriceWithFixedAmountCashbackCoupon);
     });

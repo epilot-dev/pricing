@@ -440,6 +440,8 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
   const subtotal = toDineroFromInteger(details.amount_subtotal!);
   const totalTax = toDineroFromInteger(details?.total_details?.amount_tax!);
 
+  const cashbackTotalsMap = details?.cashback_totals || {};
+
   const priceUnitAmountGross = toDineroFromInteger(priceItemToAppend.unit_amount_gross!);
   const priceUnitAmountNet = Number.isInteger(priceItemToAppend.unit_amount_net)
     ? toDineroFromInteger(priceItemToAppend.unit_amount_net!)
@@ -449,6 +451,10 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
   const priceDiscountAmount =
     typeof priceItemToAppend.discount_amount !== 'undefined'
       ? toDineroFromInteger(priceItemToAppend.discount_amount!)
+      : undefined;
+  const priceCashBackAmount =
+    typeof priceItemToAppend.cashback_amount !== 'undefined'
+      ? toDineroFromInteger(priceItemToAppend.cashback_amount!)
       : undefined;
   const priceBeforeDiscountAmountTotal =
     typeof priceItemToAppend.before_discount_amount_total !== 'undefined'
@@ -480,6 +486,8 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
       amount: priceTax.getAmount(),
     });
   }
+
+  console.log('AQUI', priceItemToAppend);
 
   if (!recurrence) {
     const type = price?.type || priceItemToAppend.type;
@@ -524,6 +532,7 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
     recurrence.amount_subtotal_decimal = subTotalAmount.add(priceSubtotal).toUnit().toString();
     recurrence.amount_total_decimal = totalAmount.add(priceTotal).toUnit().toString();
     recurrence.amount_tax = taxAmount.add(priceTax).getAmount();
+
     if (priceBeforeDiscountAmountTotal) {
       const recurrenceBeforeDiscountAmountTotal =
         beforeDiscountAmountTotal?.add(priceBeforeDiscountAmountTotal) ?? priceBeforeDiscountAmountTotal;
@@ -559,10 +568,21 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
     recurrenceByTax.amount_tax = taxAmount.add(priceTax).getAmount();
   }
 
+  if (priceCashBackAmount) {
+    // @ts-ignore
+    const cashbackCoupon = priceItemToAppend?._coupons?.find((coupon) => coupon.category === 'cashback');
+    const match = cashbackTotalsMap[cashbackCoupon.cashback_period];
+    // @ts-ignore
+    cashbackTotalsMap[cashbackCoupon.cashback_period] = match
+      ? { ...match, amount_total: match.amount.add(priceCashBackAmount).getAmount() }
+      : { amount_total: priceCashBackAmount.getAmount() };
+  }
+
   return {
     amount_subtotal: subtotal.add(priceSubtotal).getAmount(),
     amount_total: total.add(priceTotal).getAmount(),
     amount_tax: totalTax.add(priceTax).getAmount(),
+    cashback_totals: cashbackTotalsMap,
     total_details: {
       amount_tax: totalTax.add(priceTax).getAmount(),
       breakdown: {

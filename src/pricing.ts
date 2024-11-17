@@ -366,22 +366,14 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
 
       const priceItemToAppend = immutablePriceItem
         ? (immutablePriceItem as PriceItemDto)
-        : computePriceItem(
-            priceItem as PriceItemDto,
-            price,
-            tax,
-            priceItem.quantity!,
-            priceMapping,
-            externalFeeMapping,
-            coupons,
-          );
+        : computePriceItem(priceItem, price, tax, priceItem.quantity!, priceMapping, externalFeeMapping, coupons);
 
       const updatedTotals = isUnitAmountApproved(
         priceItem,
         priceItemToAppend?._price?.price_display_in_journeys ?? price?.price_display_in_journeys,
         undefined,
       )
-        ? recomputeDetailTotals(details, price!, priceItemToAppend)
+        ? recomputeDetailTotals(details, price, priceItemToAppend)
         : {
             amount_subtotal: details.amount_subtotal,
             amount_total: details.amount_total,
@@ -414,7 +406,11 @@ export const computePriceItemDetails = (priceItem: PriceItemDto | CompositePrice
 /**
  * Computes all the pricing total amounts to integers with a decimal precision of DECIMAL_PRECISION.
  */
-const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemToAppend: PriceItem): PricingDetails => {
+const recomputeDetailTotals = (
+  details: PricingDetails,
+  price: Price | undefined,
+  priceItemToAppend: PriceItem,
+): PricingDetails => {
   const taxes = details.total_details?.breakdown?.taxes || [];
   const firstTax = priceItemToAppend.taxes?.[0];
   const itemTax = firstTax?.tax ?? ({ rate: Number(firstTax?.rateValue) } as Partial<Tax>);

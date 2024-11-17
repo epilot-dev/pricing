@@ -440,7 +440,7 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
   const subtotal = toDineroFromInteger(details.amount_subtotal!);
   const totalTax = toDineroFromInteger(details?.total_details?.amount_tax!);
 
-  const cashbackTotalsMap = details?.cashback_totals || {};
+  const cashbackTotals = details.total_details?.breakdown?.cashbacks || [];
 
   const priceUnitAmountGross = toDineroFromInteger(priceItemToAppend.unit_amount_gross!);
   const priceUnitAmountNet = Number.isInteger(priceItemToAppend.unit_amount_net)
@@ -486,8 +486,6 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
       amount: priceTax.getAmount(),
     });
   }
-
-  console.log('AQUI', priceItemToAppend);
 
   if (!recurrence) {
     const type = price?.type || priceItemToAppend.type;
@@ -568,27 +566,33 @@ const recomputeDetailTotals = (details: PricingDetails, price: Price, priceItemT
     recurrenceByTax.amount_tax = taxAmount.add(priceTax).getAmount();
   }
 
+  // Cashback totals
   if (priceCashBackAmount) {
-    // @ts-ignore
-    const cashbackCoupon = priceItemToAppend?._coupons?.find((coupon) => coupon.category === 'cashback');
-    const match = cashbackTotalsMap[cashbackCoupon.cashback_period];
-    // @ts-ignore
-    cashbackTotalsMap[cashbackCoupon.cashback_period] = match
-      ? { ...match, amount_total: match.amount.add(priceCashBackAmount).getAmount() }
-      : { amount_total: priceCashBackAmount.getAmount() };
+    const cashbackPeriod = priceItemToAppend?.cashback_period;
+    const cashbackMatchIndex = cashbackTotals.findIndex((cashback) => cashback.cashback_period === cashbackPeriod);
+
+    if (cashbackMatchIndex !== -1) {
+      const cashbackAmountTotal = toDineroFromInteger(cashbackTotals[cashbackMatchIndex].amount_total!);
+      cashbackTotals[cashbackMatchIndex].amount_total = cashbackAmountTotal.add(priceCashBackAmount).getAmount();
+    } else {
+      cashbackTotals.push({
+        cashback_period: cashbackPeriod,
+        amount_total: priceCashBackAmount.getAmount(),
+      });
+    }
   }
 
   return {
     amount_subtotal: subtotal.add(priceSubtotal).getAmount(),
     amount_total: total.add(priceTotal).getAmount(),
     amount_tax: totalTax.add(priceTax).getAmount(),
-    cashback_totals: cashbackTotalsMap,
     total_details: {
       amount_tax: totalTax.add(priceTax).getAmount(),
       breakdown: {
         taxes,
         recurrences,
         recurrencesByTax,
+        cashbacks: cashbackTotals,
       },
     },
   };

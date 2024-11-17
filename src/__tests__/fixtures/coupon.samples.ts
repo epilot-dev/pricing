@@ -36,7 +36,7 @@ export const fixedCashbackCoupon: Coupon = {
   _title: 'Summer Cashback',
   name: 'Summer Cashback',
   type: 'fixed',
-  cashback_period: 0,
+  cashback_period: "0",
   category: 'cashback',
   fixed_value: 1000,
   fixed_value_decimal: '10.00',

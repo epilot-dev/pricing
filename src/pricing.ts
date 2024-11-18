@@ -96,7 +96,12 @@ export const computePriceComponent = (
   const safeParentQuantity = isNaN(priceItem.quantity!) ? 1 : priceItem.quantity!;
   const quantity = toDinero(String(safeQuantity)).multiply(safeParentQuantity).toUnit();
 
-  return computePriceItem(priceItemComponent, tax, quantity, priceMapping, externalFeeMapping);
+  return computePriceItem(priceItemComponent, {
+    tax: tax,
+    quantity,
+    priceMapping,
+    externalFeeMapping,
+  });
 };
 
 const isValidPrice = (priceComponent: Price): boolean => {
@@ -357,7 +362,12 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
 
       const priceItemToAppend = immutablePriceItem
         ? (immutablePriceItem as PriceItemDto)
-        : computePriceItem(priceItem, tax, priceItem.quantity!, priceMapping, externalFeeMapping);
+        : computePriceItem(priceItem, {
+            tax: tax,
+            quantity: priceItem.quantity!,
+            priceMapping: priceMapping,
+            externalFeeMapping: externalFeeMapping,
+          });
 
       const updatedTotals = isUnitAmountApproved(
         priceItem,
@@ -654,10 +664,17 @@ export const mapToProductSnapshot = (product?: Product): Product | undefined =>
  */
 export const computePriceItem = (
   priceItem: PriceItemDto,
-  applicableTax: Tax | undefined,
-  quantity: number,
-  priceMapping?: PriceInputMapping,
-  externalFeeMapping?: ExternalFeeMapping,
+  {
+    tax: applicableTax,
+    quantity,
+    priceMapping,
+    externalFeeMapping,
+  }: {
+    tax?: Tax;
+    quantity: number;
+    priceMapping?: PriceInputMapping;
+    externalFeeMapping?: ExternalFeeMapping;
+  },
 ): PriceItem => {
   const price = priceItem._price;
   const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase() as Currency;

@@ -4,7 +4,7 @@ import { DEFAULT_CURRENCY } from '../currencies';
 import { toDineroFromInteger, toDinero } from '../formatters';
 import { TaxRates } from '../formatters/constants';
 import { MarkupPricingModel, TypeGetAg } from '../pricing';
-import type { Coupon, Price, PriceGetAg, PriceItem, PriceTier, Tax } from '../types';
+import type { Price, PriceGetAg, PriceItem, PriceItemDto, PriceTier, Tax } from '../types';
 
 import { isPercentageCoupon, isValidCoupon, isCashbackCoupon, isFixedValueCoupon } from './guards/coupon';
 
@@ -96,13 +96,22 @@ export const getQuantityForTier = ({ min, max, quantity }: { min?: number; max: 
 const clamp = (value: number, minimum: number, maximum: number) => Math.min(Math.max(value, minimum), maximum);
 
 export const computePriceItemValues = (
-  unitAmountDecimal: string | undefined,
-  currency: Currency,
-  isTaxInclusive: boolean,
-  unitAmountMultiplier: number,
-  tax?: Tax,
-  coupons: ReadonlyArray<Coupon> = [],
+  priceItem: PriceItemDto,
+  {
+    unitAmountDecimal,
+    currency,
+    isTaxInclusive,
+    unitAmountMultiplier,
+    tax,
+  }: {
+    unitAmountDecimal?: string;
+    currency: Currency;
+    isTaxInclusive: boolean;
+    unitAmountMultiplier: number;
+    tax?: Tax;
+  },
 ): PriceItemsTotals => {
+  const coupons = priceItem?._coupons ?? [];
   const [coupon] = coupons.filter(isValidCoupon);
 
   let unitAmount = toDinero(unitAmountDecimal, currency);
@@ -235,6 +244,7 @@ const getPriceTierForQuantity = (tiers: PriceTier[], quantity: number): PriceTie
 };
 
 export const computeTieredVolumePriceItemValues = (
+  priceItem: PriceItemDto,
   tiers: PriceTier[] = [],
   currency: Currency,
   isTaxInclusive: boolean,
@@ -245,13 +255,13 @@ export const computeTieredVolumePriceItemValues = (
 ): PriceItemsTotals => {
   const tier = getPriceTierForQuantity(tiers, quantityToSelectTier);
 
-  const tierValues = computePriceItemValues(
-    tier?.unit_amount_decimal,
+  const tierValues = computePriceItemValues(priceItem, {
+    unitAmountDecimal: tier?.unit_amount_decimal,
     currency,
     isTaxInclusive,
     unitAmountMultiplier,
     tax,
-  );
+  });
 
   const displayMode = tier?.display_mode === 'on_request' ? 'show_as_on_request' : unchangedPriceDisplayInJourneys;
 
@@ -278,6 +288,7 @@ export const computeTieredVolumePriceItemValues = (
 };
 
 export const computeTieredFlatFeePriceItemValues = (
+  priceItem: PriceItemDto,
   tiers: PriceTier[] = [],
   currency: Currency,
   isTaxInclusive: boolean,
@@ -294,13 +305,13 @@ export const computeTieredFlatFeePriceItemValues = (
    */
   const quantityToMultiply = isUsingPriceMappingToSelectTier ? quantity : 1;
 
-  const tierValues = computePriceItemValues(
-    tier?.flat_fee_amount_decimal,
+  const tierValues = computePriceItemValues(priceItem, {
+    unitAmountDecimal: tier?.flat_fee_amount_decimal,
     currency,
     isTaxInclusive,
-    quantityToMultiply,
+    unitAmountMultiplier: quantityToMultiply,
     tax,
-  );
+  });
 
   const displayMode: Price['price_display_in_journeys'] =
     tier?.display_mode === 'on_request' ? 'show_as_on_request' : unchangedPriceDisplayInJourneys;
@@ -331,6 +342,7 @@ export const computeTieredFlatFeePriceItemValues = (
 };
 
 export const computeTieredGraduatedPriceItemValues = (
+  priceItem: PriceItemDto,
   tiers: PriceTier[] = [],
   currency: Currency,
   isTaxInclusive: boolean,
@@ -352,13 +364,13 @@ export const computeTieredGraduatedPriceItemValues = (
         quantity: quantityToSelectTier,
       });
 
-      const tierValues = computePriceItemValues(
-        tier.unit_amount_decimal,
+      const tierValues = computePriceItemValues(priceItem, {
+        unitAmountDecimal: tier.unit_amount_decimal,
         currency,
         isTaxInclusive,
-        graduatedQuantity,
+        unitAmountMultiplier: graduatedQuantity,
         tax,
-      );
+      });
 
       const displayMode: Price['price_display_in_journeys'] =
         tier?.display_mode === 'on_request' ? 'show_as_on_request' : unchangedPriceDisplayInJourneys;
@@ -417,6 +429,7 @@ export const computeTieredGraduatedPriceItemValues = (
 };
 
 export const computeExternalGetAGItemValues = (
+  priceItem: PriceItemDto,
   getAg: PriceGetAg,
   currency: Currency,
   isTaxInclusive: boolean,
@@ -446,6 +459,7 @@ export const computeExternalGetAGItemValues = (
   const markupValues =
     getAg.markup_pricing_model === MarkupPricingModel.tieredVolume && getAg.markup_tiers
       ? computeTieredVolumePriceItemValues(
+          priceItem,
           getAg.markup_tiers,
           currency,
           isTaxInclusive,
@@ -456,6 +470,7 @@ export const computeExternalGetAGItemValues = (
         )
       : getAg.markup_pricing_model === MarkupPricingModel.tieredFlatFee && getAg.markup_tiers
       ? computeTieredFlatFeePriceItemValues(
+          priceItem,
           getAg.markup_tiers,
           currency,
           isTaxInclusive,

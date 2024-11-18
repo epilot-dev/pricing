@@ -680,54 +680,50 @@ export const computePriceItem = (
 
   switch (price?.pricing_model) {
     case PricingModel.tieredVolume:
-      itemValues = computeTieredVolumePriceItemValues(
-        priceItem,
-        price.tiers,
+      itemValues = computeTieredVolumePriceItemValues(priceItem, {
+        tiers: price.tiers,
         currency,
         isTaxInclusive,
         quantityToSelectTier,
-        priceTax,
+        tax: priceTax,
         unitAmountMultiplier,
-        priceItem._price?.unchanged_price_display_in_journeys,
-      );
+        unchangedPriceDisplayInJourneys: priceItem._price?.unchanged_price_display_in_journeys,
+      });
       break;
     case PricingModel.tieredFlatFee:
-      itemValues = computeTieredFlatFeePriceItemValues(
-        priceItem,
-        price.tiers,
+      itemValues = computeTieredFlatFeePriceItemValues(priceItem, {
+        tiers: price.tiers,
         currency,
         isTaxInclusive,
         quantityToSelectTier,
-        priceTax,
-        safeQuantity,
-        isUsingPriceMappingToSelectTier,
-        priceItem._price?.unchanged_price_display_in_journeys,
-      );
+        tax: priceTax,
+        quantity: safeQuantity,
+        isUsingPriceMappingToSelectTier: isUsingPriceMappingToSelectTier,
+        unchangedPriceDisplayInJourneys: priceItem._price?.unchanged_price_display_in_journeys,
+      });
       break;
     case PricingModel.tieredGraduated:
-      itemValues = computeTieredGraduatedPriceItemValues(
-        priceItem,
-        price.tiers,
+      itemValues = computeTieredGraduatedPriceItemValues(priceItem, {
+        tiers: price.tiers,
         currency,
         isTaxInclusive,
         quantityToSelectTier,
-        priceTax,
-        safeQuantity,
-        isUsingPriceMappingToSelectTier,
-        priceItem._price?.unchanged_price_display_in_journeys,
-      );
+        tax: priceTax,
+        quantity: safeQuantity,
+        isUsingPriceMappingToSelectTier: isUsingPriceMappingToSelectTier,
+        unchangedPriceDisplayInJourneys: priceItem._price?.unchanged_price_display_in_journeys,
+      });
       break;
     case PricingModel.externalGetAG:
-      itemValues = computeExternalGetAGItemValues(
-        priceItem,
-        price?.get_ag!,
+      itemValues = computeExternalGetAGItemValues(priceItem, {
+        getAg: price?.get_ag!,
         currency,
         isTaxInclusive,
         unitAmountMultiplier,
-        quantityToSelectTier,
+        userInput: quantityToSelectTier,
         externalFeeAmountDecimal,
-        priceTax,
-      );
+        tax: priceTax,
+      });
       break;
     default:
       itemValues = computePriceItemValues(priceItem, {

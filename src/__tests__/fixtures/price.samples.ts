@@ -3081,3 +3081,21 @@ export const priceItemWithPercentageCashbackCoupon = {
   ...baseForPriceItemWithDiscount,
   _coupons: [percentageCashbackCoupon],
 };
+
+export const recurringPriceItemWithFixedAmountCashbackCoupon = {
+  ...baseForPriceItemWithDiscount,
+  _price: {
+    ...baseForPriceItemWithDiscount._price,
+    type: 'recurring',
+    billing_period: 'monthly',
+    billing_duration_amount: 1,
+    billing_duration_unit: 'years',
+    notice_time_amount: 1,
+    notice_time_unit: 'months',
+    termination_time_amount: 2,
+    termination_time_unit: 'weeks',
+    renewal_duration_amount: 1,
+    renewal_duration_unit: 'years',
+  },
+  _coupons: [fixedCashbackCoupon],
+};

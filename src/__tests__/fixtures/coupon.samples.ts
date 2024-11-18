@@ -57,3 +57,8 @@ export const percentageCashbackCoupon: Coupon = {
   percentage_value: '10',
   cashback_period: '12',
 };
+
+export const immediateFixedCashbackCoupon: Coupon = {
+  ...fixedCashbackCoupon,
+  cashback_period: '0',
+};

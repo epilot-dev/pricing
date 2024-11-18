@@ -515,14 +515,19 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(result).toEqual(results.computedResultWithPricesWithAndWithoutCoupons);
     });
 
-    it('should compute cashbacks and totals correctly', () => {
+    it('should compute fixed amount cashbacks and totals correctly', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithFixedAmountCashbackCoupon]);
       expect(result).toEqual(results.computedPriceWithFixedAmountCashbackCoupon);
     });
 
-    it('should compute cashbacks and totals correctly', () => {
+    it('should compute percentage amount cashbacks and totals correctly', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageCashbackCoupon]);
       expect(result).toEqual(results.computedPriceWithPercentageCashbackCoupon);
+    });
+
+    it('should compute fixed amount cashbacks and totals correctly for recurring price', () => {
+      const result = computeAggregatedAndPriceTotals([samples.recurringPriceItemWithFixedAmountCashbackCoupon]);
+      expect(result).toEqual(results.computedRecurringPriceWithFixedAmountCashbackCoupon);
     });
   });
 });

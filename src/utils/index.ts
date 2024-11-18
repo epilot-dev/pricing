@@ -3,8 +3,9 @@ import type { Currency, Dinero } from 'dinero.js';
 import { DEFAULT_CURRENCY } from '../currencies';
 import { toDineroFromInteger, toDinero } from '../formatters';
 import { TaxRates } from '../formatters/constants';
+import { normalizeTimeFrequencyFromDineroInputValue } from '../normalizers';
 import { MarkupPricingModel, TypeGetAg } from '../pricing';
-import type { Coupon, Price, PriceGetAg, PriceItem, PriceTier, Tax } from '../types';
+import type { BillingPeriod, Coupon, Price, PriceGetAg, PriceItem, PriceTier, Tax } from '../types';
 
 import { isPercentageCoupon, isValidCoupon, isCashbackCoupon, isFixedValueCoupon } from './guards/coupon';
 
@@ -29,6 +30,8 @@ export type PriceItemsTotals = Pick<
   | 'before_discount_amount_total'
   | 'cashback_amount'
   | 'cashback_amount_decimal'
+  | 'after_cashback_amount_total'
+  | 'after_cashback_amount_total_decimal'
   | 'get_ag'
   | 'tiers_details'
 > & {
@@ -102,6 +105,7 @@ export const computePriceItemValues = (
   unitAmountMultiplier: number,
   tax?: Tax,
   coupons: ReadonlyArray<Coupon> = [],
+  priceItem?: PriceItem,
 ): PriceItemsTotals => {
   const [coupon] = coupons.filter(isValidCoupon);
 
@@ -112,6 +116,7 @@ export const computePriceItemValues = (
   let unitDiscountAmount: Dinero | undefined;
   let unitDiscountAmountNet: Dinero | undefined;
   let cashbackAmount: Dinero | undefined;
+  let afterCashbackAmountTotal: Dinero | undefined;
 
   if (coupon) {
     if (isCashbackCoupon(coupon)) {
@@ -121,6 +126,20 @@ export const computePriceItemValues = (
         const cashbackPercentage = clamp(Number(coupon.percentage_value), 0, 100);
         cashbackAmount = unitAmount.multiply(cashbackPercentage).divide(100);
       }
+
+      /**
+       * The cashback amount must take into account the price recurrence
+       * For 1 time prices we just subtract the cashback amount from the unit amount
+       * For recurring prices we divide the cashback amount by the number of periods in 1 year, and then subtract it
+       * from the unit amount
+       */
+      const normalizedCashbackAmount = normalizeTimeFrequencyFromDineroInputValue(
+        cashbackAmount,
+        'yearly',
+        priceItem?._price?.billing_period as BillingPeriod,
+      );
+
+      afterCashbackAmountTotal = unitAmount.subtract(normalizedCashbackAmount);
     } else {
       unitAmountBeforeDiscount = unitAmount;
       if (isPercentageCoupon(coupon)) {
@@ -200,6 +219,8 @@ export const computePriceItemValues = (
     ...(cashbackAmount && {
       cashback_amount: cashbackAmount.getAmount(),
       cashback_amount_decimal: cashbackAmount.toUnit().toString(),
+      after_cashback_amount_total: afterCashbackAmountTotal?.getAmount(),
+      after_cashback_amount_total_decimal: afterCashbackAmountTotal?.toUnit().toString(),
     }),
   };
 };

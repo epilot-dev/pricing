@@ -663,11 +663,17 @@ export const mapToProductSnapshot = (product?: Product): Product | undefined =>
  */
 export const computePriceItem = (
   priceItem: PriceItemDto,
+  /**
+   * @todo Remove this redundant parameter as price can be accessed from priceItem._price
+   */
   price: Price | undefined,
   applicableTax: Tax | undefined,
   quantity: number,
   priceMapping?: PriceInputMapping,
   externalFeeMapping?: ExternalFeeMapping,
+  /**
+   * @todo Remove this redundant parameter as coupons can be accessed from priceItem._coupons
+   */
   coupons: ReadonlyArray<Coupon> = [],
 ): PriceItem => {
   const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase() as Currency;
@@ -743,6 +749,7 @@ export const computePriceItem = (
         unitAmountMultiplier,
         priceTax,
         coupons,
+        priceItem,
       );
   }
 
@@ -778,6 +785,12 @@ export const computePriceItem = (
       cashback_amount: itemValues.cashback_amount,
     }),
     ...(itemValues.cashback_amount_decimal && { cashback_amount_decimal: itemValues.cashback_amount_decimal }),
+    ...(Number.isInteger(itemValues.after_cashback_amount_total) && {
+      after_cashback_amount_total: itemValues.after_cashback_amount_total,
+    }),
+    ...(itemValues.after_cashback_amount_total_decimal && {
+      after_cashback_amount_total_decimal: itemValues.after_cashback_amount_total_decimal,
+    }),
     ...(itemValues.before_discount_amount_total && {
       before_discount_amount_total: itemValues.before_discount_amount_total,
     }),
@@ -884,6 +897,12 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
   ...(typeof priceItem.cashback_amount === 'number' && {
     cashback_amount: toDineroFromInteger(priceItem.cashback_amount).convertPrecision(precision).getAmount(),
     cashback_amount_decimal: toDineroFromInteger(priceItem.cashback_amount).toUnit().toString(),
+  }),
+  ...(typeof priceItem.after_cashback_amount_total === 'number' && {
+    after_cashback_amount_total: toDineroFromInteger(priceItem.after_cashback_amount_total)
+      .convertPrecision(precision)
+      .getAmount(),
+    after_cashback_amount_total_decimal: toDineroFromInteger(priceItem.after_cashback_amount_total).toUnit().toString(),
   }),
   amount_tax: toDineroFromInteger(priceItem.amount_tax || 0)
     .convertPrecision(precision)

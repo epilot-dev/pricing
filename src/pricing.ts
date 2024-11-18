@@ -363,7 +363,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
       const priceItemToAppend = immutablePriceItem
         ? (immutablePriceItem as PriceItemDto)
         : computePriceItem(priceItem, {
-            tax: tax,
+            tax,
             quantity: priceItem.quantity!,
             priceMapping,
             externalFeeMapping,

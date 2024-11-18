@@ -111,7 +111,7 @@ export const computePriceItemValues = (
     tax?: Tax;
   },
 ): PriceItemsTotals => {
-  const coupons = priceItem?._coupons ?? [];
+  const coupons = priceItem._coupons ?? [];
   const [coupon] = coupons.filter(isValidCoupon);
 
   let unitAmount = toDinero(unitAmountDecimal, currency);

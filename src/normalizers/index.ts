@@ -3,9 +3,7 @@ import type { Dinero } from 'dinero.js';
 import { toDinero } from '../formatters';
 import type { Price, PriceInputMapping, TimeFrequency } from '../types';
 
-import { OperationType, timeFrequencyNormalizerMatrix } from './constants';
-
-export { TimeFrequencyNormalizerMatrix, timeFrequencyNormalizerMatrix } from './constants';
+import { TIME_FREQUENCY_NORMALIZATION_FACTORS } from './constants';
 
 /**
  * This function takes in a quantity, block mapping number, block mapping frequency, price, and parent quantity
@@ -45,7 +43,7 @@ export const normalizePriceMappingInput = (priceMapping?: PriceInputMapping, pri
 
 /**
  * This function will normalize an inputted value of a specific time frequency to the
- * desired time frequency based on constant values defined here {@link timeFrequencyNormalizerMatrix}.
+ * desired time frequency based on constant values defined here {@link TIME_FREQUENCY_NORMALIZATION_FACTORS}.
  *
  * The default dinerojs precision is set to 12 decimal places.
  *
@@ -72,27 +70,21 @@ export const normalizeTimeFrequencyFromDineroInputValue = (
   timeValueFrequency: TimeFrequency,
   targetTimeFrequency: TimeFrequency,
 ): Dinero => {
-  if (
-    !timeFrequencyNormalizerMatrix[targetTimeFrequency] ||
-    !timeFrequencyNormalizerMatrix[targetTimeFrequency][timeValueFrequency]
-  ) {
+  const targetFactor = TIME_FREQUENCY_NORMALIZATION_FACTORS[targetTimeFrequency];
+  const originFactor = TIME_FREQUENCY_NORMALIZATION_FACTORS[timeValueFrequency];
+
+  if (!targetFactor || !originFactor) {
     return dineroInputValue;
   }
 
-  const { action, value } = timeFrequencyNormalizerMatrix[targetTimeFrequency][timeValueFrequency];
+  const factor = targetFactor / originFactor;
 
-  if (action === OperationType.MULTIPLY) {
-    return dineroInputValue.multiply(value);
-  } else if (action === OperationType.DIVIDE) {
-    return dineroInputValue.divide(value);
-  }
-
-  return dineroInputValue;
+  return factor > 1 ? dineroInputValue.multiply(factor) : dineroInputValue.divide(1 / factor);
 };
 
 /**
  * This function will normalize an inputted value of a specific time frequency to the
- * desired time frequency based on constant values defined here {@link timeFrequencyNormalizerMatrix}.
+ * desired time frequency based on constant values defined here {@link TIME_FREQUENCY_NORMALIZATION_FACTORS}.
  *
  * The default precision is set to 4 decimal places.
  *
@@ -127,7 +119,7 @@ export const normalizeTimeFrequency = (
 
 /**
  * This function will normalize an inputted value of a specific time frequency to the
- * desired time frequency based on constant values defined here {@link timeFrequencyNormalizerMatrix}.
+ * desired time frequency based on constant values defined here {@link TIME_FREQUENCY_NORMALIZATION_FACTORS}.
  *
  * The default precision is set to 4 decimal places.
  *

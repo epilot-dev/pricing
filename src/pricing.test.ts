@@ -524,6 +524,11 @@ describe('computeAggregatedAndPriceTotals', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageCashbackCoupon]);
       expect(result).toEqual(results.computedPriceWithPercentageCashbackCoupon);
     });
+
+    it('should compute fixed amount cashbacks and totals correctly for recurring price', () => {
+      const result = computeAggregatedAndPriceTotals([samples.recurringPriceItemWithFixedAmountCashbackCoupon]);
+      expect(result).toEqual(results.computedRecurringPriceWithFixedAmountCashbackCoupon);
+    });
   });
 });
 

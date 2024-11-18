@@ -64,6 +64,14 @@ export const normalizeTimeFrequencyToDinero = (
 ): Dinero => {
   const dineroInputValue = toDinero(String(timeValue));
 
+  return normalizeTimeFrequencyFromDineroInputValue(dineroInputValue, timeValueFrequency, targetTimeFrequency);
+};
+
+export const normalizeTimeFrequencyFromDineroInputValue = (
+  dineroInputValue: Dinero,
+  timeValueFrequency: TimeFrequency,
+  targetTimeFrequency: TimeFrequency,
+): Dinero => {
   if (
     !timeFrequencyNormalizerMatrix[targetTimeFrequency] ||
     !timeFrequencyNormalizerMatrix[targetTimeFrequency][timeValueFrequency]

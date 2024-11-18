@@ -515,12 +515,12 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(result).toEqual(results.computedResultWithPricesWithAndWithoutCoupons);
     });
 
-    it.only('should compute cashbacks and totals correctly', () => {
+    it('should compute fixed amount cashbacks and totals correctly', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithFixedAmountCashbackCoupon]);
       expect(result).toEqual(results.computedPriceWithFixedAmountCashbackCoupon);
     });
 
-    it('should compute cashbacks and totals correctly', () => {
+    it('should compute percentage amount cashbacks and totals correctly', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageCashbackCoupon]);
       expect(result).toEqual(results.computedPriceWithPercentageCashbackCoupon);
     });

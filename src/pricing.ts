@@ -7,7 +7,6 @@ import type {
   CompositePrice,
   CompositePriceItem,
   CompositePriceItemDto,
-  Coupon,
   ExternalFeeMapping,
   Price,
   PriceInputMapping,
@@ -97,14 +96,12 @@ export const computePriceComponent = (
   const safeParentQuantity = isNaN(priceItem.quantity!) ? 1 : priceItem.quantity!;
   const quantity = toDinero(String(safeQuantity)).multiply(safeParentQuantity).toUnit();
 
-  return computePriceItem(
-    priceItemComponent,
-    priceItemComponent._price,
+  return computePriceItem(priceItemComponent, {
     tax,
     quantity,
     priceMapping,
     externalFeeMapping,
-  );
+  });
 };
 
 const isValidPrice = (priceComponent: Price): boolean => {
@@ -354,7 +351,6 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
       };
     } else {
       const price = priceItem._price;
-      const coupons = priceItem._coupons;
       const tax = priceItem.taxes?.[0]?.tax;
       const priceMapping = priceItem._price
         ? priceItem.price_mappings?.find(({ price_id }) => priceItem._price!._id === price_id)
@@ -366,7 +362,12 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
 
       const priceItemToAppend = immutablePriceItem
         ? (immutablePriceItem as PriceItemDto)
-        : computePriceItem(priceItem, price, tax, priceItem.quantity!, priceMapping, externalFeeMapping, coupons);
+        : computePriceItem(priceItem, {
+            tax,
+            quantity: priceItem.quantity!,
+            priceMapping,
+            externalFeeMapping,
+          });
 
       const updatedTotals = isUnitAmountApproved(
         priceItem,
@@ -687,13 +688,19 @@ export const mapToProductSnapshot = (product?: Product): Product | undefined =>
  */
 export const computePriceItem = (
   priceItem: PriceItemDto,
-  price: Price | undefined,
-  applicableTax: Tax | undefined,
-  quantity: number,
-  priceMapping?: PriceInputMapping,
-  externalFeeMapping?: ExternalFeeMapping,
-  coupons: ReadonlyArray<Coupon> = [],
+  {
+    tax: applicableTax,
+    quantity,
+    priceMapping,
+    externalFeeMapping,
+  }: {
+    tax?: Tax;
+    quantity: number;
+    priceMapping?: PriceInputMapping;
+    externalFeeMapping?: ExternalFeeMapping;
+  },
 ): PriceItem => {
+  const price = priceItem._price;
   const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase() as Currency;
   const priceItemDescription = priceItem.description ?? price?.description;
 
@@ -714,60 +721,59 @@ export const computePriceItem = (
 
   switch (price?.pricing_model) {
     case PricingModel.tieredVolume:
-      itemValues = computeTieredVolumePriceItemValues(
-        price.tiers,
+      itemValues = computeTieredVolumePriceItemValues(priceItem, {
+        tiers: price.tiers,
         currency,
         isTaxInclusive,
         quantityToSelectTier,
-        priceTax,
+        tax: priceTax,
         unitAmountMultiplier,
-        priceItem._price?.unchanged_price_display_in_journeys,
-      );
+        unchangedPriceDisplayInJourneys: priceItem._price?.unchanged_price_display_in_journeys,
+      });
       break;
     case PricingModel.tieredFlatFee:
-      itemValues = computeTieredFlatFeePriceItemValues(
-        price.tiers,
+      itemValues = computeTieredFlatFeePriceItemValues(priceItem, {
+        tiers: price.tiers,
         currency,
         isTaxInclusive,
         quantityToSelectTier,
-        priceTax,
-        safeQuantity,
-        isUsingPriceMappingToSelectTier,
-        priceItem._price?.unchanged_price_display_in_journeys,
-      );
+        tax: priceTax,
+        quantity: safeQuantity,
+        isUsingPriceMappingToSelectTier: isUsingPriceMappingToSelectTier,
+        unchangedPriceDisplayInJourneys: priceItem._price?.unchanged_price_display_in_journeys,
+      });
       break;
     case PricingModel.tieredGraduated:
-      itemValues = computeTieredGraduatedPriceItemValues(
-        price.tiers,
+      itemValues = computeTieredGraduatedPriceItemValues(priceItem, {
+        tiers: price.tiers,
         currency,
         isTaxInclusive,
         quantityToSelectTier,
-        priceTax,
-        safeQuantity,
-        isUsingPriceMappingToSelectTier,
-        priceItem._price?.unchanged_price_display_in_journeys,
-      );
+        tax: priceTax,
+        quantity: safeQuantity,
+        isUsingPriceMappingToSelectTier: isUsingPriceMappingToSelectTier,
+        unchangedPriceDisplayInJourneys: priceItem._price?.unchanged_price_display_in_journeys,
+      });
       break;
     case PricingModel.externalGetAG:
-      itemValues = computeExternalGetAGItemValues(
-        price?.get_ag!,
+      itemValues = computeExternalGetAGItemValues(priceItem, {
+        getAg: price?.get_ag!,
         currency,
         isTaxInclusive,
         unitAmountMultiplier,
-        quantityToSelectTier,
+        userInput: quantityToSelectTier,
         externalFeeAmountDecimal,
-        priceTax,
-      );
+        tax: priceTax,
+      });
       break;
     default:
-      itemValues = computePriceItemValues(
+      itemValues = computePriceItemValues(priceItem, {
         unitAmountDecimal,
         currency,
         isTaxInclusive,
         unitAmountMultiplier,
-        priceTax,
-        coupons,
-      );
+        tax: priceTax,
+      });
   }
 
   return {

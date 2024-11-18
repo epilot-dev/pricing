@@ -65,22 +65,36 @@ export const normalizeTimeFrequencyToDinero = (
   return normalizeTimeFrequencyFromDineroInputValue(dineroInputValue, timeValueFrequency, targetTimeFrequency);
 };
 
-export const normalizeTimeFrequencyFromDineroInputValue = (
-  dineroInputValue: Dinero,
+const getTimeFrequencyConversionFactor = (
   timeValueFrequency: TimeFrequency,
   targetTimeFrequency: TimeFrequency,
-): Dinero => {
+): number => {
+  /**
+   * There's a special case when frequencies are monthly/weekly,
+   * in which case we want to work with 4 weeks in a month rather than the
+   * mathematically correct 4.33 weeks in a month (52 / 12 = 4.33).
+   */
+  if (timeValueFrequency === 'monthly' && targetTimeFrequency === 'weekly') {
+    return 1 / 4;
+  } else if (timeValueFrequency === 'weekly' && targetTimeFrequency === 'monthly') {
+    return 4;
+  }
+
   const targetFactor = TIME_FREQUENCY_NORMALIZATION_FACTORS[targetTimeFrequency];
   const originFactor = TIME_FREQUENCY_NORMALIZATION_FACTORS[timeValueFrequency];
 
   if (!targetFactor || !originFactor) {
-    return dineroInputValue;
+    return 1;
   }
 
-  const factor = targetFactor / originFactor;
-
-  return factor > 1 ? dineroInputValue.multiply(factor) : dineroInputValue.divide(1 / factor);
+  return originFactor / targetFactor;
 };
+
+export const normalizeTimeFrequencyFromDineroInputValue = (
+  dineroInputValue: Dinero,
+  timeValueFrequency: TimeFrequency,
+  targetTimeFrequency: TimeFrequency,
+): Dinero => dineroInputValue.multiply(getTimeFrequencyConversionFactor(timeValueFrequency, targetTimeFrequency));
 
 /**
  * This function will normalize an inputted value of a specific time frequency to the

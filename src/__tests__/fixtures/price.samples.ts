@@ -44,6 +44,9 @@ export const priceItem1: PriceItemDto = {
   is_tax_inclusive: true,
 };
 
+/**
+ * @todo Rename to recurringPriceItem
+ */
 export const priceItem2: PriceItemDto = {
   quantity: 1,
   taxes: [

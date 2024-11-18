@@ -97,7 +97,7 @@ export const computePriceComponent = (
   const quantity = toDinero(String(safeQuantity)).multiply(safeParentQuantity).toUnit();
 
   return computePriceItem(priceItemComponent, {
-    tax: tax,
+    tax,
     quantity,
     priceMapping,
     externalFeeMapping,

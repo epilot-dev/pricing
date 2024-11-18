@@ -135,12 +135,6 @@ export const computePriceItemValues = (
         cashbackAmount = unitAmount.multiply(cashbackPercentage).divide(100);
       }
 
-      /**
-       * The cashback amount must take into account the price recurrence
-       * For 1 time prices we just subtract the cashback amount from the unit amount
-       * For recurring prices we divide the cashback amount by the number of periods in 1 year, and then subtract it
-       * from the unit amount
-       */
       const normalizedCashbackAmount = normalizeTimeFrequencyFromDineroInputValue(
         cashbackAmount,
         'yearly',

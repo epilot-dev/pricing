@@ -365,8 +365,8 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
         : computePriceItem(priceItem, {
             tax: tax,
             quantity: priceItem.quantity!,
-            priceMapping: priceMapping,
-            externalFeeMapping: externalFeeMapping,
+            priceMapping,
+            externalFeeMapping,
           });
 
       const updatedTotals = isUnitAmountApproved(

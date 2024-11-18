@@ -437,6 +437,8 @@ const recomputeDetailTotals = (
   const subtotal = toDineroFromInteger(details.amount_subtotal!);
   const totalTax = toDineroFromInteger(details?.total_details?.amount_tax!);
 
+  const cashbacks = [...(details.total_details?.breakdown?.cashbacks ?? [])];
+
   const priceUnitAmountGross = toDineroFromInteger(priceItemToAppend.unit_amount_gross!);
   const priceUnitAmountNet = Number.isInteger(priceItemToAppend.unit_amount_net)
     ? toDineroFromInteger(priceItemToAppend.unit_amount_net!)
@@ -446,6 +448,10 @@ const recomputeDetailTotals = (
   const priceDiscountAmount =
     typeof priceItemToAppend.discount_amount !== 'undefined'
       ? toDineroFromInteger(priceItemToAppend.discount_amount!)
+      : undefined;
+  const priceCashBackAmount =
+    typeof priceItemToAppend.cashback_amount !== 'undefined'
+      ? toDineroFromInteger(priceItemToAppend.cashback_amount!)
       : undefined;
   const priceBeforeDiscountAmountTotal =
     typeof priceItemToAppend.before_discount_amount_total !== 'undefined'
@@ -521,6 +527,7 @@ const recomputeDetailTotals = (
     recurrence.amount_subtotal_decimal = subTotalAmount.add(priceSubtotal).toUnit().toString();
     recurrence.amount_total_decimal = totalAmount.add(priceTotal).toUnit().toString();
     recurrence.amount_tax = taxAmount.add(priceTax).getAmount();
+
     if (priceBeforeDiscountAmountTotal) {
       const recurrenceBeforeDiscountAmountTotal =
         beforeDiscountAmountTotal?.add(priceBeforeDiscountAmountTotal) ?? priceBeforeDiscountAmountTotal;
@@ -556,6 +563,23 @@ const recomputeDetailTotals = (
     recurrenceByTax.amount_tax = taxAmount.add(priceTax).getAmount();
   }
 
+  // Cashback totals
+  if (priceCashBackAmount) {
+    const cashbackPeriod = priceItemToAppend.cashback_period;
+    const cashbackMatchIndex = cashbacks.findIndex((cashback) => cashback.cashback_period === cashbackPeriod);
+
+    if (cashbackMatchIndex !== -1) {
+      const matchingCashback = cashbacks[cashbackMatchIndex]!;
+      const cashbackAmountTotal = toDineroFromInteger(matchingCashback.amount_total!);
+      matchingCashback.amount_total = cashbackAmountTotal.add(priceCashBackAmount).getAmount();
+    } else {
+      cashbacks.push({
+        cashback_period: cashbackPeriod,
+        amount_total: priceCashBackAmount.getAmount(),
+      });
+    }
+  }
+
   return {
     amount_subtotal: subtotal.add(priceSubtotal).getAmount(),
     amount_total: total.add(priceTotal).getAmount(),
@@ -566,6 +590,7 @@ const recomputeDetailTotals = (
         taxes,
         recurrences,
         recurrencesByTax,
+        cashbacks,
       },
     },
   };
@@ -1010,6 +1035,10 @@ const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem,
             },
           };
         }),
+        cashbacks: details.total_details?.breakdown?.cashbacks?.map((cashback) => ({
+          ...cashback,
+          amount_total: toDineroFromInteger(cashback.amount_total!).convertPrecision(precision).getAmount(),
+        })),
       },
     },
   };

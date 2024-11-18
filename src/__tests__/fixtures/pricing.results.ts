@@ -414,6 +414,7 @@ export const resultsWhenNoPricesProvided = {
           type: 'one_time',
         },
       ],
+      cashbacks: [],
     },
   },
 };
@@ -861,6 +862,7 @@ export const severalItemsPerRecurrenceTotals = {
               amount_subtotal_decimal: '420.168067226891',
             },
           ],
+          cashbacks: [],
         },
       },
       price_id: 'price#4',
@@ -1337,6 +1339,7 @@ export const severalItemsPerRecurrenceTotals = {
           unit_amount_net: 9091,
         },
       ],
+      cashbacks: [],
     },
   },
 };
@@ -1650,6 +1653,7 @@ export const compositePricesUnitAmountZeroResult = {
             { amount: 97, tax: { _id: '10', rate: 10, type: 'VAT' } },
             { amount: 0, tax: { _id: '6', rate: 6, type: 'VAT' } },
           ],
+          cashbacks: [],
         },
       },
     },
@@ -1706,6 +1710,7 @@ export const compositePricesUnitAmountZeroResult = {
         { amount: 97, tax: { _id: '10', rate: 10, type: 'VAT' } },
         { amount: 0, tax: { _id: '6', rate: 6, type: 'VAT' } },
       ],
+      cashbacks: [],
     },
   },
 };
@@ -2019,6 +2024,7 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
           amount_subtotal_decimal: '272.737346740068',
         },
       ],
+      cashbacks: [],
     },
   },
 };
@@ -2689,6 +2695,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
               amount_total_decimal: '500',
             },
           ],
+          cashbacks: [],
         },
       },
       price_id: 'price#4',
@@ -3385,6 +3392,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
           amount_subtotal_decimal: '272.737346740068',
         },
       ],
+      cashbacks: [],
     },
   },
 };
@@ -3827,6 +3835,7 @@ export const resultCompositePriceQuantity2 = {
             { amount: 5, tax: { _id: '6', rate: 6, type: 'VAT' } },
             { amount: 15966, tax: { _id: '19', rate: 19, type: 'VAT' } },
           ],
+          cashbacks: [],
         },
       },
     },
@@ -3908,6 +3917,7 @@ export const resultCompositePriceQuantity2 = {
         { amount: 5, tax: { _id: '6', rate: 6, type: 'VAT' } },
         { amount: 15966, tax: { _id: '19', rate: 19, type: 'VAT' } },
       ],
+      cashbacks: [],
     },
   },
 };
@@ -4014,6 +4024,7 @@ export const priceDetailsForOnePrice = {
         },
       ],
       taxes: [{ amount: 63024, tax: { _id: '19', rate: 19, type: 'VAT' } }],
+      cashbacks: [],
     },
   },
 };
@@ -4100,6 +4111,7 @@ export const priceDetailsForCompositePrice = {
           type: 'one_time',
         },
       ],
+      cashbacks: [],
     },
   },
   items: [
@@ -4515,6 +4527,7 @@ export const priceDetailsForCompositePrice = {
               type: 'one_time',
             },
           ],
+          cashbacks: [],
         },
       },
     },
@@ -4585,6 +4598,7 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
           type: 'recurring',
         },
       ],
+      cashbacks: [],
     },
   },
   items: [
@@ -4892,6 +4906,7 @@ export const priceDetailsForCompositePriceWithTaxChanges = {
               type: 'recurring',
             },
           ],
+          cashbacks: [],
         },
       },
     },
@@ -5147,6 +5162,7 @@ export const oneItemPerRecurrenceTotals = {
           amount_total_decimal: '294.556334479275',
         },
       ],
+      cashbacks: [],
     },
   },
 };
@@ -5581,6 +5597,7 @@ export const resultCompositePriceWithTotalDetails = {
             { amount: 5, tax: { _id: '6', rate: 6, type: 'VAT' } },
             { amount: 15966, tax: { _id: '19', rate: 19, type: 'VAT' } },
           ],
+          cashbacks: [],
         },
       },
     },
@@ -5662,6 +5679,7 @@ export const resultCompositePriceWithTotalDetails = {
         { amount: 5, tax: { _id: '6', rate: 6, type: 'VAT' } },
         { amount: 15966, tax: { _id: '19', rate: 19, type: 'VAT' } },
       ],
+      cashbacks: [],
     },
   },
 };
@@ -5702,6 +5720,7 @@ export const computedPriceWithFixedDiscount = {
           tax: { tax: { _id: '10', type: 'VAT', rate: 10 }, amount: 864 },
         },
       ],
+      cashbacks: [],
     },
   },
   items: [
@@ -5832,6 +5851,7 @@ export const computedPriceWithPercentageDiscount = {
           tax: { tax: { _id: '10', type: 'VAT', rate: 10 }, amount: 682 },
         },
       ],
+      cashbacks: [],
     },
   },
   items: [
@@ -5974,6 +5994,7 @@ export const computedPriceWithPercentageDiscountAndHighQuantity = {
           },
         },
       ],
+      cashbacks: [],
     },
   },
   items: [
@@ -6118,6 +6139,7 @@ export const computedPriceWithFixedDiscountAndHighQuantity = {
           },
         },
       ],
+      cashbacks: [],
     },
   },
   items: [
@@ -6247,6 +6269,7 @@ export const computedPriceWithFixedDiscountAndNoTax = {
           tax: { tax: { rate: 0 }, amount: 0 },
         },
       ],
+      cashbacks: [],
     },
   },
   items: [
@@ -6367,6 +6390,7 @@ export const computedPriceWithPercentageDiscountAndExclusiveTax = {
           },
         },
       ],
+      cashbacks: [],
     },
   },
   items: [
@@ -6511,6 +6535,7 @@ export const computedPriceWithFixedDiscountAndExclusiveTax = {
           },
         },
       ],
+      cashbacks: [],
     },
   },
   items: [
@@ -6643,6 +6668,7 @@ export const computedResultWithPricesWithAndWithoutCoupons = {
           tax: { tax: { _id: '10', type: 'VAT', rate: 10 }, amount: 1364 },
         },
       ],
+      cashbacks: [],
     },
   },
   items: [
@@ -6929,6 +6955,12 @@ export const computedPriceWithFixedAmountCashbackCoupon = {
           },
         },
       ],
+      cashbacks: [
+        {
+          amount_total: 1000,
+          cashback_period: '12',
+        },
+      ],
     },
   },
   items: [
@@ -7006,6 +7038,7 @@ export const computedPriceWithFixedAmountCashbackCoupon = {
       unit_amount_decimal: '100',
       amount_subtotal: 9091,
       amount_total: 10000,
+      cashback_period: '12',
       cashback_amount: 1000,
       cashback_amount_decimal: '10',
       after_cashback_amount_total: 9000,
@@ -7064,6 +7097,12 @@ export const computedPriceWithPercentageCashbackCoupon = {
             },
             amount: 909,
           },
+        },
+      ],
+      cashbacks: [
+        {
+          amount_total: 1000,
+          cashback_period: '12',
         },
       ],
     },
@@ -7141,6 +7180,7 @@ export const computedPriceWithPercentageCashbackCoupon = {
       unit_amount_decimal: '100',
       amount_subtotal: 9091,
       amount_total: 10000,
+      cashback_period: '12',
       cashback_amount: 1000,
       cashback_amount_decimal: '10',
       after_cashback_amount_total: 9000,
@@ -7201,6 +7241,12 @@ export const computedRecurringPriceWithFixedAmountCashbackCoupon = {
             },
             amount: 909,
           },
+        },
+      ],
+      cashbacks: [
+        {
+          amount_total: 1000,
+          cashback_period: '12',
         },
       ],
     },
@@ -7289,6 +7335,7 @@ export const computedRecurringPriceWithFixedAmountCashbackCoupon = {
       unit_amount_decimal: '100',
       amount_subtotal: 9091,
       amount_total: 10000,
+      cashback_period: '12',
       cashback_amount: 1000,
       cashback_amount_decimal: '10',
       after_cashback_amount_total: 9917,

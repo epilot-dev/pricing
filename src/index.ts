@@ -48,5 +48,6 @@ export type {
   TaxAmountBreakdown,
   TimeFrequency,
   BillingPeriod,
+  CashbackAmount,
 } from './types';
 export { isTaxInclusivePrice } from './utils';

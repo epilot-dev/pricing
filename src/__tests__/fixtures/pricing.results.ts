@@ -6668,7 +6668,7 @@ export const computedResultWithPricesWithAndWithoutCoupons = {
           tax: { tax: { _id: '10', type: 'VAT', rate: 10 }, amount: 1364 },
         },
       ],
-      cashbacks: []
+      cashbacks: [],
     },
   },
   items: [
@@ -6957,8 +6957,8 @@ export const computedPriceWithFixedAmountCashbackCoupon = {
       ],
       cashbacks: [
         {
-          amount_total: 10000000000000,
-          cashback_period: "12",
+          amount_total: 1000,
+          cashback_period: '12',
         },
       ],
     },
@@ -7038,7 +7038,7 @@ export const computedPriceWithFixedAmountCashbackCoupon = {
       unit_amount_decimal: '100',
       amount_subtotal: 9091,
       amount_total: 10000,
-      cashback_period: "12",
+      cashback_period: '12',
       cashback_amount: 1000,
       cashback_amount_decimal: '10',
       after_cashback_amount_total: 9000,
@@ -7101,7 +7101,7 @@ export const computedPriceWithPercentageCashbackCoupon = {
       ],
       cashbacks: [
         {
-          amount_total: 10000000000000,
+          amount_total: 1000,
           cashback_period: '12',
         },
       ],
@@ -7180,7 +7180,7 @@ export const computedPriceWithPercentageCashbackCoupon = {
       unit_amount_decimal: '100',
       amount_subtotal: 9091,
       amount_total: 10000,
-      cashback_period: "12",
+      cashback_period: '12',
       cashback_amount: 1000,
       cashback_amount_decimal: '10',
       after_cashback_amount_total: 9000,
@@ -7245,7 +7245,7 @@ export const computedRecurringPriceWithFixedAmountCashbackCoupon = {
       ],
       cashbacks: [
         {
-          amount_total: 10000000000000,
+          amount_total: 1000,
           cashback_period: '12',
         },
       ],
@@ -7335,7 +7335,7 @@ export const computedRecurringPriceWithFixedAmountCashbackCoupon = {
       unit_amount_decimal: '100',
       amount_subtotal: 9091,
       amount_total: 10000,
-      cashback_period: "12",
+      cashback_period: '12',
       cashback_amount: 1000,
       cashback_amount_decimal: '10',
       after_cashback_amount_total: 9917,

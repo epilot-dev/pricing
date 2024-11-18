@@ -3049,9 +3049,8 @@ const baseForPriceItemWithCashback: PriceItem = {
   is_tax_inclusive: true,
   cashback_amount: 1000,
   cashback_amount_decimal: '10.00',
-  cashback_period:"12",
+  cashback_period: '12',
 };
-
 
 export const priceItemWithFixedDiscount: PriceItemDto = {
   ...baseForPriceItemWithDiscount,

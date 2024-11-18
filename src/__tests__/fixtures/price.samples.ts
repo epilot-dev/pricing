@@ -3025,6 +3025,34 @@ const baseForPriceItemWithDiscount: PriceItemDto = {
   is_tax_inclusive: true,
 };
 
+const baseForPriceItemWithCashback: PriceItem = {
+  quantity: 1,
+  product_id: 'prod-id#12324',
+  price_id: 'price#1',
+  taxes: [{ tax: tax10percent }],
+  _price: {
+    _id: 'price#1',
+    unit_amount: 10000,
+    unit_amount_currency: 'EUR',
+    unit_amount_decimal: '100',
+    type: 'one_time',
+    tax: [tax10percent],
+    is_tax_inclusive: true,
+    description: 'Winter Sale',
+    _title: 'Winter Sale',
+    pricing_model: 'per_unit',
+  },
+  _product: {
+    _tags: ['product-tag-1', 'product-tag-2'],
+  },
+  pricing_model: 'per_unit',
+  is_tax_inclusive: true,
+  cashback_amount: 1000,
+  cashback_amount_decimal: '10.00',
+  cashback_period:"12",
+};
+
+
 export const priceItemWithFixedDiscount: PriceItemDto = {
   ...baseForPriceItemWithDiscount,
   _coupons: [fixedDiscountCoupon],
@@ -3073,19 +3101,19 @@ export const priceItemWithFixedDiscountAndExclusiveTax = {
 };
 
 export const priceItemWithFixedAmountCashbackCoupon = {
-  ...baseForPriceItemWithDiscount,
+  ...baseForPriceItemWithCashback,
   _coupons: [fixedCashbackCoupon],
 };
 
 export const priceItemWithPercentageCashbackCoupon = {
-  ...baseForPriceItemWithDiscount,
+  ...baseForPriceItemWithCashback,
   _coupons: [percentageCashbackCoupon],
 };
 
 export const recurringPriceItemWithFixedAmountCashbackCoupon = {
-  ...baseForPriceItemWithDiscount,
+  ...baseForPriceItemWithCashback,
   _price: {
-    ...baseForPriceItemWithDiscount._price,
+    ...baseForPriceItemWithCashback._price,
     type: 'recurring',
     billing_period: 'monthly',
     billing_duration_amount: 1,

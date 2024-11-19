@@ -11,7 +11,6 @@ export type PriceItemsDto = Components.Schemas.PriceItemsDto;
 export type Tax = Components.Schemas.Tax;
 export type TaxAmountDto = Components.Schemas.TaxAmountDto;
 export type TaxAmount = Components.Schemas.TaxAmount;
-export type CashbackAmount = Components.Schemas.CashbackAmount;
 export type CompositePrice = Components.Schemas.CompositePrice;
 export type CompositePriceItemDto = Components.Schemas.CompositePriceItemDto;
 export type CompositePriceItem = Components.Schemas.CompositePriceItem;

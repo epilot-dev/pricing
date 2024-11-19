@@ -453,6 +453,8 @@ const recomputeDetailTotals = (
     typeof priceItemToAppend.cashback_amount !== 'undefined'
       ? toDineroFromInteger(priceItemToAppend.cashback_amount!)
       : undefined;
+
+  const cashbackPeriod = priceItemToAppend.cashback_period;
   const priceBeforeDiscountAmountTotal =
     typeof priceItemToAppend.before_discount_amount_total !== 'undefined'
       ? toDineroFromInteger(priceItemToAppend.before_discount_amount_total!)
@@ -564,13 +566,12 @@ const recomputeDetailTotals = (
   }
 
   // Cashback totals
-  if (priceCashBackAmount) {
-    const cashbackPeriod = priceItemToAppend.cashback_period;
+  if (priceCashBackAmount && cashbackPeriod !== undefined) {
     const cashbackMatchIndex = cashbacks.findIndex((cashback) => cashback.cashback_period === cashbackPeriod);
 
     if (cashbackMatchIndex !== -1) {
-      const matchingCashback = cashbacks[cashbackMatchIndex]!;
-      const cashbackAmountTotal = toDineroFromInteger(matchingCashback.amount_total!);
+      const matchingCashback = cashbacks[cashbackMatchIndex];
+      const cashbackAmountTotal = toDineroFromInteger(matchingCashback.amount_total);
       matchingCashback.amount_total = cashbackAmountTotal.add(priceCashBackAmount).getAmount();
     } else {
       cashbacks.push({

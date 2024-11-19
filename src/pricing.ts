@@ -28,6 +28,7 @@ import {
   computeTieredGraduatedPriceItemValues,
   computeTieredVolumePriceItemValues,
   isTaxInclusivePrice,
+  isTruthy,
   PriceItemsTotals,
 } from './utils';
 
@@ -778,10 +779,14 @@ export const computePriceItem = (
       });
   }
 
+  /* If there's a coupon cashback period output it */
+  const cashbackPeriod = priceItem._coupons?.map(({ cashback_period }) => cashback_period).find(isTruthy);
+
   return {
     ...priceItem,
     currency,
     ...(priceItemDescription && { description: priceItemDescription }),
+    ...(typeof cashbackPeriod !== 'undefined' && { cashback_period: cashbackPeriod }),
     ...(Number.isInteger(itemValues.unit_amount) && { unit_amount: itemValues.unit_amount }),
     ...(Number.isInteger(itemValues.before_discount_unit_amount) && {
       before_discount_unit_amount: itemValues.before_discount_unit_amount,

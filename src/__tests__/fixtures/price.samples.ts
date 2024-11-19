@@ -3025,13 +3025,6 @@ const baseForPriceItemWithDiscount: PriceItemDto = {
   is_tax_inclusive: true,
 };
 
-const baseForPriceItemWithCashback: PriceItem = {
-  ...baseForPriceItemWithDiscount,
-  cashback_amount: 1000,
-  cashback_amount_decimal: '10.00',
-  cashback_period: '12',
-};
-
 export const priceItemWithFixedDiscount: PriceItemDto = {
   ...baseForPriceItemWithDiscount,
   _coupons: [fixedDiscountCoupon],
@@ -3080,19 +3073,19 @@ export const priceItemWithFixedDiscountAndExclusiveTax = {
 };
 
 export const priceItemWithFixedAmountCashbackCoupon = {
-  ...baseForPriceItemWithCashback,
+  ...baseForPriceItemWithDiscount,
   _coupons: [fixedCashbackCoupon],
 };
 
 export const priceItemWithPercentageCashbackCoupon = {
-  ...baseForPriceItemWithCashback,
+  ...baseForPriceItemWithDiscount,
   _coupons: [percentageCashbackCoupon],
 };
 
 export const recurringPriceItemWithFixedAmountCashbackCoupon = {
-  ...baseForPriceItemWithCashback,
+  ...baseForPriceItemWithDiscount,
   _price: {
-    ...baseForPriceItemWithCashback._price,
+    ...baseForPriceItemWithDiscount._price,
     type: 'recurring',
     billing_period: 'monthly',
     billing_duration_amount: 1,

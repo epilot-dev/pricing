@@ -257,12 +257,17 @@ export const computeCompositePrice = (
 };
 
 const convertAmountsToDinero = <Item extends PriceItem | CompositePriceItem>(item: Item): Item => {
+  const dineroTotal = toDinero(item.amount_total_decimal || '0');
+  const dineroSubtotal = toDinero(item.amount_subtotal_decimal || '0');
+
   return {
     ...item,
-    amount_total: toDinero(item.amount_total_decimal || '0').getAmount(),
-    amount_subtotal: toDinero(item.amount_subtotal_decimal || '0').getAmount(),
+    amount_total: dineroTotal.getAmount(),
+    amount_subtotal: dineroSubtotal.getAmount(),
     unit_amount_gross: toDinero(item.unit_amount_gross_decimal || '0').getAmount(),
     unit_amount_net: toDinero(item.unit_amount_net_decimal || '0').getAmount(),
+    unit_amount: toDinero(item.unit_amount_decimal || '0').getAmount(),
+    amount_tax: dineroTotal.subtract(dineroSubtotal).getAmount(),
   };
 };
 
@@ -460,7 +465,7 @@ const recomputeDetailTotals = (
     typeof priceItemToAppend.before_discount_amount_total !== 'undefined'
       ? toDineroFromInteger(priceItemToAppend.before_discount_amount_total!)
       : undefined;
-  const priceTax = toDineroFromInteger(priceItemToAppend.taxes?.[0]?.amount || 0);
+  const priceTax = toDineroFromInteger(priceItemToAppend.taxes?.[0]?.amount || priceItemToAppend.amount_tax || 0);
 
   if (tax) {
     tax.amount = toDineroFromInteger(tax.amount!).add(priceTax).getAmount();

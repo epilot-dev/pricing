@@ -15,13 +15,16 @@ export {
 } from './formatters';
 export { DECIMAL_PRECISION, GENERIC_UNIT_DISPLAY_LABEL, BillingPeriods, TaxRates } from './formatters/constants';
 export {
-  TimeFrequencyNormalizerMatrix,
   normalizePriceMappingInput,
   normalizeTimeFrequency,
   normalizeTimeFrequencyToDinero,
-  timeFrequencyNormalizerMatrix,
   normalizeValueToFrequencyUnit,
 } from './normalizers';
+export {
+  TimeFrequencyNormalizerMatrix,
+  timeFrequencyNormalizerMatrix,
+  TIME_FREQUENCY_NORMALIZATION_FACTORS,
+} from './normalizers/constants';
 export {
   ComputeAggregatedAndPriceTotals,
   PricingEntitiesExtractResult,

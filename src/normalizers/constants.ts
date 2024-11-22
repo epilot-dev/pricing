@@ -11,6 +11,7 @@ export enum OperationType {
  * Eg. Output must be monthly, input was yearly
  *
  * `timeFrequencyNormalizerMatrix.yearly.monthly`
+ * @deprecated Rely on TIME_FREQUENCY_NORMALIZATION_FACTORS
  */
 export type TimeFrequencyNormalizerMatrix = {
   [outputFrequency in TimeFrequency]: {
@@ -25,6 +26,8 @@ export type TimeFrequencyNormalizerMatrix = {
  * A normalized time frequencies transformation matrix
  *
  * See also {@link TimeFrequencyNormalizerMatrix}
+ * @deprecated Rely on TIME_FREQUENCY_NORMALIZATION_FACTORS
+ * @todo Remove in next major version
  */
 export const timeFrequencyNormalizerMatrix: TimeFrequencyNormalizerMatrix = Object.freeze({
   yearly: {
@@ -63,3 +66,15 @@ export const timeFrequencyNormalizerMatrix: TimeFrequencyNormalizerMatrix = Obje
     yearly: { action: OperationType.DIVIDE, value: 52 },
   },
 });
+
+type NormalizationFactor = {
+  [key in TimeFrequency]: number;
+};
+
+export const TIME_FREQUENCY_NORMALIZATION_FACTORS: NormalizationFactor = {
+  yearly: 1,
+  every_6_months: 2,
+  every_quarter: 4,
+  monthly: 12,
+  weekly: 52,
+};

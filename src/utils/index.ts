@@ -582,3 +582,7 @@ export const computeExternalGetAGItemValues = (
 };
 
 export const isNotPieceUnit = (unit: string | undefined) => unit !== undefined && unit !== 'unit';
+
+export const isTruthy = <T>(
+  value: T | '' | 0 | null | undefined | false,
+): value is Exclude<T, '' | 0 | null | undefined | false> => Boolean(value);

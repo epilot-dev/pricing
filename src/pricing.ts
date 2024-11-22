@@ -28,6 +28,7 @@ import {
   computeTieredGraduatedPriceItemValues,
   computeTieredVolumePriceItemValues,
   isTaxInclusivePrice,
+  isTruthy,
   PriceItemsTotals,
 } from './utils';
 
@@ -256,12 +257,17 @@ export const computeCompositePrice = (
 };
 
 const convertAmountsToDinero = <Item extends PriceItem | CompositePriceItem>(item: Item): Item => {
+  const dineroTotal = toDinero(item.amount_total_decimal || '0');
+  const dineroSubtotal = toDinero(item.amount_subtotal_decimal || '0');
+
   return {
     ...item,
-    amount_total: toDinero(item.amount_total_decimal || '0').getAmount(),
-    amount_subtotal: toDinero(item.amount_subtotal_decimal || '0').getAmount(),
+    amount_total: dineroTotal.getAmount(),
+    amount_subtotal: dineroSubtotal.getAmount(),
     unit_amount_gross: toDinero(item.unit_amount_gross_decimal || '0').getAmount(),
     unit_amount_net: toDinero(item.unit_amount_net_decimal || '0').getAmount(),
+    unit_amount: toDinero(item.unit_amount_decimal || '0').getAmount(),
+    amount_tax: dineroTotal.subtract(dineroSubtotal).getAmount(),
   };
 };
 
@@ -453,11 +459,13 @@ const recomputeDetailTotals = (
     typeof priceItemToAppend.cashback_amount !== 'undefined'
       ? toDineroFromInteger(priceItemToAppend.cashback_amount!)
       : undefined;
+
+  const cashbackPeriod = priceItemToAppend.cashback_period;
   const priceBeforeDiscountAmountTotal =
     typeof priceItemToAppend.before_discount_amount_total !== 'undefined'
       ? toDineroFromInteger(priceItemToAppend.before_discount_amount_total!)
       : undefined;
-  const priceTax = toDineroFromInteger(priceItemToAppend.taxes?.[0]?.amount || 0);
+  const priceTax = toDineroFromInteger(priceItemToAppend.taxes?.[0]?.amount || priceItemToAppend.amount_tax || 0);
 
   if (tax) {
     tax.amount = toDineroFromInteger(tax.amount!).add(priceTax).getAmount();
@@ -564,13 +572,12 @@ const recomputeDetailTotals = (
   }
 
   // Cashback totals
-  if (priceCashBackAmount) {
-    const cashbackPeriod = priceItemToAppend.cashback_period;
+  if (priceCashBackAmount && cashbackPeriod !== undefined) {
     const cashbackMatchIndex = cashbacks.findIndex((cashback) => cashback.cashback_period === cashbackPeriod);
 
     if (cashbackMatchIndex !== -1) {
-      const matchingCashback = cashbacks[cashbackMatchIndex]!;
-      const cashbackAmountTotal = toDineroFromInteger(matchingCashback.amount_total!);
+      const matchingCashback = cashbacks[cashbackMatchIndex];
+      const cashbackAmountTotal = toDineroFromInteger(matchingCashback.amount_total);
       matchingCashback.amount_total = cashbackAmountTotal.add(priceCashBackAmount).getAmount();
     } else {
       cashbacks.push({
@@ -777,10 +784,14 @@ export const computePriceItem = (
       });
   }
 
+  /* If there's a coupon cashback period output it */
+  const cashbackPeriod = priceItem._coupons?.map(({ cashback_period }) => cashback_period).find(isTruthy);
+
   return {
     ...priceItem,
     currency,
     ...(priceItemDescription && { description: priceItemDescription }),
+    ...(typeof cashbackPeriod !== 'undefined' && { cashback_period: cashbackPeriod }),
     ...(Number.isInteger(itemValues.unit_amount) && { unit_amount: itemValues.unit_amount }),
     ...(Number.isInteger(itemValues.before_discount_unit_amount) && {
       before_discount_unit_amount: itemValues.before_discount_unit_amount,

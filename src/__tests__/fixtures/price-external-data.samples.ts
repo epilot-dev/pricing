@@ -260,6 +260,7 @@ export const externalCompositePrice: PriceItemDto = {
                           "amount_subtotal_decimal": "50",
                           "amount_subtotal": 5000,
                           "unit_amount": 5000,
+                          "amount_tax": 1000,
                           "unit_amount_gross": 6000,
                           "unit_amount_gross_decimal": "60",
                           "unit_amount_net": 5000,
@@ -314,6 +315,7 @@ export const externalCompositePrice: PriceItemDto = {
                           "amount_subtotal_decimal": "8.4",
                           "amount_subtotal": 840,
                           "unit_amount": 840,
+                          "amount_tax": 160,
                           "unit_amount_gross": 1000,
                           "unit_amount_gross_decimal": "10",
                           "unit_amount_net": 840,
@@ -365,14 +367,16 @@ export const externalCompositePrice: PriceItemDto = {
                                   "amount_subtotal_decimal": "150",
                                   "amount_total_decimal": "160",
                                   "amount_subtotal": 15000,
-                                  "amount_total": 16000
+                                  "amount_total": 16000,
+                                  "amount_tax": 1000
                               },
                               {
                                   "type": "one_time",
                                   "amount_subtotal_decimal": "8.4",
                                   "amount_total_decimal": "10",
                                   "amount_subtotal": 840,
-                                  "amount_total": 1000
+                                  "amount_total": 1000,
+                                  "amount_tax": 160
                               }
                           ]
                       }
@@ -510,14 +514,16 @@ export const externalCompositePrice: PriceItemDto = {
                           "amount_subtotal_decimal": "150",
                           "amount_total_decimal": "160",
                           "amount_subtotal": 15000,
-                          "amount_total": 16000
+                          "amount_total": 16000,
+                          "amount_tax": 1000
                       },
                       {
                           "type": "one_time",
                           "amount_subtotal_decimal": "8.4",
                           "amount_total_decimal": "10",
                           "amount_subtotal": 840,
-                          "amount_total": 1000
+                          "amount_total": 1000,
+                          "amount_tax": 160
                       }
                   ]
               }

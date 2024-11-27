@@ -1,3 +1,4 @@
+import * as coupons from './__tests__/fixtures/coupon.samples';
 import * as samples from './__tests__/fixtures/price.samples';
 import * as results from './__tests__/fixtures/pricing.results';
 import {
@@ -513,6 +514,14 @@ describe('computeAggregatedAndPriceTotals', () => {
         samples.priceItem,
       ]);
       expect(result).toEqual(results.computedResultWithPricesWithAndWithoutCoupons);
+    });
+
+    it('should disregard any coupons set on a composite price when computing discounts and totals', () => {
+      const resultWithoutCoupons = computeAggregatedAndPriceTotals([
+        { ...samples.compositePrice, _coupons: [coupons.fixedCashbackCoupon] },
+      ]);
+      const resultWithCoupons = computeAggregatedAndPriceTotals([samples.compositePrice]);
+      expect(resultWithCoupons.total_details).toEqual(resultWithoutCoupons.total_details);
     });
 
     it('should compute discounts and totals correctly when given composite prices with components containing coupons', () => {

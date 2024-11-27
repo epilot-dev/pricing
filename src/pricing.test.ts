@@ -515,6 +515,11 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(result).toEqual(results.computedResultWithPricesWithAndWithoutCoupons);
     });
 
+    it('should compute discounts and totals correctly when given composite prices with components containing coupons', () => {
+      const result = computeAggregatedAndPriceTotals([samples.compositePriceWithComponentsWithCoupons]);
+      expect(result).toEqual(results.computedCompositePriceWithComponentsWithFixedDiscount);
+    });
+
     it('should compute fixed amount cashbacks and totals correctly', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithFixedAmountCashbackCoupon]);
       expect(result).toEqual(results.computedPriceWithFixedAmountCashbackCoupon);

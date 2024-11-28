@@ -12,6 +12,11 @@ export const percentageDiscountCoupon: Coupon = {
   percentage_value: '25',
 };
 
+export const percentage10DiscountCoupon: Coupon = {
+  ...percentageDiscountCoupon,
+  percentage_value: '10',
+};
+
 export const fixedDiscountCoupon: Coupon = {
   _id: 'coupon#2',
   _schema: 'coupon',

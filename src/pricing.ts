@@ -235,6 +235,7 @@ export const computeCompositePrice = (
           ...(itemTaxRate.tax && { tax: getPriceTax(itemTaxRate.tax, component) }),
         },
       ],
+      ...(component?._coupons && { _coupons: component?._coupons }),
     };
 
     return computePriceComponent(itemComponent, priceItem);

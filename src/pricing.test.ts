@@ -517,10 +517,10 @@ describe('computeAggregatedAndPriceTotals', () => {
     });
 
     it('should disregard any coupons set on a composite price when computing discounts and totals', () => {
-      const resultWithoutCoupons = computeAggregatedAndPriceTotals([
+      const resultWithoutCoupons = computeAggregatedAndPriceTotals([samples.compositePrice]);
+      const resultWithCoupons = computeAggregatedAndPriceTotals([
         { ...samples.compositePrice, _coupons: [coupons.fixedCashbackCoupon] },
       ]);
-      const resultWithCoupons = computeAggregatedAndPriceTotals([samples.compositePrice]);
       expect(resultWithCoupons.total_details).toEqual(resultWithoutCoupons.total_details);
     });
 

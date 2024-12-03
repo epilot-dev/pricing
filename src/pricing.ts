@@ -977,7 +977,8 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
     }),
   }),
   ...(priceItem.get_ag &&
-    priceItem.pricing_model === PricingModel.externalGetAG && {
+    (priceItem.pricing_model === PricingModel.externalGetAG ||
+      priceItem._price?.pricing_model === PricingModel.externalGetAG) && {
       get_ag: {
         ...priceItem.get_ag,
         unit_amount_net: toDineroFromInteger(priceItem.get_ag.unit_amount_net).convertPrecision(precision).getAmount(),

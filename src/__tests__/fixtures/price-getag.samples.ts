@@ -22,7 +22,6 @@ export const priceGetAG: PriceItemDto = {
     _tags: [],
   },
   type: 'recurring',
-  pricing_model: 'external_getag',
   get_ag: {
     category: 'power',
     markup_amount: 10,

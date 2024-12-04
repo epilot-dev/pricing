@@ -1,6 +1,6 @@
 {
   "name": "@epilot/pricing",
-  "version": "4.44.5",
+  "version": "4.44.6",
   "description": "Pricing Library",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

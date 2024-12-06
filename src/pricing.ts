@@ -159,39 +159,38 @@ const getPriceComponents = (priceItem: CompositePriceItemDto): PriceComponent[] 
  * @returns the product and price relations from the price items grouped by their slug.
  */
 export const extractPricingEntitiesBySlug = (
-  priceItems?: (PriceItem | CompositePriceItem)[],
+  priceItems: Array<PriceItem | CompositePriceItem> = [],
 ): PricingEntitiesExtractResult => {
-  const productRelations = [] as RelationAttributeValue['$relation'];
-  const priceRelations = [] as RelationAttributeValue['$relation'];
-  const priceLookup: Record<string, boolean> = {};
-  const productLookup: Record<string, boolean> = {};
-  const pricingTags: string[] = [];
+  const productSet = new Set<string>();
+  const priceSet = new Set<string>();
+  const tagSet = new Set<string>();
 
-  priceItems?.forEach((item) => {
-    if (item?.product_id && !productLookup[item.product_id]) {
-      productRelations.push({
-        entity_id: item.product_id,
-        _schema: 'product',
-        _tags: [],
-      });
-      pricingTags.push(...(item._product?._tags || []));
-      productLookup[item.product_id] = true;
+  for (const item of priceItems) {
+    /**
+     * Account for possibility that function might be called with
+     * array containing nullish items, even though it's typed not to
+     */
+    if (!item) continue;
+
+    if (item.product_id) productSet.add(item.product_id);
+    if (item.price_id) priceSet.add(item.price_id);
+
+    const productTags = item._product?._tags?.filter(Boolean);
+    const priceTags = item._price?._tags?.filter(Boolean);
+
+    for (const tag of productTags ?? []) {
+      tagSet.add(tag);
     }
-    if (item?.price_id && !priceLookup[item.price_id]) {
-      priceRelations.push({
-        entity_id: item.price_id,
-        _schema: 'price',
-        _tags: [],
-      });
-      pricingTags.push(...(item._price?._tags || []));
-      priceLookup[item.price_id] = true;
+
+    for (const tag of priceTags ?? []) {
+      tagSet.add(tag);
     }
-  });
+  }
 
   return {
-    product: { $relation: productRelations },
-    price: { $relation: priceRelations },
-    _tags: [...new Set(pricingTags)],
+    product: { $relation: Array.from(productSet).map((id) => ({ entity_id: id, _schema: 'product', _tags: [] })) },
+    price: { $relation: Array.from(priceSet).map((id) => ({ entity_id: id, _schema: 'price', _tags: [] })) },
+    _tags: Array.from(tagSet),
   };
 };
 

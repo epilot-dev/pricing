@@ -586,18 +586,17 @@ const recomputeDetailTotals = (
       const matchingCashback = cashbacks[cashbackMatchIndex];
       const cashbackAmountTotal = toDineroFromInteger(matchingCashback.amount_total);
       matchingCashback.amount_total = cashbackAmountTotal.add(priceCashBackAmount).getAmount();
-
-      // Removes cashback if the total amount is 0, this is to avoid having empty cashbacks in the breakdown
-      // TODO: Improve this so that the metadata is not carrying around keys that no longer apply, like a coupon with a 0 amount
-      if (matchingCashback.amount_total === 0) {
-        cashbacks.splice(cashbackMatchIndex, 1);
-      }
     } else {
       cashbacks.push({
         cashback_period: cashbackPeriod,
         amount_total: priceCashBackAmount.getAmount(),
       });
     }
+  }
+
+  // Remove empty cashbacks from the breakdown
+  if (cashbacks.length > 0) {
+    cashbacks.filter((cashback) => cashback.amount_total > 0);
   }
 
   return {

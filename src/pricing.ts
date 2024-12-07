@@ -596,7 +596,7 @@ const recomputeDetailTotals = (
 
   // Remove empty cashbacks from the breakdown
   if (cashbacks.length > 0) {
-    cashbacks.filter((cashback) => cashback.amount_total > 0);
+    cashbacks.filter((cashback) => toDineroFromInteger(cashback.amount_total).greaterThan(toDineroFromInteger(0)));
   }
 
   return {

@@ -467,6 +467,8 @@ const recomputeDetailTotals = (
       ? toDineroFromInteger(priceItemToAppend.cashback_amount!)
       : undefined;
 
+  const coupon = (priceItemToAppend as PriceItemDto)?._coupons?.[0];
+
   const cashbackPeriod = priceItemToAppend.cashback_period;
   const priceBeforeDiscountAmountTotal =
     typeof priceItemToAppend.before_discount_amount_total !== 'undefined'
@@ -579,7 +581,7 @@ const recomputeDetailTotals = (
   }
 
   // Cashback totals
-  if (priceCashBackAmount && cashbackPeriod !== undefined) {
+  if (priceCashBackAmount && cashbackPeriod !== undefined && Boolean(coupon)) {
     const cashbackMatchIndex = cashbacks.findIndex((cashback) => cashback.cashback_period === cashbackPeriod);
 
     if (cashbackMatchIndex !== -1) {
@@ -592,6 +594,11 @@ const recomputeDetailTotals = (
         amount_total: priceCashBackAmount.getAmount(),
       });
     }
+  }
+
+  // Remove empty cashbacks from the breakdown
+  if (cashbacks.length > 0) {
+    cashbacks.filter((cashback) => cashback.amount_total > 0);
   }
 
   return {

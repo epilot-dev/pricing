@@ -82,6 +82,9 @@ type PriceComponent = NonNullable<CompositePriceItemDto['item_components']>[numb
 export const isCompositePrice = (priceItem: PriceItemDto | CompositePriceItemDto): priceItem is CompositePriceItemDto =>
   Boolean(priceItem.is_composite_price || priceItem._price?.is_composite_price);
 
+const isCompositePriceItem = (priceItem: PriceItem | CompositePriceItem): priceItem is CompositePriceItem =>
+  Boolean(priceItem.is_composite_price || priceItem._price?.is_composite_price);
+
 export const computePriceComponent = (
   priceItemComponent: PriceItemDto,
   priceItem: CompositePriceItemDto,
@@ -382,7 +385,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
             externalFeeMapping,
           });
 
-      const updatedTotals = isUnitAmountApproved(
+      const updatedTotals = isOnRequestUnitAmountApproved(
         priceItem,
         priceItemToAppend?._price?.price_display_in_journeys ?? price?.price_display_in_journeys,
         undefined,
@@ -638,7 +641,7 @@ const recomputeDetailTotalsFromCompositePrice = (
   };
 
   return (compositePriceItem.item_components ?? []).reduce((detailTotals, itemComponent) => {
-    const updatedTotals = isUnitAmountApproved(
+    const updatedTotals = isOnRequestUnitAmountApproved(
       itemComponent,
       itemComponent._price?.price_display_in_journeys,
       compositePriceItem,
@@ -1142,7 +1145,37 @@ const getPriceRecurrenceByTax = (
   );
 };
 
-const isUnitAmountApproved = (
+/**
+ * Determines if a price item is approved based on its display mode and approval property.
+ *
+ * If price item has a parent item, it is always cosidered approved if the display mode is not 'show_as_on_request'.
+ *
+ * @param priceItem - The price item to check, which can be either a `PriceItem` or a `CompositePriceItem`.
+ * @param parentPriceItem - An optional parent composite price item, used for additional context when checking unit amounts.
+ * @returns `true` if the price item is approved, `false` otherwise.
+ */
+export const isPriceItemApproved = (
+  priceItem: PriceItem | CompositePriceItem,
+  parentPriceItem?: CompositePriceItem,
+) => {
+  if (isCompositePriceItem(priceItem)) {
+    const hasHiddenPriceComponents = (priceItem.item_components ?? []).some(isDisplayModeRequiringApproval);
+
+    return hasHiddenPriceComponents
+      ? Boolean(priceItem.on_request_approved)
+      : Boolean(!isDisplayModeRequiringApproval(priceItem) || priceItem?.on_request_approved);
+  } else {
+    if (parentPriceItem) {
+      return Boolean(
+        priceItem._price?.price_display_in_journeys !== 'show_as_on_request' || parentPriceItem?.on_request_approved,
+      );
+    }
+
+    return Boolean(!isDisplayModeRequiringApproval(priceItem) || priceItem?.on_request_approved);
+  }
+};
+
+const isOnRequestUnitAmountApproved = (
   priceItem: PriceItem,
   priceDisplayInJourneys?: Price['price_display_in_journeys'],
   parentPriceItem?: CompositePriceItem,
@@ -1154,13 +1187,42 @@ const isUnitAmountApproved = (
     const parentPriceIsHiddenPrice = parentPriceItem._price?.price_display_in_journeys === 'show_as_on_request';
 
     if (parentHasHiddenPriceComponents || parentPriceIsHiddenPrice) {
-      return parentPriceItem?.on_request_approved;
+      return Boolean(parentPriceItem?.on_request_approved);
     }
 
     return true;
   }
 
-  return priceDisplayInJourneys !== 'show_as_on_request' || priceItem?.on_request_approved;
+  return Boolean(priceDisplayInJourneys !== 'show_as_on_request' || priceItem?.on_request_approved);
+};
+
+/**
+ * Determines if a price item or composite price item requires approval.
+ *
+ * This function checks if the given price item or any of its components (if it is a composite price)
+ * require approval based on their display mode.
+ *
+ * @param priceItem - The price item or composite price item to check.
+ * @returns `true` if the price item or any of its components require approval, otherwise `false`.
+ */
+export const isRequiringApproval = (priceItem: PriceItem | CompositePriceItem): boolean => {
+  const isRequiringApproval = isDisplayModeRequiringApproval(priceItem);
+
+  if (isCompositePriceItem(priceItem)) {
+    return (
+      isRequiringApproval ||
+      Boolean(priceItem.item_components?.some((component) => isDisplayModeRequiringApproval(component)))
+    );
+  }
+
+  return isRequiringApproval;
+};
+
+const isDisplayModeRequiringApproval = (priceItem: PriceItem | CompositePriceItem): boolean => {
+  return (
+    priceItem._price?.price_display_in_journeys === 'show_as_on_request' ||
+    priceItem._price?.price_display_in_journeys === 'show_as_starting_price'
+  );
 };
 
 export const computeQuantities = (price: Price | undefined, quantity: number, priceMapping?: PriceInputMapping) => {

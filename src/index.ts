@@ -34,6 +34,8 @@ export {
   computePriceItemDetails,
   computeQuantities,
   extractPricingEntitiesBySlug,
+  isPriceItemApproved,
+  isRequiringApproval,
 } from './pricing';
 export {
   computeCumulativeValue,

@@ -531,7 +531,7 @@ const recomputeDetailTotals = (
     const subTotalAmount = toDineroFromInteger(recurrence.amount_subtotal);
     const totalAmount = toDineroFromInteger(recurrence.amount_total);
     const taxAmount = toDineroFromInteger(recurrence.amount_tax!);
-    const beforeDiscountAmountTotal =
+    const existingRecurrenceBeforeDiscountAmountTotal =
       typeof recurrence.before_discount_amount_total !== 'undefined'
         ? toDineroFromInteger(recurrence.before_discount_amount_total)
         : undefined;
@@ -545,9 +545,10 @@ const recomputeDetailTotals = (
     recurrence.amount_total_decimal = totalAmount.add(priceTotal).toUnit().toString();
     recurrence.amount_tax = taxAmount.add(priceTax).getAmount();
 
-    if (priceBeforeDiscountAmountTotal) {
+    if (priceBeforeDiscountAmountTotal || existingRecurrenceBeforeDiscountAmountTotal) {
+      const baseAmount = priceBeforeDiscountAmountTotal || priceTotal;
       const recurrenceBeforeDiscountAmountTotal =
-        beforeDiscountAmountTotal?.add(priceBeforeDiscountAmountTotal) ?? priceBeforeDiscountAmountTotal;
+        existingRecurrenceBeforeDiscountAmountTotal?.add(baseAmount) ?? baseAmount;
       recurrence.before_discount_amount_total = recurrenceBeforeDiscountAmountTotal.getAmount();
       recurrence.before_discount_amount_total_decimal = recurrenceBeforeDiscountAmountTotal.toUnit().toString();
     }

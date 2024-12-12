@@ -1,3 +1,4 @@
+import { PriceItems } from '@epilot/pricing-client';
 import type { Currency } from 'dinero.js';
 
 import { DEFAULT_CURRENCY } from './currencies';
@@ -1239,6 +1240,32 @@ export const computeQuantities = (price: Price | undefined, quantity: number, pr
     unitAmountMultiplier,
     isUsingPriceMappingToSelectTier: Boolean(normalizedPriceMappingInput),
   };
+};
+
+export const getRecurrencesWithEstimatedPrices = (lineItems: PriceItems | undefined) => {
+  const recurrences: Record<string, boolean> = {};
+
+  lineItems?.forEach((lineItem) => {
+    if (isCompositePriceItem(lineItem)) {
+      lineItem.item_components?.forEach((component) => {
+        const recurrence = component.type === 'recurring' ? component.billing_period : component.type;
+
+        if (recurrence !== undefined) {
+          recurrences[recurrence] =
+            recurrences[recurrence] || component._price?.price_display_in_journeys === 'estimated_price';
+        }
+      });
+    } else {
+      const recurrence = lineItem.type === 'recurring' ? lineItem.billing_period : lineItem.type;
+
+      if (recurrence !== undefined) {
+        recurrences[recurrence] =
+          recurrences[recurrence] || lineItem._price?.price_display_in_journeys === 'estimated_price';
+      }
+    }
+  });
+
+  return recurrences;
 };
 
 const computeExternalFee = (

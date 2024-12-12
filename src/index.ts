@@ -36,6 +36,7 @@ export {
   extractPricingEntitiesBySlug,
   isPriceItemApproved,
   isRequiringApproval,
+  getRecurrencesWithEstimatedPrices,
 } from './pricing';
 export {
   computeCumulativeValue,

@@ -1,3 +1,4 @@
+import { PriceItems } from '@epilot/pricing-client';
 import * as coupons from './__tests__/fixtures/coupon.samples';
 import * as samples from './__tests__/fixtures/price.samples';
 import * as results from './__tests__/fixtures/pricing.results';
@@ -7,6 +8,7 @@ import {
   computeCompositePrice,
   computePriceItemDetails,
   extractPricingEntitiesBySlug,
+  getRecurrencesWithEstimatedPrices,
   isCompositePrice,
   mapToPriceSnapshot,
   mapToProductSnapshot,
@@ -680,3 +682,169 @@ describe('mapToProductSnapshot', () => {
     expect(result).not.toHaveProperty(Array.from(ENTITY_FIELDS_EXCLUSION_LIST));
   });
 });
+
+describe('getRecurrencesWithEstimatedPrices', () => {
+  const monthlyEstimateComponent = {
+    type: 'recurring',
+    billing_period: 'monthly',
+    _price: {
+      price_display_in_journeys: 'estimated_price'
+    }
+  }
+
+  const oneTimeEstimateComponent = {
+    type: 'one_time',
+    _price: {
+      price_display_in_journeys: 'estimated_price'
+    }
+  }
+
+  const monthlyComponent = {
+    type: 'recurring',
+    billing_period: 'monthly',
+    _price: {
+      price_display_in_journeys: 'show_price'
+    }
+  }
+
+  const oneTimeComponent = {
+    type: 'one_time',
+    _price: {
+      price_display_in_journeys: 'show_price'
+    }
+  }
+
+  test('should return recurrences with estimated prices (composite price, monthly estimated)', () => {
+    // given
+    const priceDetails = [
+      {
+        is_composite_price: true,
+        item_components: [
+          oneTimeComponent,
+          monthlyComponent,
+          monthlyEstimateComponent
+        ]
+      },
+      {
+        is_composite_price: true,
+        item_components: [oneTimeComponent, monthlyComponent]
+      }
+    ] as PriceItems
+
+    // when
+    const result = getRecurrencesWithEstimatedPrices(priceDetails)
+
+    // then
+    expect(result).toEqual({ monthly: true, one_time: false })
+  })
+
+  test('should return recurrences with estimated prices (composite price, one time and monthly estimated)', () => {
+    // given
+    const priceDetails = [
+      {
+        is_composite_price: true,
+        item_components: [
+          oneTimeEstimateComponent,
+          oneTimeComponent,
+          monthlyComponent,
+          monthlyEstimateComponent
+        ]
+      },
+      {
+        is_composite_price: true,
+        item_components: [oneTimeComponent, monthlyComponent]
+      }
+    ] as PriceItems
+
+    // when
+    const result = getRecurrencesWithEstimatedPrices(priceDetails)
+
+    // then
+    expect(result).toEqual({ monthly: true, one_time: true })
+  })
+
+  test('should return recurrences with estimated prices (composite price, none estimated)', () => {
+    // given
+    const priceDetails = [
+      {
+        is_composite_price: true,
+        item_components: [oneTimeComponent, monthlyComponent]
+      },
+      {
+        is_composite_price: true,
+        item_components: [oneTimeComponent, monthlyComponent]
+      }
+    ] as PriceItems
+
+    // when
+    const result = getRecurrencesWithEstimatedPrices(priceDetails)
+
+    // then
+    expect(result).toEqual({ monthly: false, one_time: false })
+  })
+
+  test('should return recurrences with estimated prices (simple price, none estimated)', () => {
+    // given
+    const priceDetails: PriceItems =  [ oneTimeComponent, monthlyComponent ]
+
+    // when
+    const result = getRecurrencesWithEstimatedPrices(priceDetails)
+
+    // then
+    expect(result).toEqual({ monthly: false, one_time: false })
+  })
+
+  test('should return recurrences with estimated prices (simple price, monthly estimated)', () => {
+    // given
+    const priceDetails = [
+      oneTimeComponent,
+      monthlyComponent,
+      monthlyEstimateComponent
+    ] as PriceItems
+
+    // when
+    const result = getRecurrencesWithEstimatedPrices(priceDetails)
+
+    // then
+    expect(result).toEqual({ monthly: true, one_time: false })
+  })
+
+  test('should return recurrences with estimated prices (simple price, one time and monthly estimated)', () => {
+    // given
+    const priceDetails = [
+      oneTimeComponent,
+      oneTimeEstimateComponent,
+      monthlyComponent,
+      monthlyEstimateComponent
+    ] as PriceItems
+
+    // when
+    const result = getRecurrencesWithEstimatedPrices(priceDetails)
+
+    // then
+    expect(result).toEqual({ monthly: true, one_time: true })
+  })
+
+  test('should return recurrences with estimated prices (mixed prices, one time and monthly estimated)', () => {
+    // given
+    const priceDetails = [
+      {
+        is_composite_price: true,
+        item_components: [
+          oneTimeEstimateComponent,
+          oneTimeComponent,
+          monthlyComponent
+        ]
+      },
+      oneTimeComponent,
+      monthlyComponent,
+      monthlyEstimateComponent
+    ] as PriceItems
+
+    // when
+    const result = getRecurrencesWithEstimatedPrices(priceDetails)
+
+    // then
+    expect(result).toEqual({ monthly: true, one_time: true })
+  })
+})

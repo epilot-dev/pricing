@@ -12,6 +12,7 @@ export {
   toDineroFromInteger,
   toIntegerAmount,
   addSeparatorToDineroString,
+  getCurrencySymbol,
 } from './formatters';
 export { DECIMAL_PRECISION, GENERIC_UNIT_DISPLAY_LABEL, BillingPeriods, TaxRates } from './formatters/constants';
 export {

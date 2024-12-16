@@ -169,8 +169,10 @@ export const recomputeWithDiscounts = ({
     return baseResult;
   }
 
-  const unitAmount = toDinero(baseResult.unit_amount_net_decimal, currency);
-  const unitAmountGross = toDinero(baseResult.unit_amount_gross_decimal, currency);
+  const unitAmount = toDineroFromInteger(baseResult.unit_amount!, currency);
+  const unitAmountNet = toDineroFromInteger(baseResult.unit_amount_net!, currency);
+  const unitAmountGross = toDineroFromInteger(baseResult.unit_amount_gross!, currency);
+  const taxRate = getTaxValue(tax);
 
   let discountPercentage: number | undefined;
   let unitDiscountAmount: Dinero | undefined;
@@ -204,34 +206,47 @@ export const recomputeWithDiscounts = ({
   }
 
   // Handle regular discounts
-  const unitAmountGrossBeforeDiscount = unitAmountGross;
-
   if (isPercentageCoupon(coupon)) {
     discountPercentage = clamp(Number(coupon.percentage_value), 0, 100);
-    unitDiscountAmount = unitAmountGross.multiply(discountPercentage).divide(100);
+    // For tax-exclusive prices, apply discount to net amount
+    if (isTaxInclusive) {
+      unitDiscountAmount = unitAmountGross.multiply(discountPercentage).divide(100);
+      unitDiscountAmountNet = unitDiscountAmount.divide(1 + taxRate);
+    } else {
+      unitDiscountAmountNet = unitAmountNet.multiply(discountPercentage).divide(100);
+      unitDiscountAmount = unitDiscountAmountNet;
+    }
   } else {
     const fixedDiscountAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
-    unitDiscountAmount = fixedDiscountAmount.greaterThan(unitAmountGross) ? unitAmountGross : fixedDiscountAmount;
+    if (isTaxInclusive) {
+      unitDiscountAmount = fixedDiscountAmount.greaterThan(unitAmountGross) ? unitAmountGross : fixedDiscountAmount;
+      unitDiscountAmountNet = unitDiscountAmount.divide(1 + taxRate);
+    } else {
+      unitDiscountAmountNet = fixedDiscountAmount.greaterThan(unitAmountNet) ? unitAmountNet : fixedDiscountAmount;
+      unitDiscountAmount = unitDiscountAmountNet;
+    }
   }
 
-  // Calculate net discount amount based on tax inclusivity
-  if (isTaxInclusive) {
-    const taxRate = getTaxValue(tax);
-    unitDiscountAmountNet = unitDiscountAmount.divide(1 + taxRate);
-  } else {
-    unitDiscountAmountNet = unitDiscountAmount;
-  }
+  // Calculate new amounts
+  const newUnitAmountNet = unitAmountNet.subtract(unitDiscountAmountNet);
 
-  // Apply discount to amounts
-  const newUnitAmountGross = unitAmountGross.subtract(unitDiscountAmount);
-  const newUnitAmountNet = unitAmount.subtract(unitDiscountAmountNet);
+  // For tax-exclusive, calculate gross after applying tax to discounted net
+  const newUnitAmountGross = isTaxInclusive
+    ? unitAmountGross.subtract(unitDiscountAmount)
+    : newUnitAmountNet.multiply(1 + taxRate);
 
-  // Calculate new tax amounts
+  const beforeDiscountTaxAmount = isTaxInclusive
+    ? unitAmountGross.subtract(unitAmountNet)
+    : unitAmountNet.multiply(taxRate);
+
   const newTaxAmount = newUnitAmountGross.subtract(newUnitAmountNet).multiply(unitAmountMultiplier);
-  const taxDiscountAmount = unitDiscountAmount.subtract(unitDiscountAmountNet).multiply(unitAmountMultiplier);
+  const taxDiscountAmount = isTaxInclusive
+    ? unitDiscountAmount.subtract(unitDiscountAmountNet).multiply(unitAmountMultiplier)
+    : unitDiscountAmountNet.multiply(taxRate).multiply(unitAmountMultiplier);
 
   return {
     ...baseResult,
+    unit_amount: isTaxInclusive ? newUnitAmountGross.getAmount() : newUnitAmountNet.getAmount(),
     unit_amount_gross: newUnitAmountGross.getAmount(),
     unit_amount_gross_decimal: newUnitAmountGross.toUnit().toString(),
     unit_amount_net: newUnitAmountNet.getAmount(),
@@ -241,14 +256,16 @@ export const recomputeWithDiscounts = ({
     amount_tax: newTaxAmount.getAmount(),
     unit_discount_amount: unitDiscountAmount.getAmount(),
     unit_discount_amount_decimal: unitDiscountAmount.toUnit().toString(),
-    before_discount_unit_amount: unitAmountGrossBeforeDiscount.getAmount(),
+    before_discount_unit_amount: unitAmount.getAmount(),
     unit_discount_amount_net: unitDiscountAmountNet.getAmount(),
     unit_discount_amount_net_decimal: unitDiscountAmountNet.toUnit().toString(),
     tax_discount_amount: taxDiscountAmount.getAmount(),
     tax_discount_amount_decimal: taxDiscountAmount.toUnit().toString(),
+    before_discount_tax_amount: beforeDiscountTaxAmount.multiply(unitAmountMultiplier).getAmount(),
+    before_discount_tax_amount_decimal: beforeDiscountTaxAmount.toUnit().toString(),
     discount_amount: unitDiscountAmount.multiply(unitAmountMultiplier).getAmount(),
     discount_percentage: discountPercentage,
-    before_discount_amount_total: unitAmountGrossBeforeDiscount.multiply(unitAmountMultiplier).getAmount(),
+    before_discount_amount_total: unitAmountGross.multiply(unitAmountMultiplier).getAmount(),
   };
 };
 

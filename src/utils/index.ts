@@ -98,22 +98,19 @@ export const getQuantityForTier = ({ min, max, quantity }: { min?: number; max: 
 
 const clamp = (value: number, minimum: number, maximum: number) => Math.min(Math.max(value, minimum), maximum);
 
-export const computePriceItemValues = (
-  _priceItem: PriceItemDto,
-  {
-    unitAmountDecimal,
-    currency,
-    isTaxInclusive,
-    unitAmountMultiplier,
-    tax,
-  }: {
-    unitAmountDecimal?: string;
-    currency: Currency;
-    isTaxInclusive: boolean;
-    unitAmountMultiplier: number;
-    tax?: Tax;
-  },
-): PriceItemsTotals => {
+export const computePriceItemValues = ({
+  unitAmountDecimal,
+  currency,
+  isTaxInclusive,
+  unitAmountMultiplier,
+  tax,
+}: {
+  unitAmountDecimal?: string;
+  currency: Currency;
+  isTaxInclusive: boolean;
+  unitAmountMultiplier: number;
+  tax?: Tax;
+}): PriceItemsTotals => {
   const unitAmount = toDinero(unitAmountDecimal, currency);
   const taxRate = getTaxValue(tax);
 
@@ -293,29 +290,26 @@ const getPriceTierForQuantity = (tiers: PriceTier[], quantity: number): PriceTie
   return selectedTiers[selectedTiers.length - 1] ?? null;
 };
 
-export const computeTieredVolumePriceItemValues = (
-  priceItem: PriceItemDto,
-  {
-    tiers = [],
-    currency,
-    isTaxInclusive,
-    quantityToSelectTier,
-    tax,
-    unitAmountMultiplier,
-    unchangedPriceDisplayInJourneys,
-  }: {
-    tiers?: PriceTier[];
-    currency: Currency;
-    isTaxInclusive: boolean;
-    quantityToSelectTier: number;
-    tax: Tax | undefined;
-    unitAmountMultiplier: number;
-    unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'];
-  },
-): PriceItemsTotals => {
+export const computeTieredVolumePriceItemValues = ({
+  tiers = [],
+  currency,
+  isTaxInclusive,
+  quantityToSelectTier,
+  tax,
+  unitAmountMultiplier,
+  unchangedPriceDisplayInJourneys,
+}: {
+  tiers?: PriceTier[];
+  currency: Currency;
+  isTaxInclusive: boolean;
+  quantityToSelectTier: number;
+  tax: Tax | undefined;
+  unitAmountMultiplier: number;
+  unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'];
+}): PriceItemsTotals => {
   const tier = getPriceTierForQuantity(tiers, quantityToSelectTier);
 
-  const tierValues = computePriceItemValues(priceItem, {
+  const tierValues = computePriceItemValues({
     unitAmountDecimal: tier?.unit_amount_decimal,
     currency,
     isTaxInclusive,
@@ -347,28 +341,25 @@ export const computeTieredVolumePriceItemValues = (
   };
 };
 
-export const computeTieredFlatFeePriceItemValues = (
-  priceItem: PriceItemDto,
-  {
-    tiers = [],
-    currency,
-    isTaxInclusive,
-    quantityToSelectTier,
-    tax,
-    quantity,
-    isUsingPriceMappingToSelectTier,
-    unchangedPriceDisplayInJourneys,
-  }: {
-    tiers?: PriceTier[];
-    currency: Currency;
-    isTaxInclusive: boolean;
-    quantityToSelectTier: number;
-    tax?: Tax;
-    quantity: number;
-    isUsingPriceMappingToSelectTier: boolean;
-    unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'];
-  },
-): PriceItemsTotals => {
+export const computeTieredFlatFeePriceItemValues = ({
+  tiers = [],
+  currency,
+  isTaxInclusive,
+  quantityToSelectTier,
+  tax,
+  quantity,
+  isUsingPriceMappingToSelectTier,
+  unchangedPriceDisplayInJourneys,
+}: {
+  tiers?: PriceTier[];
+  currency: Currency;
+  isTaxInclusive: boolean;
+  quantityToSelectTier: number;
+  tax?: Tax;
+  quantity: number;
+  isUsingPriceMappingToSelectTier: boolean;
+  unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'];
+}): PriceItemsTotals => {
   const tier = getPriceTierForQuantity(tiers, quantityToSelectTier);
   /**
    * If the price mapping is used to select the tier, we need to multiply the totals by the quantity.
@@ -376,7 +367,7 @@ export const computeTieredFlatFeePriceItemValues = (
    */
   const quantityToMultiply = isUsingPriceMappingToSelectTier ? quantity : 1;
 
-  const tierValues = computePriceItemValues(priceItem, {
+  const tierValues = computePriceItemValues({
     unitAmountDecimal: tier?.flat_fee_amount_decimal,
     currency,
     isTaxInclusive,
@@ -412,28 +403,25 @@ export const computeTieredFlatFeePriceItemValues = (
   };
 };
 
-export const computeTieredGraduatedPriceItemValues = (
-  priceItem: PriceItemDto,
-  {
-    tiers = [],
-    currency,
-    isTaxInclusive,
-    quantityToSelectTier,
-    tax,
-    quantity,
-    isUsingPriceMappingToSelectTier,
-    unchangedPriceDisplayInJourneys,
-  }: {
-    tiers?: PriceTier[];
-    currency: Currency;
-    isTaxInclusive: boolean;
-    quantityToSelectTier: number;
-    tax?: Tax;
-    quantity: number;
-    isUsingPriceMappingToSelectTier: boolean;
-    unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'];
-  },
-): PriceItemsTotals => {
+export const computeTieredGraduatedPriceItemValues = ({
+  tiers = [],
+  currency,
+  isTaxInclusive,
+  quantityToSelectTier,
+  tax,
+  quantity,
+  isUsingPriceMappingToSelectTier,
+  unchangedPriceDisplayInJourneys,
+}: {
+  tiers?: PriceTier[];
+  currency: Currency;
+  isTaxInclusive: boolean;
+  quantityToSelectTier: number;
+  tax?: Tax;
+  quantity: number;
+  isUsingPriceMappingToSelectTier: boolean;
+  unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'];
+}): PriceItemsTotals => {
   const priceTiersForQuantity = getPriceTiersForQuantity(tiers, quantityToSelectTier);
 
   const totals = priceTiersForQuantity.reduce(
@@ -446,7 +434,7 @@ export const computeTieredGraduatedPriceItemValues = (
         quantity: quantityToSelectTier,
       });
 
-      const tierValues = computePriceItemValues(priceItem, {
+      const tierValues = computePriceItemValues({
         unitAmountDecimal: tier.unit_amount_decimal,
         currency,
         isTaxInclusive,
@@ -510,26 +498,23 @@ export const computeTieredGraduatedPriceItemValues = (
   };
 };
 
-export const computeExternalGetAGItemValues = (
-  priceItem: PriceItemDto,
-  {
-    getAg,
-    currency,
-    isTaxInclusive,
-    unitAmountMultiplier,
-    userInput,
-    externalFeeAmountDecimal,
-    tax,
-  }: {
-    getAg: PriceGetAg;
-    currency: Currency;
-    isTaxInclusive: boolean;
-    unitAmountMultiplier: number;
-    userInput: number;
-    externalFeeAmountDecimal?: string;
-    tax?: Tax;
-  },
-): PriceItemsTotals => {
+export const computeExternalGetAGItemValues = ({
+  getAg,
+  currency,
+  isTaxInclusive,
+  unitAmountMultiplier,
+  userInput,
+  externalFeeAmountDecimal,
+  tax,
+}: {
+  getAg: PriceGetAg;
+  currency: Currency;
+  isTaxInclusive: boolean;
+  unitAmountMultiplier: number;
+  userInput: number;
+  externalFeeAmountDecimal?: string;
+  tax?: Tax;
+}): PriceItemsTotals => {
   if (externalFeeAmountDecimal === undefined || getAg === undefined || userInput === 0) {
     return {
       unit_amount_net: 0,
@@ -550,7 +535,7 @@ export const computeExternalGetAGItemValues = (
 
   const markupValues =
     getAg.markup_pricing_model === MarkupPricingModel.tieredVolume && getAg.markup_tiers
-      ? computeTieredVolumePriceItemValues(priceItem, {
+      ? computeTieredVolumePriceItemValues({
           tiers: getAg.markup_tiers,
           currency,
           isTaxInclusive,
@@ -560,7 +545,7 @@ export const computeExternalGetAGItemValues = (
           unchangedPriceDisplayInJourneys: 'show_price',
         })
       : getAg.markup_pricing_model === MarkupPricingModel.tieredFlatFee && getAg.markup_tiers
-      ? computeTieredFlatFeePriceItemValues(priceItem, {
+      ? computeTieredFlatFeePriceItemValues({
           tiers: getAg.markup_tiers,
           currency,
           isTaxInclusive,

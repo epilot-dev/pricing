@@ -216,32 +216,34 @@ export const applyDiscounts = (
     }
   }
 
-  const newUnitAmountNet = unitAmountNet.subtract(unitDiscountAmountNet);
+  const afterDiscountUnitAmountNet = unitAmountNet.subtract(unitDiscountAmountNet);
 
   /* For tax-exclusive, calculate gross after applying tax to discounted net */
-  const newUnitAmountGross = isTaxInclusive
+  const afterDiscountUnitAmountGross = isTaxInclusive
     ? unitAmountGross.subtract(unitDiscountAmount)
-    : newUnitAmountNet.multiply(1 + taxRate);
+    : afterDiscountUnitAmountNet.multiply(1 + taxRate);
 
   const beforeDiscountTaxAmount = isTaxInclusive
     ? unitAmountGross.subtract(unitAmountNet)
     : unitAmountNet.multiply(taxRate);
 
-  const newTaxAmount = newUnitAmountGross.subtract(newUnitAmountNet).multiply(unitAmountMultiplier);
+  const afterDiscountTaxAmount = afterDiscountUnitAmountGross
+    .subtract(afterDiscountUnitAmountNet)
+    .multiply(unitAmountMultiplier);
   const taxDiscountAmount = isTaxInclusive
     ? unitDiscountAmount.subtract(unitDiscountAmountNet).multiply(unitAmountMultiplier)
     : unitDiscountAmountNet.multiply(taxRate).multiply(unitAmountMultiplier);
 
   return {
     ...itemValues,
-    unit_amount: isTaxInclusive ? newUnitAmountGross.getAmount() : newUnitAmountNet.getAmount(),
-    unit_amount_gross: newUnitAmountGross.getAmount(),
-    unit_amount_gross_decimal: newUnitAmountGross.toUnit().toString(),
-    unit_amount_net: newUnitAmountNet.getAmount(),
-    unit_amount_net_decimal: newUnitAmountNet.toUnit().toString(),
-    amount_subtotal: newUnitAmountNet.multiply(unitAmountMultiplier).getAmount(),
-    amount_total: newUnitAmountGross.multiply(unitAmountMultiplier).getAmount(),
-    amount_tax: newTaxAmount.getAmount(),
+    unit_amount: isTaxInclusive ? afterDiscountUnitAmountGross.getAmount() : afterDiscountUnitAmountNet.getAmount(),
+    unit_amount_gross: afterDiscountUnitAmountGross.getAmount(),
+    unit_amount_gross_decimal: afterDiscountUnitAmountGross.toUnit().toString(),
+    unit_amount_net: afterDiscountUnitAmountNet.getAmount(),
+    unit_amount_net_decimal: afterDiscountUnitAmountNet.toUnit().toString(),
+    amount_subtotal: afterDiscountUnitAmountNet.multiply(unitAmountMultiplier).getAmount(),
+    amount_total: afterDiscountUnitAmountGross.multiply(unitAmountMultiplier).getAmount(),
+    amount_tax: afterDiscountTaxAmount.getAmount(),
     unit_discount_amount: unitDiscountAmount.getAmount(),
     unit_discount_amount_decimal: unitDiscountAmount.toUnit().toString(),
     before_discount_unit_amount: isTaxInclusive ? unitAmountGross.getAmount() : unitAmountNet.getAmount(),

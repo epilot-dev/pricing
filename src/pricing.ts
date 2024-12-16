@@ -31,6 +31,7 @@ import {
   isTaxInclusivePrice,
   isTruthy,
   PriceItemsTotals,
+  recomputeWithDiscounts,
 } from './utils';
 
 export enum PricingModel {
@@ -793,14 +794,24 @@ export const computePriceItem = (
         tax: priceTax,
       });
       break;
-    default:
-      itemValues = computePriceItemValues(priceItem, {
+    default: {
+      const baseValues = computePriceItemValues(priceItem, {
         unitAmountDecimal,
         currency,
         isTaxInclusive,
         unitAmountMultiplier,
         tax: priceTax,
       });
+
+      itemValues = recomputeWithDiscounts({
+        priceItem,
+        baseResult: baseValues,
+        currency,
+        isTaxInclusive,
+        unitAmountMultiplier,
+        tax: priceTax,
+      });
+    }
   }
 
   /* If there's a coupon cashback period output it */

@@ -99,7 +99,7 @@ export const getQuantityForTier = ({ min, max, quantity }: { min?: number; max: 
 const clamp = (value: number, minimum: number, maximum: number) => Math.min(Math.max(value, minimum), maximum);
 
 export const computePriceItemValues = (
-  priceItem: PriceItemDto,
+  _priceItem: PriceItemDto,
   {
     unitAmountDecimal,
     currency,
@@ -114,86 +114,24 @@ export const computePriceItemValues = (
     tax?: Tax;
   },
 ): PriceItemsTotals => {
-  const coupons = priceItem._coupons ?? [];
-  const [coupon] = coupons.filter(isValidCoupon);
-
-  let unitAmount = toDinero(unitAmountDecimal, currency);
-
-  let unitAmountBeforeDiscount: Dinero | undefined;
-  let discountPercentage: number | undefined;
-  let unitDiscountAmount: Dinero | undefined;
-  let unitDiscountAmountNet: Dinero | undefined;
-  let cashbackAmount: Dinero | undefined;
-  let afterCashbackAmountTotal: Dinero | undefined;
-
-  if (coupon) {
-    if (isCashbackCoupon(coupon)) {
-      if (isFixedValueCoupon(coupon)) {
-        cashbackAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
-      } else {
-        const cashbackPercentage = clamp(Number(coupon.percentage_value), 0, 100);
-        cashbackAmount = unitAmount.multiply(cashbackPercentage).divide(100);
-      }
-
-      const normalizedCashbackAmount = normalizeTimeFrequencyFromDineroInputValue(
-        cashbackAmount,
-        'yearly',
-        priceItem?._price?.billing_period as BillingPeriod,
-      );
-
-      afterCashbackAmountTotal = unitAmount.subtract(normalizedCashbackAmount);
-    } else {
-      unitAmountBeforeDiscount = unitAmount;
-      if (isPercentageCoupon(coupon)) {
-        discountPercentage = clamp(Number(coupon.percentage_value), 0, 100);
-        unitDiscountAmount = unitAmount.multiply(discountPercentage).divide(100);
-      } else {
-        const fixedDiscountAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
-        unitDiscountAmount = fixedDiscountAmount.greaterThan(unitAmount) ? unitAmount : fixedDiscountAmount;
-      }
-      unitAmount = unitAmount.subtract(unitDiscountAmount);
-    }
-  }
-
+  const unitAmount = toDinero(unitAmountDecimal, currency);
   const taxRate = getTaxValue(tax);
 
   let unitAmountNet: Dinero;
   let unitTaxAmount: Dinero;
-  let unitAmountBeforeDiscountNet: Dinero | undefined;
-  let beforeDiscountUnitTaxAmount: Dinero | undefined;
 
   if (isTaxInclusive) {
     unitAmountNet = unitAmount.divide(1 + taxRate);
-    unitDiscountAmountNet = unitDiscountAmount?.divide(1 + taxRate);
-    unitAmountBeforeDiscountNet = unitAmountBeforeDiscount?.divide(1 + taxRate);
     unitTaxAmount = unitAmount.subtract(unitAmountNet);
-    beforeDiscountUnitTaxAmount =
-      unitAmountBeforeDiscountNet && unitAmountBeforeDiscount?.subtract(unitAmountBeforeDiscountNet);
   } else {
     unitAmountNet = unitAmount;
-    unitAmountBeforeDiscountNet = unitAmountBeforeDiscount;
-    unitDiscountAmountNet = unitDiscountAmount;
     unitTaxAmount = unitAmount.multiply(taxRate);
-    beforeDiscountUnitTaxAmount = unitAmountBeforeDiscount?.multiply(taxRate);
   }
 
   const unitAmountGross = unitAmountNet.add(unitTaxAmount);
-
-  const taxDiscountAmount =
-    unitDiscountAmountNet && unitDiscountAmount
-      ? isTaxInclusive
-        ? unitDiscountAmount.subtract(unitDiscountAmountNet).multiply(unitAmountMultiplier)
-        : unitDiscountAmountNet.multiply(taxRate).multiply(unitAmountMultiplier)
-      : undefined;
   const taxAmount = unitTaxAmount.multiply(unitAmountMultiplier);
-  const beforeDiscountTaxAmount = beforeDiscountUnitTaxAmount?.multiply(unitAmountMultiplier);
-  const beforeDiscountUnitAmountGross =
-    beforeDiscountUnitTaxAmount && unitAmountBeforeDiscountNet?.add(beforeDiscountUnitTaxAmount);
-  const discountAmount = unitDiscountAmount?.multiply(unitAmountMultiplier);
   const amountSubtotal = unitAmountNet.multiply(unitAmountMultiplier);
   const amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
-
-  const beforeDiscountAmountTotal = beforeDiscountUnitAmountGross?.multiply(unitAmountMultiplier);
 
   return {
     unit_amount: unitAmount.getAmount(),
@@ -204,26 +142,113 @@ export const computePriceItemValues = (
     amount_subtotal: amountSubtotal.getAmount(),
     amount_total: amountTotal.getAmount(),
     amount_tax: taxAmount.getAmount(),
-    ...(unitDiscountAmount && {
-      unit_discount_amount: unitDiscountAmount?.getAmount(),
-      unit_discount_amount_decimal: unitDiscountAmount?.toUnit().toString(),
-      before_discount_unit_amount: unitAmountBeforeDiscount?.getAmount(),
-      unit_discount_amount_net: unitDiscountAmountNet?.getAmount(),
-      unit_discount_amount_net_decimal: unitDiscountAmountNet?.toUnit().toString(),
-      tax_discount_amount: taxDiscountAmount?.getAmount(),
-      tax_discount_amount_decimal: taxDiscountAmount?.toUnit().toString(),
-      before_discount_tax_amount: beforeDiscountTaxAmount?.getAmount(),
-      before_discount_tax_amount_decimal: beforeDiscountTaxAmount?.toUnit().toString(),
-      discount_amount: discountAmount?.getAmount(),
-      discount_percentage: discountPercentage,
-      before_discount_amount_total: beforeDiscountAmountTotal?.getAmount(),
-    }),
-    ...(cashbackAmount && {
+  };
+};
+
+type RecomputeWithDiscountsParams = {
+  priceItem: PriceItemDto;
+  baseResult: PriceItemsTotals;
+  currency: Currency;
+  isTaxInclusive: boolean;
+  unitAmountMultiplier: number;
+  tax?: Tax;
+};
+
+export const recomputeWithDiscounts = ({
+  priceItem,
+  baseResult,
+  currency,
+  isTaxInclusive,
+  unitAmountMultiplier,
+  tax,
+}: RecomputeWithDiscountsParams): PriceItemsTotals => {
+  const coupons = priceItem._coupons ?? [];
+  const [coupon] = coupons.filter(isValidCoupon);
+
+  if (!coupon) {
+    return baseResult;
+  }
+
+  const unitAmount = toDinero(baseResult.unit_amount_net_decimal, currency);
+  const unitAmountGross = toDinero(baseResult.unit_amount_gross_decimal, currency);
+
+  let discountPercentage: number | undefined;
+  let unitDiscountAmount: Dinero | undefined;
+  let unitDiscountAmountNet: Dinero | undefined;
+  let cashbackAmount: Dinero | undefined;
+  let afterCashbackAmountTotal: Dinero | undefined;
+
+  if (isCashbackCoupon(coupon)) {
+    if (isFixedValueCoupon(coupon)) {
+      cashbackAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
+    } else {
+      const cashbackPercentage = clamp(Number(coupon.percentage_value), 0, 100);
+      cashbackAmount = unitAmountGross.multiply(cashbackPercentage).divide(100);
+    }
+
+    const normalizedCashbackAmount = normalizeTimeFrequencyFromDineroInputValue(
+      cashbackAmount,
+      'yearly',
+      priceItem?._price?.billing_period as BillingPeriod,
+    );
+
+    afterCashbackAmountTotal = unitAmountGross.subtract(normalizedCashbackAmount);
+
+    return {
+      ...baseResult,
       cashback_amount: cashbackAmount.getAmount(),
       cashback_amount_decimal: cashbackAmount.toUnit().toString(),
-      after_cashback_amount_total: afterCashbackAmountTotal?.getAmount(),
-      after_cashback_amount_total_decimal: afterCashbackAmountTotal?.toUnit().toString(),
-    }),
+      after_cashback_amount_total: afterCashbackAmountTotal.getAmount(),
+      after_cashback_amount_total_decimal: afterCashbackAmountTotal.toUnit().toString(),
+    };
+  }
+
+  // Handle regular discounts
+  const unitAmountGrossBeforeDiscount = unitAmountGross;
+
+  if (isPercentageCoupon(coupon)) {
+    discountPercentage = clamp(Number(coupon.percentage_value), 0, 100);
+    unitDiscountAmount = unitAmountGross.multiply(discountPercentage).divide(100);
+  } else {
+    const fixedDiscountAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
+    unitDiscountAmount = fixedDiscountAmount.greaterThan(unitAmountGross) ? unitAmountGross : fixedDiscountAmount;
+  }
+
+  // Calculate net discount amount based on tax inclusivity
+  if (isTaxInclusive) {
+    const taxRate = getTaxValue(tax);
+    unitDiscountAmountNet = unitDiscountAmount.divide(1 + taxRate);
+  } else {
+    unitDiscountAmountNet = unitDiscountAmount;
+  }
+
+  // Apply discount to amounts
+  const newUnitAmountGross = unitAmountGross.subtract(unitDiscountAmount);
+  const newUnitAmountNet = unitAmount.subtract(unitDiscountAmountNet);
+
+  // Calculate new tax amounts
+  const newTaxAmount = newUnitAmountGross.subtract(newUnitAmountNet).multiply(unitAmountMultiplier);
+  const taxDiscountAmount = unitDiscountAmount.subtract(unitDiscountAmountNet).multiply(unitAmountMultiplier);
+
+  return {
+    ...baseResult,
+    unit_amount_gross: newUnitAmountGross.getAmount(),
+    unit_amount_gross_decimal: newUnitAmountGross.toUnit().toString(),
+    unit_amount_net: newUnitAmountNet.getAmount(),
+    unit_amount_net_decimal: newUnitAmountNet.toUnit().toString(),
+    amount_subtotal: newUnitAmountNet.multiply(unitAmountMultiplier).getAmount(),
+    amount_total: newUnitAmountGross.multiply(unitAmountMultiplier).getAmount(),
+    amount_tax: newTaxAmount.getAmount(),
+    unit_discount_amount: unitDiscountAmount.getAmount(),
+    unit_discount_amount_decimal: unitDiscountAmount.toUnit().toString(),
+    before_discount_unit_amount: unitAmountGrossBeforeDiscount.getAmount(),
+    unit_discount_amount_net: unitDiscountAmountNet.getAmount(),
+    unit_discount_amount_net_decimal: unitDiscountAmountNet.toUnit().toString(),
+    tax_discount_amount: taxDiscountAmount.getAmount(),
+    tax_discount_amount_decimal: taxDiscountAmount.toUnit().toString(),
+    discount_amount: unitDiscountAmount.multiply(unitAmountMultiplier).getAmount(),
+    discount_percentage: discountPercentage,
+    before_discount_amount_total: unitAmountGrossBeforeDiscount.multiply(unitAmountMultiplier).getAmount(),
   };
 };
 

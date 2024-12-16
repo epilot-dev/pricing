@@ -5,9 +5,9 @@ import { toDineroFromInteger, toDinero } from '../formatters';
 import { TaxRates } from '../formatters/constants';
 import { normalizeTimeFrequencyFromDineroInputValue } from '../normalizers';
 import { MarkupPricingModel, TypeGetAg } from '../pricing';
-import type { BillingPeriod, Price, PriceGetAg, PriceItem, PriceItemDto, PriceTier, Tax } from '../types';
+import type { BillingPeriod, Coupon, Price, PriceGetAg, PriceItem, PriceItemDto, PriceTier, Tax } from '../types';
 
-import { isPercentageCoupon, isValidCoupon, isCashbackCoupon, isFixedValueCoupon } from './guards/coupon';
+import { isPercentageCoupon, isCashbackCoupon, isFixedValueCoupon } from './guards/coupon';
 
 export type PriceItemsTotals = Pick<
   PriceItem,
@@ -98,102 +98,37 @@ export const getQuantityForTier = ({ min, max, quantity }: { min?: number; max: 
 
 const clamp = (value: number, minimum: number, maximum: number) => Math.min(Math.max(value, minimum), maximum);
 
-export const computePriceItemValues = (
-  priceItem: PriceItemDto,
-  {
-    unitAmountDecimal,
-    currency,
-    isTaxInclusive,
-    unitAmountMultiplier,
-    tax,
-  }: {
-    unitAmountDecimal?: string;
-    currency: Currency;
-    isTaxInclusive: boolean;
-    unitAmountMultiplier: number;
-    tax?: Tax;
-  },
-): PriceItemsTotals => {
-  const coupons = priceItem._coupons ?? [];
-  const [coupon] = coupons.filter(isValidCoupon);
-
-  let unitAmount = toDinero(unitAmountDecimal, currency);
-
-  let unitAmountBeforeDiscount: Dinero | undefined;
-  let discountPercentage: number | undefined;
-  let unitDiscountAmount: Dinero | undefined;
-  let unitDiscountAmountNet: Dinero | undefined;
-  let cashbackAmount: Dinero | undefined;
-  let afterCashbackAmountTotal: Dinero | undefined;
-
-  if (coupon) {
-    if (isCashbackCoupon(coupon)) {
-      if (isFixedValueCoupon(coupon)) {
-        cashbackAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
-      } else {
-        const cashbackPercentage = clamp(Number(coupon.percentage_value), 0, 100);
-        cashbackAmount = unitAmount.multiply(cashbackPercentage).divide(100);
-      }
-
-      const normalizedCashbackAmount = normalizeTimeFrequencyFromDineroInputValue(
-        cashbackAmount,
-        'yearly',
-        priceItem?._price?.billing_period as BillingPeriod,
-      );
-
-      afterCashbackAmountTotal = unitAmount.subtract(normalizedCashbackAmount);
-    } else {
-      unitAmountBeforeDiscount = unitAmount;
-      if (isPercentageCoupon(coupon)) {
-        discountPercentage = clamp(Number(coupon.percentage_value), 0, 100);
-        unitDiscountAmount = unitAmount.multiply(discountPercentage).divide(100);
-      } else {
-        const fixedDiscountAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
-        unitDiscountAmount = fixedDiscountAmount.greaterThan(unitAmount) ? unitAmount : fixedDiscountAmount;
-      }
-      unitAmount = unitAmount.subtract(unitDiscountAmount);
-    }
-  }
-
+export const computePriceItemValues = ({
+  unitAmountDecimal,
+  currency,
+  isTaxInclusive,
+  unitAmountMultiplier,
+  tax,
+}: {
+  unitAmountDecimal?: string;
+  currency: Currency;
+  isTaxInclusive: boolean;
+  unitAmountMultiplier: number;
+  tax?: Tax;
+}): PriceItemsTotals => {
+  const unitAmount = toDinero(unitAmountDecimal, currency);
   const taxRate = getTaxValue(tax);
 
   let unitAmountNet: Dinero;
   let unitTaxAmount: Dinero;
-  let unitAmountBeforeDiscountNet: Dinero | undefined;
-  let beforeDiscountUnitTaxAmount: Dinero | undefined;
 
   if (isTaxInclusive) {
     unitAmountNet = unitAmount.divide(1 + taxRate);
-    unitDiscountAmountNet = unitDiscountAmount?.divide(1 + taxRate);
-    unitAmountBeforeDiscountNet = unitAmountBeforeDiscount?.divide(1 + taxRate);
     unitTaxAmount = unitAmount.subtract(unitAmountNet);
-    beforeDiscountUnitTaxAmount =
-      unitAmountBeforeDiscountNet && unitAmountBeforeDiscount?.subtract(unitAmountBeforeDiscountNet);
   } else {
     unitAmountNet = unitAmount;
-    unitAmountBeforeDiscountNet = unitAmountBeforeDiscount;
-    unitDiscountAmountNet = unitDiscountAmount;
     unitTaxAmount = unitAmount.multiply(taxRate);
-    beforeDiscountUnitTaxAmount = unitAmountBeforeDiscount?.multiply(taxRate);
   }
 
   const unitAmountGross = unitAmountNet.add(unitTaxAmount);
-
-  const taxDiscountAmount =
-    unitDiscountAmountNet && unitDiscountAmount
-      ? isTaxInclusive
-        ? unitDiscountAmount.subtract(unitDiscountAmountNet).multiply(unitAmountMultiplier)
-        : unitDiscountAmountNet.multiply(taxRate).multiply(unitAmountMultiplier)
-      : undefined;
   const taxAmount = unitTaxAmount.multiply(unitAmountMultiplier);
-  const beforeDiscountTaxAmount = beforeDiscountUnitTaxAmount?.multiply(unitAmountMultiplier);
-  const beforeDiscountUnitAmountGross =
-    beforeDiscountUnitTaxAmount && unitAmountBeforeDiscountNet?.add(beforeDiscountUnitTaxAmount);
-  const discountAmount = unitDiscountAmount?.multiply(unitAmountMultiplier);
   const amountSubtotal = unitAmountNet.multiply(unitAmountMultiplier);
   const amountTotal = unitAmountGross.multiply(unitAmountMultiplier);
-
-  const beforeDiscountAmountTotal = beforeDiscountUnitAmountGross?.multiply(unitAmountMultiplier);
 
   return {
     unit_amount: unitAmount.getAmount(),
@@ -204,26 +139,121 @@ export const computePriceItemValues = (
     amount_subtotal: amountSubtotal.getAmount(),
     amount_total: amountTotal.getAmount(),
     amount_tax: taxAmount.getAmount(),
-    ...(unitDiscountAmount && {
-      unit_discount_amount: unitDiscountAmount?.getAmount(),
-      unit_discount_amount_decimal: unitDiscountAmount?.toUnit().toString(),
-      before_discount_unit_amount: unitAmountBeforeDiscount?.getAmount(),
-      unit_discount_amount_net: unitDiscountAmountNet?.getAmount(),
-      unit_discount_amount_net_decimal: unitDiscountAmountNet?.toUnit().toString(),
-      tax_discount_amount: taxDiscountAmount?.getAmount(),
-      tax_discount_amount_decimal: taxDiscountAmount?.toUnit().toString(),
-      before_discount_tax_amount: beforeDiscountTaxAmount?.getAmount(),
-      before_discount_tax_amount_decimal: beforeDiscountTaxAmount?.toUnit().toString(),
-      discount_amount: discountAmount?.getAmount(),
-      discount_percentage: discountPercentage,
-      before_discount_amount_total: beforeDiscountAmountTotal?.getAmount(),
-    }),
-    ...(cashbackAmount && {
+  };
+};
+
+export const applyDiscounts = (
+  itemValues: PriceItemsTotals,
+  {
+    priceItem,
+    currency,
+    isTaxInclusive,
+    unitAmountMultiplier,
+    tax,
+    coupon,
+  }: {
+    priceItem: PriceItemDto;
+    currency: Currency;
+    isTaxInclusive: boolean;
+    unitAmountMultiplier: number;
+    tax?: Tax;
+    coupon: Coupon;
+  },
+): PriceItemsTotals => {
+  const unitAmountNet = toDineroFromInteger(itemValues.unit_amount_net!, currency);
+  const unitAmountGross = toDineroFromInteger(itemValues.unit_amount_gross!, currency);
+  const taxRate = getTaxValue(tax);
+
+  let discountPercentage: number | undefined;
+  let unitDiscountAmount: Dinero | undefined;
+  let unitDiscountAmountNet: Dinero | undefined;
+  let cashbackAmount: Dinero | undefined;
+  let afterCashbackAmountTotal: Dinero | undefined;
+
+  if (isCashbackCoupon(coupon)) {
+    if (isFixedValueCoupon(coupon)) {
+      cashbackAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
+    } else {
+      const cashbackPercentage = clamp(Number(coupon.percentage_value), 0, 100);
+      cashbackAmount = unitAmountGross.multiply(cashbackPercentage).divide(100);
+    }
+
+    const normalizedCashbackAmount = normalizeTimeFrequencyFromDineroInputValue(
+      cashbackAmount,
+      'yearly',
+      priceItem?._price?.billing_period as BillingPeriod,
+    );
+
+    afterCashbackAmountTotal = unitAmountGross.subtract(normalizedCashbackAmount);
+
+    return {
+      ...itemValues,
       cashback_amount: cashbackAmount.getAmount(),
       cashback_amount_decimal: cashbackAmount.toUnit().toString(),
-      after_cashback_amount_total: afterCashbackAmountTotal?.getAmount(),
-      after_cashback_amount_total_decimal: afterCashbackAmountTotal?.toUnit().toString(),
-    }),
+      after_cashback_amount_total: afterCashbackAmountTotal.getAmount(),
+      after_cashback_amount_total_decimal: afterCashbackAmountTotal.toUnit().toString(),
+    };
+  }
+
+  if (isPercentageCoupon(coupon)) {
+    discountPercentage = clamp(Number(coupon.percentage_value), 0, 100);
+    /* For tax-exclusive prices, apply discount to net amount */
+    if (isTaxInclusive) {
+      unitDiscountAmount = unitAmountGross.multiply(discountPercentage).divide(100);
+      unitDiscountAmountNet = unitDiscountAmount.divide(1 + taxRate);
+    } else {
+      unitDiscountAmountNet = unitAmountNet.multiply(discountPercentage).divide(100);
+      unitDiscountAmount = unitDiscountAmountNet;
+    }
+  } else {
+    const fixedDiscountAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency as Currency);
+    if (isTaxInclusive) {
+      unitDiscountAmount = fixedDiscountAmount.greaterThan(unitAmountGross) ? unitAmountGross : fixedDiscountAmount;
+      unitDiscountAmountNet = unitDiscountAmount.divide(1 + taxRate);
+    } else {
+      unitDiscountAmountNet = fixedDiscountAmount.greaterThan(unitAmountNet) ? unitAmountNet : fixedDiscountAmount;
+      unitDiscountAmount = unitDiscountAmountNet;
+    }
+  }
+
+  const newUnitAmountNet = unitAmountNet.subtract(unitDiscountAmountNet);
+
+  /* For tax-exclusive, calculate gross after applying tax to discounted net */
+  const newUnitAmountGross = isTaxInclusive
+    ? unitAmountGross.subtract(unitDiscountAmount)
+    : newUnitAmountNet.multiply(1 + taxRate);
+
+  const beforeDiscountTaxAmount = isTaxInclusive
+    ? unitAmountGross.subtract(unitAmountNet)
+    : unitAmountNet.multiply(taxRate);
+
+  const newTaxAmount = newUnitAmountGross.subtract(newUnitAmountNet).multiply(unitAmountMultiplier);
+  const taxDiscountAmount = isTaxInclusive
+    ? unitDiscountAmount.subtract(unitDiscountAmountNet).multiply(unitAmountMultiplier)
+    : unitDiscountAmountNet.multiply(taxRate).multiply(unitAmountMultiplier);
+
+  return {
+    ...itemValues,
+    unit_amount: isTaxInclusive ? newUnitAmountGross.getAmount() : newUnitAmountNet.getAmount(),
+    unit_amount_gross: newUnitAmountGross.getAmount(),
+    unit_amount_gross_decimal: newUnitAmountGross.toUnit().toString(),
+    unit_amount_net: newUnitAmountNet.getAmount(),
+    unit_amount_net_decimal: newUnitAmountNet.toUnit().toString(),
+    amount_subtotal: newUnitAmountNet.multiply(unitAmountMultiplier).getAmount(),
+    amount_total: newUnitAmountGross.multiply(unitAmountMultiplier).getAmount(),
+    amount_tax: newTaxAmount.getAmount(),
+    unit_discount_amount: unitDiscountAmount.getAmount(),
+    unit_discount_amount_decimal: unitDiscountAmount.toUnit().toString(),
+    before_discount_unit_amount: isTaxInclusive ? unitAmountGross.getAmount() : unitAmountNet.getAmount(),
+    unit_discount_amount_net: unitDiscountAmountNet.getAmount(),
+    unit_discount_amount_net_decimal: unitDiscountAmountNet.toUnit().toString(),
+    tax_discount_amount: taxDiscountAmount.getAmount(),
+    tax_discount_amount_decimal: taxDiscountAmount.toUnit().toString(),
+    before_discount_tax_amount: beforeDiscountTaxAmount.multiply(unitAmountMultiplier).getAmount(),
+    before_discount_tax_amount_decimal: beforeDiscountTaxAmount.toUnit().toString(),
+    discount_amount: unitDiscountAmount.multiply(unitAmountMultiplier).getAmount(),
+    discount_percentage: discountPercentage,
+    before_discount_amount_total: unitAmountGross.multiply(unitAmountMultiplier).getAmount(),
   };
 };
 
@@ -257,29 +287,26 @@ const getPriceTierForQuantity = (tiers: PriceTier[], quantity: number): PriceTie
   return selectedTiers[selectedTiers.length - 1] ?? null;
 };
 
-export const computeTieredVolumePriceItemValues = (
-  priceItem: PriceItemDto,
-  {
-    tiers = [],
-    currency,
-    isTaxInclusive,
-    quantityToSelectTier,
-    tax,
-    unitAmountMultiplier,
-    unchangedPriceDisplayInJourneys,
-  }: {
-    tiers?: PriceTier[];
-    currency: Currency;
-    isTaxInclusive: boolean;
-    quantityToSelectTier: number;
-    tax: Tax | undefined;
-    unitAmountMultiplier: number;
-    unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'];
-  },
-): PriceItemsTotals => {
+export const computeTieredVolumePriceItemValues = ({
+  tiers = [],
+  currency,
+  isTaxInclusive,
+  quantityToSelectTier,
+  tax,
+  unitAmountMultiplier,
+  unchangedPriceDisplayInJourneys,
+}: {
+  tiers?: PriceTier[];
+  currency: Currency;
+  isTaxInclusive: boolean;
+  quantityToSelectTier: number;
+  tax: Tax | undefined;
+  unitAmountMultiplier: number;
+  unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'];
+}): PriceItemsTotals => {
   const tier = getPriceTierForQuantity(tiers, quantityToSelectTier);
 
-  const tierValues = computePriceItemValues(priceItem, {
+  const tierValues = computePriceItemValues({
     unitAmountDecimal: tier?.unit_amount_decimal,
     currency,
     isTaxInclusive,
@@ -311,28 +338,25 @@ export const computeTieredVolumePriceItemValues = (
   };
 };
 
-export const computeTieredFlatFeePriceItemValues = (
-  priceItem: PriceItemDto,
-  {
-    tiers = [],
-    currency,
-    isTaxInclusive,
-    quantityToSelectTier,
-    tax,
-    quantity,
-    isUsingPriceMappingToSelectTier,
-    unchangedPriceDisplayInJourneys,
-  }: {
-    tiers?: PriceTier[];
-    currency: Currency;
-    isTaxInclusive: boolean;
-    quantityToSelectTier: number;
-    tax?: Tax;
-    quantity: number;
-    isUsingPriceMappingToSelectTier: boolean;
-    unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'];
-  },
-): PriceItemsTotals => {
+export const computeTieredFlatFeePriceItemValues = ({
+  tiers = [],
+  currency,
+  isTaxInclusive,
+  quantityToSelectTier,
+  tax,
+  quantity,
+  isUsingPriceMappingToSelectTier,
+  unchangedPriceDisplayInJourneys,
+}: {
+  tiers?: PriceTier[];
+  currency: Currency;
+  isTaxInclusive: boolean;
+  quantityToSelectTier: number;
+  tax?: Tax;
+  quantity: number;
+  isUsingPriceMappingToSelectTier: boolean;
+  unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'];
+}): PriceItemsTotals => {
   const tier = getPriceTierForQuantity(tiers, quantityToSelectTier);
   /**
    * If the price mapping is used to select the tier, we need to multiply the totals by the quantity.
@@ -340,7 +364,7 @@ export const computeTieredFlatFeePriceItemValues = (
    */
   const quantityToMultiply = isUsingPriceMappingToSelectTier ? quantity : 1;
 
-  const tierValues = computePriceItemValues(priceItem, {
+  const tierValues = computePriceItemValues({
     unitAmountDecimal: tier?.flat_fee_amount_decimal,
     currency,
     isTaxInclusive,
@@ -376,28 +400,25 @@ export const computeTieredFlatFeePriceItemValues = (
   };
 };
 
-export const computeTieredGraduatedPriceItemValues = (
-  priceItem: PriceItemDto,
-  {
-    tiers = [],
-    currency,
-    isTaxInclusive,
-    quantityToSelectTier,
-    tax,
-    quantity,
-    isUsingPriceMappingToSelectTier,
-    unchangedPriceDisplayInJourneys,
-  }: {
-    tiers?: PriceTier[];
-    currency: Currency;
-    isTaxInclusive: boolean;
-    quantityToSelectTier: number;
-    tax?: Tax;
-    quantity: number;
-    isUsingPriceMappingToSelectTier: boolean;
-    unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'];
-  },
-): PriceItemsTotals => {
+export const computeTieredGraduatedPriceItemValues = ({
+  tiers = [],
+  currency,
+  isTaxInclusive,
+  quantityToSelectTier,
+  tax,
+  quantity,
+  isUsingPriceMappingToSelectTier,
+  unchangedPriceDisplayInJourneys,
+}: {
+  tiers?: PriceTier[];
+  currency: Currency;
+  isTaxInclusive: boolean;
+  quantityToSelectTier: number;
+  tax?: Tax;
+  quantity: number;
+  isUsingPriceMappingToSelectTier: boolean;
+  unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'];
+}): PriceItemsTotals => {
   const priceTiersForQuantity = getPriceTiersForQuantity(tiers, quantityToSelectTier);
 
   const totals = priceTiersForQuantity.reduce(
@@ -410,7 +431,7 @@ export const computeTieredGraduatedPriceItemValues = (
         quantity: quantityToSelectTier,
       });
 
-      const tierValues = computePriceItemValues(priceItem, {
+      const tierValues = computePriceItemValues({
         unitAmountDecimal: tier.unit_amount_decimal,
         currency,
         isTaxInclusive,
@@ -474,26 +495,23 @@ export const computeTieredGraduatedPriceItemValues = (
   };
 };
 
-export const computeExternalGetAGItemValues = (
-  priceItem: PriceItemDto,
-  {
-    getAg,
-    currency,
-    isTaxInclusive,
-    unitAmountMultiplier,
-    userInput,
-    externalFeeAmountDecimal,
-    tax,
-  }: {
-    getAg: PriceGetAg;
-    currency: Currency;
-    isTaxInclusive: boolean;
-    unitAmountMultiplier: number;
-    userInput: number;
-    externalFeeAmountDecimal?: string;
-    tax?: Tax;
-  },
-): PriceItemsTotals => {
+export const computeExternalGetAGItemValues = ({
+  getAg,
+  currency,
+  isTaxInclusive,
+  unitAmountMultiplier,
+  userInput,
+  externalFeeAmountDecimal,
+  tax,
+}: {
+  getAg: PriceGetAg;
+  currency: Currency;
+  isTaxInclusive: boolean;
+  unitAmountMultiplier: number;
+  userInput: number;
+  externalFeeAmountDecimal?: string;
+  tax?: Tax;
+}): PriceItemsTotals => {
   if (externalFeeAmountDecimal === undefined || getAg === undefined || userInput === 0) {
     return {
       unit_amount_net: 0,
@@ -514,7 +532,7 @@ export const computeExternalGetAGItemValues = (
 
   const markupValues =
     getAg.markup_pricing_model === MarkupPricingModel.tieredVolume && getAg.markup_tiers
-      ? computeTieredVolumePriceItemValues(priceItem, {
+      ? computeTieredVolumePriceItemValues({
           tiers: getAg.markup_tiers,
           currency,
           isTaxInclusive,
@@ -524,7 +542,7 @@ export const computeExternalGetAGItemValues = (
           unchangedPriceDisplayInJourneys: 'show_price',
         })
       : getAg.markup_pricing_model === MarkupPricingModel.tieredFlatFee && getAg.markup_tiers
-      ? computeTieredFlatFeePriceItemValues(priceItem, {
+      ? computeTieredFlatFeePriceItemValues({
           tiers: getAg.markup_tiers,
           currency,
           isTaxInclusive,

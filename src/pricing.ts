@@ -31,7 +31,9 @@ import {
   isTaxInclusivePrice,
   isTruthy,
   PriceItemsTotals,
+  applyDiscounts,
 } from './utils';
+import { isValidCoupon } from './utils/guards/coupon';
 
 export enum PricingModel {
   perUnit = 'per_unit',
@@ -748,7 +750,7 @@ export const computePriceItem = (
 
   switch (price?.pricing_model) {
     case PricingModel.tieredVolume:
-      itemValues = computeTieredVolumePriceItemValues(priceItem, {
+      itemValues = computeTieredVolumePriceItemValues({
         tiers: price.tiers,
         currency,
         isTaxInclusive,
@@ -759,7 +761,7 @@ export const computePriceItem = (
       });
       break;
     case PricingModel.tieredFlatFee:
-      itemValues = computeTieredFlatFeePriceItemValues(priceItem, {
+      itemValues = computeTieredFlatFeePriceItemValues({
         tiers: price.tiers,
         currency,
         isTaxInclusive,
@@ -771,7 +773,7 @@ export const computePriceItem = (
       });
       break;
     case PricingModel.tieredGraduated:
-      itemValues = computeTieredGraduatedPriceItemValues(priceItem, {
+      itemValues = computeTieredGraduatedPriceItemValues({
         tiers: price.tiers,
         currency,
         isTaxInclusive,
@@ -783,7 +785,7 @@ export const computePriceItem = (
       });
       break;
     case PricingModel.externalGetAG:
-      itemValues = computeExternalGetAGItemValues(priceItem, {
+      itemValues = computeExternalGetAGItemValues({
         getAg: price?.get_ag!,
         currency,
         isTaxInclusive,
@@ -794,13 +796,27 @@ export const computePriceItem = (
       });
       break;
     default:
-      itemValues = computePriceItemValues(priceItem, {
+      itemValues = computePriceItemValues({
         unitAmountDecimal,
         currency,
         isTaxInclusive,
         unitAmountMultiplier,
         tax: priceTax,
       });
+  }
+
+  const coupons = priceItem._coupons ?? [];
+  const [coupon] = coupons.filter(isValidCoupon);
+
+  if (coupon) {
+    itemValues = applyDiscounts(itemValues, {
+      priceItem,
+      currency,
+      isTaxInclusive,
+      unitAmountMultiplier,
+      tax: priceTax,
+      coupon,
+    });
   }
 
   /* If there's a coupon cashback period output it */

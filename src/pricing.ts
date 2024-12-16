@@ -31,8 +31,9 @@ import {
   isTaxInclusivePrice,
   isTruthy,
   PriceItemsTotals,
-  recomputeWithDiscounts,
+  applyDiscounts,
 } from './utils';
+import { isValidCoupon } from './utils/guards/coupon';
 
 export enum PricingModel {
   perUnit = 'per_unit',
@@ -795,23 +796,28 @@ export const computePriceItem = (
       });
       break;
     default: {
-      const baseValues = computePriceItemValues(priceItem, {
+      itemValues = computePriceItemValues(priceItem, {
         unitAmountDecimal,
         currency,
         isTaxInclusive,
         unitAmountMultiplier,
         tax: priceTax,
       });
-
-      itemValues = recomputeWithDiscounts({
-        priceItem,
-        baseResult: baseValues,
-        currency,
-        isTaxInclusive,
-        unitAmountMultiplier,
-        tax: priceTax,
-      });
     }
+  }
+
+  const coupons = priceItem._coupons ?? [];
+  const [coupon] = coupons.filter(isValidCoupon);
+
+  if (coupon) {
+    itemValues = applyDiscounts(itemValues, {
+      priceItem,
+      currency,
+      isTaxInclusive,
+      unitAmountMultiplier,
+      tax: priceTax,
+      coupon,
+    });
   }
 
   /* If there's a coupon cashback period output it */

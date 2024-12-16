@@ -5,9 +5,9 @@ import { toDineroFromInteger, toDinero } from '../formatters';
 import { TaxRates } from '../formatters/constants';
 import { normalizeTimeFrequencyFromDineroInputValue } from '../normalizers';
 import { MarkupPricingModel, TypeGetAg } from '../pricing';
-import type { BillingPeriod, Price, PriceGetAg, PriceItem, PriceItemDto, PriceTier, Tax } from '../types';
+import type { BillingPeriod, Coupon, Price, PriceGetAg, PriceItem, PriceItemDto, PriceTier, Tax } from '../types';
 
-import { isPercentageCoupon, isValidCoupon, isCashbackCoupon, isFixedValueCoupon } from './guards/coupon';
+import { isPercentageCoupon, isCashbackCoupon, isFixedValueCoupon } from './guards/coupon';
 
 export type PriceItemsTotals = Pick<
   PriceItem,
@@ -147,31 +147,20 @@ export const computePriceItemValues = (
 
 type RecomputeWithDiscountsParams = {
   priceItem: PriceItemDto;
-  baseResult: PriceItemsTotals;
   currency: Currency;
   isTaxInclusive: boolean;
   unitAmountMultiplier: number;
   tax?: Tax;
+  coupon: Coupon;
 };
 
-export const recomputeWithDiscounts = ({
-  priceItem,
-  baseResult,
-  currency,
-  isTaxInclusive,
-  unitAmountMultiplier,
-  tax,
-}: RecomputeWithDiscountsParams): PriceItemsTotals => {
-  const coupons = priceItem._coupons ?? [];
-  const [coupon] = coupons.filter(isValidCoupon);
-
-  if (!coupon) {
-    return baseResult;
-  }
-
-  const unitAmount = toDineroFromInteger(baseResult.unit_amount!, currency);
-  const unitAmountNet = toDineroFromInteger(baseResult.unit_amount_net!, currency);
-  const unitAmountGross = toDineroFromInteger(baseResult.unit_amount_gross!, currency);
+export const applyDiscounts = (
+  itemValues: PriceItemsTotals,
+  { priceItem, currency, isTaxInclusive, unitAmountMultiplier, tax, coupon }: RecomputeWithDiscountsParams,
+): PriceItemsTotals => {
+  const unitAmount = toDineroFromInteger(itemValues.unit_amount!, currency);
+  const unitAmountNet = toDineroFromInteger(itemValues.unit_amount_net!, currency);
+  const unitAmountGross = toDineroFromInteger(itemValues.unit_amount_gross!, currency);
   const taxRate = getTaxValue(tax);
 
   let discountPercentage: number | undefined;
@@ -197,7 +186,7 @@ export const recomputeWithDiscounts = ({
     afterCashbackAmountTotal = unitAmountGross.subtract(normalizedCashbackAmount);
 
     return {
-      ...baseResult,
+      ...itemValues,
       cashback_amount: cashbackAmount.getAmount(),
       cashback_amount_decimal: cashbackAmount.toUnit().toString(),
       after_cashback_amount_total: afterCashbackAmountTotal.getAmount(),
@@ -217,7 +206,7 @@ export const recomputeWithDiscounts = ({
       unitDiscountAmount = unitDiscountAmountNet;
     }
   } else {
-    const fixedDiscountAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
+    const fixedDiscountAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency as Currency);
     if (isTaxInclusive) {
       unitDiscountAmount = fixedDiscountAmount.greaterThan(unitAmountGross) ? unitAmountGross : fixedDiscountAmount;
       unitDiscountAmountNet = unitDiscountAmount.divide(1 + taxRate);
@@ -245,7 +234,7 @@ export const recomputeWithDiscounts = ({
     : unitDiscountAmountNet.multiply(taxRate).multiply(unitAmountMultiplier);
 
   return {
-    ...baseResult,
+    ...itemValues,
     unit_amount: isTaxInclusive ? newUnitAmountGross.getAmount() : newUnitAmountNet.getAmount(),
     unit_amount_gross: newUnitAmountGross.getAmount(),
     unit_amount_gross_decimal: newUnitAmountGross.toUnit().toString(),

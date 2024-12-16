@@ -160,7 +160,6 @@ export const applyDiscounts = (
     coupon: Coupon;
   },
 ): PriceItemsTotals => {
-  const unitAmount = toDineroFromInteger(itemValues.unit_amount!, currency);
   const unitAmountNet = toDineroFromInteger(itemValues.unit_amount_net!, currency);
   const unitAmountGross = toDineroFromInteger(itemValues.unit_amount_gross!, currency);
   const taxRate = getTaxValue(tax);
@@ -245,7 +244,7 @@ export const applyDiscounts = (
     amount_tax: newTaxAmount.getAmount(),
     unit_discount_amount: unitDiscountAmount.getAmount(),
     unit_discount_amount_decimal: unitDiscountAmount.toUnit().toString(),
-    before_discount_unit_amount: unitAmount.getAmount(),
+    before_discount_unit_amount: isTaxInclusive ? unitAmountGross.getAmount() : unitAmountNet.getAmount(),
     unit_discount_amount_net: unitDiscountAmountNet.getAmount(),
     unit_discount_amount_net_decimal: unitDiscountAmountNet.toUnit().toString(),
     tax_discount_amount: taxDiscountAmount.getAmount(),

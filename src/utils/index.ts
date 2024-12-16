@@ -145,18 +145,23 @@ export const computePriceItemValues = (
   };
 };
 
-type RecomputeWithDiscountsParams = {
-  priceItem: PriceItemDto;
-  currency: Currency;
-  isTaxInclusive: boolean;
-  unitAmountMultiplier: number;
-  tax?: Tax;
-  coupon: Coupon;
-};
-
 export const applyDiscounts = (
   itemValues: PriceItemsTotals,
-  { priceItem, currency, isTaxInclusive, unitAmountMultiplier, tax, coupon }: RecomputeWithDiscountsParams,
+  {
+    priceItem,
+    currency,
+    isTaxInclusive,
+    unitAmountMultiplier,
+    tax,
+    coupon,
+  }: {
+    priceItem: PriceItemDto;
+    currency: Currency;
+    isTaxInclusive: boolean;
+    unitAmountMultiplier: number;
+    tax?: Tax;
+    coupon: Coupon;
+  },
 ): PriceItemsTotals => {
   const unitAmount = toDineroFromInteger(itemValues.unit_amount!, currency);
   const unitAmountNet = toDineroFromInteger(itemValues.unit_amount_net!, currency);

@@ -196,10 +196,9 @@ export const applyDiscounts = (
     };
   }
 
-  // Handle regular discounts
   if (isPercentageCoupon(coupon)) {
     discountPercentage = clamp(Number(coupon.percentage_value), 0, 100);
-    // For tax-exclusive prices, apply discount to net amount
+    /* For tax-exclusive prices, apply discount to net amount */
     if (isTaxInclusive) {
       unitDiscountAmount = unitAmountGross.multiply(discountPercentage).divide(100);
       unitDiscountAmountNet = unitDiscountAmount.divide(1 + taxRate);
@@ -218,10 +217,9 @@ export const applyDiscounts = (
     }
   }
 
-  // Calculate new amounts
   const newUnitAmountNet = unitAmountNet.subtract(unitDiscountAmountNet);
 
-  // For tax-exclusive, calculate gross after applying tax to discounted net
+  /* For tax-exclusive, calculate gross after applying tax to discounted net */
   const newUnitAmountGross = isTaxInclusive
     ? unitAmountGross.subtract(unitDiscountAmount)
     : newUnitAmountNet.multiply(1 + taxRate);

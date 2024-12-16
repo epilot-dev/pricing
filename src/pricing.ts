@@ -208,13 +208,11 @@ export const extractPricingEntitiesBySlug = (
  * Otherwise, the composite price item is returned as is.
  *
  * @param priceItem the composite price item DTO
- * @param compositePrice the composite price
  * @returns the composite price item
  */
-export const computeCompositePrice = (
-  priceItem: CompositePriceItemDto,
-  compositePrice?: CompositePrice,
-): CompositePriceItem => {
+export const computeCompositePrice = (priceItem: CompositePriceItemDto): CompositePriceItem => {
+  const compositePrice = priceItem._price as CompositePrice;
+
   const priceComponents = getPriceComponents(priceItem);
   const computedItemComponents = priceComponents.map((component) => {
     const componentTax = Array.isArray(component.tax) ? component.tax : [];
@@ -343,10 +341,9 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
       priceItem &&
       isCompositePrice(priceItem)
     ) {
-      const price = priceItem._price;
       const compositePriceItemToAppend = immutablePriceItem
         ? (immutablePriceItem as CompositePriceItem)
-        : computeCompositePrice(priceItem, price);
+        : computeCompositePrice(priceItem);
 
       const itemBreakdown = recomputeDetailTotalsFromCompositePrice(undefined, compositePriceItemToAppend);
       const updatedTotals = recomputeDetailTotalsFromCompositePrice(details, compositePriceItemToAppend);

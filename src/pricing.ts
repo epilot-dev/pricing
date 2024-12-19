@@ -1269,7 +1269,8 @@ export const getRecurrencesWithEstimatedPrices = (lineItems: PriceItems | undefi
         }
       });
     } else {
-      const recurrence = lineItem.type === 'recurring' ? lineItem.billing_period : lineItem.type;
+      const recurrence =
+        lineItem._price?.type === 'recurring' ? lineItem._price?.billing_period : lineItem._price?.type;
 
       if (recurrence !== undefined) {
         recurrences[recurrence] =

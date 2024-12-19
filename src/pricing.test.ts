@@ -682,6 +682,8 @@ describe('getRecurrencesWithEstimatedPrices', () => {
     type: 'recurring',
     billing_period: 'monthly',
     _price: {
+      type: 'recurring',
+      billing_period: 'monthly',
       price_display_in_journeys: 'estimated_price'
     }
   }
@@ -689,6 +691,7 @@ describe('getRecurrencesWithEstimatedPrices', () => {
   const oneTimeEstimateComponent = {
     type: 'one_time',
     _price: {
+      type: 'one_time',
       price_display_in_journeys: 'estimated_price'
     }
   }
@@ -697,6 +700,8 @@ describe('getRecurrencesWithEstimatedPrices', () => {
     type: 'recurring',
     billing_period: 'monthly',
     _price: {
+      type: 'recurring',
+      billing_period: 'monthly',
       price_display_in_journeys: 'show_price'
     }
   }
@@ -704,6 +709,7 @@ describe('getRecurrencesWithEstimatedPrices', () => {
   const oneTimeComponent = {
     type: 'one_time',
     _price: {
+      type: 'one_time',
       price_display_in_journeys: 'show_price'
     }
   }

@@ -1261,7 +1261,7 @@ export const getRecurrencesWithEstimatedPrices = (lineItems: PriceItems | undefi
   lineItems?.forEach((lineItem) => {
     if (isCompositePriceItem(lineItem)) {
       lineItem.item_components?.forEach((component) => {
-        const recurrence = component.type === 'recurring' ? component.billing_period : component.type;
+        const recurrence = component._price?.type === 'recurring' ? component._price?.billing_period : component.type;
 
         if (recurrence !== undefined) {
           recurrences[recurrence] =

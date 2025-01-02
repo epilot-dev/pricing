@@ -829,15 +829,9 @@ export const computePriceItem = (
       before_discount_unit_amount: itemValues.before_discount_unit_amount,
     }),
     ...(Number.isInteger(itemValues.unit_discount_amount) && { unit_discount_amount: itemValues.unit_discount_amount }),
-    ...(itemValues.unit_discount_amount_decimal && {
-      unit_discount_amount_decimal: itemValues.unit_discount_amount_decimal,
-    }),
     ...(Number.isInteger(itemValues.unit_amount_net) && { unit_amount_net: itemValues.unit_amount_net }),
     ...(Number.isInteger(itemValues.unit_discount_amount_net) && {
       unit_discount_amount_net: itemValues.unit_discount_amount_net,
-    }),
-    ...(itemValues.unit_discount_amount_net_decimal && {
-      unit_discount_amount_net_decimal: itemValues.unit_discount_amount_net_decimal,
     }),
     ...(Number.isInteger(itemValues.unit_amount_gross) && { unit_amount_gross: itemValues.unit_amount_gross }),
     ...(price?.pricing_model === PricingModel.perUnit &&
@@ -860,17 +854,9 @@ export const computePriceItem = (
       before_discount_amount_total: itemValues.before_discount_amount_total,
     }),
     amount_tax: itemValues.amount_tax,
-    ...(Number.isInteger(itemValues.tax_discount_amount) && {
-      tax_discount_amount: itemValues.tax_discount_amount,
-    }),
-    ...(itemValues.tax_discount_amount_decimal && {
-      tax_discount_amount_decimal: itemValues.tax_discount_amount_decimal,
-    }),
+    ...(Number.isInteger(itemValues.tax_discount_amount) && { tax_discount_amount: itemValues.tax_discount_amount }),
     ...(Number.isInteger(itemValues.before_discount_tax_amount) && {
       before_discount_tax_amount: itemValues.before_discount_tax_amount,
-    }),
-    ...(itemValues.before_discount_tax_amount_decimal && {
-      before_discount_tax_amount_decimal: itemValues.before_discount_tax_amount_decimal,
     }),
     ...(itemValues.tiers_details && {
       tiers_details: itemValues.tiers_details.map((tier) => ({

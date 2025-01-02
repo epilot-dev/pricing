@@ -354,7 +354,7 @@ export const resultsWhenNoPricesProvided = {
       unit_amount: 0,
       unit_amount_net: 0,
       unit_amount_net_decimal: '0',
-      unit_amount_decimal: '0.0',
+      unit_amount_decimal: '0',
       unit_amount_gross: 0,
       unit_amount_gross_decimal: '0',
       _price: {

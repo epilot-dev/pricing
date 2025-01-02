@@ -142,7 +142,7 @@ const ensureComponentWithValidPrice = (itemComponent: PriceItemDto): PriceItemDt
   ...itemComponent,
   unit_amount: Number.isInteger(itemComponent.unit_amount) ? itemComponent.unit_amount : 0,
   unit_amount_decimal:
-    typeof itemComponent.unit_amount_decimal !== 'undefined' ? itemComponent.unit_amount_decimal : '0.0',
+    typeof itemComponent.unit_amount_decimal !== 'undefined' ? itemComponent.unit_amount_decimal : '0',
 });
 
 const getPriceComponents = (priceItem: CompositePriceItemDto): PriceComponent[] => {
@@ -730,7 +730,7 @@ export const computePriceItem = (
   const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase() as Currency;
   const priceItemDescription = priceItem.description ?? price?.description;
 
-  const unitAmountDecimal = priceItem.unit_amount_decimal || price?.unit_amount_decimal || '0.0';
+  const unitAmountDecimal = priceItem.unit_amount_decimal || price?.unit_amount_decimal || '0';
   const priceTax = getPriceTax(applicableTax, price, priceItem.taxes);
   const isTaxInclusive =
     priceItem.is_tax_inclusive !== undefined ? priceItem.is_tax_inclusive : isTaxInclusivePrice(price);

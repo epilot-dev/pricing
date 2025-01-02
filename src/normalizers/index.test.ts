@@ -75,9 +75,9 @@ describe('normalizeNumberToFrequency', () => {
   `(
     `should normalize $timeValue/$timeValueFrequency properly to time frequency $targetTimeFrequency`,
     ({ timeValue, timeValueFrequency, targetTimeFrequency, precision, expectedNormalizedValue }) => {
-      expect(normalizeValueToFrequencyUnit(timeValue, timeValueFrequency, targetTimeFrequency, precision)).toStrictEqual(
-        expectedNormalizedValue,
-      );
+      expect(
+        normalizeValueToFrequencyUnit(timeValue, timeValueFrequency, targetTimeFrequency, precision),
+      ).toStrictEqual(expectedNormalizedValue);
     },
   );
 });

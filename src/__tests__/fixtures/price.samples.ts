@@ -7,6 +7,7 @@ import {
   PriceItemDto,
   TaxAmount,
 } from '../../types';
+
 import {
   fixedCashbackCoupon,
   fixedDiscountCoupon,
@@ -14,7 +15,6 @@ import {
   percentageCashbackCoupon,
   percentageDiscountCoupon,
 } from './coupon.samples';
-
 import { tax10percent, tax19percent, tax6percent } from './tax.samples';
 
 export const priceItem1: PriceItemDto = {
@@ -854,7 +854,6 @@ export const compositePriceWithTaxChanges: CompositePriceItemDto = {
         price_display_in_journeys: 'show_price',
         type: 'recurring',
         billing_period: 'monthly',
-
         _slug: 'price',
         _schema: 'price',
         _title: 'monthly variable',
@@ -1147,7 +1146,6 @@ export const nonComputedCompositePrice: CompositePriceItem & { [key: string]: un
             _schema: 'tax',
             _title: '',
             _updated_at: '2022-06-29T20:26:19.020Z',
-
             rate: 10,
             type: 'VAT',
           },
@@ -1186,7 +1184,6 @@ export const nonComputedCompositePrice: CompositePriceItem & { [key: string]: un
             _schema: 'tax',
             _title: '',
             _updated_at: '2022-06-29T20:26:19.020Z',
-
             rate: 6,
             type: 'VAT',
           },
@@ -1225,7 +1222,6 @@ export const nonComputedCompositePrice: CompositePriceItem & { [key: string]: un
             _schema: 'tax',
             _title: '',
             _updated_at: '2022-06-29T20:26:19.020Z',
-
             rate: 19,
             type: 'VAT',
           },
@@ -1545,7 +1541,6 @@ export const fullCompositePrice: CompositePriceItem & { [key: string]: unknown }
             _schema: 'tax',
             _title: '',
             _updated_at: '2022-06-29T20:26:19.020Z',
-
             rate: 10,
             type: 'VAT',
           },
@@ -1584,7 +1579,6 @@ export const fullCompositePrice: CompositePriceItem & { [key: string]: unknown }
             _schema: 'tax',
             _title: '',
             _updated_at: '2022-06-29T20:26:19.020Z',
-
             rate: 6,
             type: 'VAT',
           },
@@ -1623,7 +1617,6 @@ export const fullCompositePrice: CompositePriceItem & { [key: string]: unknown }
             _schema: 'tax',
             _title: '',
             _updated_at: '2022-06-29T20:26:19.020Z',
-
             rate: 19,
             type: 'VAT',
           },
@@ -1672,7 +1665,6 @@ export const fullCompositePrice: CompositePriceItem & { [key: string]: unknown }
             _schema: 'tax',
             _title: '',
             _updated_at: '2022-06-29T20:26:19.020Z',
-
             rate: 10,
             type: 'VAT',
           },
@@ -1704,7 +1696,6 @@ export const fullCompositePrice: CompositePriceItem & { [key: string]: unknown }
             _schema: 'tax',
             _title: '',
             _updated_at: '2022-06-29T20:26:19.020Z',
-
             rate: 10,
             type: 'VAT',
           },
@@ -1742,7 +1733,6 @@ export const fullCompositePrice: CompositePriceItem & { [key: string]: unknown }
             _schema: 'tax',
             _title: '',
             _updated_at: '2022-06-29T20:26:19.020Z',
-
             rate: 6,
             type: 'VAT',
           },
@@ -1776,7 +1766,6 @@ export const fullCompositePrice: CompositePriceItem & { [key: string]: unknown }
             _schema: 'tax',
             _title: '',
             _updated_at: '2022-06-29T20:26:19.020Z',
-
             rate: 6,
             type: 'VAT',
           },
@@ -1812,7 +1801,6 @@ export const fullCompositePrice: CompositePriceItem & { [key: string]: unknown }
             _schema: 'tax',
             _title: '',
             _updated_at: '2022-06-29T20:26:19.020Z',
-
             rate: 19,
             type: 'VAT',
           },
@@ -1843,7 +1831,6 @@ export const fullCompositePrice: CompositePriceItem & { [key: string]: unknown }
             _schema: 'tax',
             _title: '',
             _updated_at: '2022-06-29T20:26:19.020Z',
-
             rate: 19,
             type: 'VAT',
           },
@@ -1899,7 +1886,6 @@ export const compositePriceComponentQuantity0: CompositePriceItemDto = {
             _schema: 'tax',
             _title: '',
             _updated_at: '2022-06-29T20:26:19.020Z',
-
             rate: 10,
             type: 'VAT',
           },
@@ -1948,7 +1934,6 @@ export const compositePriceComponentQuantity0: CompositePriceItemDto = {
             _schema: 'tax',
             _title: '',
             _updated_at: '2022-06-29T20:26:19.020Z',
-
             rate: 10,
             type: 'VAT',
           },
@@ -1976,7 +1961,6 @@ export const compositePriceComponentQuantity0: CompositePriceItemDto = {
             _schema: 'tax',
             _title: '',
             _updated_at: '2022-06-29T20:26:19.020Z',
-
             rate: 10,
             type: 'VAT',
           },

@@ -854,7 +854,6 @@ export const compositePriceWithTaxChanges: CompositePriceItemDto = {
         price_display_in_journeys: 'show_price',
         type: 'recurring',
         billing_period: 'monthly',
-
         _slug: 'price',
         _schema: 'price',
         _title: 'monthly variable',

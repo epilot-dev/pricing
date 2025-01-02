@@ -421,7 +421,6 @@ export const severalItemsPerRecurrenceTotals = {
             _title: '',
             rate: 19,
             type: 'VAT',
-
             _created_at: '2022-06-29T20:26:19.020Z',
             _updated_at: '2022-06-29T20:26:19.020Z',
           },
@@ -442,7 +441,6 @@ export const severalItemsPerRecurrenceTotals = {
             _title: '',
             rate: 19,
             type: 'VAT',
-
             _created_at: '2022-06-29T20:26:19.020Z',
             _updated_at: '2022-06-29T20:26:19.020Z',
           },
@@ -552,7 +550,6 @@ export const severalItemsPerRecurrenceTotals = {
             _org: '739224',
             _title: '',
             type: 'VAT',
-
             _created_at: '2022-06-29T20:26:19.020Z',
             _updated_at: '2022-06-29T20:26:19.020Z',
           },
@@ -583,7 +580,6 @@ export const severalItemsPerRecurrenceTotals = {
             _org: '739224',
             _title: '',
             type: 'VAT',
-
             _created_at: '2022-06-29T20:26:19.020Z',
             _updated_at: '2022-06-29T20:26:19.020Z',
           },
@@ -623,7 +619,6 @@ export const severalItemsPerRecurrenceTotals = {
             _title: '',
             rate: 19,
             type: 'VAT',
-
             _created_at: '2022-06-29T20:26:19.020Z',
             _updated_at: '2022-06-29T20:26:19.020Z',
           },
@@ -644,7 +639,6 @@ export const severalItemsPerRecurrenceTotals = {
             _title: '',
             rate: 19,
             type: 'VAT',
-
             _created_at: '2022-06-29T20:26:19.020Z',
             _updated_at: '2022-06-29T20:26:19.020Z',
           },
@@ -684,7 +678,6 @@ export const severalItemsPerRecurrenceTotals = {
             _org: '739224',
             _title: '',
             type: 'VAT',
-
             _created_at: '2022-06-29T20:26:19.020Z',
             _updated_at: '2022-06-29T20:26:19.020Z',
           },
@@ -714,7 +707,6 @@ export const severalItemsPerRecurrenceTotals = {
             _org: '739224',
             _title: '',
             type: 'VAT',
-
             _created_at: '2022-06-29T20:26:19.020Z',
             _updated_at: '2022-06-29T20:26:19.020Z',
           },
@@ -886,7 +878,6 @@ export const severalItemsPerRecurrenceTotals = {
                 _schema: 'tax',
                 _org: '739224',
                 _title: '',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -918,7 +909,6 @@ export const severalItemsPerRecurrenceTotals = {
                 _org: '739224',
                 _title: '',
                 type: 'VAT',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -946,7 +936,6 @@ export const severalItemsPerRecurrenceTotals = {
                 _title: '',
                 rate: 19,
                 type: 'VAT',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -993,7 +982,6 @@ export const severalItemsPerRecurrenceTotals = {
                 _schema: 'tax',
                 _org: '739224',
                 _title: '',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -1011,7 +999,6 @@ export const severalItemsPerRecurrenceTotals = {
                 _schema: 'tax',
                 _org: '739224',
                 _title: '',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -1064,7 +1051,6 @@ export const severalItemsPerRecurrenceTotals = {
                 _org: '739224',
                 _title: '',
                 type: 'VAT',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -1083,7 +1069,6 @@ export const severalItemsPerRecurrenceTotals = {
                 _org: '739224',
                 _title: '',
                 type: 'VAT',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -1131,7 +1116,6 @@ export const severalItemsPerRecurrenceTotals = {
                 _title: '',
                 rate: 19,
                 type: 'VAT',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -1154,7 +1138,6 @@ export const severalItemsPerRecurrenceTotals = {
                 _title: '',
                 rate: 19,
                 type: 'VAT',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -1364,7 +1347,6 @@ export const compositePricesUnitAmountZeroResult = {
                 _schema: 'tax',
                 _title: '',
                 _updated_at: '2022-06-29T20:26:19.020Z',
-
                 rate: 10,
                 type: 'VAT',
               },
@@ -1399,7 +1381,6 @@ export const compositePricesUnitAmountZeroResult = {
                 _schema: 'tax',
                 _title: '',
                 _updated_at: '2022-06-29T20:26:19.020Z',
-
                 rate: 6,
                 type: 'VAT',
               },
@@ -1453,7 +1434,6 @@ export const compositePricesUnitAmountZeroResult = {
                 _schema: 'tax',
                 _title: '',
                 _updated_at: '2022-06-29T20:26:19.020Z',
-
                 rate: 10,
                 type: 'VAT',
               },
@@ -1487,7 +1467,6 @@ export const compositePricesUnitAmountZeroResult = {
                 _schema: 'tax',
                 _title: '',
                 _updated_at: '2022-06-29T20:26:19.020Z',
-
                 rate: 10,
                 type: 'VAT',
               },
@@ -1527,7 +1506,6 @@ export const compositePricesUnitAmountZeroResult = {
                 _schema: 'tax',
                 _title: '',
                 _updated_at: '2022-06-29T20:26:19.020Z',
-
                 rate: 6,
                 type: 'VAT',
               },
@@ -1563,7 +1541,6 @@ export const compositePricesUnitAmountZeroResult = {
                 _schema: 'tax',
                 _title: '',
                 _updated_at: '2022-06-29T20:26:19.020Z',
-
                 rate: 6,
                 type: 'VAT',
               },
@@ -2050,7 +2027,6 @@ export const compositePriceWithDisplayOnRequest = {
                 _schema: 'tax',
                 _org: '739224',
                 _title: '',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -2117,7 +2093,6 @@ export const compositePriceWithDisplayOnRequest = {
                 _schema: 'tax',
                 _org: '739224',
                 _title: '',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -2135,7 +2110,6 @@ export const compositePriceWithDisplayOnRequest = {
                 _schema: 'tax',
                 _org: '739224',
                 _title: '',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -2187,7 +2161,6 @@ export const compositePriceWithDisplayOnRequest = {
                 _schema: 'tax',
                 _org: '739224',
                 _title: '',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -2205,7 +2178,6 @@ export const compositePriceWithDisplayOnRequest = {
                 _schema: 'tax',
                 _org: '739224',
                 _title: '',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -2271,7 +2243,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
             _title: '',
             rate: 19,
             type: 'VAT',
-
             _created_at: '2022-06-29T20:26:19.020Z',
             _updated_at: '2022-06-29T20:26:19.020Z',
           },
@@ -2400,7 +2371,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
             _org: '739224',
             _title: '',
             type: 'VAT',
-
             _created_at: '2022-06-29T20:26:19.020Z',
             _updated_at: '2022-06-29T20:26:19.020Z',
           },
@@ -2431,7 +2401,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
             _org: '739224',
             _title: '',
             type: 'VAT',
-
             _created_at: '2022-06-29T20:26:19.020Z',
             _updated_at: '2022-06-29T20:26:19.020Z',
           },
@@ -2471,7 +2440,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
             _title: '',
             rate: 19,
             type: 'VAT',
-
             _created_at: '2022-06-29T20:26:19.020Z',
             _updated_at: '2022-06-29T20:26:19.020Z',
           },
@@ -2492,7 +2460,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
             _title: '',
             rate: 19,
             type: 'VAT',
-
             _created_at: '2022-06-29T20:26:19.020Z',
             _updated_at: '2022-06-29T20:26:19.020Z',
           },
@@ -2532,7 +2499,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
             _org: '739224',
             _title: '',
             type: 'VAT',
-
             _created_at: '2022-06-29T20:26:19.020Z',
             _updated_at: '2022-06-29T20:26:19.020Z',
           },
@@ -2562,7 +2528,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
             _org: '739224',
             _title: '',
             type: 'VAT',
-
             _created_at: '2022-06-29T20:26:19.020Z',
             _updated_at: '2022-06-29T20:26:19.020Z',
           },
@@ -2713,7 +2678,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _schema: 'tax',
                 _org: '739224',
                 _title: '',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -2745,7 +2709,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _org: '739224',
                 _title: '',
                 type: 'VAT',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -2773,7 +2736,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _title: '',
                 rate: 19,
                 type: 'VAT',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -2820,7 +2782,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _schema: 'tax',
                 _org: '739224',
                 _title: '',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -2838,7 +2799,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _schema: 'tax',
                 _org: '739224',
                 _title: '',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -2891,7 +2851,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _org: '739224',
                 _title: '',
                 type: 'VAT',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -2910,7 +2869,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _org: '739224',
                 _title: '',
                 type: 'VAT',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -2958,7 +2916,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _title: '',
                 rate: 19,
                 type: 'VAT',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -2981,7 +2938,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _title: '',
                 rate: 19,
                 type: 'VAT',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -3050,7 +3006,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _schema: 'tax',
                 _org: '739224',
                 _title: '',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -3081,7 +3036,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _schema: 'tax',
                 _org: '739224',
                 _title: '',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -3124,7 +3078,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _schema: 'tax',
                 _org: '739224',
                 _title: '',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -3142,7 +3095,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _schema: 'tax',
                 _org: '739224',
                 _title: '',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -3194,7 +3146,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _schema: 'tax',
                 _org: '739224',
                 _title: '',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -3212,7 +3163,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
                 _schema: 'tax',
                 _org: '739224',
                 _title: '',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -3450,7 +3400,6 @@ export const resultCompositePriceQuantity2 = {
                 _schema: 'tax',
                 _title: '',
                 _updated_at: '2022-06-29T20:26:19.020Z',
-
                 rate: 6,
                 type: 'VAT',
               },
@@ -3485,7 +3434,6 @@ export const resultCompositePriceQuantity2 = {
                 _schema: 'tax',
                 _title: '',
                 _updated_at: '2022-06-29T20:26:19.020Z',
-
                 rate: 19,
                 type: 'VAT',
               },
@@ -3534,7 +3482,6 @@ export const resultCompositePriceQuantity2 = {
                 _schema: 'tax',
                 _title: '',
                 _updated_at: '2022-06-29T20:26:19.020Z',
-
                 rate: 10,
                 type: 'VAT',
               },
@@ -3568,7 +3515,6 @@ export const resultCompositePriceQuantity2 = {
                 _schema: 'tax',
                 _title: '',
                 _updated_at: '2022-06-29T20:26:19.020Z',
-
                 rate: 10,
                 type: 'VAT',
               },
@@ -3608,7 +3554,6 @@ export const resultCompositePriceQuantity2 = {
                 _schema: 'tax',
                 _title: '',
                 _updated_at: '2022-06-29T20:26:19.020Z',
-
                 rate: 6,
                 type: 'VAT',
               },
@@ -3644,7 +3589,6 @@ export const resultCompositePriceQuantity2 = {
                 _schema: 'tax',
                 _title: '',
                 _updated_at: '2022-06-29T20:26:19.020Z',
-
                 rate: 6,
                 type: 'VAT',
               },
@@ -3682,7 +3626,6 @@ export const resultCompositePriceQuantity2 = {
                 _schema: 'tax',
                 _title: '',
                 _updated_at: '2022-06-29T20:26:19.020Z',
-
                 rate: 19,
                 type: 'VAT',
               },
@@ -3715,7 +3658,6 @@ export const resultCompositePriceQuantity2 = {
                 _schema: 'tax',
                 _title: '',
                 _updated_at: '2022-06-29T20:26:19.020Z',
-
                 rate: 19,
                 type: 'VAT',
               },
@@ -4160,7 +4102,6 @@ export const priceDetailsForCompositePrice = {
                 _org: '739224',
                 _title: '',
                 type: 'VAT',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -4188,7 +4129,6 @@ export const priceDetailsForCompositePrice = {
                 _title: '',
                 rate: 19,
                 type: 'VAT',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -4235,7 +4175,6 @@ export const priceDetailsForCompositePrice = {
                 _schema: 'tax',
                 _org: '739224',
                 _title: '',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -4253,7 +4192,6 @@ export const priceDetailsForCompositePrice = {
                 _schema: 'tax',
                 _org: '739224',
                 _title: '',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -4306,7 +4244,6 @@ export const priceDetailsForCompositePrice = {
                 _org: '739224',
                 _title: '',
                 type: 'VAT',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -4325,7 +4262,6 @@ export const priceDetailsForCompositePrice = {
                 _org: '739224',
                 _title: '',
                 type: 'VAT',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -4373,7 +4309,6 @@ export const priceDetailsForCompositePrice = {
                 _title: '',
                 rate: 19,
                 type: 'VAT',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -4396,7 +4331,6 @@ export const priceDetailsForCompositePrice = {
                 _title: '',
                 rate: 19,
                 type: 'VAT',
-
                 _created_at: '2022-06-29T20:26:19.020Z',
                 _updated_at: '2022-06-29T20:26:19.020Z',
               },
@@ -5369,7 +5303,6 @@ export const resultCompositePriceWithTotalDetails = {
                 _schema: 'tax',
                 _title: '',
                 _updated_at: '2022-06-29T20:26:19.020Z',
-
                 rate: 6,
                 type: 'VAT',
               },
@@ -5442,7 +5375,6 @@ export const resultCompositePriceWithTotalDetails = {
                 _schema: 'tax',
                 _title: '',
                 _updated_at: '2022-06-29T20:26:19.020Z',
-
                 rate: 19,
                 type: 'VAT',
               },
@@ -5475,7 +5407,6 @@ export const resultCompositePriceWithTotalDetails = {
                 _schema: 'tax',
                 _title: '',
                 _updated_at: '2022-06-29T20:26:19.020Z',
-
                 rate: 19,
                 type: 'VAT',
               },

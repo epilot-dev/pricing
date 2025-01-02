@@ -1311,7 +1311,7 @@ describe('computeAggregatedAndPriceTotals', () => {
                     amount_subtotal: 5455,
                     amount_tax: 545,
                   }),
-                ])
+                ]),
               }),
               expect.not.objectContaining({
                 unit_amount: undefined,

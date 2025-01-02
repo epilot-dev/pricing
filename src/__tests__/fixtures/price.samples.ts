@@ -7,6 +7,7 @@ import {
   PriceItemDto,
   TaxAmount,
 } from '../../types';
+
 import {
   fixedCashbackCoupon,
   fixedDiscountCoupon,
@@ -14,7 +15,6 @@ import {
   percentageCashbackCoupon,
   percentageDiscountCoupon,
 } from './coupon.samples';
-
 import { tax10percent, tax19percent, tax6percent } from './tax.samples';
 
 export const priceItem1: PriceItemDto = {

@@ -824,7 +824,21 @@ export const computePriceItem = (
     currency,
     ...(priceItemDescription && { description: priceItemDescription }),
     ...(typeof cashbackPeriod !== 'undefined' && { cashback_period: cashbackPeriod }),
-    ...(Number.isInteger(itemValues.unit_amount) && { unit_amount: itemValues.unit_amount }),
+    /**
+     * @todo In the future the unit_amount_decimal should be derived from the unit_amount
+     * and not from the original price's unit_amount_decimal,
+     * as it can be affected by the discounting.
+     * Right now we have a solution that targets specifically discounted prices,
+     * but this should be generalized.
+     */
+    ...(price?.pricing_model === PricingModel.perUnit && { unit_amount_decimal: unitAmountDecimal }),
+    ...(typeof itemValues.unit_amount === 'number' &&
+      Number.isInteger(itemValues.unit_amount) && {
+        unit_amount: itemValues.unit_amount,
+        ...(coupon && {
+          unit_amount_decimal: toDineroFromInteger(itemValues.unit_amount).toUnit().toString(),
+        }),
+      }),
     ...(Number.isInteger(itemValues.before_discount_unit_amount) && {
       before_discount_unit_amount: itemValues.before_discount_unit_amount,
     }),
@@ -834,7 +848,6 @@ export const computePriceItem = (
       unit_discount_amount_net: itemValues.unit_discount_amount_net,
     }),
     ...(Number.isInteger(itemValues.unit_amount_gross) && { unit_amount_gross: itemValues.unit_amount_gross }),
-    ...(price?.pricing_model === PricingModel.perUnit && { unit_amount_decimal: unitAmountDecimal }),
     amount_subtotal: itemValues.amount_subtotal,
     amount_total: itemValues.amount_total,
     ...(itemValues.discount_amount && { discount_amount: itemValues.discount_amount }),

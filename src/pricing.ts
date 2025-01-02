@@ -92,14 +92,14 @@ export const computePriceComponent = (
   priceItemComponent: PriceItemDto,
   priceItem: CompositePriceItemDto,
 ): PriceItem => {
-  const tax = priceItemComponent?.taxes?.[0]?.tax;
+  const tax = priceItemComponent.taxes?.[0]?.tax;
   const priceMapping = priceItem.price_mappings?.find(({ price_id }) => priceItemComponent._price!._id === price_id);
 
   const externalFeeMapping = priceItem.external_fees_mappings?.find(
     ({ price_id }) => priceItemComponent._price!._id === price_id,
   );
 
-  const safeQuantity = isNaN(priceItemComponent?.quantity!) ? 1 : priceItemComponent?.quantity;
+  const safeQuantity = isNaN(priceItemComponent.quantity!) ? 1 : priceItemComponent.quantity;
   const safeParentQuantity = isNaN(priceItem.quantity!) ? 1 : priceItem.quantity!;
   const quantity = toDinero(String(safeQuantity)).multiply(safeParentQuantity).toUnit();
 
@@ -146,8 +146,8 @@ const ensureComponentWithValidPrice = (itemComponent: PriceItemDto): PriceItemDt
 });
 
 const getPriceComponents = (priceItem: CompositePriceItemDto): PriceComponent[] => {
-  if (!Array.isArray(priceItem?.item_components)) {
-    return Array.isArray(priceItem?._price?.price_components)
+  if (!Array.isArray(priceItem.item_components)) {
+    return Array.isArray(priceItem._price?.price_components)
       ? priceItem._price!.price_components.filter(isValidPrice)
       : [];
   }

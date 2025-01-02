@@ -841,7 +841,6 @@ export const computePriceItem = (
       unit_discount_amount_net_decimal: itemValues.unit_discount_amount_net_decimal,
     }),
     ...(Number.isInteger(itemValues.unit_amount_gross) && { unit_amount_gross: itemValues.unit_amount_gross }),
-    ...(itemValues.unit_amount_gross_decimal && { unit_amount_gross_decimal: itemValues.unit_amount_gross_decimal }),
     ...(price?.pricing_model === PricingModel.perUnit &&
       unitAmountDecimal && { unit_amount_decimal: unitAmountDecimal }),
     amount_subtotal: itemValues.amount_subtotal,

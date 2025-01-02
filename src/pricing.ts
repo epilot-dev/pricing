@@ -833,7 +833,6 @@ export const computePriceItem = (
       unit_discount_amount_decimal: itemValues.unit_discount_amount_decimal,
     }),
     ...(Number.isInteger(itemValues.unit_amount_net) && { unit_amount_net: itemValues.unit_amount_net }),
-    ...(itemValues.unit_amount_net_decimal && { unit_amount_net_decimal: itemValues.unit_amount_net_decimal }),
     ...(Number.isInteger(itemValues.unit_discount_amount_net) && {
       unit_discount_amount_net: itemValues.unit_discount_amount_net,
     }),

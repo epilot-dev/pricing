@@ -238,7 +238,6 @@ export const applyDiscounts = (
     ...itemValues,
     unit_amount: isTaxInclusive ? afterDiscountUnitAmountGross.getAmount() : afterDiscountUnitAmountNet.getAmount(),
     unit_amount_gross: afterDiscountUnitAmountGross.getAmount(),
-    unit_amount_gross_decimal: afterDiscountUnitAmountGross.toUnit().toString(),
     unit_amount_net: afterDiscountUnitAmountNet.getAmount(),
     unit_amount_net_decimal: afterDiscountUnitAmountNet.toUnit().toString(),
     amount_subtotal: afterDiscountUnitAmountNet.multiply(unitAmountMultiplier).getAmount(),

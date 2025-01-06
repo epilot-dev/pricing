@@ -731,8 +731,7 @@ export const computePriceItem = (
 
   const unitAmountDecimal = priceItem.unit_amount_decimal || price?.unit_amount_decimal || '0';
   const priceTax = getPriceTax(applicableTax, price, priceItem.taxes);
-  const isTaxInclusive =
-    priceItem.is_tax_inclusive !== undefined ? priceItem.is_tax_inclusive : isTaxInclusivePrice(price);
+  const isTaxInclusive = priceItem.is_tax_inclusive ?? isTaxInclusivePrice(price);
 
   const { safeQuantity, quantityToSelectTier, unitAmountMultiplier, isUsingPriceMappingToSelectTier } =
     computeQuantities(price, quantity, priceMapping);
@@ -820,6 +819,7 @@ export const computePriceItem = (
 
   return {
     ...priceItem,
+    ...itemValues,
     currency,
     ...(priceItemDescription && { description: priceItemDescription }),
     ...(Number.isInteger(itemValues.cashback_amount) && { cashback_period: cashbackPeriod ?? '0' }),
@@ -832,53 +832,10 @@ export const computePriceItem = (
      */
     ...(price?.pricing_model === PricingModel.perUnit && { unit_amount_decimal: unitAmountDecimal }),
     ...(typeof itemValues.unit_amount === 'number' &&
-      Number.isInteger(itemValues.unit_amount) && {
-        unit_amount: itemValues.unit_amount,
-        ...(coupon && {
-          unit_amount_decimal: toDineroFromInteger(itemValues.unit_amount).toUnit().toString(),
-        }),
+      Number.isInteger(itemValues.unit_amount) &&
+      coupon && {
+        unit_amount_decimal: toDineroFromInteger(itemValues.unit_amount).toUnit().toString(),
       }),
-    ...(Number.isInteger(itemValues.before_discount_unit_amount) && {
-      before_discount_unit_amount: itemValues.before_discount_unit_amount,
-    }),
-    ...(Number.isInteger(itemValues.unit_discount_amount) && { unit_discount_amount: itemValues.unit_discount_amount }),
-    ...(Number.isInteger(itemValues.unit_amount_net) && { unit_amount_net: itemValues.unit_amount_net }),
-    ...(Number.isInteger(itemValues.unit_discount_amount_net) && {
-      unit_discount_amount_net: itemValues.unit_discount_amount_net,
-    }),
-    ...(itemValues.unit_amount_net_decimal && {
-      unit_amount_net_decimal: itemValues.unit_amount_net_decimal,
-    }),
-    ...(Number.isInteger(itemValues.unit_amount_gross) && { unit_amount_gross: itemValues.unit_amount_gross }),
-    ...(itemValues.unit_amount_gross_decimal && {
-      unit_amount_gross_decimal: itemValues.unit_amount_gross_decimal,
-    }),
-    amount_subtotal: itemValues.amount_subtotal,
-    amount_total: itemValues.amount_total,
-    ...(itemValues.discount_amount && { discount_amount: itemValues.discount_amount }),
-    ...(typeof itemValues.discount_percentage === 'number' && { discount_percentage: itemValues.discount_percentage }),
-    ...(Number.isInteger(itemValues.cashback_amount) && {
-      cashback_amount: itemValues.cashback_amount,
-    }),
-    ...(itemValues.cashback_amount_decimal && { cashback_amount_decimal: itemValues.cashback_amount_decimal }),
-    ...(Number.isInteger(itemValues.after_cashback_amount_total) && {
-      after_cashback_amount_total: itemValues.after_cashback_amount_total,
-    }),
-    ...(itemValues.after_cashback_amount_total_decimal && {
-      after_cashback_amount_total_decimal: itemValues.after_cashback_amount_total_decimal,
-    }),
-    ...(itemValues.before_discount_amount_total && {
-      before_discount_amount_total: itemValues.before_discount_amount_total,
-    }),
-    amount_tax: itemValues.amount_tax,
-    ...(Number.isInteger(itemValues.tax_discount_amount) && { tax_discount_amount: itemValues.tax_discount_amount }),
-    ...(Number.isInteger(itemValues.before_discount_tax_amount) && {
-      before_discount_tax_amount: itemValues.before_discount_tax_amount,
-    }),
-    ...(itemValues.tiers_details && {
-      tiers_details: itemValues.tiers_details,
-    }),
-    ...(itemValues.get_ag && { get_ag: itemValues.get_ag }),
     taxes: [
       {
         ...(priceTax ? { tax: priceTax } : { rate: 'nontaxable', rateValue: 0 }),

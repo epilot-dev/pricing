@@ -876,16 +876,7 @@ export const computePriceItem = (
       before_discount_tax_amount: itemValues.before_discount_tax_amount,
     }),
     ...(itemValues.tiers_details && {
-      tiers_details: itemValues.tiers_details.map((tier) => ({
-        quantity: tier.quantity,
-        unit_amount: tier.unit_amount,
-        unit_amount_decimal: tier.unit_amount_decimal,
-        unit_amount_gross: tier.unit_amount_gross,
-        unit_amount_net: tier.unit_amount_net,
-        amount_subtotal: tier.amount_subtotal,
-        amount_total: tier.amount_total,
-        amount_tax: tier.amount_tax,
-      })),
+      tiers_details: itemValues.tiers_details,
     }),
     ...(itemValues.get_ag && { get_ag: itemValues.get_ag }),
     taxes: [

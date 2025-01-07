@@ -10,7 +10,7 @@ import {
   computePriceItemDetails,
   extractPricingEntitiesBySlug,
   getRecurrencesWithEstimatedPrices,
-  isCompositePrice,
+  isCompositePriceItemDto,
   mapToPriceSnapshot,
   mapToProductSnapshot,
 } from './pricing';
@@ -589,9 +589,9 @@ describe('computePriceItemDetails', () => {
 
 describe('handleCompositePrices', () => {
   it('should identify composite price correctly', () => {
-    const result1 = isCompositePrice(samples.compositePrice._price as CompositePrice);
-    const result2 = isCompositePrice(samples.priceItem._price as Price);
-    const result3 = isCompositePrice(samples.priceItem1._price as Price);
+    const result1 = isCompositePriceItemDto(samples.compositePrice._price as CompositePrice);
+    const result2 = isCompositePriceItemDto(samples.priceItem._price as Price);
+    const result3 = isCompositePriceItemDto(samples.priceItem1._price as Price);
     expect(result1).toBe(true);
     expect(result2).toBe(false);
     expect(result3).toBe(false);

@@ -82,8 +82,9 @@ type PriceComponent = NonNullable<CompositePriceItemDto['item_components']>[numb
   number_input?: number;
 };
 
-export const isCompositePrice = (priceItem: PriceItemDto | CompositePriceItemDto): priceItem is CompositePriceItemDto =>
-  Boolean(priceItem.is_composite_price || priceItem._price?.is_composite_price);
+export const isCompositePriceItemDto = (
+  priceItem: PriceItemDto | CompositePriceItemDto,
+): priceItem is CompositePriceItemDto => Boolean(priceItem.is_composite_price || priceItem._price?.is_composite_price);
 
 const isCompositePriceItem = (priceItem: PriceItem | CompositePriceItem): priceItem is CompositePriceItem =>
   Boolean(priceItem.is_composite_price || priceItem._price?.is_composite_price);
@@ -245,19 +246,15 @@ export const computeCompositePrice = (priceItem: CompositePriceItemDto): Composi
     return computePriceComponent(itemComponent, priceItem);
   });
 
-  const itemDescription = priceItem?.description ?? compositePrice?.description ?? null;
+  const itemDescription = priceItem.description ?? compositePrice?.description ?? null;
 
   return {
     ...priceItem,
-    ...(priceItem?._product && { _product: mapToProductSnapshot(priceItem._product!) }),
+    ...(priceItem._product && { _product: mapToProductSnapshot(priceItem._product!) }),
     _price: mapToPriceSnapshot(priceItem._price as Price | undefined),
     currency: priceItem._price!.unit_amount_currency || DEFAULT_CURRENCY,
     ...(itemDescription && { description: itemDescription }),
-    /**
-     * @todo It might not be necessary to spread the price components here,
-     * investigate whether it's being mutated elsewhere
-     */
-    item_components: [...computedItemComponents],
+    item_components: computedItemComponents,
   };
 };
 
@@ -325,6 +322,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
         taxes: [],
         recurrences: [],
         recurrencesByTax: [],
+        cashbacks: [],
       },
     },
     currency: DEFAULT_CURRENCY,
@@ -333,14 +331,7 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
   const priceDetails = priceItems.reduce((details, priceItem) => {
     const immutablePriceItem = getImmutablePriceItem(priceItem._immutable_pricing_details);
 
-    if (
-      /**
-       * priceItem should never be nullish but since optional check was removed
-       * from isCompositePrice we should make the check before calling it
-       */
-      priceItem &&
-      isCompositePrice(priceItem)
-    ) {
+    if (isCompositePriceItemDto(priceItem)) {
       const compositePriceItemToAppend = immutablePriceItem
         ? (immutablePriceItem as CompositePriceItem)
         : computeCompositePrice(priceItem);
@@ -348,22 +339,21 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
       const itemBreakdown = recomputeDetailTotalsFromCompositePrice(undefined, compositePriceItemToAppend);
       const updatedTotals = recomputeDetailTotalsFromCompositePrice(details, compositePriceItemToAppend);
 
+      const newItem = {
+        ...compositePriceItemToAppend,
+        ...itemBreakdown,
+        ...(typeof itemBreakdown?.amount_subtotal === 'number' && {
+          amount_subtotal_decimal: toDineroFromInteger(itemBreakdown.amount_subtotal).toUnit().toString(),
+        }),
+        ...(typeof itemBreakdown?.amount_total === 'number' && {
+          amount_total_decimal: toDineroFromInteger(itemBreakdown.amount_total).toUnit().toString(),
+        }),
+        item_components: convertPriceComponentsPrecision(compositePriceItemToAppend.item_components ?? [], 2),
+      };
+
       return {
         ...updatedTotals,
-        items: [
-          ...details.items,
-          {
-            ...compositePriceItemToAppend,
-            ...itemBreakdown,
-            ...(typeof itemBreakdown?.amount_subtotal === 'number' && {
-              amount_subtotal_decimal: toDineroFromInteger(itemBreakdown.amount_subtotal).toUnit().toString(),
-            }),
-            ...(typeof itemBreakdown?.amount_total === 'number' && {
-              amount_total_decimal: toDineroFromInteger(itemBreakdown.amount_total).toUnit().toString(),
-            }),
-            item_components: convertPriceComponentsPrecision(compositePriceItemToAppend.item_components ?? [], 2),
-          },
-        ],
+        items: details.items.concat(newItem),
       };
     } else {
       const price = priceItem._price;
@@ -398,9 +388,11 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
             total_details: details.total_details,
           };
 
+      const newItem = convertPriceItemPrecision(priceItemToAppend, 2);
+
       return {
         ...updatedTotals,
-        items: [...details.items, convertPriceItemPrecision(priceItemToAppend, 2)],
+        items: details.items.concat(newItem),
       };
     }
   }, initialPricingDetails);
@@ -625,7 +617,6 @@ const recomputeDetailTotalsFromCompositePrice = (
   compositePriceItem: CompositePriceItem,
 ): PricingDetails => {
   const initialPricingDetails: PricingDetails = {
-    items: [],
     amount_subtotal: 0,
     amount_total: 0,
     total_details: {
@@ -635,6 +626,7 @@ const recomputeDetailTotalsFromCompositePrice = (
         taxes: [],
         recurrences: [],
         recurrencesByTax: [],
+        cashbacks: [],
       },
     },
   };
@@ -654,7 +646,7 @@ const recomputeDetailTotalsFromCompositePrice = (
         };
 
     return {
-      ...(detailTotals.items?.length && { items: [...detailTotals.items] }),
+      ...detailTotals,
       ...updatedTotals,
     };
   }, details || initialPricingDetails);

@@ -1044,9 +1044,9 @@ const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem,
             unit_amount_gross: toDineroFromInteger(recurrence.unit_amount_gross!)
               .convertPrecision(precision)
               .getAmount(),
-            unit_amount_net: Number.isInteger(recurrence.unit_amount_net)
-              ? toDineroFromInteger(recurrence.unit_amount_net!).convertPrecision(precision).getAmount()
-              : undefined,
+            ...(Number.isInteger(recurrence.unit_amount_net) && {
+              unit_amount_net: toDineroFromInteger(recurrence.unit_amount_net!).convertPrecision(precision).getAmount(),
+            }),
             amount_subtotal: toDineroFromInteger(recurrence.amount_subtotal).convertPrecision(precision).getAmount(),
             amount_total: toDineroFromInteger(recurrence.amount_total).convertPrecision(precision).getAmount(),
             amount_tax: toDineroFromInteger(recurrence.amount_tax!).convertPrecision(precision).getAmount(),

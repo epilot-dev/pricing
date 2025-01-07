@@ -1,9 +1,13 @@
-import { PriceItems } from '@epilot/pricing-client';
+import type { CashbackAmount, PriceItems } from '@epilot/pricing-client';
 import type { Currency } from 'dinero.js';
 
 import { DEFAULT_CURRENCY } from './currencies';
 import { toDineroFromInteger, toDinero } from './formatters';
-import { normalizePriceMappingInput, normalizeValueToFrequencyUnit } from './normalizers';
+import {
+  normalizePriceMappingInput,
+  normalizeTimeFrequencyFromDineroInputValue,
+  normalizeValueToFrequencyUnit,
+} from './normalizers';
 import type {
   CompositePriceItem,
   CompositePriceItemDto,
@@ -298,6 +302,34 @@ const getImmutablePriceItem = (
 };
 
 /**
+ * Recurrence amounts after cashbacks can only be computed
+ * after all recurrences and cashbacks have been computed.
+ */
+const computeRecurrenceAfterCashbackAmounts = (recurrence: RecurrenceAmount, cashbacks: CashbackAmount[]) => {
+  /* Only the first cashback is taken into account */
+  const cashback = cashbacks[0];
+
+  if (!cashback || !recurrence.type) {
+    return recurrence;
+  }
+
+  const cashbackAmount = toDineroFromInteger(cashback.amount_total);
+
+  const normalizedCashbackAmount =
+    recurrence.type === 'recurring'
+      ? normalizeTimeFrequencyFromDineroInputValue(cashbackAmount, 'yearly', recurrence.billing_period!)
+      : cashbackAmount;
+
+  const afterCashbackAmountTotal = toDineroFromInteger(recurrence.amount_total).subtract(normalizedCashbackAmount);
+
+  return {
+    ...recurrence,
+    after_cashback_amount_total: afterCashbackAmountTotal.getAmount(),
+    after_cashback_amount_total_decimal: afterCashbackAmountTotal.toUnit().toString(),
+  };
+};
+
+/**
  * Computes all the integer amounts for the price items using the string decimal representation defined on prices unit_amount field.
  * All totals are computed with a decimal precision of DECIMAL_PRECISION.
  * After the calculations the integer amounts are scaled to a precision of 2.
@@ -395,6 +427,14 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
   }, initialPricingDetails);
 
   priceDetails.currency = (priceDetails.items[0]?.currency as Currency) || DEFAULT_CURRENCY;
+
+  const cashbacks = priceDetails.total_details?.breakdown?.cashbacks;
+
+  if (cashbacks?.length) {
+    priceDetails.total_details!.breakdown!.recurrences = priceDetails.total_details?.breakdown?.recurrences?.map(
+      (recurrence) => computeRecurrenceAfterCashbackAmounts(recurrence, cashbacks),
+    );
+  }
 
   return convertPricingPrecision(priceDetails, 2);
 };
@@ -1018,6 +1058,12 @@ const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem,
                 .convertPrecision(precision)
                 .getAmount(),
             }),
+            ...(typeof recurrence.after_cashback_amount_total === 'number' &&
+              Number.isInteger(recurrence.after_cashback_amount_total) && {
+                after_cashback_amount_total: toDineroFromInteger(recurrence.after_cashback_amount_total)
+                  .convertPrecision(precision)
+                  .getAmount(),
+              }),
           };
         }),
         recurrencesByTax: details.total_details?.breakdown?.recurrencesByTax!.map((recurrence) => {

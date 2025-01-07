@@ -6852,6 +6852,8 @@ export const computedPriceWithFixedAmountCashbackCoupon = {
           amount_subtotal_decimal: '90.909090909091',
           amount_total_decimal: '100',
           amount_tax: 909,
+          after_cashback_amount_total: 9000,
+          after_cashback_amount_total_decimal: '90',
         },
       ],
       recurrencesByTax: [
@@ -6996,6 +6998,8 @@ export const computedPriceWithPercentageCashbackCoupon = {
           amount_subtotal_decimal: '90.909090909091',
           amount_total_decimal: '100',
           amount_tax: 909,
+          after_cashback_amount_total: 9000,
+          after_cashback_amount_total_decimal: '90',
         },
       ],
       recurrencesByTax: [
@@ -7139,6 +7143,8 @@ export const computedRecurringPriceWithFixedAmountCashbackCoupon = {
           amount_subtotal_decimal: '90.909090909091',
           amount_total_decimal: '100',
           amount_tax: 909,
+          after_cashback_amount_total: 9917,
+          after_cashback_amount_total_decimal: '99.166666666667',
         },
       ],
       recurrencesByTax: [
@@ -7901,6 +7907,8 @@ export const computedCompositePriceWithComponentsWithCashbacks = {
           amount_subtotal_decimal: '9.090909090909',
           amount_total_decimal: '10',
           amount_tax: 91,
+          after_cashback_amount_total: 833,
+          after_cashback_amount_total_decimal: '8.333333333333',
         },
         {
           type: 'one_time',
@@ -7911,6 +7919,8 @@ export const computedCompositePriceWithComponentsWithCashbacks = {
           amount_subtotal_decimal: '90.909090909091',
           amount_total_decimal: '100',
           amount_tax: 909,
+          after_cashback_amount_total: 8000,
+          after_cashback_amount_total_decimal: '80',
         },
       ],
       recurrencesByTax: [

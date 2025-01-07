@@ -507,12 +507,12 @@ const recomputeDetailTotals = (
       amount_total_decimal: priceTotal.toUnit().toString(),
       amount_tax: priceTax.getAmount(),
       ...(priceBeforeDiscountAmountTotal && {
-        before_discount_amount_total: priceBeforeDiscountAmountTotal?.getAmount(),
-        before_discount_amount_total_decimal: priceBeforeDiscountAmountTotal?.toUnit().toString(),
+        before_discount_amount_total: priceBeforeDiscountAmountTotal.getAmount(),
+        before_discount_amount_total_decimal: priceBeforeDiscountAmountTotal.toUnit().toString(),
       }),
       ...(priceDiscountAmount && {
-        discount_amount: priceDiscountAmount?.getAmount(),
-        discount_amount_decimal: priceDiscountAmount?.toUnit().toString(),
+        discount_amount: priceDiscountAmount.getAmount(),
+        discount_amount_decimal: priceDiscountAmount.toUnit().toString(),
       }),
     });
   } else {

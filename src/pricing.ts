@@ -454,20 +454,16 @@ const recomputeDetailTotals = (
     typeof priceItemToAppend.discount_amount !== 'undefined'
       ? toDineroFromInteger(priceItemToAppend.discount_amount!)
       : undefined;
-  const priceCashBackAmount =
-    typeof priceItemToAppend.cashback_amount !== 'undefined'
-      ? toDineroFromInteger(priceItemToAppend.cashback_amount!)
-      : undefined;
 
-  const coupon = (priceItemToAppend as PriceItemDto)?._coupons?.[0];
-
-  const cashbackPeriod = priceItemToAppend.cashback_period ?? '0';
   const priceBeforeDiscountAmountTotal =
     typeof priceItemToAppend.before_discount_amount_total !== 'undefined'
       ? toDineroFromInteger(priceItemToAppend.before_discount_amount_total!)
       : undefined;
   const priceTax = toDineroFromInteger(priceItemToAppend.taxes?.[0]?.amount || priceItemToAppend.amount_tax || 0);
 
+  /**
+   * Taxes
+   */
   if (tax) {
     tax.amount = toDineroFromInteger(tax.amount!).add(priceTax).getAmount();
 
@@ -493,6 +489,9 @@ const recomputeDetailTotals = (
     });
   }
 
+  /**
+   * Recurrences
+   */
   if (!recurrence) {
     const type = price?.type || priceItemToAppend.type;
 
@@ -516,26 +515,28 @@ const recomputeDetailTotals = (
       }),
     });
   } else {
-    const unitAmountGrossAmount = toDineroFromInteger(recurrence.unit_amount_gross!);
+    const unitAmountGrossAmount = toDineroFromInteger(recurrence.unit_amount_gross!).add(priceUnitAmountGross);
     const unitAmountNetAmount = recurrence.unit_amount_net
-      ? toDineroFromInteger(recurrence.unit_amount_net)
+      ? toDineroFromInteger(recurrence.unit_amount_net).add(priceUnitAmountNet!)
       : undefined;
-    const subTotalAmount = toDineroFromInteger(recurrence.amount_subtotal);
-    const totalAmount = toDineroFromInteger(recurrence.amount_total);
-    const taxAmount = toDineroFromInteger(recurrence.amount_tax!);
+    const subTotalAmount = toDineroFromInteger(recurrence.amount_subtotal).add(priceSubtotal);
+    const totalAmount = toDineroFromInteger(recurrence.amount_total).add(priceTotal);
+    const taxAmount = toDineroFromInteger(recurrence.amount_tax!).add(priceTax);
+
+    recurrence.unit_amount_gross = unitAmountGrossAmount.getAmount();
+    recurrence.unit_amount_net = unitAmountNetAmount?.getAmount();
+    recurrence.amount_subtotal = subTotalAmount.getAmount();
+    recurrence.amount_subtotal_decimal = subTotalAmount.toUnit().toString();
+    recurrence.amount_total = totalAmount.getAmount();
+    recurrence.amount_total_decimal = totalAmount.toUnit().toString();
+    recurrence.amount_tax = taxAmount.getAmount();
+
     const existingRecurrenceBeforeDiscountAmountTotal =
       typeof recurrence.before_discount_amount_total !== 'undefined'
         ? toDineroFromInteger(recurrence.before_discount_amount_total)
         : undefined;
     const discountAmount =
       typeof recurrence.discount_amount !== 'undefined' ? toDineroFromInteger(recurrence.discount_amount) : undefined;
-    recurrence.unit_amount_gross = unitAmountGrossAmount.add(priceUnitAmountGross).getAmount();
-    recurrence.unit_amount_net = unitAmountNetAmount?.add(priceUnitAmountNet!).getAmount() ?? undefined;
-    recurrence.amount_subtotal = subTotalAmount.add(priceSubtotal).getAmount();
-    recurrence.amount_total = totalAmount.add(priceTotal).getAmount();
-    recurrence.amount_subtotal_decimal = subTotalAmount.add(priceSubtotal).toUnit().toString();
-    recurrence.amount_total_decimal = totalAmount.add(priceTotal).toUnit().toString();
-    recurrence.amount_tax = taxAmount.add(priceTax).getAmount();
 
     if (priceBeforeDiscountAmountTotal || existingRecurrenceBeforeDiscountAmountTotal) {
       const baseAmount = priceBeforeDiscountAmountTotal || priceTotal;
@@ -551,6 +552,9 @@ const recomputeDetailTotals = (
     }
   }
 
+  /**
+   * Recurrences by tax
+   */
   const recurrenceTax = !tax && itemTax ? taxes?.[taxes?.length - 1] : tax;
 
   if (!recurrenceByTax) {
@@ -565,13 +569,24 @@ const recomputeDetailTotals = (
       tax: recurrenceTax ?? { amount: 0, rate: 'nontaxable', rateValue: 0, tax: { rate: 0 } },
     });
   } else {
-    const totalAmount = toDineroFromInteger(recurrenceByTax.amount_total);
-    const subTotalAmount = toDineroFromInteger(recurrenceByTax.amount_subtotal);
-    const taxAmount = toDineroFromInteger(recurrenceByTax.amount_tax!);
-    recurrenceByTax.amount_total = totalAmount.add(priceTotal).getAmount();
-    recurrenceByTax.amount_subtotal = subTotalAmount.add(priceSubtotal).getAmount();
-    recurrenceByTax.amount_tax = taxAmount.add(priceTax).getAmount();
+    const totalAmount = toDineroFromInteger(recurrenceByTax.amount_total).add(priceTotal);
+    const subTotalAmount = toDineroFromInteger(recurrenceByTax.amount_subtotal).add(priceSubtotal);
+    const taxAmount = toDineroFromInteger(recurrenceByTax.amount_tax!).add(priceTax);
+
+    recurrenceByTax.amount_total = totalAmount.getAmount();
+    recurrenceByTax.amount_subtotal = subTotalAmount.getAmount();
+    recurrenceByTax.amount_tax = taxAmount.getAmount();
   }
+
+  /**
+   * Cashbacks
+   */
+  const coupon = (priceItemToAppend as PriceItemDto)?._coupons?.[0];
+  const cashbackPeriod = priceItemToAppend.cashback_period ?? '0';
+  const priceCashBackAmount =
+    typeof priceItemToAppend.cashback_amount !== 'undefined'
+      ? toDineroFromInteger(priceItemToAppend.cashback_amount!)
+      : undefined;
 
   // Cashback totals
   if (priceCashBackAmount && Boolean(coupon)) {

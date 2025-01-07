@@ -5,7 +5,6 @@ import { DEFAULT_CURRENCY } from './currencies';
 import { toDineroFromInteger, toDinero } from './formatters';
 import { normalizePriceMappingInput, normalizeValueToFrequencyUnit } from './normalizers';
 import type {
-  CompositePrice,
   CompositePriceItem,
   CompositePriceItemDto,
   ExternalFeeMapping,
@@ -212,8 +211,6 @@ export const extractPricingEntitiesBySlug = (
  * @returns the composite price item
  */
 export const computeCompositePrice = (priceItem: CompositePriceItemDto): CompositePriceItem => {
-  const compositePrice = priceItem._price as CompositePrice;
-
   const priceComponents = getPriceComponents(priceItem);
   const computedItemComponents = priceComponents.map((component) => {
     const componentTax = Array.isArray(component.tax) ? component.tax : [];
@@ -246,13 +243,13 @@ export const computeCompositePrice = (priceItem: CompositePriceItemDto): Composi
     return computePriceComponent(itemComponent, priceItem);
   });
 
-  const itemDescription = priceItem.description ?? compositePrice?.description ?? null;
+  const itemDescription = priceItem.description ?? priceItem._price?.description;
 
   return {
     ...priceItem,
-    ...(priceItem._product && { _product: mapToProductSnapshot(priceItem._product!) }),
+    ...(priceItem._product && { _product: mapToProductSnapshot(priceItem._product) }),
     _price: mapToPriceSnapshot(priceItem._price as Price | undefined),
-    currency: priceItem._price!.unit_amount_currency || DEFAULT_CURRENCY,
+    currency: priceItem._price?.unit_amount_currency || DEFAULT_CURRENCY,
     ...(itemDescription && { description: itemDescription }),
     item_components: computedItemComponents,
   };

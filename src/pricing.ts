@@ -116,30 +116,16 @@ export const computePriceComponent = (
 };
 
 const isValidPrice = (priceComponent: Price): boolean => {
-  if (
-    (!priceComponent.pricing_model || priceComponent.pricing_model === PricingModel.perUnit) &&
-    typeof priceComponent.unit_amount !== 'number'
-  ) {
-    return false;
+  switch (priceComponent.pricing_model || PricingModel.perUnit) {
+    case PricingModel.perUnit:
+      return Boolean(typeof priceComponent.unit_amount === 'number' && priceComponent.unit_amount_decimal);
+    case PricingModel.tieredFlatFee:
+    case PricingModel.tieredVolume:
+    case PricingModel.tieredGraduated:
+      return Boolean(priceComponent.tiers);
+    default:
+      return true;
   }
-
-  if (
-    (!priceComponent.pricing_model || priceComponent.pricing_model === PricingModel.perUnit) &&
-    !priceComponent.unit_amount_decimal
-  ) {
-    return false;
-  }
-
-  if (
-    (priceComponent.pricing_model === PricingModel.tieredFlatFee ||
-      priceComponent.pricing_model === PricingModel.tieredVolume ||
-      priceComponent.pricing_model === PricingModel.tieredGraduated) &&
-    !priceComponent.tiers
-  ) {
-    return false;
-  }
-
-  return true;
 };
 
 const ensureComponentWithValidPrice = (itemComponent: PriceItemDto): PriceItemDto => ({

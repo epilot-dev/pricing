@@ -116,9 +116,7 @@ export const computePriceComponent = (
 };
 
 const isValidPrice = (priceComponent: Price): boolean => {
-  const pricingModel = priceComponent.pricing_model || PricingModel.perUnit;
-
-  switch (pricingModel) {
+  switch (priceComponent.pricing_model || PricingModel.perUnit) {
     case PricingModel.perUnit:
       return Boolean(typeof priceComponent.unit_amount === 'number' && priceComponent.unit_amount_decimal);
     case PricingModel.tieredFlatFee:

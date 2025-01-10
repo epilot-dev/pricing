@@ -957,6 +957,10 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
     tax_discount_amount: toDineroFromInteger(priceItem.tax_discount_amount).convertPrecision(precision).getAmount(),
     tax_discount_amount_decimal: toDineroFromInteger(priceItem.tax_discount_amount).toUnit().toString(),
   }),
+  ...(typeof priceItem.discount_amount_net === 'number' && {
+    discount_amount_net: toDineroFromInteger(priceItem.discount_amount_net).convertPrecision(precision).getAmount(),
+    discount_amount_net_decimal: toDineroFromInteger(priceItem.discount_amount_net).toUnit().toString(),
+  }),
   ...(typeof priceItem.before_discount_tax_amount === 'number' && {
     before_discount_tax_amount: toDineroFromInteger(priceItem.before_discount_tax_amount)
       .convertPrecision(precision)

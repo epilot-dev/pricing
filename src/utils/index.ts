@@ -25,6 +25,8 @@ export type PriceItemsTotals = Pick<
   | 'tax_discount_amount_decimal'
   | 'before_discount_tax_amount'
   | 'before_discount_tax_amount_decimal'
+  | 'discount_amount_net'
+  | 'discount_amount_net_decimal'
   | 'discount_amount'
   | 'discount_percentage'
   | 'before_discount_amount_total'
@@ -203,7 +205,7 @@ export const applyDiscounts = (
       unitDiscountAmountNet = unitDiscountAmount.divide(1 + taxRate);
     } else {
       unitDiscountAmountNet = unitAmountNet.multiply(discountPercentage).divide(100);
-      unitDiscountAmount = unitDiscountAmountNet;
+      unitDiscountAmount = unitDiscountAmountNet.multiply(1 + taxRate);
     }
   } else {
     const fixedDiscountAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency as Currency);
@@ -212,7 +214,7 @@ export const applyDiscounts = (
       unitDiscountAmountNet = unitDiscountAmount.divide(1 + taxRate);
     } else {
       unitDiscountAmountNet = fixedDiscountAmount.greaterThan(unitAmountNet) ? unitAmountNet : fixedDiscountAmount;
-      unitDiscountAmount = unitDiscountAmountNet;
+      unitDiscountAmount = unitDiscountAmountNet.multiply(1 + taxRate);
     }
   }
 
@@ -248,7 +250,8 @@ export const applyDiscounts = (
     tax_discount_amount: taxDiscountAmount.getAmount(),
     before_discount_tax_amount: beforeDiscountTaxAmount.multiply(unitAmountMultiplier).getAmount(),
     discount_amount: unitDiscountAmount.multiply(unitAmountMultiplier).getAmount(),
-    discount_percentage: discountPercentage,
+    discount_amount_net: unitDiscountAmountNet.multiply(unitAmountMultiplier).getAmount(),
+    ...(typeof discountPercentage === 'number' && { discount_percentage: discountPercentage }),
     before_discount_amount_total: unitAmountGross.multiply(unitAmountMultiplier).getAmount(),
   };
 };

@@ -15,6 +15,8 @@ export type PriceItemsTotals = Pick<
   | 'unit_discount_amount'
   | 'unit_discount_amount_decimal'
   | 'before_discount_unit_amount'
+  | 'before_discount_unit_amount_gross'
+  | 'before_discount_unit_amount_net'
   | 'unit_amount_net'
   | 'unit_amount_net_decimal'
   | 'unit_discount_amount_net'
@@ -248,6 +250,8 @@ export const applyDiscounts = (
     amount_tax: afterDiscountTaxAmount.getAmount(),
     unit_discount_amount: unitDiscountAmount.getAmount(),
     before_discount_unit_amount: isTaxInclusive ? unitAmountGross.getAmount() : unitAmountNet.getAmount(),
+    before_discount_unit_amount_gross: unitAmountGross.getAmount(),
+    before_discount_unit_amount_net: unitAmountNet.getAmount(),
     unit_discount_amount_net: unitDiscountAmountNet.getAmount(),
     tax_discount_amount: taxDiscountAmount.getAmount(),
     before_discount_tax_amount: beforeDiscountTaxAmount.multiply(unitAmountMultiplier).getAmount(),

@@ -3020,6 +3020,11 @@ export const priceItemWithFixedDiscountAndHighQuantity: PriceItemDto = {
   quantity: 5,
 };
 
+export const priceItemWithFixedDiscountAndPriceMappings: PriceItemDto = {
+  ...priceItemWithFixedDiscount,
+  price_mappings: [{ price_id: 'price#1', value: 2 }],
+};
+
 export const priceItemWithPercentageDiscount: PriceItemDto = {
   ...baseForPriceItemWithDiscount,
   _coupons: [percentageDiscountCoupon],
@@ -3065,6 +3070,11 @@ export const priceItemWithFixedAmountCashbackCoupon = {
 export const priceItemWithPercentageCashbackCoupon = {
   ...baseForPriceItemWithDiscount,
   _coupons: [percentageCashbackCoupon],
+};
+
+export const priceItemWithFixedAmountCashbackCouponAndPriceMappings = {
+  ...priceItemWithFixedAmountCashbackCoupon,
+  price_mappings: [{ price_id: 'price#1', value: 2 }],
 };
 
 export const recurringPriceItemWithFixedAmountCashbackCoupon = {

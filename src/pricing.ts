@@ -900,6 +900,23 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
     before_discount_unit_amount: toDineroFromInteger(priceItem.before_discount_unit_amount)
       .convertPrecision(precision)
       .getAmount(),
+    before_discount_unit_amount_decimal: toDineroFromInteger(priceItem.before_discount_unit_amount).toUnit().toString(),
+  }),
+  ...(typeof priceItem.before_discount_unit_amount_gross === 'number' && {
+    before_discount_unit_amount_gross: toDineroFromInteger(priceItem.before_discount_unit_amount_gross)
+      .convertPrecision(precision)
+      .getAmount(),
+    before_discount_unit_amount_gross_decimal: toDineroFromInteger(priceItem.before_discount_unit_amount_gross)
+      .toUnit()
+      .toString(),
+  }),
+  ...(typeof priceItem.before_discount_unit_amount_net === 'number' && {
+    before_discount_unit_amount_net: toDineroFromInteger(priceItem.before_discount_unit_amount_net)
+      .convertPrecision(precision)
+      .getAmount(),
+    before_discount_unit_amount_net_decimal: toDineroFromInteger(priceItem.before_discount_unit_amount_net)
+      .toUnit()
+      .toString(),
   }),
   ...(typeof priceItem.unit_discount_amount === 'number' && {
     unit_discount_amount: toDineroFromInteger(priceItem.unit_discount_amount).convertPrecision(precision).getAmount(),
@@ -907,8 +924,6 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
   }),
   ...(typeof priceItem.unit_amount_net === 'number' && {
     unit_amount_net: toDineroFromInteger(priceItem.unit_amount_net).convertPrecision(precision).getAmount(),
-  }),
-  ...(typeof priceItem.unit_amount_net === 'number' && {
     unit_amount_net_decimal: toDineroFromInteger(priceItem.unit_amount_net).toUnit().toString(),
   }),
   ...(typeof priceItem.unit_discount_amount_net === 'number' && {

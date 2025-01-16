@@ -1,6 +1,6 @@
 import type { Dinero } from 'dinero.js';
 
-import { toDinero } from '../formatters';
+import { getSafeQuantity, toDinero } from '../formatters';
 import type { Price, PriceInputMapping, TimeFrequency } from '../types';
 
 import { TIME_FREQUENCY_NORMALIZATION_FACTORS } from './constants';
@@ -23,11 +23,7 @@ export const normalizePriceMappingInput = (priceMapping?: PriceInputMapping, pri
     return null;
   }
 
-  /**
-   * @todo Remove non-nullish assertion and do instead
-   * priceMapping.value === 'number' && isNaN(priceMapping.value) ? 1 : priceMapping.value;
-   */
-  const safeValue = isNaN(priceMapping.value!) ? 1 : priceMapping.value;
+  const safeValue = getSafeQuantity(priceMapping.value);
   const isFrequencyUnitNormalizationNeeded = price.type !== 'one_time' && priceMapping.value;
 
   if (isFrequencyUnitNormalizationNeeded) {

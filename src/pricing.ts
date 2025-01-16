@@ -2,7 +2,7 @@ import type { CashbackAmount, PriceItems } from '@epilot/pricing-client';
 import type { Currency } from 'dinero.js';
 
 import { DEFAULT_CURRENCY } from './currencies';
-import { toDineroFromInteger, toDinero } from './formatters';
+import { toDineroFromInteger, toDinero, getSafeQuantity } from './formatters';
 import {
   normalizePriceMappingInput,
   normalizeTimeFrequencyFromDineroInputValue,
@@ -216,7 +216,7 @@ export const computeCompositePrice = (priceItem: CompositePriceItemDto): Composi
     const itemComponent: PriceItemDto = {
       ...existingItemComponent,
       pricing_model: existingItemComponent?.pricing_model || component.pricing_model,
-      quantity: isNaN(existingItemComponent?.quantity!) ? 1 : existingItemComponent?.quantity,
+      quantity: getSafeQuantity(existingItemComponent?.quantity),
       type,
       ...(type === 'recurring' && {
         billing_period: existingItemComponent?.billing_period || component.billing_period,
@@ -1239,9 +1239,6 @@ const isDisplayModeRequiringApproval = (priceItem: PriceItem | CompositePriceIte
     priceItem._price?.price_display_in_journeys === 'show_as_starting_price'
   );
 };
-
-const getSafeQuantity = (quantity: number | undefined) =>
-  typeof quantity === 'number' && !Number.isNaN(quantity) ? quantity : 1;
 
 export const computeQuantities = (price: Price | undefined, quantity: number, priceMapping?: PriceInputMapping) => {
   const safeQuantity = getSafeQuantity(quantity);

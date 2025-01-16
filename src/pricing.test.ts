@@ -495,6 +495,11 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(result).toEqual(results.computedPriceWithFixedDiscountAndHighQuantity);
     });
 
+    it('should compute discounts and totals correctly when there is a fixed discount coupon and price mappings', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithFixedDiscountAndPriceMappings]);
+      expect(result).toEqual(results.computedPriceWithFixedDiscountAndPriceMappings);
+    });
+
     it('should compute discounts and totals correctly for prices without tax', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageDiscountAndNoTax]);
       expect(result).toEqual(results.computedPriceWithFixedDiscountAndNoTax);
@@ -540,6 +545,11 @@ describe('computeAggregatedAndPriceTotals', () => {
     it('should compute fixed amount cashbacks and totals correctly', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithFixedAmountCashbackCoupon]);
       expect(result).toEqual(results.computedPriceWithFixedAmountCashbackCoupon);
+    });
+
+    it('should compute fixed amount cashbacks and totals correctly when there is a price mapping', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithFixedAmountCashbackCouponAndPriceMappings]);
+      expect(result).toEqual(results.computedPriceWithFixedAmountCashbackCouponAndPriceMappings);
     });
 
     it('should compute percentage amount cashbacks and totals correctly', () => {

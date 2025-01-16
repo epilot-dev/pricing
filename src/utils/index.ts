@@ -169,16 +169,18 @@ export const applyDiscounts = (
   let discountPercentage: number | undefined;
   let unitDiscountAmount: Dinero | undefined;
   let unitDiscountAmountNet: Dinero | undefined;
-  let cashbackAmount: Dinero | undefined;
+  let unitCashbackAmount: Dinero | undefined;
   let afterCashbackAmountTotal: Dinero | undefined;
 
   if (isCashbackCoupon(coupon)) {
     if (isFixedValueCoupon(coupon)) {
-      cashbackAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
+      unitCashbackAmount = toDinero(coupon.fixed_value_decimal, coupon.fixed_value_currency);
     } else {
       const cashbackPercentage = clamp(Number(coupon.percentage_value), 0, 100);
-      cashbackAmount = unitAmountGross.multiply(cashbackPercentage).divide(100);
+      unitCashbackAmount = unitAmountGross.multiply(cashbackPercentage).divide(100);
     }
+
+    const cashbackAmount = unitCashbackAmount.multiply(unitAmountMultiplier);
 
     const normalizedCashbackAmount = normalizeTimeFrequencyFromDineroInputValue(
       cashbackAmount,

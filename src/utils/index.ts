@@ -162,6 +162,15 @@ export const applyDiscounts = (
     coupon: Coupon;
   },
 ): PriceItemsTotals => {
+  /**
+   * To prevent coupons from being applied twice if computing utilities are called with an item
+   * that already has a discount applied, check if the discount/cashbacks is already set
+   * If it is, return the item values as they are.
+   */
+  if (typeof itemValues.discount_amount === 'number' || typeof itemValues.cashback_amount === 'string') {
+    return itemValues;
+  }
+
   const unitAmountNet = toDineroFromInteger(itemValues.unit_amount_net!, currency);
   const unitAmountGross = toDineroFromInteger(itemValues.unit_amount_gross!, currency);
   const taxRate = getTaxValue(tax);

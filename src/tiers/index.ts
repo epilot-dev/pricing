@@ -57,21 +57,21 @@ export function getDisplayTierByQuantity(
  * @param {PriceTier[]} tiers - The price tiers.
  * @param {Number} quantity - The quantity.
  * @param {PricingModel} pricingModel - The pricing model.
- * @returns {PriceTierEnhanced[]} The selected tiers.
+ * @returns {Price} The selected tiers.
  */
-export function getDisplayTiersByQuantity<T extends PriceTier[] | undefined>(
-  tiers: T,
+export function getDisplayTiersByQuantity(
+  tiers?: PriceTier[],
   quantity?: number,
   pricingModel?: PricingModel | Price['pricing_model'],
   isTaxInclusive = true,
   tax?: Tax,
-): T extends PriceTier[] ? PriceTierEnhanced[] : undefined {
+): PriceTierEnhanced[] | undefined {
   if (!tiers?.length) {
-    return undefined as T extends PriceTier[] ? PriceTierEnhanced[] : undefined;
+    return;
   }
 
   if (!quantity || quantity <= 0 || !pricingModel) {
-    return [enhanceTier(tiers[0], isTaxInclusive, tax)] as T extends PriceTier[] ? PriceTierEnhanced[] : undefined;
+    return [enhanceTier(tiers[0], isTaxInclusive, tax)];
   }
 
   const matchingTiers = tiers
@@ -79,14 +79,10 @@ export function getDisplayTiersByQuantity<T extends PriceTier[] | undefined>(
     .map((tier) => enhanceTier(tier, isTaxInclusive, tax));
 
   if (pricingModel === PricingModel.tieredGraduated) {
-    return matchingTiers.map((tier) => enhanceTier(tier, isTaxInclusive, tax)) as T extends PriceTier[]
-      ? PriceTierEnhanced[]
-      : undefined;
+    return matchingTiers.map((tier) => enhanceTier(tier, isTaxInclusive, tax));
   }
 
-  return [enhanceTier(matchingTiers[matchingTiers.length - 1], isTaxInclusive, tax)] as T extends PriceTier[]
-    ? PriceTierEnhanced[]
-    : undefined;
+  return [enhanceTier(matchingTiers[matchingTiers.length - 1], isTaxInclusive, tax)];
 }
 
 /**

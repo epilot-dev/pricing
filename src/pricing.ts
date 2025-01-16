@@ -909,8 +909,6 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
   }),
   ...(typeof priceItem.unit_amount_net === 'number' && {
     unit_amount_net: toDineroFromInteger(priceItem.unit_amount_net).convertPrecision(precision).getAmount(),
-  }),
-  ...(typeof priceItem.unit_amount_net === 'number' && {
     unit_amount_net_decimal: toDineroFromInteger(priceItem.unit_amount_net).toUnit().toString(),
   }),
   ...(typeof priceItem.unit_discount_amount_net === 'number' && {

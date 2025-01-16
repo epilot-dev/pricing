@@ -340,7 +340,6 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
         cashbacks: [],
       },
     },
-    currency: DEFAULT_CURRENCY,
   };
 
   const priceDetails = priceItems.reduce((details, priceItem) => {

@@ -208,7 +208,7 @@ export const computeCompositePrice = (priceItem: CompositePriceItemDto): Composi
   const priceComponents = getPriceComponents(priceItem);
   const computedItemComponents = priceComponents.map((component) => {
     const componentTax = Array.isArray(component.tax) ? component.tax : [];
-    const itemTaxRate: TaxAmountDto = (componentTax?.[0] && { tax: componentTax?.[0] }) || { rate: 'nontaxable' };
+    const itemTaxRate: TaxAmountDto = (componentTax[0] && { tax: componentTax[0] }) || { rate: 'nontaxable' };
 
     const { _itemRef: existingItemComponent, ...existingPrice } = component;
     const type = existingItemComponent?.type || component.type;
@@ -231,7 +231,7 @@ export const computeCompositePrice = (priceItem: CompositePriceItemDto): Composi
           ...(itemTaxRate.tax && { tax: getPriceTax(itemTaxRate.tax, component) }),
         },
       ],
-      ...(component?._coupons && { _coupons: component?._coupons }),
+      ...(component._coupons && { _coupons: component._coupons }),
     };
 
     return computePriceComponent(itemComponent, priceItem);
@@ -790,7 +790,7 @@ export const computePriceItem = (
         quantityToSelectTier,
         tax: priceTax,
         quantity: safeQuantity,
-        isUsingPriceMappingToSelectTier: isUsingPriceMappingToSelectTier,
+        isUsingPriceMappingToSelectTier,
         unchangedPriceDisplayInJourneys: priceItem._price?.unchanged_price_display_in_journeys,
       });
       break;
@@ -802,13 +802,13 @@ export const computePriceItem = (
         quantityToSelectTier,
         tax: priceTax,
         quantity: safeQuantity,
-        isUsingPriceMappingToSelectTier: isUsingPriceMappingToSelectTier,
+        isUsingPriceMappingToSelectTier,
         unchangedPriceDisplayInJourneys: priceItem._price?.unchanged_price_display_in_journeys,
       });
       break;
     case PricingModel.externalGetAG:
       itemValues = computeExternalGetAGItemValues({
-        getAg: price?.get_ag!,
+        getAg: price.get_ag!,
         currency,
         isTaxInclusive,
         unitAmountMultiplier,
@@ -869,7 +869,7 @@ export const computePriceItem = (
         amount: itemValues.amount_tax,
       },
     ],
-    ...(priceItem?._product && { _product: mapToProductSnapshot(priceItem._product) }),
+    ...(priceItem._product && { _product: mapToProductSnapshot(priceItem._product) }),
     _price: {
       ...mapToPriceSnapshot(price),
       ...(itemValues.price_display_in_journeys && {
@@ -1122,7 +1122,7 @@ const getPriceTax = (applicableTax?: Tax, price?: Price, priceItemTaxes?: TaxAmo
   }
 
   const isNonTaxable = applicableTax === null;
-  const existingPriceTax = Array.isArray(price?.tax) && price?.tax?.[0];
+  const existingPriceTax = Array.isArray(price?.tax) && price!.tax[0];
 
   if (!isNonTaxable && existingPriceTax) {
     return existingPriceTax;
@@ -1178,15 +1178,14 @@ export const isPriceItemApproved = (
 
     return hasHiddenPriceComponents
       ? Boolean(priceItem.on_request_approved)
-      : Boolean(!isDisplayModeRequiringApproval(priceItem) || priceItem?.on_request_approved);
+      : !isDisplayModeRequiringApproval(priceItem) || Boolean(priceItem.on_request_approved);
+  } else if (parentPriceItem) {
+    return (
+      priceItem._price?.price_display_in_journeys !== 'show_as_on_request' ||
+      Boolean(parentPriceItem.on_request_approved)
+    );
   } else {
-    if (parentPriceItem) {
-      return Boolean(
-        priceItem._price?.price_display_in_journeys !== 'show_as_on_request' || parentPriceItem?.on_request_approved,
-      );
-    }
-
-    return Boolean(!isDisplayModeRequiringApproval(priceItem) || priceItem?.on_request_approved);
+    return !isDisplayModeRequiringApproval(priceItem) || Boolean(priceItem.on_request_approved);
   }
 };
 
@@ -1202,13 +1201,13 @@ const isOnRequestUnitAmountApproved = (
     const parentPriceIsHiddenPrice = parentPriceItem._price?.price_display_in_journeys === 'show_as_on_request';
 
     if (parentHasHiddenPriceComponents || parentPriceIsHiddenPrice) {
-      return Boolean(parentPriceItem?.on_request_approved);
+      return Boolean(parentPriceItem.on_request_approved);
     }
 
     return true;
   }
 
-  return Boolean(priceDisplayInJourneys !== 'show_as_on_request' || priceItem?.on_request_approved);
+  return Boolean(priceDisplayInJourneys !== 'show_as_on_request' || priceItem.on_request_approved);
 };
 
 /**
@@ -1262,7 +1261,7 @@ export const getRecurrencesWithEstimatedPrices = (lineItems: PriceItems | undefi
   lineItems?.forEach((lineItem) => {
     if (isCompositePriceItem(lineItem)) {
       lineItem.item_components?.forEach((component) => {
-        const recurrence = component._price?.type === 'recurring' ? component._price?.billing_period : component.type;
+        const recurrence = component._price?.type === 'recurring' ? component._price.billing_period : component.type;
 
         if (recurrence !== undefined) {
           recurrences[recurrence] =
@@ -1270,8 +1269,7 @@ export const getRecurrencesWithEstimatedPrices = (lineItems: PriceItems | undefi
         }
       });
     } else {
-      const recurrence =
-        lineItem._price?.type === 'recurring' ? lineItem._price?.billing_period : lineItem._price?.type;
+      const recurrence = lineItem._price?.type === 'recurring' ? lineItem._price.billing_period : lineItem._price?.type;
 
       if (recurrence !== undefined) {
         recurrences[recurrence] =

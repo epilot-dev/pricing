@@ -28,7 +28,7 @@ export const normalizePriceMappingInput = (priceMapping?: PriceInputMapping, pri
 
   if (isFrequencyUnitNormalizationNeeded) {
     return normalizeTimeFrequencyToDinero(
-      safeValue!,
+      safeValue,
       priceMapping.frequency_unit as TimeFrequency,
       price.billing_period as TimeFrequency,
     );

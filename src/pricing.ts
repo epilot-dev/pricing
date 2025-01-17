@@ -2,7 +2,7 @@ import type { CashbackAmount, PriceItems } from '@epilot/pricing-client';
 import type { Currency } from 'dinero.js';
 
 import { DEFAULT_CURRENCY } from './currencies';
-import { toDineroFromInteger, toDinero } from './formatters';
+import { toDineroFromInteger, toDinero, getSafeQuantity } from './formatters';
 import {
   normalizePriceMappingInput,
   normalizeTimeFrequencyFromDineroInputValue,
@@ -103,8 +103,12 @@ export const computePriceComponent = (
     ({ price_id }) => priceItemComponent._price!._id === price_id,
   );
 
-  const safeQuantity = isNaN(priceItemComponent.quantity!) ? 1 : priceItemComponent.quantity;
-  const safeParentQuantity = isNaN(priceItem.quantity!) ? 1 : priceItem.quantity!;
+  const safeQuantity = getSafeQuantity(priceItemComponent.quantity);
+  const safeParentQuantity = getSafeQuantity(priceItem.quantity);
+  /**
+   * @todo Consider using plain number multiplication instead of dinero,
+   * as there's no tangible benefit of doing so here.
+   */
   const quantity = toDinero(String(safeQuantity)).multiply(safeParentQuantity).toUnit();
 
   return computePriceItem(priceItemComponent, {
@@ -212,7 +216,7 @@ export const computeCompositePrice = (priceItem: CompositePriceItemDto): Composi
     const itemComponent: PriceItemDto = {
       ...existingItemComponent,
       pricing_model: existingItemComponent?.pricing_model || component.pricing_model,
-      quantity: isNaN(existingItemComponent?.quantity!) ? 1 : existingItemComponent?.quantity,
+      quantity: getSafeQuantity(existingItemComponent?.quantity),
       type,
       ...(type === 'recurring' && {
         billing_period: existingItemComponent?.billing_period || component.billing_period,
@@ -346,9 +350,8 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
     const immutablePriceItem = getImmutablePriceItem(priceItem._immutable_pricing_details);
 
     if (isCompositePriceItemDto(priceItem)) {
-      const compositePriceItemToAppend = immutablePriceItem
-        ? (immutablePriceItem as CompositePriceItem)
-        : computeCompositePrice(priceItem);
+      const compositePriceItemToAppend =
+        (immutablePriceItem as CompositePriceItem | undefined) ?? computeCompositePrice(priceItem);
 
       const itemBreakdown = recomputeDetailTotalsFromCompositePrice(undefined, compositePriceItemToAppend);
       const updatedTotals = recomputeDetailTotalsFromCompositePrice(details, compositePriceItemToAppend);
@@ -380,14 +383,9 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
         ({ price_id }) => priceItem._price!._id === price_id,
       );
 
-      const priceItemToAppend = immutablePriceItem
-        ? (immutablePriceItem as PriceItemDto)
-        : computePriceItem(priceItem, {
-            tax,
-            quantity: priceItem.quantity!,
-            priceMapping,
-            externalFeeMapping,
-          });
+      const priceItemToAppend =
+        (immutablePriceItem as PriceItemDto | undefined) ??
+        computePriceItem(priceItem, { tax, quantity: priceItem.quantity!, priceMapping, externalFeeMapping });
 
       const updatedTotals = isOnRequestUnitAmountApproved(
         priceItem,
@@ -1243,7 +1241,7 @@ const isDisplayModeRequiringApproval = (priceItem: PriceItem | CompositePriceIte
 };
 
 export const computeQuantities = (price: Price | undefined, quantity: number, priceMapping?: PriceInputMapping) => {
-  const safeQuantity = isNaN(quantity) ? 1 : quantity;
+  const safeQuantity = getSafeQuantity(quantity);
   const normalizedPriceMappingInput = normalizePriceMappingInput(priceMapping, price);
   const quantityToSelectTier = normalizedPriceMappingInput ? normalizedPriceMappingInput.toUnit() : 1;
   const unitAmountMultiplier = normalizedPriceMappingInput

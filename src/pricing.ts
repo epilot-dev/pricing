@@ -1122,7 +1122,7 @@ const getPriceTax = (applicableTax?: Tax, price?: Price, priceItemTaxes?: TaxAmo
   }
 
   const isNonTaxable = applicableTax === null;
-  const existingPriceTax = Array.isArray(price?.tax) && price?.tax?.[0];
+  const existingPriceTax = Array.isArray(price?.tax) && price!.tax[0];
 
   if (!isNonTaxable && existingPriceTax) {
     return existingPriceTax;

@@ -932,9 +932,9 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
     unit_discount_amount_net_decimal: toDineroFromInteger(priceItem.unit_discount_amount_net).toUnit().toString(),
   }),
   ...(typeof priceItem.unit_amount_gross === 'number' && {
+    unit_amount_gross: toDineroFromInteger(priceItem.unit_amount_gross).convertPrecision(precision).getAmount(),
     unit_amount_gross_decimal: toDineroFromInteger(priceItem.unit_amount_gross).toUnit().toString(),
   }),
-  unit_amount_gross: toDineroFromInteger(priceItem.unit_amount_gross!).convertPrecision(precision).getAmount(),
   amount_subtotal: toDineroFromInteger(priceItem.amount_subtotal!).convertPrecision(precision).getAmount(),
   amount_subtotal_decimal: toDineroFromInteger(priceItem.amount_subtotal!).toUnit().toString(),
   amount_total: toDineroFromInteger(priceItem.amount_total!).convertPrecision(precision).getAmount(),

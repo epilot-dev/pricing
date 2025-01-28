@@ -43,6 +43,7 @@ export enum PricingModel {
   tieredGraduated = 'tiered_graduated',
   tieredVolume = 'tiered_volume',
   tieredFlatFee = 'tiered_flatfee',
+  dynamicTariff = 'dynamic_tariff',
   externalGetAG = 'external_getag',
 }
 export enum MarkupPricingModel {
@@ -53,6 +54,11 @@ export enum MarkupPricingModel {
 export enum TypeGetAg {
   basePrice = 'base_price',
   workPrice = 'work_price',
+}
+
+export enum ModeDynamicTariff {
+  dayAheadMarket = 'day_ahead_market',
+  manual = 'manual',
 }
 
 export type ComputeAggregatedAndPriceTotals = typeof computeAggregatedAndPriceTotals;

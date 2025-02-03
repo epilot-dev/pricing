@@ -1108,7 +1108,7 @@ export const incompletePriceItem: PriceItemDto = {
   is_tax_inclusive: true,
 };
 
-export const nonComputedCompositePrice: CompositePriceItem & { [key: string]: unknown } = {
+export const nonComputedCompositePrice: CompositePriceItemDto = {
   _price: {
     _created_at: '2022-06-15T09:17:08.343Z',
     _id: 'price#4',
@@ -1502,7 +1502,7 @@ export const compositePricesUnitAmountZero: CompositePriceItemDto = {
   _product: {},
 };
 
-export const fullCompositePrice: CompositePriceItem & { [key: string]: unknown } = {
+export const alreadyComputedCompositePrice: CompositePriceItem & { [key: string]: unknown } = {
   _price: {
     _created_at: '2022-06-15T09:17:08.343Z',
     _id: 'price#4',

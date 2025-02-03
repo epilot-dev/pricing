@@ -135,9 +135,7 @@ export const computePriceItemValues = ({
   return {
     unit_amount: unitAmount.getAmount(),
     unit_amount_net: unitAmountNet.getAmount(),
-    unit_amount_net_decimal: unitAmountNet.toUnit().toString(),
     unit_amount_gross: unitAmountGross.getAmount(),
-    unit_amount_gross_decimal: unitAmountGross.toUnit().toString(),
     amount_subtotal: amountSubtotal.getAmount(),
     amount_total: amountTotal.getAmount(),
     amount_tax: taxAmount.getAmount(),
@@ -193,9 +191,7 @@ export const applyDiscounts = (
     return {
       ...itemValues,
       cashback_amount: cashbackAmount.getAmount(),
-      cashback_amount_decimal: cashbackAmount.toUnit().toString(),
       after_cashback_amount_total: afterCashbackAmountTotal.getAmount(),
-      after_cashback_amount_total_decimal: afterCashbackAmountTotal.toUnit().toString(),
     };
   }
 

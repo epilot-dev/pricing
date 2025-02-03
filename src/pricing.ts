@@ -36,7 +36,7 @@ import {
   PriceItemsTotals,
   applyDiscounts,
 } from './utils';
-import { isValidCoupon } from './utils/guards/coupon';
+import { isValidCoupon, sortCouponsByCreationDate } from './utils/guards/coupon';
 
 export enum PricingModel {
   perUnit = 'per_unit',
@@ -833,8 +833,9 @@ export const computePriceItem = (
       });
   }
 
-  const coupons = priceItem._coupons ?? [];
-  const [coupon] = coupons.filter(isValidCoupon);
+  const coupons = (priceItem._coupons ?? []).filter(isValidCoupon).sort(sortCouponsByCreationDate);
+
+  const [coupon] = coupons;
 
   if (coupon) {
     itemValues = applyDiscounts(itemValues, {
@@ -848,7 +849,7 @@ export const computePriceItem = (
   }
 
   /* If there's a coupon cashback period output it */
-  const cashbackPeriod = priceItem._coupons?.map(({ cashback_period }) => cashback_period).find(isTruthy);
+  const cashbackPeriod = coupons.map(({ cashback_period }) => cashback_period).find(isTruthy);
 
   return {
     ...priceItem,

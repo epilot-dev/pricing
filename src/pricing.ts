@@ -762,7 +762,6 @@ export const computePriceItem = (
   const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase() as Currency;
   const priceItemDescription = priceItem.description ?? price?.description;
 
-  const unitAmountDecimal = priceItem.unit_amount_decimal || price?.unit_amount_decimal || '0';
   const priceTax = getPriceTax(applicableTax, price, priceItem.taxes);
   const isTaxInclusive = priceItem.is_tax_inclusive ?? isTaxInclusivePrice(price);
 
@@ -825,7 +824,7 @@ export const computePriceItem = (
       break;
     default:
       itemValues = computePriceItemValues({
-        unitAmountDecimal,
+        unitAmountDecimal: priceItem.unit_amount_decimal || price?.unit_amount_decimal || '0',
         currency,
         isTaxInclusive,
         unitAmountMultiplier,
@@ -857,19 +856,6 @@ export const computePriceItem = (
     currency,
     ...(priceItemDescription && { description: priceItemDescription }),
     ...(Number.isInteger(itemValues.cashback_amount) && { cashback_period: cashbackPeriod ?? '0' }),
-    /**
-     * @todo In the future the unit_amount_decimal should be derived from the unit_amount
-     * and not from the original price's unit_amount_decimal,
-     * as it can be affected by the discounting.
-     * Right now we have a solution that targets specifically discounted prices,
-     * but this should be generalized.
-     */
-    ...(price?.pricing_model === PricingModel.perUnit && { unit_amount_decimal: unitAmountDecimal }),
-    ...(typeof itemValues.unit_amount === 'number' &&
-      Number.isInteger(itemValues.unit_amount) &&
-      coupon && {
-        unit_amount_decimal: toDineroFromInteger(itemValues.unit_amount).toUnit().toString(),
-      }),
     taxes: [
       {
         ...(priceTax ? { tax: priceTax } : { rate: 'nontaxable', rateValue: 0 }),

@@ -567,12 +567,12 @@ describe('computeAggregatedAndPriceTotals', () => {
 describe('computeCompositePrice', () => {
   it('computes the composite price correctly from non computed composite price', () => {
     const result = computeCompositePrice(samples.nonComputedCompositePrice);
-    expect(result).toStrictEqual(results.computedCompositePrice);
+    expect(result).toStrictEqual(results.firstTimeComputedCompositePrice);
   });
 
   it('computes the composite price correctly from already computed composite price', () => {
     const result = computeCompositePrice(samples.alreadyComputedCompositePrice as CompositePriceItemDto);
-    expect(result).toStrictEqual(results.computedCompositePrice);
+    expect(result).toStrictEqual(results.recomputedCompositePrice);
   });
 });
 

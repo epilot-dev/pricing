@@ -47,16 +47,14 @@ export type PriceItemsTotals = Pick<
   price_display_in_journeys?: Price['price_display_in_journeys'];
 };
 
-export const getTaxValue = (tax?: Tax): number => {
-  if (!tax) {
-    return TaxRates.nontaxable;
-  }
+/**
+ * It's unclear in which scenarios the tax is an array.
+ * @todo Check if this is the case and if so, fix it.
+ */
+export const getTaxValue = (tax?: Tax | Array<Tax>) => {
+  const rate = Array.isArray(tax) ? tax[0]?.rate : tax?.rate;
 
-  if (Array.isArray(tax)) {
-    return (Number(tax[0]?.rate) || 0) / 100;
-  }
-
-  return (Number(tax.rate) || 0) / 100;
+  return Number(rate || TaxRates.nontaxable) / 100;
 };
 
 /**

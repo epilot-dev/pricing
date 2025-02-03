@@ -901,6 +901,7 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
   ...priceItem,
   ...(typeof priceItem.unit_amount === 'number' && {
     unit_amount: toDineroFromInteger(priceItem.unit_amount).convertPrecision(precision).getAmount(),
+    unit_amount_decimal: toDineroFromInteger(priceItem.unit_amount).toUnit().toString(),
   }),
   ...(typeof priceItem.before_discount_unit_amount === 'number' && {
     before_discount_unit_amount: toDineroFromInteger(priceItem.before_discount_unit_amount)

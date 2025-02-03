@@ -41,3 +41,14 @@ export const isValidCoupon = (coupon: Coupon): coupon is FixedValueCoupon | Perc
   isFixedValueCoupon(coupon) || isPercentageCoupon(coupon);
 
 export const isCashbackCoupon = (coupon: Coupon): coupon is CashbackCoupon => coupon.category === 'cashback';
+
+const getTimestamp = (dateString?: string): number => {
+  const date = new Date(dateString ?? '');
+
+  const timestamp = date.getTime();
+
+  return isNaN(timestamp) ? 0 : timestamp;
+};
+
+export const sortCouponsByCreationDate = <C extends Coupon>(a: C, b: C): number =>
+  getTimestamp(a._created_at) - getTimestamp(b._created_at);

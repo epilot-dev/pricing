@@ -100,7 +100,7 @@ export const getQuantityForTier = ({ min, max, quantity }: { min?: number; max: 
 
 const clamp = (value: number, minimum: number, maximum: number) => Math.min(Math.max(value, minimum), maximum);
 
-export const computePriceItemValues = ({
+export const computePerUnitPriceItemValues = ({
   unitAmountDecimal,
   currency,
   isTaxInclusive,
@@ -305,7 +305,7 @@ export const computeTieredVolumePriceItemValues = ({
 }): PriceItemsTotals => {
   const tier = getPriceTierForQuantity(tiers, quantityToSelectTier);
 
-  const tierValues = computePriceItemValues({
+  const tierValues = computePerUnitPriceItemValues({
     unitAmountDecimal: tier?.unit_amount_decimal,
     currency,
     isTaxInclusive,
@@ -363,7 +363,7 @@ export const computeTieredFlatFeePriceItemValues = ({
    */
   const quantityToMultiply = isUsingPriceMappingToSelectTier ? quantity : 1;
 
-  const tierValues = computePriceItemValues({
+  const tierValues = computePerUnitPriceItemValues({
     unitAmountDecimal: tier?.flat_fee_amount_decimal,
     currency,
     isTaxInclusive,
@@ -430,7 +430,7 @@ export const computeTieredGraduatedPriceItemValues = ({
         quantity: quantityToSelectTier,
       });
 
-      const tierValues = computePriceItemValues({
+      const tierValues = computePerUnitPriceItemValues({
         unitAmountDecimal: tier.unit_amount_decimal,
         currency,
         isTaxInclusive,

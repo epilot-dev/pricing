@@ -27,7 +27,7 @@ import type {
 } from './types';
 import {
   computeExternalGetAGItemValues,
-  computePriceItemValues,
+  computePerUnitPriceItemValues,
   computeTieredFlatFeePriceItemValues,
   computeTieredGraduatedPriceItemValues,
   computeTieredVolumePriceItemValues,
@@ -822,8 +822,9 @@ export const computePriceItem = (
         tax: priceTax,
       });
       break;
+    case PricingModel.perUnit:
     default:
-      itemValues = computePriceItemValues({
+      itemValues = computePerUnitPriceItemValues({
         unitAmountDecimal: priceItem.unit_amount_decimal || price?.unit_amount_decimal || '0',
         currency,
         isTaxInclusive,

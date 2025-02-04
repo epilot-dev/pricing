@@ -1,5 +1,3 @@
-import type { PriceItems, PriceItemsDto } from '@epilot/pricing-client';
-
 import * as coupons from './__tests__/fixtures/coupon.samples';
 import * as samples from './__tests__/fixtures/price.samples';
 import * as results from './__tests__/fixtures/pricing.results';
@@ -14,7 +12,7 @@ import {
   mapToPriceSnapshot,
   mapToProductSnapshot,
 } from './pricing';
-import type { CompositePrice, CompositePriceItemDto, Price, PriceItemDto } from './types';
+import type { CompositePrice, CompositePriceItemDto, Price, PriceItemDto, PriceItems, PriceItemsDto } from './types';
 
 describe('computeAggregatedAndPriceTotals', () => {
   describe('when is_composite_price = false', () => {

@@ -36,6 +36,8 @@ import {
   isTruthy,
   PriceItemsTotals,
   applyDiscounts,
+  convertPriceItemWithCouponAppliedToPriceItemDto,
+  isPriceItemWithCouponApplied,
 } from './utils';
 import { isValidCoupon, sortCouponsByCreationDate } from './utils/guards/coupon';
 
@@ -746,7 +748,7 @@ export const mapToProductSnapshot = (product?: Product): Product | undefined =>
  * Computes all price item total amounts to integers with a decimal precision of DECIMAL_PRECISION.
  */
 export const computePriceItem = (
-  priceItem: PriceItemDto,
+  _priceItem: PriceItemDto,
   {
     tax: applicableTax,
     quantity,
@@ -759,6 +761,17 @@ export const computePriceItem = (
     externalFeeMapping?: ExternalFeeMapping;
   },
 ): PriceItem => {
+  /**
+   * In some circunstances computePriceItem is being called with already computed price items.
+   * In this case, we don't want we want to "revert" some of the computations, so they're not applied twice.
+   * @todo We should broaden the type of priceItem to include PriceItem and CompositePriceItem
+   * in addition to PriceItemDto and CompositePriceItemDto,
+   * to cover the scenario in which recomputations are occurring.
+   */
+  const priceItem = isPriceItemWithCouponApplied(_priceItem)
+    ? convertPriceItemWithCouponAppliedToPriceItemDto(_priceItem)
+    : _priceItem;
+
   const price = priceItem._price;
   const currency = (price?.unit_amount_currency || DEFAULT_CURRENCY).toUpperCase() as Currency;
   const priceItemDescription = priceItem.description ?? price?.description;

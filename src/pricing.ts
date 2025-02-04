@@ -982,6 +982,9 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
   })),
   ...(priceItem.tiers_details && {
     tiers_details: priceItem.tiers_details.map((tier) => {
+      /**
+       * @todo Also output the decimal values
+       */
       return {
         ...tier,
         unit_amount_gross: toDineroFromInteger(tier.unit_amount_gross).convertPrecision(precision).getAmount(),

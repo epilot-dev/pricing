@@ -1,4 +1,4 @@
-import type { PriceItems } from '@epilot/pricing-client';
+import type { PriceItems, PriceItemsDto } from '@epilot/pricing-client';
 
 import * as coupons from './__tests__/fixtures/coupon.samples';
 import * as samples from './__tests__/fixtures/price.samples';
@@ -560,6 +560,15 @@ describe('computeAggregatedAndPriceTotals', () => {
     it('should compute fixed amount cashbacks and totals correctly for recurring price', () => {
       const result = computeAggregatedAndPriceTotals([samples.recurringPriceItemWithFixedAmountCashbackCoupon]);
       expect(result).toEqual(results.computedRecurringPriceWithFixedAmountCashbackCoupon);
+    });
+
+    /**
+     * @todo Fix discount application to ensure that the result is the same when recomputing the pricing details
+     */
+    it.skip('should deliver the same result when recomputing the pricing details with discount coupons', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageDiscount]);
+      const resultRecomputed = computeAggregatedAndPriceTotals(result.items as PriceItemsDto);
+      expect(result).toStrictEqual(resultRecomputed);
     });
   });
 });

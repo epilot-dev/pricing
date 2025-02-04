@@ -560,11 +560,14 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(result).toEqual(results.computedRecurringPriceWithFixedAmountCashbackCoupon);
     });
 
-    /**
-     * @todo Fix discount application to ensure that the result is the same when recomputing the pricing details
-     */
-    it.skip('should deliver the same result when recomputing the pricing details with discount coupons', () => {
+    it('should deliver the same result when recomputing the pricing details with discount coupons', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageDiscount]);
+      const resultRecomputed = computeAggregatedAndPriceTotals(result.items as PriceItemsDto);
+      expect(result).toStrictEqual(resultRecomputed);
+    });
+
+    it('should deliver the same result when recomputing the pricing details with cashback coupons', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageCashbackCoupon]);
       const resultRecomputed = computeAggregatedAndPriceTotals(result.items as PriceItemsDto);
       expect(result).toStrictEqual(resultRecomputed);
     });

@@ -594,6 +594,12 @@ describe('computePriceItemDetails', () => {
 
     expect(result).toStrictEqual(results.priceDetailsForCompositePriceWithTaxChanges);
   });
+
+  it('should deliver the same result when recomputing the pricing details', () => {
+    const result = computePriceItemDetails(samples.compositePrice);
+    const resultRecomputed = computePriceItemDetails(result.items?.[0] as CompositePriceItemDto);
+    expect(result).toStrictEqual(resultRecomputed);
+  });
 });
 
 describe('handleCompositePrices', () => {

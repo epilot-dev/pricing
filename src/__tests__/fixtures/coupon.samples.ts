@@ -1,4 +1,4 @@
-import type { Coupon } from '@epilot/pricing-client';
+import { Coupon } from '../../types';
 
 export const percentageDiscountCoupon: Coupon = {
   _id: 'coupon#1',

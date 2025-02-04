@@ -1,4 +1,3 @@
-import type { CashbackAmount, PriceItems } from '@epilot/pricing-client';
 import type { Currency } from 'dinero.js';
 
 import { DEFAULT_CURRENCY } from './currencies';
@@ -9,6 +8,7 @@ import {
   normalizeValueToFrequencyUnit,
 } from './normalizers';
 import type {
+  CashbackAmount,
   CompositePriceItem,
   CompositePriceItemDto,
   ExternalFeeMapping,
@@ -16,6 +16,7 @@ import type {
   PriceInputMapping,
   PriceItem,
   PriceItemDto,
+  PriceItems,
   PriceItemsDto,
   PricingDetails,
   Product,

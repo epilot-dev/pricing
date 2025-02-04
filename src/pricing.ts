@@ -16,6 +16,7 @@ import type {
   PriceInputMapping,
   PriceItem,
   PriceItemDto,
+  PriceItems,
   PriceItemsDto,
   PricingDetails,
   Product,

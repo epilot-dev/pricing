@@ -84,7 +84,7 @@ describe('computeAggregatedAndPriceTotals', () => {
             expect.objectContaining({
               amount_subtotal: 1000,
               amount_total: 1000,
-              unit_amount_decimal: '10.00',
+              unit_amount_decimal: '10',
               unit_amount_gross: 1000,
               unit_amount_gross_decimal: '10',
               unit_amount_net: 1000,
@@ -115,7 +115,7 @@ describe('computeAggregatedAndPriceTotals', () => {
             expect.objectContaining({
               amount_subtotal: 1000,
               amount_total: 1000,
-              unit_amount_decimal: '10.00',
+              unit_amount_decimal: '10',
               unit_amount_gross: 1000,
               unit_amount_net: 1000,
               taxes: [
@@ -129,7 +129,7 @@ describe('computeAggregatedAndPriceTotals', () => {
             expect.objectContaining({
               amount_subtotal: 2000,
               amount_total: 2000,
-              unit_amount_decimal: '20.00',
+              unit_amount_decimal: '20',
               unit_amount_gross: 2000,
               unit_amount_net: 2000,
               taxes: [
@@ -362,7 +362,7 @@ describe('computeAggregatedAndPriceTotals', () => {
                   quantity: 10,
                   unit_amount: 1000,
                   unit_amount_currency: 'EUR',
-                  unit_amount_decimal: '10.0',
+                  unit_amount_decimal: '10',
                   unit_amount_gross: 1000,
                   unit_amount_gross_decimal: '10',
                   type: 'one_time',

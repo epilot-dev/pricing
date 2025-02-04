@@ -64,6 +64,11 @@ export enum ModeDynamicTariff {
   manual = 'manual',
 }
 
+export enum IntervalDynamicTariff {
+  hourly = 'hourly',
+  monthly = 'monthly_average',
+}
+
 export type ComputeAggregatedAndPriceTotals = typeof computeAggregatedAndPriceTotals;
 
 type RelationAttributeValue = {

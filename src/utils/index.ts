@@ -63,9 +63,8 @@ export const getTaxValue = (tax?: Tax | Array<Tax>) => {
  * @param price the price object
  * @returns true if the price is tax inclusive, false otherwise. defaults to true.
  */
-export const isTaxInclusivePrice = (price?: Price): boolean => {
-  return price?.is_tax_inclusive ?? true;
-};
+export const isTaxInclusivePrice = (price?: Pick<Price, 'is_tax_inclusive'>): boolean =>
+  price?.is_tax_inclusive ?? true;
 
 /**
  * Gets the quantity for a specific tier.

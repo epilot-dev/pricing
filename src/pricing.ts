@@ -104,6 +104,7 @@ const isCompositePriceItem = (priceItem: PriceItem | CompositePriceItem): priceI
 export const computePriceComponent = (
   priceItemComponent: PriceItemDto,
   priceItem: CompositePriceItemDto,
+  { redeemedPromoCouponIds = [] }: { redeemedPromoCouponIds?: string[] } = {},
 ): PriceItem => {
   const tax = priceItemComponent.taxes?.[0]?.tax;
   const priceMapping = priceItem.price_mappings?.find(({ price_id }) => priceItemComponent._price!._id === price_id);
@@ -125,6 +126,7 @@ export const computePriceComponent = (
     quantity,
     priceMapping,
     externalFeeMapping,
+    redeemedPromoCouponIds,
   });
 };
 
@@ -328,6 +330,10 @@ const computeRecurrenceAfterCashbackAmounts = (recurrence: RecurrenceAmount, cas
   };
 };
 
+type ComputeAggregatedAndPriceTotalsOptions = {
+  redeemedPromoCouponIds?: string[];
+};
+
 /**
  * Computes all the integer amounts for the price items using the string decimal representation defined on prices unit_amount field.
  * All totals are computed with a decimal precision of DECIMAL_PRECISION.
@@ -335,7 +341,10 @@ const computeRecurrenceAfterCashbackAmounts = (recurrence: RecurrenceAmount, cas
  *
  * This function computes both line items and aggregated totals.
  */
-export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): PricingDetails => {
+export const computeAggregatedAndPriceTotals = (
+  priceItems: PriceItemsDto,
+  { redeemedPromoCouponIds = [] }: ComputeAggregatedAndPriceTotalsOptions = {},
+): PricingDetails => {
   const initialPricingDetails: Omit<PricingDetails, 'items'> & {
     items: NonNullable<PricingDetails['items']>;
   } = {
@@ -394,7 +403,13 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
 
       const priceItemToAppend =
         (immutablePriceItem as PriceItemDto | undefined) ??
-        computePriceItem(priceItem, { tax, quantity: priceItem.quantity!, priceMapping, externalFeeMapping });
+        computePriceItem(priceItem, {
+          tax,
+          quantity: priceItem.quantity!,
+          priceMapping,
+          externalFeeMapping,
+          redeemedPromoCouponIds,
+        });
 
       const updatedTotals = isOnRequestUnitAmountApproved(
         priceItem,
@@ -438,8 +453,10 @@ export const computeAggregatedAndPriceTotals = (priceItems: PriceItemsDto): Pric
  * @param priceItem - the price item to compute
  * @returns the pricing details
  */
-export const computePriceItemDetails = (priceItem: PriceItemDto | CompositePriceItemDto): PricingDetails =>
-  computeAggregatedAndPriceTotals([priceItem]);
+export const computePriceItemDetails = (
+  priceItem: PriceItemDto | CompositePriceItemDto,
+  options?: ComputeAggregatedAndPriceTotalsOptions,
+) => computeAggregatedAndPriceTotals([priceItem], options);
 
 /**
  * Computes all the pricing total amounts to integers with a decimal precision of DECIMAL_PRECISION.
@@ -754,11 +771,13 @@ export const computePriceItem = (
     quantity,
     priceMapping,
     externalFeeMapping,
+    redeemedPromoCouponIds,
   }: {
     tax?: Tax;
     quantity: number;
     priceMapping?: PriceInputMapping;
     externalFeeMapping?: ExternalFeeMapping;
+    redeemedPromoCouponIds: string[];
   },
 ): PriceItem => {
   /**
@@ -847,9 +866,12 @@ export const computePriceItem = (
       });
   }
 
-  const coupons = (priceItem._coupons ?? []).filter(isValidCoupon).sort(sortCouponsByCreationDate);
+  const coupons = priceItem._coupons
+    ?.filter(isValidCoupon)
+    .filter((coupon) => (coupon.requires_promo_code ? redeemedPromoCouponIds.includes(coupon._id) : true))
+    .sort(sortCouponsByCreationDate);
 
-  const [coupon] = coupons;
+  const [coupon] = coupons ?? [];
 
   if (coupon) {
     itemValues = applyDiscounts(itemValues, {
@@ -863,11 +885,12 @@ export const computePriceItem = (
   }
 
   /* If there's a coupon cashback period output it */
-  const cashbackPeriod = coupons.map(({ cashback_period }) => cashback_period).find(isTruthy);
+  const cashbackPeriod = coupons?.map(({ cashback_period }) => cashback_period).find(isTruthy);
 
   return {
     ...priceItem,
     ...itemValues,
+    ...(coupons && { _coupons: coupons }),
     currency,
     ...(priceItemDescription && { description: priceItemDescription }),
     ...(Number.isInteger(itemValues.cashback_amount) && { cashback_period: cashbackPeriod ?? '0' }),

@@ -866,14 +866,12 @@ export const computePriceItem = (
       });
   }
 
-  const _coupons = priceItem._coupons
+  const coupons = priceItem._coupons
     ?.filter(isValidCoupon)
     .filter((coupon) => (coupon.requires_promo_code ? redeemedPromoCouponIds.includes(coupon._id) : true))
     .sort(sortCouponsByCreationDate);
 
-  const coupons = _coupons ?? [];
-
-  const [coupon] = coupons;
+  const [coupon] = coupons ?? [];
 
   if (coupon) {
     itemValues = applyDiscounts(itemValues, {
@@ -887,12 +885,12 @@ export const computePriceItem = (
   }
 
   /* If there's a coupon cashback period output it */
-  const cashbackPeriod = coupons.map(({ cashback_period }) => cashback_period).find(isTruthy);
+  const cashbackPeriod = coupons?.map(({ cashback_period }) => cashback_period).find(isTruthy);
 
   return {
     ...priceItem,
     ...itemValues,
-    ...(_coupons && { _coupons }),
+    ...(coupons && { _coupons: coupons }),
     currency,
     ...(priceItemDescription && { description: priceItemDescription }),
     ...(Number.isInteger(itemValues.cashback_amount) && { cashback_period: cashbackPeriod ?? '0' }),

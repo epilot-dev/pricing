@@ -12,6 +12,11 @@ export const percentageDiscountCoupon: Coupon = {
   percentage_value: '25',
 };
 
+export const promoCodeRequiredPercentageDiscountCoupon: Coupon = {
+  ...percentageDiscountCoupon,
+  requires_promo_code: true,
+};
+
 export const percentage10DiscountCoupon: Coupon = {
   ...percentageDiscountCoupon,
   percentage_value: '10',

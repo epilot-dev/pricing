@@ -571,6 +571,25 @@ describe('computeAggregatedAndPriceTotals', () => {
       const resultRecomputed = computeAggregatedAndPriceTotals(result.items as PriceItemsDto);
       expect(result).toStrictEqual(resultRecomputed);
     });
+
+    it('should not apply coupon if it has requires_promo_code set to true', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithPromoCodeRequiredCoupon]);
+      expect(result).toEqual(results.computedPriceWithoutAppliedCoupon);
+    });
+
+    it('should not apply coupon if it has requires_promo_code set to true and redeemedPromoCouponIds is empty', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithPromoCodeRequiredCoupon], {
+        redeemedPromoCouponIds: [],
+      });
+      expect(result).toEqual(results.computedPriceWithoutAppliedCoupon);
+    });
+
+    it('should apply coupon if it has requires_promo_code set to true and redeemedPromoCouponIds includes the coupon id', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithPromoCodeRequiredCoupon], {
+        redeemedPromoCouponIds: [samples.priceItemWithPromoCodeRequiredCoupon._coupons?.[0]!._id!],
+      });
+      expect(result).toEqual(results.computedPriceWithAppliedCoupon);
+    });
   });
 });
 

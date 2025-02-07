@@ -37,6 +37,7 @@ import {
   PriceItemsTotals,
   applyDiscounts,
   convertPriceItemWithCouponAppliedToPriceItemDto,
+  computeExternalDynamicTariffValues,
   isPriceItemWithCouponApplied,
 } from './utils';
 import { isValidCoupon, sortCouponsByCreationDate } from './utils/guards/coupon';
@@ -847,6 +848,16 @@ export const computePriceItem = (
         quantity: safeQuantity,
         isUsingPriceMappingToSelectTier,
         unchangedPriceDisplayInJourneys: priceItem._price?.unchanged_price_display_in_journeys,
+      });
+      break;
+    case PricingModel.dynamicTariff:
+      itemValues = computeExternalDynamicTariffValues({
+        dynamicTariff: price.dynamic_tariff!,
+        currency,
+        isTaxInclusive,
+        unitAmountMultiplier,
+        externalFeeAmountDecimal,
+        tax: priceTax,
       });
       break;
     case PricingModel.externalGetAG:

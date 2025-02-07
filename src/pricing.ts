@@ -28,6 +28,7 @@ import type {
 } from './types';
 import {
   computeExternalGetAGItemValues,
+  computeExternalDynamicTariffValues,
   computePerUnitPriceItemValues,
   computeTieredFlatFeePriceItemValues,
   computeTieredGraduatedPriceItemValues,
@@ -37,7 +38,6 @@ import {
   PriceItemsTotals,
   applyDiscounts,
   convertPriceItemWithCouponAppliedToPriceItemDto,
-  computeExternalDynamicTariffValues,
   isPriceItemWithCouponApplied,
 } from './utils';
 import { isValidCoupon, sortCouponsByCreationDate } from './utils/guards/coupon';

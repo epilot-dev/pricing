@@ -4,8 +4,18 @@ import { DEFAULT_CURRENCY } from '../currencies';
 import { toDineroFromInteger, toDinero } from '../formatters';
 import { TaxRates } from '../formatters/constants';
 import { normalizeTimeFrequencyFromDineroInputValue } from '../normalizers';
-import { MarkupPricingModel, TypeGetAg } from '../pricing';
-import type { BillingPeriod, Coupon, Price, PriceGetAg, PriceItem, PriceItemDto, PriceTier, Tax } from '../types';
+import { MarkupPricingModel, ModeDynamicTariff, TypeGetAg } from '../pricing';
+import type {
+  BillingPeriod,
+  Coupon,
+  Price,
+  PriceDynamicTariff,
+  PriceGetAg,
+  PriceItem,
+  PriceItemDto,
+  PriceTier,
+  Tax,
+} from '../types';
 
 import { isPercentageCoupon, isCashbackCoupon, isFixedValueCoupon } from './guards/coupon';
 
@@ -641,6 +651,57 @@ export const computeExternalGetAGItemValues = ({
       markup_amount_decimal: (relevantTier ? relevantTier?.unit_amount_decimal : getAg.markup_amount_decimal) || '0',
     },
   };
+};
+
+export const computeExternalDynamicTariffValues = ({
+  dynamicTariff,
+  currency,
+  isTaxInclusive,
+  unitAmountMultiplier,
+  externalFeeAmountDecimal,
+  tax,
+}: {
+  dynamicTariff: PriceDynamicTariff;
+  currency: Currency;
+  isTaxInclusive: boolean;
+  unitAmountMultiplier: number;
+  externalFeeAmountDecimal?: string;
+  tax?: Tax;
+}): PriceItemsTotals => {
+  if (externalFeeAmountDecimal === undefined || dynamicTariff === undefined) {
+    return {
+      unit_amount_net: 0,
+      unit_amount_gross: 0,
+      amount_tax: 0,
+      amount_subtotal: 0,
+      amount_total: 0,
+    };
+  }
+
+  if (dynamicTariff.mode === ModeDynamicTariff.manual) {
+    return computePerUnitPriceItemValues({
+      unitAmountDecimal: dynamicTariff.average_price_decimal,
+      currency,
+      isTaxInclusive,
+      unitAmountMultiplier,
+      tax,
+    });
+  }
+
+  const taxRate = getTaxValue(tax);
+  const averageUnitPrice = isTaxInclusive
+    ? toDinero(externalFeeAmountDecimal).multiply(1 + taxRate)
+    : toDinero(externalFeeAmountDecimal);
+
+  const unitAmountDecimal = averageUnitPrice.add(toDinero(dynamicTariff.markup_decimal));
+
+  return computePerUnitPriceItemValues({
+    unitAmountDecimal: unitAmountDecimal.toUnit().toString(),
+    currency,
+    isTaxInclusive,
+    unitAmountMultiplier,
+    tax,
+  });
 };
 
 export const isNotPieceUnit = (unit: string | undefined) => unit !== undefined && unit !== 'unit';

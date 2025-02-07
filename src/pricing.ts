@@ -28,6 +28,7 @@ import type {
 } from './types';
 import {
   computeExternalGetAGItemValues,
+  computeExternalDynamicTariffValues,
   computePerUnitPriceItemValues,
   computeTieredFlatFeePriceItemValues,
   computeTieredGraduatedPriceItemValues,
@@ -62,6 +63,11 @@ export enum TypeGetAg {
 export enum ModeDynamicTariff {
   dayAheadMarket = 'day_ahead_market',
   manual = 'manual',
+}
+
+export enum IntervalDynamicTariff {
+  hourly = 'hourly',
+  monthly = 'monthly_average',
 }
 
 export type ComputeAggregatedAndPriceTotals = typeof computeAggregatedAndPriceTotals;
@@ -842,6 +848,16 @@ export const computePriceItem = (
         quantity: safeQuantity,
         isUsingPriceMappingToSelectTier,
         unchangedPriceDisplayInJourneys: priceItem._price?.unchanged_price_display_in_journeys,
+      });
+      break;
+    case PricingModel.dynamicTariff:
+      itemValues = computeExternalDynamicTariffValues({
+        dynamicTariff: price.dynamic_tariff!,
+        currency,
+        isTaxInclusive,
+        unitAmountMultiplier,
+        externalFeeAmountDecimal,
+        tax: priceTax,
       });
       break;
     case PricingModel.externalGetAG:

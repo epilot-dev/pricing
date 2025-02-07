@@ -26,6 +26,7 @@ export type {
   PriceTierEnhanced,
   PriceTierDisplayMode,
   PriceGetAg,
+  PriceDynamicTariff,
   CashbackAmount,
 } from '@epilot/pricing-client';
 import type { BillingPeriod } from '@epilot/pricing-client';

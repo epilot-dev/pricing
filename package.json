@@ -1,6 +1,6 @@
 {
   "name": "@epilot/pricing",
-  "version": "4.44.26",
+  "version": "4.45.0",
   "description": "Pricing Library",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -54,14 +54,18 @@
   "author": "epilot GmbH",
   "license": "UNLICENSED",
   "dependencies": {
-    "@epilot/pricing-client": "^3.42.0",
-    "@types/dinero.js": "^1.9.0",
     "dinero.js": "^1.9.1"
+  },
+  "peerDependencies": {
+    "@epilot/pricing-client": "^3.42.0"
   },
   "devDependencies": {
     "@epilot/eslint-config": "^1.2.10",
+    "@epilot/pricing-client": "^3.42.0",
+    "@types/dinero.js": "^1.9.0",
     "@types/jest": "^26.0.20",
     "concurrently": "^8.1.0",
+    "esbuild-loader": "^4.3.0",
     "eslint": "^7.15.0",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-watch": "^7.0.0",

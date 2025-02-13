@@ -29,7 +29,7 @@ export {
 export {
   type ComputeAggregatedAndPriceTotals,
   type PricingEntitiesExtractResult,
-  type PricingModel,
+  PricingModel,
   computeAggregatedAndPriceTotals,
   computePriceComponent,
   computePriceItemDetails,

@@ -8,7 +8,7 @@ module.exports = {
   entry: './src/index.ts',
   mode: 'production',
   resolve: { extensions: ['.ts'] },
-  devtool: false,
+  devtool: 'source-map',
   module: {
     rules: [
       {

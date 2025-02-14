@@ -600,6 +600,19 @@ describe('computeAggregatedAndPriceTotals', () => {
       });
       expect(result).toEqual(results.computedPriceWithAppliedCoupon);
     });
+
+    it('should apply coupon on price component if it has requires_promo_code set to true and redeemedPromoCouponIds includes the coupon id', () => {
+      const result = computeAggregatedAndPriceTotals(
+        [samples.compositePriceWithComponentsWithPromoCodeRequiredCoupon],
+        {
+          redeemedPromoCouponIds: [
+            (samples.compositePriceWithComponentsWithPromoCodeRequiredCoupon._price!.price_components as Price[])?.[0]!
+              ._coupons?.[0]!._id!,
+          ],
+        },
+      );
+      expect(result).toEqual(results.computedCompositePriceWithComponentsWithPromoCodeRequiredCoupon);
+    });
   });
 });
 

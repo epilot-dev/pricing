@@ -107,10 +107,14 @@ export const isCompositePriceItemDto = (
 const isCompositePriceItem = (priceItem: PriceItem | CompositePriceItem): priceItem is CompositePriceItem =>
   Boolean(priceItem.is_composite_price || priceItem._price?.is_composite_price);
 
+type ComputePriceComponentOptions = {
+  redeemedPromoCouponIds?: string[];
+};
+
 export const computePriceComponent = (
   priceItemComponent: PriceItemDto,
   priceItem: CompositePriceItemDto,
-  { redeemedPromoCouponIds = [] }: { redeemedPromoCouponIds?: string[] } = {},
+  { redeemedPromoCouponIds = [] }: ComputePriceComponentOptions = {},
 ): PriceItem => {
   const tax = priceItemComponent.taxes?.[0]?.tax;
   const priceMapping = priceItem.price_mappings?.find(({ price_id }) => priceItemComponent._price!._id === price_id);
@@ -221,7 +225,10 @@ export const extractPricingEntitiesBySlug = (
  * @param priceItem the composite price item DTO
  * @returns the composite price item
  */
-export const computeCompositePrice = (priceItem: CompositePriceItemDto): CompositePriceItem => {
+export const computeCompositePrice = (
+  priceItem: CompositePriceItemDto,
+  options: ComputePriceComponentOptions = {},
+): CompositePriceItem => {
   const priceComponents = getPriceComponents(priceItem);
   const computedItemComponents = priceComponents.map((component) => {
     const componentTax = Array.isArray(component.tax) ? component.tax : [];
@@ -251,7 +258,7 @@ export const computeCompositePrice = (priceItem: CompositePriceItemDto): Composi
       ...(component._coupons && { _coupons: component._coupons }),
     };
 
-    return computePriceComponent(itemComponent, priceItem);
+    return computePriceComponent(itemComponent, priceItem, options);
   });
 
   const itemDescription = priceItem.description ?? priceItem._price?.description;
@@ -375,7 +382,8 @@ export const computeAggregatedAndPriceTotals = (
 
     if (isCompositePriceItemDto(priceItem)) {
       const compositePriceItemToAppend =
-        (immutablePriceItem as CompositePriceItem | undefined) ?? computeCompositePrice(priceItem);
+        (immutablePriceItem as CompositePriceItem | undefined) ??
+        computeCompositePrice(priceItem, { redeemedPromoCouponIds });
 
       const itemBreakdown = recomputeDetailTotalsFromCompositePrice(undefined, compositePriceItemToAppend);
       const updatedTotals = recomputeDetailTotalsFromCompositePrice(details, compositePriceItemToAppend);

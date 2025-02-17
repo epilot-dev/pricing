@@ -13,14 +13,14 @@
     "pricing"
   ],
   "scripts": {
-    "start": "mkdir -p dist && cp -r src/types dist/types && webpack --watch",
+    "start": "mkdir -p dist && cp -r src/types dist/types && nodemon --watch src --ext ts --exec 'node esbuild.config.js'",
     "test": "jest",
     "test:watch": "jest --watch",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
     "gen-docs": "rm -rf docs && typedoc --plugin typedoc-plugin-markdown --out docs src && echo '{ \"label\": \"Pricing Library\", \"position\": 0 }' > docs/_category_.json",
     "clean": "rm -rf dist",
-    "bundle-definition": "webpack --mode=production",
+    "bundle-definition": "node esbuild.config.js",
     "build": "npm run clean && tsc && mkdir -p dist && cp -r src/types dist/types && npm run bundle-definition",
     "typegen": "echo '/* eslint-disable */\n/**\n * DO NOT MODIFY - GENERATED TYPES FROM OPENAPI\n **/' > src/types/pricing-types.d.ts && typegen ../../lambda/ApiHandlerFunction/openapi.yml >> src/types/pricing-types.d.ts",
     "prepare": "npm run build",
@@ -65,21 +65,19 @@
     "@types/dinero.js": "^1.9.0",
     "@types/jest": "^26.0.20",
     "concurrently": "^8.1.0",
-    "esbuild-loader": "^4.3.0",
+    "esbuild": "^0.19.12",
     "eslint": "^7.15.0",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-watch": "^7.0.0",
     "husky": "^4.3.5",
     "jest": "^26.6.3",
-    "nodemon-webpack-plugin": "^4.8.1",
+    "nodemon": "^3.0.0",
     "openapi-client-axios-typegen": "^7.5.1",
     "ts-jest": "^26.5.0",
     "ts-node": "^10.8.1",
     "typedoc": "^0.24.7",
     "typedoc-plugin-markdown": "^3.15.3",
-    "typescript": "^4.6.4",
-    "webpack": "~5.76.0",
-    "webpack-cli": "^4.4.0"
+    "typescript": "^4.6.4"
   },
   "packageManager": "pnpm@9.12.2+sha512.22721b3a11f81661ae1ec68ce1a7b879425a1ca5b991c975b074ac220b187ce56c708fe5db69f4c962c989452eee76c82877f4ee80f474cebd61ee13461b6228"
 }

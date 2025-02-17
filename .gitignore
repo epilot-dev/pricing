@@ -1,5 +1,5 @@
 *.js
-!webpack.config.js
+!esbuild.config.js
 node_modules/
 docs/
 dist

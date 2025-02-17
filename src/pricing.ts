@@ -22,6 +22,7 @@ import type {
   Product,
   RecurrenceAmount,
   RecurrenceAmountWithTax,
+  RedeemedPromo,
   Tax,
   TaxAmountDto,
   TimeFrequency,
@@ -108,13 +109,13 @@ const isCompositePriceItem = (priceItem: PriceItem | CompositePriceItem): priceI
   Boolean(priceItem.is_composite_price || priceItem._price?.is_composite_price);
 
 type ComputePriceComponentOptions = {
-  redeemedPromoCouponIds?: string[];
+  redeemedPromos?: Array<RedeemedPromo>;
 };
 
 export const computePriceComponent = (
   priceItemComponent: PriceItemDto,
   priceItem: CompositePriceItemDto,
-  { redeemedPromoCouponIds = [] }: ComputePriceComponentOptions = {},
+  { redeemedPromos = [] }: ComputePriceComponentOptions = {},
 ): PriceItem => {
   const tax = priceItemComponent.taxes?.[0]?.tax;
   const priceMapping = priceItem.price_mappings?.find(({ price_id }) => priceItemComponent._price!._id === price_id);
@@ -136,7 +137,7 @@ export const computePriceComponent = (
     quantity,
     priceMapping,
     externalFeeMapping,
-    redeemedPromoCouponIds,
+    redeemedPromos,
   });
 };
 
@@ -344,7 +345,7 @@ const computeRecurrenceAfterCashbackAmounts = (recurrence: RecurrenceAmount, cas
 };
 
 type ComputeAggregatedAndPriceTotalsOptions = {
-  redeemedPromoCouponIds?: string[];
+  redeemedPromos?: Array<RedeemedPromo>;
 };
 
 /**
@@ -356,7 +357,7 @@ type ComputeAggregatedAndPriceTotalsOptions = {
  */
 export const computeAggregatedAndPriceTotals = (
   priceItems: PriceItemsDto,
-  { redeemedPromoCouponIds = [] }: ComputeAggregatedAndPriceTotalsOptions = {},
+  { redeemedPromos = [] }: ComputeAggregatedAndPriceTotalsOptions = {},
 ): PricingDetails => {
   const initialPricingDetails: Omit<PricingDetails, 'items'> & {
     items: NonNullable<PricingDetails['items']>;
@@ -375,6 +376,7 @@ export const computeAggregatedAndPriceTotals = (
         cashbacks: [],
       },
     },
+    ...(redeemedPromos.length && { redeemed_promos: redeemedPromos }),
   };
 
   const priceDetails = priceItems.reduce((details, priceItem) => {
@@ -382,8 +384,7 @@ export const computeAggregatedAndPriceTotals = (
 
     if (isCompositePriceItemDto(priceItem)) {
       const compositePriceItemToAppend =
-        (immutablePriceItem as CompositePriceItem | undefined) ??
-        computeCompositePrice(priceItem, { redeemedPromoCouponIds });
+        (immutablePriceItem as CompositePriceItem | undefined) ?? computeCompositePrice(priceItem, { redeemedPromos });
 
       const itemBreakdown = recomputeDetailTotalsFromCompositePrice(undefined, compositePriceItemToAppend);
       const updatedTotals = recomputeDetailTotalsFromCompositePrice(details, compositePriceItemToAppend);
@@ -422,7 +423,7 @@ export const computeAggregatedAndPriceTotals = (
           quantity: priceItem.quantity!,
           priceMapping,
           externalFeeMapping,
-          redeemedPromoCouponIds,
+          redeemedPromos,
         });
 
       const updatedTotals = isOnRequestUnitAmountApproved(
@@ -781,13 +782,13 @@ export const computePriceItem = (
     quantity,
     priceMapping,
     externalFeeMapping,
-    redeemedPromoCouponIds,
+    redeemedPromos,
   }: {
     tax?: Tax;
     quantity: number;
     priceMapping?: PriceInputMapping;
     externalFeeMapping?: ExternalFeeMapping;
-    redeemedPromoCouponIds: string[];
+    redeemedPromos: Array<RedeemedPromo>;
   },
 ): PriceItem => {
   /**
@@ -885,6 +886,8 @@ export const computePriceItem = (
         tax: priceTax,
       });
   }
+
+  const redeemedPromoCouponIds = redeemedPromos.flatMap(({ coupons }) => coupons?.map(({ _id }) => _id));
 
   const coupons = priceItem._coupons
     ?.filter(isValidCoupon)

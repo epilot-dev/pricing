@@ -6477,6 +6477,25 @@ export const computedPriceWithAppliedCoupon = {
   amount_subtotal: 6818,
   amount_total: 7500,
   amount_tax: 682,
+  redeemed_promos: [
+    {
+      code: 'SUMMER25',
+      coupons: [
+        {
+          _created_at: '2022-06-15T09:17:06.510Z',
+          _id: 'coupon#1',
+          _org: 'org#1',
+          _schema: 'coupon',
+          _title: 'Winter Sale',
+          _updated_at: '2022-06-17T11:48:20.104Z',
+          name: 'Winter Sale',
+          percentage_value: '25',
+          requires_promo_code: true,
+          type: 'percentage',
+        },
+      ],
+    },
+  ],
   total_details: {
     amount_tax: 682,
     breakdown: {
@@ -9601,6 +9620,25 @@ export const computedCompositePriceWithComponentsWithPromoCodeRequiredCoupon = {
   amount_subtotal: 682,
   amount_total: 750,
   amount_tax: 68,
+  redeemed_promos: [
+    {
+      code: 'SUMMER25',
+      coupons: [
+        {
+          _created_at: '2022-06-15T09:17:06.510Z',
+          _id: 'coupon#1',
+          _org: 'org#1',
+          _schema: 'coupon',
+          _title: 'Winter Sale',
+          _updated_at: '2022-06-17T11:48:20.104Z',
+          name: 'Winter Sale',
+          percentage_value: '25',
+          requires_promo_code: true,
+          type: 'percentage',
+        },
+      ],
+    },
+  ],
   total_details: {
     amount_tax: 68,
     breakdown: {

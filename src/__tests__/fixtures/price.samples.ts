@@ -3217,3 +3217,16 @@ export const compositePriceWithComponentsWithCashbackCoupons: CompositePriceItem
     ],
   },
 };
+
+export const compositePriceWithComponentsWithPromoCodeRequiredCoupon: CompositePriceItemDto = {
+  ...compositePriceWithComponentsWithCoupons,
+  _price: {
+    ...compositePriceWithComponentsWithCoupons._price,
+    price_components: [
+      {
+        ...(compositePriceWithComponentsWithCoupons._price!.price_components as Price)[0]!,
+        _coupons: [promoCodeRequiredPercentageDiscountCoupon],
+      },
+    ],
+  },
+};

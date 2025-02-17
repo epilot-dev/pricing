@@ -1,8 +1,8 @@
 export type { Currency } from 'dinero.js';
 export { DEFAULT_CURRENCY } from './currencies';
 export {
-  AmountFormatter,
-  DineroConvertor,
+  type AmountFormatter,
+  type DineroConvertor,
   formatAmount,
   formatAmountFromString,
   formatPriceUnit,
@@ -22,13 +22,13 @@ export {
   normalizeValueToFrequencyUnit,
 } from './normalizers';
 export {
-  TimeFrequencyNormalizerMatrix,
+  type TimeFrequencyNormalizerMatrix,
   timeFrequencyNormalizerMatrix,
   TIME_FREQUENCY_NORMALIZATION_FACTORS,
 } from './normalizers/constants';
 export {
-  ComputeAggregatedAndPriceTotals,
-  PricingEntitiesExtractResult,
+  type ComputeAggregatedAndPriceTotals,
+  type PricingEntitiesExtractResult,
   PricingModel,
   computeAggregatedAndPriceTotals,
   computePriceComponent,

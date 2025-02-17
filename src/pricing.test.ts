@@ -594,7 +594,7 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(result).toEqual(results.computedPriceWithoutAppliedCoupon);
     });
 
-    it('should apply coupon if it has requires_promo_code set to true and redeemedPromos includes the coupon id', () => {
+    it('should apply coupon if it has requires_promo_code set to true and redeemedPromos includes the coupon', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithPromoCodeRequiredCoupon], {
         redeemedPromos: [
           {
@@ -606,7 +606,7 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(result).toEqual(results.computedPriceWithAppliedCoupon);
     });
 
-    it('should apply coupon on price component if it has requires_promo_code set to true and redeemedPromos includes the coupon id', () => {
+    it('should apply coupon on price component if it has requires_promo_code set to true and redeemedPromos includes the coupon', () => {
       const result = computeAggregatedAndPriceTotals(
         [samples.compositePriceWithComponentsWithPromoCodeRequiredCoupon],
         {

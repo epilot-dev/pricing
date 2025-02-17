@@ -587,27 +587,38 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(result).toEqual(results.computedPriceWithoutAppliedCoupon);
     });
 
-    it('should not apply coupon if it has requires_promo_code set to true and redeemedPromoCouponIds is empty', () => {
+    it('should not apply coupon if it has requires_promo_code set to true and redeemedPromos is empty', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithPromoCodeRequiredCoupon], {
-        redeemedPromoCouponIds: [],
+        redeemedPromos: [],
       });
       expect(result).toEqual(results.computedPriceWithoutAppliedCoupon);
     });
 
-    it('should apply coupon if it has requires_promo_code set to true and redeemedPromoCouponIds includes the coupon id', () => {
+    it('should apply coupon if it has requires_promo_code set to true and redeemedPromos includes the coupon id', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithPromoCodeRequiredCoupon], {
-        redeemedPromoCouponIds: [samples.priceItemWithPromoCodeRequiredCoupon._coupons?.[0]!._id!],
+        redeemedPromos: [
+          {
+            code: 'SUMMER25',
+            coupons: [samples.priceItemWithPromoCodeRequiredCoupon._coupons?.[0]!],
+          },
+        ],
       });
       expect(result).toEqual(results.computedPriceWithAppliedCoupon);
     });
 
-    it('should apply coupon on price component if it has requires_promo_code set to true and redeemedPromoCouponIds includes the coupon id', () => {
+    it('should apply coupon on price component if it has requires_promo_code set to true and redeemedPromos includes the coupon id', () => {
       const result = computeAggregatedAndPriceTotals(
         [samples.compositePriceWithComponentsWithPromoCodeRequiredCoupon],
         {
-          redeemedPromoCouponIds: [
-            (samples.compositePriceWithComponentsWithPromoCodeRequiredCoupon._price!.price_components as Price[])?.[0]!
-              ._coupons?.[0]!._id!,
+          redeemedPromos: [
+            {
+              code: 'SUMMER25',
+              coupons: [
+                (
+                  samples.compositePriceWithComponentsWithPromoCodeRequiredCoupon._price!.price_components as Price[]
+                )?.[0]!._coupons?.[0]!,
+              ],
+            },
           ],
         },
       );

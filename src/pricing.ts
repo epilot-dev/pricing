@@ -431,12 +431,7 @@ export const computeAggregatedAndPriceTotals = (
         undefined,
       )
         ? recomputeDetailTotals(details, price, priceItemToAppend)
-        : {
-            amount_subtotal: details.amount_subtotal,
-            amount_total: details.amount_total,
-            amount_tax: details.amount_tax,
-            total_details: details.total_details,
-          };
+        : details;
 
       const newItem = convertPriceItemPrecision(priceItemToAppend, 2);
 
@@ -672,6 +667,7 @@ const recomputeDetailTotals = (
   }
 
   return {
+    ...details,
     amount_subtotal: subtotal.add(priceSubtotal).getAmount(),
     amount_total: total.add(priceTotal).getAmount(),
     amount_tax: totalTax.add(priceTax).getAmount(),

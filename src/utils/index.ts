@@ -693,7 +693,7 @@ export const computeExternalDynamicTariffValues = ({
     ? toDinero(externalFeeAmountDecimal).multiply(1 + taxRate)
     : toDinero(externalFeeAmountDecimal);
 
-  const unitAmountDecimal = averageUnitPrice.add(toDinero(dynamicTariff.markup_decimal));
+  const unitAmountDecimal = averageUnitPrice.add(toDinero(dynamicTariff.markup_amount_decimal));
 
   return computePerUnitPriceItemValues({
     unitAmountDecimal: unitAmountDecimal.toUnit().toString(),

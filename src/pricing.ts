@@ -41,7 +41,7 @@ import {
   convertPriceItemWithCouponAppliedToPriceItemDto,
   isPriceItemWithCouponApplied,
 } from './utils';
-import { isValidCoupon, sortCouponsByCreationDate } from './utils/guards/coupon';
+import { isValidCoupon, getCouponOrder } from './utils/guards/coupon';
 
 export enum PricingModel {
   perUnit = 'per_unit',
@@ -892,7 +892,7 @@ export const computePriceItem = (
   const coupons = priceItem._coupons
     ?.filter(isValidCoupon)
     .filter((coupon) => (coupon.requires_promo_code ? redeemedPromoCouponIds.includes(coupon._id) : true))
-    .sort(sortCouponsByCreationDate);
+    .sort(getCouponOrder);
 
   const [coupon] = coupons ?? [];
 

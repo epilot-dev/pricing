@@ -12,6 +12,11 @@ export const percentageDiscountCoupon: Coupon = {
   percentage_value: '25',
 };
 
+export const highPercentageDiscountCoupon: Coupon = {
+  ...percentageDiscountCoupon,
+  percentage_value: '50',
+};
+
 export const promoCodeRequiredPercentageDiscountCoupon: Coupon = {
   ...percentageDiscountCoupon,
   requires_promo_code: true,
@@ -34,6 +39,12 @@ export const fixedDiscountCoupon: Coupon = {
   fixed_value: 500,
   fixed_value_decimal: '5.00',
   fixed_value_currency: 'EUR',
+};
+
+export const highFixedDiscountCoupon: Coupon = {
+  ...fixedDiscountCoupon,
+  fixed_value: 1000,
+  fixed_value_decimal: '10.00',
 };
 
 export const fixedCashbackCoupon: Coupon = {

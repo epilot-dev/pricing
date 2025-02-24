@@ -11,6 +11,8 @@ import {
 import {
   fixedCashbackCoupon,
   fixedDiscountCoupon,
+  highFixedDiscountCoupon,
+  highPercentageDiscountCoupon,
   percentage10DiscountCoupon,
   percentageCashbackCoupon,
   percentageDiscountCoupon,
@@ -3016,6 +3018,11 @@ export const priceItemWithFixedDiscount: PriceItemDto = {
   _coupons: [fixedDiscountCoupon],
 };
 
+export const priceItemWithMultipleFixedDiscounts: PriceItemDto = {
+  ...priceItemWithFixedDiscount,
+  _coupons: [fixedDiscountCoupon, highFixedDiscountCoupon],
+};
+
 export const priceItemWithFixedDiscountAndHighQuantity: PriceItemDto = {
   ...priceItemWithFixedDiscount,
   quantity: 5,
@@ -3029,6 +3036,11 @@ export const priceItemWithFixedDiscountAndPriceMappings: PriceItemDto = {
 export const priceItemWithPercentageDiscount: PriceItemDto = {
   ...baseForPriceItemWithDiscount,
   _coupons: [percentageDiscountCoupon],
+};
+
+export const priceItemWithMultiplePercentageDiscounts: PriceItemDto = {
+  ...priceItemWithPercentageDiscount,
+  _coupons: [percentageDiscountCoupon, highPercentageDiscountCoupon],
 };
 
 export const priceItemWithPromoCodeRequiredCoupon: PriceItemDto = {

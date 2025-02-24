@@ -459,9 +459,19 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(item.before_discount_unit_amount).toEqual(item.unit_discount_amount);
     });
 
+    it('should only apply the highest fixed amount discount coupon', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithMultipleFixedDiscounts]);
+      expect(result).toEqual(results.computedPriceWithMultipleFixedDiscounts);
+    });
+
     it('should compute discounts and totals correctly when there is a percentage discount coupon', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageDiscount]);
       expect(result).toEqual(results.computedPriceWithPercentageDiscount);
+    });
+
+    it('should only apply the highest percentage discount coupon', () => {
+      const result = computeAggregatedAndPriceTotals([samples.priceItemWithMultiplePercentageDiscounts]);
+      expect(result).toEqual(results.computedPriceWithMultiplePercentageDiscounts);
     });
 
     it('should ensure percentage discounts do not go below 0% and above 100%', () => {

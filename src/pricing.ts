@@ -35,7 +35,6 @@ import {
   computeTieredGraduatedPriceItemValues,
   computeTieredVolumePriceItemValues,
   isTaxInclusivePrice,
-  isTruthy,
   PriceItemsTotals,
   applyDiscounts,
   convertPriceItemWithCouponAppliedToPriceItemDto,
@@ -894,7 +893,10 @@ export const computePriceItem = (
     .filter((coupon) => (coupon.requires_promo_code ? redeemedPromoCouponIds.includes(coupon._id) : true))
     .sort(sortCouponsByCreationDate);
 
-  const [coupon] = coupons ?? [];
+  /* Only apply the first coupon */
+  const appliedCoupons = coupons?.slice(0, 1);
+
+  const [coupon] = appliedCoupons ?? [];
 
   if (coupon) {
     itemValues = applyDiscounts(itemValues, {
@@ -908,12 +910,12 @@ export const computePriceItem = (
   }
 
   /* If there's a coupon cashback period output it */
-  const cashbackPeriod = coupons?.map(({ cashback_period }) => cashback_period).find(isTruthy);
+  const cashbackPeriod = coupon?.cashback_period;
 
   return {
     ...priceItem,
     ...itemValues,
-    ...(coupons && { _coupons: coupons }),
+    ...(appliedCoupons && { _coupons: appliedCoupons }),
     currency,
     ...(priceItemDescription && { description: priceItemDescription }),
     ...(Number.isInteger(itemValues.cashback_amount) && { cashback_period: cashbackPeriod ?? '0' }),

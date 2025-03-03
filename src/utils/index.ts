@@ -47,6 +47,7 @@ export type PriceItemsTotals = Pick<
   | 'after_cashback_amount_total'
   | 'after_cashback_amount_total_decimal'
   | 'get_ag'
+  | 'dynamic_tariff'
   | 'tiers_details'
 > & {
   /* These are marked as optional on the original type */
@@ -675,33 +676,82 @@ export const computeExternalDynamicTariffValues = ({
       amount_tax: 0,
       amount_subtotal: 0,
       amount_total: 0,
+      dynamic_tariff: {
+        ...dynamicTariff,
+        unit_amount_net: 0,
+        unit_amount_gross: 0,
+        markup_amount_net: 0,
+        markup_amount_gross: 0,
+      },
     };
   }
 
+  const taxRate = getTaxValue(tax);
+
   if (dynamicTariff.mode === ModeDynamicTariff.manual) {
-    return computePerUnitPriceItemValues({
-      unitAmountDecimal: dynamicTariff.average_price_decimal,
+    const unitAmountDecimal = toDinero(dynamicTariff.average_price_decimal);
+    const markup_amount_net = isTaxInclusive
+      ? unitAmountDecimal.divide(1 + taxRate).getAmount()
+      : unitAmountDecimal.getAmount();
+    const markup_amount_gross = isTaxInclusive
+      ? unitAmountDecimal.getAmount()
+      : unitAmountDecimal.multiply(1 + taxRate).getAmount();
+
+    const basePerUnitPriceValues = computePerUnitPriceItemValues({
+      unitAmountDecimal: unitAmountDecimal.toUnit().toString(),
       currency,
       isTaxInclusive,
       unitAmountMultiplier,
       tax,
     });
+
+    return {
+      ...basePerUnitPriceValues,
+      dynamic_tariff: {
+        ...dynamicTariff,
+        markup_amount_net,
+        markup_amount_gross,
+        unit_amount_net: 0,
+        unit_amount_gross: 0,
+      },
+    };
   }
 
-  const taxRate = getTaxValue(tax);
-  const averageUnitPrice = isTaxInclusive
-    ? toDinero(externalFeeAmountDecimal).multiply(1 + taxRate)
-    : toDinero(externalFeeAmountDecimal);
+  const markup = toDinero(dynamicTariff.markup_amount_decimal);
+  const markup_amount_net = isTaxInclusive ? markup.divide(1 + taxRate).getAmount() : markup.getAmount();
+  const markup_amount_gross = isTaxInclusive ? markup.getAmount() : markup.multiply(1 + taxRate).getAmount();
 
-  const unitAmountDecimal = averageUnitPrice.add(toDinero(dynamicTariff.markup_amount_decimal));
+  const market_price = toDinero(externalFeeAmountDecimal);
+  const unit_amount_net = market_price.getAmount();
+  const unit_amount_gross = market_price.multiply(1 + taxRate).getAmount();
 
-  return computePerUnitPriceItemValues({
-    unitAmountDecimal: unitAmountDecimal.toUnit().toString(),
+  // combined price per kWh - external market price + markup
+  const unitAmountDecimal = isTaxInclusive
+    ? market_price
+        .multiply(1 + taxRate)
+        .add(markup)
+        .toUnit()
+        .toString()
+    : market_price.add(markup).toUnit().toString();
+
+  const basePerUnitPriceValues = computePerUnitPriceItemValues({
+    unitAmountDecimal,
     currency,
     isTaxInclusive,
     unitAmountMultiplier,
     tax,
   });
+
+  return {
+    ...basePerUnitPriceValues,
+    dynamic_tariff: {
+      ...dynamicTariff,
+      markup_amount_net,
+      markup_amount_gross,
+      unit_amount_net,
+      unit_amount_gross,
+    },
+  };
 };
 
 export const isNotPieceUnit = (unit: string | undefined) => unit !== undefined && unit !== 'unit';

@@ -1074,6 +1074,37 @@ const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceIt
         markup_amount_net_decimal: toDineroFromInteger(priceItem.get_ag.markup_amount_net!).toUnit().toString(),
       },
     }),
+  ...(priceItem.dynamic_tariff &&
+    (priceItem.pricing_model === PricingModel.dynamicTariff ||
+      priceItem._price?.pricing_model === PricingModel.dynamicTariff) && {
+      dynamic_tariff: {
+        ...priceItem.dynamic_tariff,
+        unit_amount_net: priceItem.dynamic_tariff.unit_amount_net
+          ? toDineroFromInteger(priceItem.dynamic_tariff.unit_amount_net).convertPrecision(precision).getAmount()
+          : undefined,
+        unit_amount_gross: priceItem.dynamic_tariff.unit_amount_gross
+          ? toDineroFromInteger(priceItem.dynamic_tariff.unit_amount_gross).convertPrecision(precision).getAmount()
+          : undefined,
+        unit_amount_net_decimal: priceItem.dynamic_tariff.unit_amount_net
+          ? toDineroFromInteger(priceItem.dynamic_tariff.unit_amount_net).toUnit().toString()
+          : undefined,
+        unit_amount_gross_decimal: priceItem.dynamic_tariff.unit_amount_gross
+          ? toDineroFromInteger(priceItem.dynamic_tariff.unit_amount_gross).toUnit().toString()
+          : undefined,
+        markup_amount_net: priceItem.dynamic_tariff.markup_amount_net
+          ? toDineroFromInteger(priceItem.dynamic_tariff.markup_amount_net).convertPrecision(precision).getAmount()
+          : undefined,
+        markup_amount_net_decimal: priceItem.dynamic_tariff.markup_amount_net
+          ? toDineroFromInteger(priceItem.dynamic_tariff.markup_amount_net).toUnit().toString()
+          : undefined,
+        markup_amount_gross: priceItem.dynamic_tariff.markup_amount_gross
+          ? toDineroFromInteger(priceItem.dynamic_tariff.markup_amount_gross).convertPrecision(precision).getAmount()
+          : undefined,
+        markup_amount_gross_decimal: priceItem.dynamic_tariff.markup_amount_gross
+          ? toDineroFromInteger(priceItem.dynamic_tariff.markup_amount_gross).toUnit().toString()
+          : undefined,
+      },
+    }),
 });
 
 const isPricingDetails = (details: unknown): details is PricingDetails =>

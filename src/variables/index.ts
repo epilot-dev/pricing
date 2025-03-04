@@ -1,7 +1,5 @@
 import {
   Coupon,
-  Currency,
-  Price,
   PriceItem,
   PriceItems,
   Product,

@@ -266,7 +266,7 @@ export const getUnitAmount = (
 
   return safeFormatAmount({
     amount: amount || 0,
-    currency: item.currency,
+    currency: item.currency as any,
     locale: i18n.language,
   });
 };

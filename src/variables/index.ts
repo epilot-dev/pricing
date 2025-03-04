@@ -43,7 +43,8 @@ export const RECURRENCE_ORDERING = [
   'yearly',
 ] as const;
 
-export const processOrderTableData = async (c: any, data: any, i18n: any) => {
+export const processOrderTableData = (c: any, data: any, i18n: any) => {
+  console.log('RUNNING LOCALLY');
   /* Utility to avoid having to call safeFormatAmount and pass extensive options object */
   const formatAmount = (amount: number) => safeFormatAmount({ amount, currency: data.currency, locale: i18n.language });
 

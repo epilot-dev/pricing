@@ -54,7 +54,6 @@ interface I18n {
 }
 
 export const processOrderTableData = (data: EntityItem, i18n: I18n) => {
-  console.log('RUNNING LOCALLY');
   /* Utility to avoid having to call safeFormatAmount and pass extensive options object */
   const formatAmount = (amount: number) => safeFormatAmount({ amount, currency: data.currency, locale: i18n.language });
 

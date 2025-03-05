@@ -1,4 +1,6 @@
+import { Components } from '@epilot/entity-client';
 import {
+  CompositePriceItem,
   Coupon,
   PriceItem,
   PriceItems,
@@ -7,6 +9,7 @@ import {
   RecurrenceAmountWithTax,
   RedeemedPromo,
 } from '@epilot/pricing-client';
+import { Currency } from 'dinero.js';
 import { cloneDeep } from 'lodash';
 
 import { formatPriceUnit } from '../formatters';
@@ -43,7 +46,14 @@ export const RECURRENCE_ORDERING = [
   'yearly',
 ] as const;
 
-export const processOrderTableData = (c: any, data: any, i18n: any) => {
+export type EntityItem = Components.Schemas.EntityItem;
+
+interface I18n {
+  t: (key: string, options?: any) => string;
+  language: string;
+}
+
+export const processOrderTableData = (data: EntityItem, i18n: I18n) => {
   console.log('RUNNING LOCALLY');
   /* Utility to avoid having to call safeFormatAmount and pass extensive options object */
   const formatAmount = (amount: number) => safeFormatAmount({ amount, currency: data.currency, locale: i18n.language });
@@ -91,15 +101,14 @@ export const processOrderTableData = (c: any, data: any, i18n: any) => {
        * Should double check that doing so doesn't break anything
        */
       Object.assign(
-        recurrence as any,
-        computeRecurrenceAmounts(recurrence as any, { currency: data.currency, locale: i18n.language }),
+        recurrence,
+        computeRecurrenceAmounts(recurrence, { currency: data.currency, locale: i18n.language }),
       );
 
       const recurrencesByTax =
         (data.total_details.breakdown.recurrencesByTax as Array<RecurrenceAmountWithTax> | undefined)?.filter?.(
           (recurrenceByTax) =>
-            recurrenceByTax.type === (recurrence as any).type &&
-            recurrenceByTax.billing_period === (recurrence as any).billing_period,
+            recurrenceByTax.type === recurrence.type && recurrenceByTax.billing_period === recurrence.billing_period,
         ) ?? [];
 
       const shouldShowDetailedRecurrence = recurrencesByTax.length > 1;
@@ -187,23 +196,29 @@ export const processOrderTableData = (c: any, data: any, i18n: any) => {
      * Line items arrive with 1 price per line, regardless of whether they're simple or composite.
      * We need to "unwrap" price components into individual line items.
      */
-    const flattenLineItems = (data.line_items as Array<any>).flatMap<PriceItems[number]>((item, itemIndex) => {
+    const flattenLineItems = (
+      data.line_items as Array<(PriceItem | CompositePriceItem) & { _position: string }>
+    ).flatMap<PriceItems[number]>((item, itemIndex) => {
       const parentPosition = itemIndex + 1;
       item._position = fillPostSpaces(`${parentPosition}.`, 4);
-      if (Array.isArray(item.tiers_details)) {
+      if (!isCompositePrice(item) && Array.isArray(item.tiers_details)) {
         item.tiers_details = (item.tiers_details as Array<any>).map((tierDetail, tierDetailIndex) => ({
           ...tierDetail,
           _position: fillPostSpaces(`${parentPosition}.${tierDetailIndex + 1}.`, 6),
         }));
       }
 
-      let componentItems = [] as any[];
+      let componentItems = [] as any;
 
-      if (item.is_composite_price || item._price?.is_composite_price) {
+      if (isCompositePrice(item)) {
         item.is_composite_price = true;
         if (Array.isArray(item.item_components)) {
           const clonedItem = cloneDeep(item);
-          componentItems = (item.item_components as Array<any>).flatMap((component, componentIndex) => {
+          componentItems = (
+            item.item_components as Array<
+              PriceItem & { _position: string; is_composite_component: boolean; parent_item: CompositePriceItem }
+            >
+          ).flatMap((component, componentIndex) => {
             const childPosition = `${parentPosition}.${componentIndex + 1}`;
 
             component._position = fillPostSpaces(`${childPosition}.`, 6);
@@ -227,10 +242,11 @@ export const processOrderTableData = (c: any, data: any, i18n: any) => {
       }
 
       const couponItems = ((item._coupons as Array<Coupon> | undefined) ?? [])?.map<PriceItem & { coupon: Coupon }>(
-        (coupon) => ({
-          ...item,
-          coupon,
-        }),
+        (coupon) =>
+          ({
+            ...item,
+            coupon,
+          } as any),
       );
 
       console.log({ couponItems });
@@ -366,7 +382,7 @@ export const processOrderTableData = (c: any, data: any, i18n: any) => {
         // Composite product
         if (item.is_composite_price) {
           if (Array.isArray(item.total_details?.breakdown?.recurrences)) {
-            recurrences = processRecurrences(item, data as { currency?: any }, i18n);
+            recurrences = processRecurrences(item, data as { currency?: Currency }, i18n);
           }
 
           amountTotalFormatted = '';
@@ -378,7 +394,7 @@ export const processOrderTableData = (c: any, data: any, i18n: any) => {
       } else {
         if (Array.isArray(item.total_details?.breakdown?.recurrences) && displayInJourneys !== 'show_as_on_request') {
           const prefix = i18n.t(displayInJourneys!, EMPTY_VALUE_PLACEHOLDER);
-          recurrences = processRecurrences(item, data as { currency?: any }, i18n, prefix);
+          recurrences = processRecurrences(item, data as { currency?: Currency }, i18n, prefix);
         }
 
         unitAmountNetFormatted = getHiddenAmountString(i18n.t, displayInJourneys, unitAmountNetFormatted);
@@ -403,7 +419,7 @@ export const processOrderTableData = (c: any, data: any, i18n: any) => {
        */
       if (item._price?.variable_price) {
         const itemPriceMapping = (item.parent_item ?? item).price_mappings?.find(
-          (mapping: any) => mapping.price_id === item.price_id,
+          (mapping: { price_id: string }) => mapping.price_id === item.price_id,
         );
         if (item._price?.type !== 'one_time') {
           item.quantity_billing_period = itemPriceMapping?.frequency_unit
@@ -610,7 +626,7 @@ export const processOrderTableData = (c: any, data: any, i18n: any) => {
 
 const getFormattedCouponDescription = (
   { type, percentage_value, fixed_value, fixed_value_currency, category, cashback_period }: Coupon,
-  i18n: any,
+  i18n: I18n,
   redeemedPromo?: RedeemedPromo,
 ) => {
   const value =
@@ -618,7 +634,7 @@ const getFormattedCouponDescription = (
       ? formatPercentage(percentage_value!)
       : safeFormatAmount({
           amount: fixed_value!,
-          currency: fixed_value_currency as any,
+          currency: fixed_value_currency as Currency,
           locale: i18n.language,
         });
 

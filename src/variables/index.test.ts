@@ -13,6 +13,8 @@ import {
 } from './fixtures/orders';
 
 import { processOrderTableData } from '.';
+import { PriceItem } from '@epilot/pricing-client';
+import { getQuantity } from './utils';
 
 const mockI18n = {
   t: (key: string, fallback: string) => key || fallback,
@@ -120,7 +122,6 @@ describe('processOrderTableData', () => {
   });
 
   it('return original data/skip processing if line items are empty', async () => {
-    //given orderEntityDataWithEmptyLineItems
 
     //when
     const data = await processOrderTableData(orderEntityDataWithEmptyLineItems as any, mockI18n);
@@ -138,78 +139,78 @@ describe('processOrderTableData', () => {
   });
 });
 
-// describe('getQuantity', () => {
-//   const baseVariableItem = {
-//     price_id: 'price_id',
-//     _price: {
-//       variable_price: true,
-//     },
-//   };
+describe('getQuantity', () => {
+  const baseVariableItem = {
+    price_id: 'price_id',
+    _price: {
+      variable_price: true,
+    },
+  };
 
-//   const baseNotVariableItem = {
-//     price_id: 'price_id',
-//     _price: {
-//       variable_price: false,
-//     },
-//   };
+  const baseNotVariableItem = {
+    price_id: 'price_id',
+    _price: {
+      variable_price: false,
+    },
+  };
 
-//   const baseMappings = [{ price_id: 'price_id', value: 75 }];
-//   const zeroBaseMappings = [{ price_id: 'price_id', value: 0 }];
-//   const wrongBaseMappings = [{ price_id: 'price_id_1', value: 75 }];
+  const baseMappings = [{ price_id: 'price_id', value: 75 }];
+  const zeroBaseMappings = [{ price_id: 'price_id', value: 0 }];
+  const wrongBaseMappings = [{ price_id: 'price_id_1', value: 75 }];
 
-//   it.each`
-//     baseItem               | parentItem             | quantity     | parentQuantity | mappings             | expected
-//     ${baseNotVariableItem} | ${undefined}           | ${1}         | ${1}           | ${undefined}         | ${'1'}
-//     ${baseNotVariableItem} | ${undefined}           | ${2}         | ${2}           | ${undefined}         | ${'2'}
-//     ${baseNotVariableItem} | ${baseVariableItem}    | ${1}         | ${1}           | ${undefined}         | ${'1'}
-//     ${baseNotVariableItem} | ${baseVariableItem}    | ${2}         | ${2}           | ${undefined}         | ${'2 x 2'}
-//     ${baseVariableItem}    | ${undefined}           | ${1}         | ${1}           | ${undefined}         | ${'---'}
-//     ${baseVariableItem}    | ${undefined}           | ${2}         | ${2}           | ${undefined}         | ${'2 x ---'}
-//     ${baseVariableItem}    | ${undefined}           | ${1}         | ${1}           | ${baseMappings}      | ${'75 '}
-//     ${baseVariableItem}    | ${undefined}           | ${2}         | ${2}           | ${baseMappings}      | ${'2 x 75 '}
-//     ${baseVariableItem}    | ${baseVariableItem}    | ${1}         | ${1}           | ${undefined}         | ${'---'}
-//     ${baseVariableItem}    | ${baseVariableItem}    | ${2}         | ${2}           | ${undefined}         | ${'2 x ---'}
-//     ${baseVariableItem}    | ${baseVariableItem}    | ${1}         | ${1}           | ${baseMappings}      | ${'75 '}
-//     ${baseVariableItem}    | ${baseVariableItem}    | ${2}         | ${2}           | ${baseMappings}      | ${'2 x 75 '}
-//     ${baseVariableItem}    | ${baseVariableItem}    | ${2}         | ${2}           | ${wrongBaseMappings} | ${'2 x ---'}
-//     ${baseVariableItem}    | ${baseVariableItem}    | ${2}         | ${2}           | ${zeroBaseMappings}  | ${'2 x 0 '}
-//     ${baseVariableItem}    | ${baseVariableItem}    | ${undefined} | ${2}           | ${baseMappings}      | ${'2 x 75 '}
-//     ${baseNotVariableItem} | ${baseNotVariableItem} | ${6}         | ${2}           | ${undefined}         | ${'2 x 6'}
-//   `(
-//     'returns $expected for the inputs',
-//     async ({
-//       baseItem,
-//       parentItem,
-//       quantity,
-//       parentQuantity,
-//       mappings,
-//       expected,
-//     }: {
-//       baseItem: PriceItem;
-//       parentItem: PriceItem | undefined;
-//       quantity: number;
-//       parentQuantity: number;
-//       mappings: any;
-//       expected: string;
-//     }) => {
-//       const mappedParentItem = parentItem && {
-//         ...parentItem,
-//         ...(parentQuantity && { quantity: parentQuantity }),
-//         ...(mappings && { price_mappings: mappings }),
-//       };
+  it.each`
+    baseItem               | parentItem             | quantity     | parentQuantity | mappings             | expected
+    ${baseNotVariableItem} | ${undefined}           | ${1}         | ${1}           | ${undefined}         | ${'1'}
+    ${baseNotVariableItem} | ${undefined}           | ${2}         | ${2}           | ${undefined}         | ${'2'}
+    ${baseNotVariableItem} | ${baseVariableItem}    | ${1}         | ${1}           | ${undefined}         | ${'1'}
+    ${baseNotVariableItem} | ${baseVariableItem}    | ${2}         | ${2}           | ${undefined}         | ${'2 x 2'}
+    ${baseVariableItem}    | ${undefined}           | ${1}         | ${1}           | ${undefined}         | ${'---'}
+    ${baseVariableItem}    | ${undefined}           | ${2}         | ${2}           | ${undefined}         | ${'2 x ---'}
+    ${baseVariableItem}    | ${undefined}           | ${1}         | ${1}           | ${baseMappings}      | ${'75 '}
+    ${baseVariableItem}    | ${undefined}           | ${2}         | ${2}           | ${baseMappings}      | ${'2 x 75 '}
+    ${baseVariableItem}    | ${baseVariableItem}    | ${1}         | ${1}           | ${undefined}         | ${'---'}
+    ${baseVariableItem}    | ${baseVariableItem}    | ${2}         | ${2}           | ${undefined}         | ${'2 x ---'}
+    ${baseVariableItem}    | ${baseVariableItem}    | ${1}         | ${1}           | ${baseMappings}      | ${'75 '}
+    ${baseVariableItem}    | ${baseVariableItem}    | ${2}         | ${2}           | ${baseMappings}      | ${'2 x 75 '}
+    ${baseVariableItem}    | ${baseVariableItem}    | ${2}         | ${2}           | ${wrongBaseMappings} | ${'2 x ---'}
+    ${baseVariableItem}    | ${baseVariableItem}    | ${2}         | ${2}           | ${zeroBaseMappings}  | ${'2 x 0 '}
+    ${baseVariableItem}    | ${baseVariableItem}    | ${undefined} | ${2}           | ${baseMappings}      | ${'2 x 75 '}
+    ${baseNotVariableItem} | ${baseNotVariableItem} | ${6}         | ${2}           | ${undefined}         | ${'2 x 6'}
+  `(
+    'returns $expected for the inputs',
+    async ({
+      baseItem,
+      parentItem,
+      quantity,
+      parentQuantity,
+      mappings,
+      expected,
+    }: {
+      baseItem: PriceItem;
+      parentItem: PriceItem | undefined;
+      quantity: number;
+      parentQuantity: number;
+      mappings: any;
+      expected: string;
+    }) => {
+      const mappedParentItem = parentItem && {
+        ...parentItem,
+        ...(parentQuantity && { quantity: parentQuantity }),
+        ...(mappings && { price_mappings: mappings }),
+      };
 
-//       const item = {
-//         ...baseItem,
-//         ...(quantity && { quantity }),
-//         ...(mappings && { price_mappings: mappings }),
-//       };
+      const item = {
+        ...baseItem,
+        ...(quantity && { quantity }),
+        ...(mappings && { price_mappings: mappings }),
+      };
 
-//       const result = getQuantity(item, mappedParentItem);
+      const result = getQuantity(item, mappedParentItem);
 
-//       expect(result).toBe(expected);
-//     },
-//   );
-// });
+      expect(result).toBe(expected);
+    },
+  );
+});
 
 // describe('unitAmountApproved', () => {
 //   it('should return true when item._price.price_display_in_journeys is not "show_as_on_request"', async () => {

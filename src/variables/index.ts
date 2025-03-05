@@ -32,7 +32,7 @@ import {
   safeFormatAmount,
   unitAmountApproved,
   withValidLineItem,
-} from './formatters';
+} from './utils';
 
 export const RECURRENCE_ORDERING = [
   'one_time',

@@ -13,8 +13,8 @@ import {
 } from './fixtures/orders';
 
 import { processOrderTableData } from '.';
-import { PriceItem } from '@epilot/pricing-client';
-import { getQuantity } from './utils';
+import { CompositePrice, PriceItem } from '@epilot/pricing-client';
+import { getHiddenAmountString, getPriceDisplayInJourneys, getQuantity, unitAmountApproved } from './utils';
 
 const mockI18n = {
   t: (key: string, fallback: string) => key || fallback,
@@ -212,167 +212,167 @@ describe('getQuantity', () => {
   );
 });
 
-// describe('unitAmountApproved', () => {
-//   it('should return true when item._price.price_display_in_journeys is not "show_as_on_request"', async () => {
-//     const item = {
-//       _price: {
-//         price_display_in_journeys: 'show_price',
-//       },
-//     };
-//     expect(unitAmountApproved(item as PriceItemWithParent)).toBe(true);
-//   });
+describe('unitAmountApproved', () => {
+  it('should return true when item._price.price_display_in_journeys is not "show_as_on_request"', async () => {
+    const item = {
+      _price: {
+        price_display_in_journeys: 'show_price',
+      },
+    };
+    expect(unitAmountApproved(item as any)).toBe(true);
+  });
 
-//   it('should return true when item.is_composite_price is true and item_components has "show_price" price_display_in_journeys', async () => {
-//     const item = {
-//       is_composite_price: true,
-//       item_components: [
-//         {
-//           _price: {
-//             price_display_in_journeys: 'show_price',
-//           },
-//         },
-//         {
-//           _price: {
-//             price_display_in_journeys: 'show_price',
-//           },
-//         },
-//       ],
-//     };
-//     expect(unitAmountApproved(item as PriceItemWithParent)).toBe(true);
-//   });
+  it('should return true when item.is_composite_price is true and item_components has "show_price" price_display_in_journeys', async () => {
+    const item = {
+      is_composite_price: true,
+      item_components: [
+        {
+          _price: {
+            price_display_in_journeys: 'show_price',
+          },
+        },
+        {
+          _price: {
+            price_display_in_journeys: 'show_price',
+          },
+        },
+      ],
+    };
+    expect(unitAmountApproved(item as any)).toBe(true);
+  });
 
-//   it('should return true when item.on_request_approved is true', async () => {
-//     const item = {
-//       on_request_approved: true,
-//     };
-//     expect(unitAmountApproved(item as PriceItemWithParent)).toBe(true);
-//   });
+  it('should return true when item.on_request_approved is true', async () => {
+    const item = {
+      on_request_approved: true,
+    };
+    expect(unitAmountApproved(item as any)).toBe(true);
+  });
 
-//   it('should return true when item.parent_item.on_request_approved is true', async () => {
-//     const item = {
-//       parent_item: {
-//         on_request_approved: true,
-//       },
-//     };
-//     expect(unitAmountApproved(item as PriceItemWithParent)).toBe(true);
-//   });
+  it('should return true when item.parent_item.on_request_approved is true', async () => {
+    const item = {
+      parent_item: {
+        on_request_approved: true,
+      },
+    };
+    expect(unitAmountApproved(item as any)).toBe(true);
+  });
 
-//   it('should return false when all conditions are false', async () => {
-//     const item = {
-//       _price: {
-//         price_display_in_journeys: 'show_as_on_request',
-//       },
-//       is_composite_price: true,
-//       item_components: [
-//         {
-//           _price: {
-//             price_display_in_journeys: 'show_as_on_request',
-//           },
-//         },
-//       ],
-//       on_request_approved: false,
-//       parent_item: {
-//         on_request_approved: false,
-//       },
-//     };
-//     expect(unitAmountApproved(item as PriceItemWithParent)).toBe(false);
-//   });
-// });
+  it('should return false when all conditions are false', async () => {
+    const item = {
+      _price: {
+        price_display_in_journeys: 'show_as_on_request',
+      },
+      is_composite_price: true,
+      item_components: [
+        {
+          _price: {
+            price_display_in_journeys: 'show_as_on_request',
+          },
+        },
+      ],
+      on_request_approved: false,
+      parent_item: {
+        on_request_approved: false,
+      },
+    };
+    expect(unitAmountApproved(item as any)).toBe(false);
+  });
+});
 
-// describe('getHiddenAmountString', () => {
-//   it('should return "---" for a composite price with no matching component', async () => {
-//     const priceItem = {
-//       _price: {
-//         price_display_in_journeys: 'show_as_on_request',
-//       },
-//       item_components: [
-//         {
-//           _price: {
-//             price_display_in_journeys: 'other_value',
-//           },
-//         },
-//       ],
-//     } as CompositePrice;
+describe('getHiddenAmountString', () => {
+  it('should return "---" for a composite price with no matching component', async () => {
+    const priceItem = {
+      _price: {
+        price_display_in_journeys: 'show_as_on_request',
+      },
+      item_components: [
+        {
+          _price: {
+            price_display_in_journeys: 'other_value',
+          },
+        },
+      ],
+    } as CompositePrice;
 
-//     const result = getHiddenAmountString(mockI18n.t, getPriceDisplayInJourneys(priceItem));
+    const result = getHiddenAmountString(mockI18n.t, getPriceDisplayInJourneys(priceItem));
 
-//     expect(result).toBe('show_as_on_request');
-//   });
+    expect(result).toBe('show_as_on_request');
+  });
 
-//   it('should return the translation for a composite price', async () => {
-//     const priceItem = {
-//       _price: {
-//         price_display_in_journeys: 'show_as_on_request',
-//       },
-//       item_components: [
-//         {
-//           _price: {
-//             price_display_in_journeys: 'other_value',
-//           },
-//         },
-//         {
-//           _price: {
-//             price_display_in_journeys: 'show_as_starting_price',
-//           },
-//         },
-//       ],
-//     } as CompositePrice;
+  it('should return the translation for a composite price', async () => {
+    const priceItem = {
+      _price: {
+        price_display_in_journeys: 'show_as_on_request',
+      },
+      item_components: [
+        {
+          _price: {
+            price_display_in_journeys: 'other_value',
+          },
+        },
+        {
+          _price: {
+            price_display_in_journeys: 'show_as_starting_price',
+          },
+        },
+      ],
+    } as CompositePrice;
 
-//     const result = getHiddenAmountString(mockI18n.t, getPriceDisplayInJourneys(priceItem));
+    const result = getHiddenAmountString(mockI18n.t, getPriceDisplayInJourneys(priceItem));
 
-//     expect(result).toBe('show_as_on_request');
-//   });
+    expect(result).toBe('show_as_on_request');
+  });
 
-//   it('should return the translation for a non-composite price with a parentItem', async () => {
-//     const priceItem = {
-//       _price: {
-//         price_display_in_journeys: 'other_value',
-//       },
-//       parent_item: {
-//         _price: {
-//           price_display_in_journeys: 'show_as_on_request',
-//         },
-//       },
-//     };
+  it('should return the translation for a non-composite price with a parentItem', async () => {
+    const priceItem = {
+      _price: {
+        price_display_in_journeys: 'other_value',
+      },
+      parent_item: {
+        _price: {
+          price_display_in_journeys: 'show_as_on_request',
+        },
+      },
+    };
 
-//     const result = getHiddenAmountString(mockI18n.t, getPriceDisplayInJourneys(priceItem));
+    const result = getHiddenAmountString(mockI18n.t, getPriceDisplayInJourneys(priceItem));
 
-//     expect(result).toBe('show_as_on_request');
-//   });
+    expect(result).toBe('show_as_on_request');
+  });
 
-//   it('should return the translation for a non-composite price with NO parentItem', async () => {
-//     const priceItem = {
-//       _price: {
-//         price_display_in_journeys: 'show_as_on_request',
-//       },
-//     };
+  it('should return the translation for a non-composite price with NO parentItem', async () => {
+    const priceItem = {
+      _price: {
+        price_display_in_journeys: 'show_as_on_request',
+      },
+    };
 
-//     const result = getHiddenAmountString(mockI18n.t, getPriceDisplayInJourneys(priceItem));
-//     const resultWithAmount = getHiddenAmountString(mockI18n.t, getPriceDisplayInJourneys(priceItem), '€123.45');
+    const result = getHiddenAmountString(mockI18n.t, getPriceDisplayInJourneys(priceItem));
+    const resultWithAmount = getHiddenAmountString(mockI18n.t, getPriceDisplayInJourneys(priceItem), '€123.45');
 
-//     expect(result).toBe('show_as_on_request');
-//     expect(resultWithAmount).toBe('show_as_on_request');
-//   });
+    expect(result).toBe('show_as_on_request');
+    expect(resultWithAmount).toBe('show_as_on_request');
+  });
 
-//   it('should return the correct translations when price is starting at', async () => {
-//     const priceItem = {
-//       _price: {
-//         price_display_in_journeys: 'show_as_starting_price',
-//       },
-//     };
+  it('should return the correct translations when price is starting at', async () => {
+    const priceItem = {
+      _price: {
+        price_display_in_journeys: 'show_as_starting_price',
+      },
+    };
 
-//     const resultWithFormattedString = getHiddenAmountString(
-//       mockI18n.t,
-//       getPriceDisplayInJourneys(priceItem),
-//       '€123.45',
-//     );
-//     const resultWithZeroNumber = getHiddenAmountString(mockI18n.t, getPriceDisplayInJourneys(priceItem), 0);
-//     const resultWithNumber = getHiddenAmountString(mockI18n.t, getPriceDisplayInJourneys(priceItem), 123);
-//     const resultWithUndefined = getHiddenAmountString(mockI18n.t, getPriceDisplayInJourneys(priceItem), undefined);
+    const resultWithFormattedString = getHiddenAmountString(
+      mockI18n.t,
+      getPriceDisplayInJourneys(priceItem),
+      '€123.45',
+    );
+    const resultWithZeroNumber = getHiddenAmountString(mockI18n.t, getPriceDisplayInJourneys(priceItem), 0);
+    const resultWithNumber = getHiddenAmountString(mockI18n.t, getPriceDisplayInJourneys(priceItem), 123);
+    const resultWithUndefined = getHiddenAmountString(mockI18n.t, getPriceDisplayInJourneys(priceItem), undefined);
 
-//     expect(resultWithFormattedString).toBe('show_as_starting_price €123.45');
-//     expect(resultWithZeroNumber).toBe('show_as_starting_price 0');
-//     expect(resultWithNumber).toBe('show_as_starting_price 123');
-//     expect(resultWithUndefined).toBe('show_as_starting_price');
-//   });
-// });
+    expect(resultWithFormattedString).toBe('show_as_starting_price €123.45');
+    expect(resultWithZeroNumber).toBe('show_as_starting_price 0');
+    expect(resultWithNumber).toBe('show_as_starting_price 123');
+    expect(resultWithUndefined).toBe('show_as_starting_price');
+  });
+});

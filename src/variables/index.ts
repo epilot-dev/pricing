@@ -248,8 +248,6 @@ export const processOrderTableData = (data: EntityItem, i18n: I18n) => {
           } as any),
       );
 
-      console.log({ couponItems });
-
       return [item, ...componentItems, ...couponItems];
     });
 

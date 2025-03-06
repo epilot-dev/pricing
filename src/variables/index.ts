@@ -1,4 +1,3 @@
-import { Components } from '@epilot/entity-client';
 import {
   Components as PricingComponents,
   CompositePriceItem,
@@ -47,7 +46,6 @@ export const RECURRENCE_ORDERING = [
   'yearly',
 ] as const;
 
-export type EntityItem = Components.Schemas.EntityItem;
 export type Order = PricingComponents.Schemas.Order;
 
 interface I18n {

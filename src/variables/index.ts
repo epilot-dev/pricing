@@ -8,6 +8,7 @@ import {
   RecurrenceAmount,
   RecurrenceAmountWithTax,
   RedeemedPromo,
+  BillingPeriod,
 } from '@epilot/pricing-client';
 import { Currency } from 'dinero.js';
 import { cloneDeep } from 'lodash';
@@ -15,6 +16,7 @@ import { cloneDeep } from 'lodash';
 import { formatPriceUnit } from '../formatters';
 import { getRecurrencesWithEstimatedPrices, PricingModel } from '../pricing';
 
+import { OrderTableData, RecurrenceByBillingPeriod } from './types';
 import {
   computeRecurrenceAmounts,
   EMPTY_VALUE_PLACEHOLDER,
@@ -54,11 +56,14 @@ interface I18n {
 }
 
 export const processOrderTableData = (order: Order, i18n: I18n) => {
-  const data = {
+  const data: OrderTableData = {
     ...order,
-  } as any;
+    products: [],
+    total_details: (order.total_details || {}) as OrderTableData['total_details'],
+  };
   /* Utility to avoid having to call safeFormatAmount and pass extensive options object */
-  const formatAmount = (amount: number) => safeFormatAmount({ amount, currency: data.currency, locale: i18n.language });
+  const formatAmount = (amount: number) =>
+    safeFormatAmount({ amount, currency: data.currency as Currency, locale: i18n.language });
 
   if (data.total_details) {
     /* Create item for each cashback period */
@@ -79,8 +84,7 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
   /**
    * @todo Type RecurrenceAmount is missing amount_tax_decimal in spec
    */
-  const recurrences: Array<RecurrenceAmount & { amount_tax_decimal?: string }> | undefined =
-    data.total_details?.breakdown?.recurrences;
+  const recurrences = data.total_details?.breakdown?.recurrences;
   const estimatedIntervals = getRecurrencesWithEstimatedPrices(data.line_items);
 
   if (recurrences?.length) {
@@ -90,13 +94,13 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
       ),
     ).filter(Boolean);
 
-    data.total_details.breakdown.recurrences = sortedRecurrences;
+    data.total_details.breakdown.recurrences = sortedRecurrences as RecurrenceAmount[];
     data.total_details.recurrences = [];
     data.total_details.recurrencesByTax = {};
 
     // build prices based on billing period for custom variables
     for (const value of sortedRecurrences) {
-      const recurrence = value || ({} as RecurrenceAmount & { amount_tax_decimal?: string });
+      const recurrence = value || ({} as RecurrenceAmount);
       /**
        * @todo Instead of mutating recurrence,
        * just compute properties when constructing recurrenceByBillingPeriodTotal
@@ -104,7 +108,7 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
        */
       Object.assign(
         recurrence,
-        computeRecurrenceAmounts(recurrence, { currency: data.currency, locale: i18n.language }),
+        computeRecurrenceAmounts(recurrence, { currency: data.currency as Currency, locale: i18n.language }),
       );
 
       const recurrencesByTax =
@@ -120,10 +124,10 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
       const recurrenceByBillingPeriodTotal = {
         ...(shouldShowDetailedRecurrence && { totalLabel: i18n.t('table_order.gross_total') }),
         billing_period: estimatedIntervals[interval]
-          ? `${i18n.t('table_order.estimated', {
+          ? (`${i18n.t('table_order.estimated', {
               interval: i18n.t(`table_order.recurrences.billing_period.${interval}`),
-            })}`
-          : `${i18n.t(`table_order.recurrences.billing_period.${interval}`)}`,
+            })}` as BillingPeriod)
+          : (`${i18n.t(`table_order.recurrences.billing_period.${interval}`)}` as BillingPeriod),
         /**
          * @todo Instead of setting every property just spread the recurrence object
          */
@@ -134,18 +138,18 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
         amount_tax: recurrence.amount_tax,
         amount_tax_decimal: recurrence.amount_tax_decimal,
         full_amount_tax: i18n.t('table_order.incl_vat').replace('!!amount!!', (recurrence.amount_tax || '').toString()),
-        type: recurrence.type,
-      };
+        type: recurrence.type || 'one_time',
+      } as RecurrenceByBillingPeriod;
 
       // This is required for some customers custom variables. Do not remove.
-      data.total_details[interval] = recurrenceByBillingPeriodTotal;
+      data.total_details[interval] = recurrenceByBillingPeriodTotal as RecurrenceAmount;
 
       /* If recurrence has a discount associated, push another line containing the discount details */
       if ('discount_amount' in recurrence && typeof recurrence.discount_amount === 'number') {
         data.total_details.recurrences.push({
           is_discount_recurrence: true,
-          amount_total: formatAmount(-recurrence.discount_amount),
-        });
+          amount_total: formatAmount(-recurrence.discount_amount) as string,
+        } as RecurrenceByBillingPeriod);
       }
 
       if (shouldShowDetailedRecurrence && recurrencesByTax.length) {
@@ -157,7 +161,7 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
            */
           Object.assign(
             recurrenceByTax,
-            computeRecurrenceAmounts(recurrenceByTax, { currency: data.currency, locale: i18n.language }),
+            computeRecurrenceAmounts(recurrenceByTax, { currency: data.currency as Currency, locale: i18n.language }),
           );
         }
         const recurrencesByBillingPeriodWithTaxes = recurrencesByTax.map((recurrenceByTax) => ({
@@ -169,15 +173,15 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
 
         // This is required for some customers custom variables. Do not remove.
         recurrencesByBillingPeriodWithTaxes.forEach((recurrenceByTax) => {
-          data.total_details.recurrencesByTax[
-            `${getRecurrenceInterval(recurrenceByTax as Pick<RecurrenceAmount, 'billing_period' | 'type'>)}-${
-              recurrenceByTax.tax
-            }`
-          ] = recurrenceByTax;
+          const index = `${getRecurrenceInterval(
+            recurrenceByTax as Pick<RecurrenceAmount, 'billing_period' | 'type'>,
+          )}-${recurrenceByTax.tax}`;
+          data.total_details.recurrencesByTax[index] = recurrenceByTax as unknown as RecurrenceAmountWithTax;
         });
+
         data.total_details.recurrences.push({
           ...recurrenceByBillingPeriodTotal,
-          recurrencesByTax: recurrencesByBillingPeriodWithTaxes,
+          recurrencesByTax: recurrencesByBillingPeriodWithTaxes as unknown as RecurrenceAmountWithTax,
         });
       } else {
         data.total_details.recurrences.push(recurrenceByBillingPeriodTotal);
@@ -617,7 +621,7 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
         amount: data.total_details.amount_tax || 0,
         currency: data.currency,
         locale: i18n.language,
-      });
+      }) as never;
     }
   }
 

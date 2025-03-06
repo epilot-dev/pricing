@@ -27,7 +27,7 @@ beforeEach(() => {
 
 describe('processOrderTableData', () => {
   it('returns correctly', async () => {
-    const result = await processOrderTableData(orderWithCompositeItem, mockI18n);
+    const result = await processOrderTableData(orderWithCompositeItem as any, mockI18n);
     expect(result.products.length).toBe(12);
     expect(result.products[0]).toEqual(
       expect.objectContaining({
@@ -101,7 +101,7 @@ describe('processOrderTableData', () => {
   });
 
   it('returns correctly the tax details', async () => {
-    const result = await processOrderTableData(orderWithMultiplePrices, mockI18n);
+    const result = await processOrderTableData(orderWithMultiplePrices as any, mockI18n);
     expect(result.total_details.recurrences).toEqual(orderWithMultiplePricesResults.total_details.recurrences);
   });
 
@@ -114,7 +114,7 @@ describe('processOrderTableData', () => {
     expect(dataWithFlattenLineItems1.products[1].price).toEqual(expect.objectContaining(priceWithCorrectQuantity));
 
     //when
-    const dataWithFlattenLineItems2 = await processOrderTableData(dataWithFlattenLineItems1, mockI18n);
+    const dataWithFlattenLineItems2 = await processOrderTableData(dataWithFlattenLineItems1 as any, mockI18n);
 
     //then
     expect(dataWithFlattenLineItems2.products.length).toBe(12);

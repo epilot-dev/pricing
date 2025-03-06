@@ -1,5 +1,6 @@
 import { Components } from '@epilot/entity-client';
 import {
+  Components as PricingComponents,
   CompositePriceItem,
   Coupon,
   PriceItem,
@@ -47,13 +48,17 @@ export const RECURRENCE_ORDERING = [
 ] as const;
 
 export type EntityItem = Components.Schemas.EntityItem;
+export type Order = PricingComponents.Schemas.Order;
 
 interface I18n {
   t: (key: string, options?: any) => string;
   language: string;
 }
 
-export const processOrderTableData = (data: EntityItem, i18n: I18n) => {
+export const processOrderTableData = (order: Order, i18n: I18n) => {
+  const data = {
+    ...order,
+  } as any;
   /* Utility to avoid having to call safeFormatAmount and pass extensive options object */
   const formatAmount = (amount: number) => safeFormatAmount({ amount, currency: data.currency, locale: i18n.language });
 

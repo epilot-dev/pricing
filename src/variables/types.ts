@@ -78,7 +78,7 @@ interface Cashback {
   amount: string | number;
 }
 
-interface Breakdown {
+export interface Breakdown {
   recurrences?: RecurrenceAmount[];
 }
 

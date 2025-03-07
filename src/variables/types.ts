@@ -72,7 +72,7 @@ export interface VariableFee extends BaseFee {
   unit_amount_decimal?: string;
 }
 
-interface Cashback {
+export interface Cashback {
   name: string;
   period: string;
   amount: string | number;

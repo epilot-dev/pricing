@@ -576,7 +576,7 @@ describe('computeAggregatedAndPriceTotals', () => {
     });
 
     it('should compute fixed amount cashbacks and totals correctly for recurring price', () => {
-      const result = computeAggregatedAndPriceTotals([samples.recurringPriceItemWithFixedAmountCashbackCoupon]);
+      const result = computeAggregatedAndPriceTotals([samples.recurringPriceItemWithFixedAmountCashbackCoupon as PriceItemDto]);
       expect(result).toEqual(results.computedRecurringPriceWithFixedAmountCashbackCoupon);
     });
 

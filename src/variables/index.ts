@@ -56,11 +56,10 @@ interface I18n {
 }
 
 export const processOrderTableData = (order: Order, i18n: I18n) => {
-  const data: OrderTableData = {
+  const data = {
     ...order,
-    products: [],
-    total_details: (order.total_details || {}) as OrderTableData['total_details'],
-  };
+    total_details: order.total_details as OrderTableData['total_details'],
+  } as OrderTableData;
   /* Utility to avoid having to call safeFormatAmount and pass extensive options object */
   const formatAmount = (amount: number) =>
     safeFormatAmount({ amount, currency: data.currency as Currency, locale: i18n.language });

@@ -57,3 +57,4 @@ export type {
   BillingPeriod,
 } from './types';
 export { isTaxInclusivePrice } from './utils';
+export { processOrderTableData } from './variables';

@@ -1,6 +1,6 @@
 {
   "name": "@epilot/pricing",
-  "version": "4.47.1",
+  "version": "4.48.0-1",
   "description": "Pricing Library",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -57,11 +57,11 @@
     "dinero.js": "^1.9.1"
   },
   "peerDependencies": {
-    "@epilot/pricing-client": "^3.46.0"
+    "@epilot/pricing-client": "^3.47.3"
   },
   "devDependencies": {
     "@epilot/eslint-config": "^1.2.10",
-    "@epilot/pricing-client": "^3.46.0",
+    "@epilot/pricing-client": "^3.47.3",
     "@types/dinero.js": "^1.9.0",
     "@types/jest": "^26.0.20",
     "concurrently": "^8.1.0",

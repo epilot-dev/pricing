@@ -142,8 +142,8 @@ export function getTierDescription(
   const formatOptions: Partial<Parameters<typeof formatAmountFromString>[0]> = {
     currency,
     locale,
-    useRealPrecision: tax ? false : true,
     enableSubunitDisplay,
+    precision: 2,
   };
 
   const unitAmountDecimal =

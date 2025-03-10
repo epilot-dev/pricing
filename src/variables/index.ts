@@ -11,7 +11,6 @@ import {
   BillingPeriod,
 } from '@epilot/pricing-client';
 import { Currency } from 'dinero.js';
-import { cloneDeep } from 'lodash';
 
 import { formatPriceUnit } from '../formatters';
 import { getRecurrencesWithEstimatedPrices, PricingModel } from '../pricing';
@@ -218,7 +217,7 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
       if (isCompositePrice(item)) {
         item.is_composite_price = true;
         if (Array.isArray(item.item_components)) {
-          const clonedItem = cloneDeep(item);
+          const clonedItem = clone(item);
           componentItems = (
             item.item_components as Array<
               PriceItem & { _position: string; is_composite_component: boolean; parent_item: CompositePriceItem }
@@ -657,3 +656,12 @@ const getFormattedCouponDescription = (
 };
 
 const formatPercentage = (formatPercentageValue: number | string) => `${formatPercentageValue}%`;
+
+// TODO: Use external cloning utils, check common utils used across consumers.
+const clone = <T>(item: T): T => {
+  if (!item) {
+    return item;
+  }
+
+  return JSON.parse(JSON.stringify(item));
+};

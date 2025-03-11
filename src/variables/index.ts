@@ -70,9 +70,13 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
     data.total_details.cashbacks = cashbacks?.map((cashback) => {
       const period = i18n.t(`table_order.cashback_period.${cashback.cashback_period}`, 'immediately');
 
-      const name = i18n.t('table_order.cashback', 'Cashback');
-
       const amount = formatAmount(cashback.amount_total ?? 0);
+
+      const name = i18n.t('table_order.cashback', {
+        value: '',
+        cashbackPeriodLabel: '',
+        redeemedPromo: '',
+      });
 
       return { name, period, amount };
     });

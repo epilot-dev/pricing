@@ -222,7 +222,7 @@ describe('getTierDescription', () => {
   const tierWithSubunitAmount = {
     up_to: 10,
     unit_amount: 5,
-    unit_amount_decimal: '0.05',
+    unit_amount_decimal: '0.05123412',
   };
 
   const tierWithUnitAmountZero = {
@@ -267,29 +267,30 @@ describe('getTierDescription', () => {
   };
 
   it.each`
-    pricingModel                    | tier                              | unit         | locale       | currency     | t    | showStartsAt | enableSubunitDisplay | shouldDisplayOnRequest | expected
-    ${PricingModel.tieredGraduated} | ${tierWithUnitAmount}             | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${'Starts at €10.00/kWh'}
-    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${'Starts at €10.00/kWh'}
-    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${false}     | ${false}             | ${undefined}           | ${'€10.00/kWh'}
-    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'kWh'}     | ${'de'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${'Starts at 10,00 €/kWh'}
-    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'kWh'}     | ${'en'}      | ${'USD'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${'Starts at $10.00/kWh'}
-    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${true}              | ${undefined}           | ${'Starts at €10.00/kWh'}
-    ${PricingModel.tieredVolume}    | ${tierWithSubunitAmount}          | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${true}              | ${undefined}           | ${'Starts at 5.00 cents/kWh'}
-    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${undefined} | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${'Starts at €10.00'}
-    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'unit'}    | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${'Starts at €10.00'}
-    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'kWh'}     | ${undefined} | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${'Starts at 10,00 €/kWh'}
-    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'kWh'}     | ${'en'}      | ${undefined} | ${t} | ${true}      | ${false}             | ${undefined}           | ${'Starts at €10.00/kWh'}
-    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${undefined} | ${false}             | ${undefined}           | ${'Starts at €10.00/kWh'}
-    ${PricingModel.tieredVolume}    | ${tierWithUnitAmountZero}         | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${'Starts at €0.00/kWh'}
-    ${PricingModel.tieredVolume}    | ${tierWithUnitAmountUndefined}    | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${undefined}
-    ${PricingModel.tieredVolume}    | ${tierInvalid}                    | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${undefined}
-    ${PricingModel.tieredFlatFee}   | ${tierWithFlatFeeAmount}          | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${'Starts at €10.00'}
-    ${PricingModel.tieredFlatFee}   | ${tierWithFlatFeeAmountZero}      | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${'Starts at €0.00'}
-    ${PricingModel.tieredFlatFee}   | ${tierWithFlatFeeAmountUndefined} | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${undefined}
-    ${PricingModel.tieredVolume}    | ${tierWithUnitAmountOnRequest}    | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${true}                | ${'Price on request'}
-    ${PricingModel.tieredFlatFee}   | ${tierWithFlatFeeAmountOnRequest} | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${true}                | ${'Price on request'}
-    ${PricingModel.tieredVolume}    | ${tierWithUnitAmountOnRequest}    | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${false}               | ${'Starts at €10.00/kWh'}
-    ${PricingModel.tieredFlatFee}   | ${tierWithFlatFeeAmountOnRequest} | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${false}               | ${'Starts at €10.00'}
+    pricingModel                    | tier                              | unit         | locale       | currency     | t    | showStartsAt | enableSubunitDisplay | shouldDisplayOnRequest | precision    | expected
+    ${PricingModel.tieredGraduated} | ${tierWithUnitAmount}             | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${undefined} | ${'Starts at €10.00/kWh'}
+    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${undefined} | ${'Starts at €10.00/kWh'}
+    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${false}     | ${false}             | ${undefined}           | ${undefined} | ${'€10.00/kWh'}
+    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'kWh'}     | ${'de'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${undefined} | ${'Starts at 10,00 €/kWh'}
+    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'kWh'}     | ${'en'}      | ${'USD'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${undefined} | ${'Starts at $10.00/kWh'}
+    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${true}              | ${undefined}           | ${undefined} | ${'Starts at €10.00/kWh'}
+    ${PricingModel.tieredVolume}    | ${tierWithSubunitAmount}          | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${true}              | ${undefined}           | ${undefined} | ${'Starts at 5.12 cents/kWh'}
+    ${PricingModel.tieredVolume}    | ${tierWithSubunitAmount}          | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${true}              | ${undefined}           | ${4}         | ${'Starts at 5.1234 cents/kWh'}
+    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${undefined} | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${undefined} | ${'Starts at €10.00'}
+    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'unit'}    | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${undefined} | ${'Starts at €10.00'}
+    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'kWh'}     | ${undefined} | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${undefined} | ${'Starts at 10,00 €/kWh'}
+    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'kWh'}     | ${'en'}      | ${undefined} | ${t} | ${true}      | ${false}             | ${undefined}           | ${undefined} | ${'Starts at €10.00/kWh'}
+    ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}             | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${undefined} | ${false}             | ${undefined}           | ${undefined} | ${'Starts at €10.00/kWh'}
+    ${PricingModel.tieredVolume}    | ${tierWithUnitAmountZero}         | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${undefined} | ${'Starts at €0.00/kWh'}
+    ${PricingModel.tieredVolume}    | ${tierWithUnitAmountUndefined}    | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${undefined} | ${undefined}
+    ${PricingModel.tieredVolume}    | ${tierInvalid}                    | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${undefined} | ${undefined}
+    ${PricingModel.tieredFlatFee}   | ${tierWithFlatFeeAmount}          | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${undefined} | ${'Starts at €10.00'}
+    ${PricingModel.tieredFlatFee}   | ${tierWithFlatFeeAmountZero}      | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${undefined} | ${'Starts at €0.00'}
+    ${PricingModel.tieredFlatFee}   | ${tierWithFlatFeeAmountUndefined} | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${undefined}           | ${undefined} | ${undefined}
+    ${PricingModel.tieredVolume}    | ${tierWithUnitAmountOnRequest}    | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${true}                | ${undefined} | ${'Price on request'}
+    ${PricingModel.tieredFlatFee}   | ${tierWithFlatFeeAmountOnRequest} | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${true}                | ${undefined} | ${'Price on request'}
+    ${PricingModel.tieredVolume}    | ${tierWithUnitAmountOnRequest}    | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${false}               | ${undefined} | ${'Starts at €10.00/kWh'}
+    ${PricingModel.tieredFlatFee}   | ${tierWithFlatFeeAmountOnRequest} | ${'kWh'}     | ${'en'}      | ${'EUR'}     | ${t} | ${true}      | ${false}             | ${false}               | ${undefined} | ${'Starts at €10.00'}
   `(
     'should return correct for the tier, when pricingModel=$pricingModel, unit=$unit, locale=$locale, currency=$currency, showStartsAt=$showStartsAt',
     ({
@@ -302,6 +303,7 @@ describe('getTierDescription', () => {
       showStartsAt,
       enableSubunitDisplay,
       shouldDisplayOnRequest,
+      precision,
       expected,
     }: {
       pricingModel: PricingModel;
@@ -313,12 +315,14 @@ describe('getTierDescription', () => {
       showStartsAt: boolean;
       enableSubunitDisplay: boolean;
       shouldDisplayOnRequest?: boolean;
+      precision?: number;
       expected: string;
     }) => {
       const result = getTierDescription(pricingModel, tier, unit, locale, currency, t, {
         showStartsAt,
         enableSubunitDisplay,
         showOnRequest: shouldDisplayOnRequest,
+        precision
       });
 
       expect(result?.replace(/\s+/g, ' ').trim()).toEqual(expected);
@@ -329,7 +333,7 @@ describe('getTierDescription', () => {
     pricingModel                    | tier                     | unit     | locale  | currency | t    | showStartsAt | enableSubunitDisplay | shouldDisplayOnRequest | tax                                | expected
     ${PricingModel.tieredGraduated} | ${tierWithUnitAmount}    | ${'kWh'} | ${'en'} | ${'EUR'} | ${t} | ${true}      | ${false}             | ${undefined}           | ${{ isInclusive: true, rate: 10 }} | ${'Starts at €9.09/kWh'}
     ${PricingModel.tieredVolume}    | ${tierWithUnitAmount}    | ${'kWh'} | ${'en'} | ${'EUR'} | ${t} | ${true}      | ${false}             | ${undefined}           | ${{ isInclusive: true, rate: 10 }} | ${'Starts at €9.09/kWh'}
-    ${PricingModel.tieredVolume}    | ${tierWithSubunitAmount} | ${'kWh'} | ${'en'} | ${'EUR'} | ${t} | ${true}      | ${true}              | ${undefined}           | ${{ isInclusive: true, rate: 10 }} | ${'Starts at 4.55 cents/kWh'}
+    ${PricingModel.tieredVolume}    | ${tierWithSubunitAmount} | ${'kWh'} | ${'en'} | ${'EUR'} | ${t} | ${true}      | ${true}              | ${undefined}           | ${{ isInclusive: true, rate: 10 }} | ${'Starts at 4.66 cents/kWh'}
     ${PricingModel.tieredFlatFee}   | ${tierWithFlatFeeAmount} | ${'kWh'} | ${'en'} | ${'EUR'} | ${t} | ${true}      | ${false}             | ${undefined}           | ${{ isInclusive: true, rate: 10 }} | ${'Starts at €9.09'}
   `(
     'should return correct net values for the tier, when pricingModel=$pricingModel, unit=$unit, locale=$locale, currency=$currency, showStartsAt=$showStartsAt',

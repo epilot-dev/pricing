@@ -104,7 +104,7 @@ export function getTierDescription(
   locale: string = DEFAULT_LOCALE,
   currency: Currency = DEFAULT_CURRENCY,
   t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
-  options: { showStartsAt?: boolean; enableSubunitDisplay?: boolean; showOnRequest?: boolean } = {},
+  options: { showStartsAt?: boolean; enableSubunitDisplay?: boolean; showOnRequest?: boolean; precision?: number },
   tax: { isInclusive: boolean; rate: number } | undefined = undefined,
 ): string | undefined {
   if (!pricingModel) {
@@ -126,7 +126,7 @@ export function getTierDescription(
     return;
   }
 
-  const { showStartsAt = true, enableSubunitDisplay = false } = options;
+  const { showStartsAt = true, enableSubunitDisplay = false, precision = 2 } = options;
   const showUnitAmount =
     (pricingModel === PricingModel.tieredGraduated || pricingModel === PricingModel.tieredVolume) &&
     typeof tier.unit_amount === 'number';
@@ -142,8 +142,8 @@ export function getTierDescription(
   const formatOptions: Partial<Parameters<typeof formatAmountFromString>[0]> = {
     currency,
     locale,
-    useRealPrecision: tax ? false : true,
     enableSubunitDisplay,
+    precision
   };
 
   const unitAmountDecimal =
@@ -169,7 +169,7 @@ export function getTierDescription(
             .toString(),
         )
       : tier.flat_fee_amount_decimal;
-
+      
   const formatedAmountString =
     showUnitAmount &&
     formatAmountFromString({

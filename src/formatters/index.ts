@@ -145,11 +145,17 @@ export type AmountFormatter = typeof formatAmount;
  * Gets the precision and format from a decimal amount (string)
  * @param {string} decimalAmount - The decimal amount to get the precision and format from
  */
-function getPrecisionAndFormatFromStringAmount(
-  decimalAmount: string,
-  useRealPrecision: boolean,
-  shouldDisplayAsCents: boolean,
-) {
+function getPrecisionAndFormatFromStringAmount({
+  decimalAmount,
+  useRealPrecision,
+  precision,
+  shouldDisplayAsCents,
+}: {
+  decimalAmount: string;
+  useRealPrecision: boolean;
+  precision?: number;
+  shouldDisplayAsCents: boolean;
+}) {
   if (useRealPrecision) {
     const [, decimalNumbers] = decimalAmount.split('.');
 
@@ -162,6 +168,16 @@ function getPrecisionAndFormatFromStringAmount(
 
     return {
       amountPrecision,
+      amountFormat,
+    };
+  }
+
+  if (precision) {
+    const precisionToFormat = '0'.repeat(precision);
+    const amountFormat = DEFAULT_FORMAT.replace('.00', `.${precisionToFormat}`);
+
+    return {
+      amountPrecision: precision,
       amountFormat,
     };
   }
@@ -210,11 +226,12 @@ export const formatAmountFromString = ({
   const dineroObjectFromAmount = toDinero(parsedDecimalAmount, currency || DEFAULT_CURRENCY);
   const [onlyDecimalFromAmount, subunitFromAmount] = parsedDecimalAmount.split('.');
   const shouldDisplayAsCents = Number(onlyDecimalFromAmount) === 0 && dineroObjectFromAmount.hasSubUnits();
-  const { amountPrecision, amountFormat } = getPrecisionAndFormatFromStringAmount(
-    parsedDecimalAmount,
+  const { amountPrecision, amountFormat } = getPrecisionAndFormatFromStringAmount({
+    decimalAmount: parsedDecimalAmount,
     useRealPrecision,
-    enableSubunitDisplay && shouldDisplayAsCents,
-  );
+    shouldDisplayAsCents: enableSubunitDisplay && shouldDisplayAsCents,
+    precision,
+  });
 
   if (enableSubunitDisplay && shouldDisplayAsCents) {
     const subunit = getFormattedCurrencySubunit(

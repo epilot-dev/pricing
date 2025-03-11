@@ -169,7 +169,7 @@ export function getTierDescription(
             .toString(),
         )
       : tier.flat_fee_amount_decimal;
-
+      
   const formatedAmountString =
     showUnitAmount &&
     formatAmountFromString({

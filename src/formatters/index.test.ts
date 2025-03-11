@@ -117,35 +117,42 @@ describe('formatAmount', () => {
 
 describe('formatAmountFromString', () => {
   it.each`
-    unitAmountDecimal | currency | locale     | enableSubunitDisplay | expected
-    ${'0.0100'}       | ${'EUR'} | ${'de'}    | ${true}              | ${'1,00 Cent'}
-    ${'0.0200'}       | ${'EUR'} | ${'de-DE'} | ${true}              | ${'2,00 Cent'}
-    ${'-1.0100'}      | ${'EUR'} | ${'de'}    | ${true}              | ${'-1,01\xa0€'}
-    ${'-0.0300'}      | ${'EUR'} | ${'de'}    | ${true}              | ${'-3,00 Cent'}
-    ${'1.0205'}       | ${'EUR'} | ${'de'}    | ${true}              | ${'1,02\xa0€'}
-    ${'0.0205'}       | ${'USD'} | ${'en'}    | ${true}              | ${'2.05 cents'}
-    ${'10.0205'}      | ${'USD'} | ${'en'}    | ${true}              | ${'$10.02'}
-    ${'0.0100'}       | ${'JPY'} | ${'en'}    | ${true}              | ${'1.00 cent' /* JPY is not supported, fallback to cents */}
-    ${'0.0100'}       | ${'EUR'} | ${'de'}    | ${false}             | ${'0,01\xa0€'}
+    unitAmountDecimal | currency | locale     | enableSubunitDisplay | precision    | expected
+    ${'0.0100'}       | ${'EUR'} | ${'de'}    | ${true}              | ${undefined} | ${'1,00 Cent'}
+    ${'0.0200'}       | ${'EUR'} | ${'de-DE'} | ${true}              | ${undefined} | ${'2,00 Cent'}
+    ${'-1.0100'}      | ${'EUR'} | ${'de'}    | ${true}              | ${undefined} | ${'-1,01\xa0€'}
+    ${'-0.0300'}      | ${'EUR'} | ${'de'}    | ${true}              | ${undefined} | ${'-3,00 Cent'}
+    ${'1.0205'}       | ${'EUR'} | ${'de'}    | ${true}              | ${undefined} | ${'1,02\xa0€'}
+    ${'0.0205'}       | ${'USD'} | ${'en'}    | ${true}              | ${undefined} | ${'2.05 cents'}
+    ${'0.0205123'}    | ${'USD'} | ${'en'}    | ${true}              | ${4}         | ${'2.0512 cents'}
+    ${'10.0205'}      | ${'USD'} | ${'en'}    | ${true}              | ${undefined} | ${'$10.02'}
+    ${'0.0100'}       | ${'JPY'} | ${'en'}    | ${true}              | ${undefined} | ${'1.00 cent' /* JPY is not supported, fallback to cents */}
+    ${'0.0100'}       | ${'EUR'} | ${'de'}    | ${false}             | ${undefined} | ${'0,01\xa0€'}
+    ${'10.00'}        | ${'EUR'} | ${'de'}    | ${false}             | ${undefined} | ${'10,00\xa0€'}
+    ${'10.50'}        | ${'EUR'} | ${'de'}    | ${false}             | ${undefined} | ${'10,50\xa0€'}
+    ${'10.51234'}     | ${'EUR'} | ${'de'}    | ${false}             | ${4}         | ${'10,5123\xa0€'}
   `(
     'should format an amount in cents when price is between -1 and 1',
     ({
       unitAmountDecimal,
       currency,
       locale,
-      expected,
       enableSubunitDisplay,
+      precision,
+      expected,
     }: {
       unitAmountDecimal: string;
       currency: Currency;
       locale: string;
-      expected: string;
       enableSubunitDisplay: boolean;
+      precision: number;
+      expected: string;
     }) => {
       const formattedAmount = formatAmountFromString({
         decimalAmount: unitAmountDecimal,
         currency,
         locale,
+        precision,
         enableSubunitDisplay,
       });
 

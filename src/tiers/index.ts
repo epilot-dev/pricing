@@ -104,7 +104,7 @@ export function getTierDescription(
   locale: string = DEFAULT_LOCALE,
   currency: Currency = DEFAULT_CURRENCY,
   t: (key: string, options?: { ns: string; defaultValue?: string }) => string,
-  options: { showStartsAt?: boolean; enableSubunitDisplay?: boolean; showOnRequest?: boolean; precision?: number },
+  options: { showStartsAt?: boolean; enableSubunitDisplay?: boolean; showOnRequest?: boolean; precision?: number } = {},
   tax: { isInclusive: boolean; rate: number } | undefined = undefined,
 ): string | undefined {
   if (!pricingModel) {

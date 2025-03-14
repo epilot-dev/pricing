@@ -899,11 +899,16 @@ export const computePriceItem = (
   const [coupon] = appliedCoupons ?? [];
 
   if (coupon) {
+    const multiplier =
+      price?.pricing_model === PricingModel.tieredFlatFee || price?.pricing_model === PricingModel.tieredGraduated
+        ? safeQuantity
+        : unitAmountMultiplier;
+
     itemValues = applyDiscounts(itemValues, {
       priceItem,
       currency,
       isTaxInclusive,
-      unitAmountMultiplier,
+      unitAmountMultiplier: multiplier,
       tax: priceTax,
       coupon,
     });

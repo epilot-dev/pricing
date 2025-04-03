@@ -9,7 +9,7 @@ const buildOptions = {
   platform: 'node',
   format: 'cjs',
   sourcemap: true,
-  target: 'node16',
+  target: 'node18',
   minify: true,
   treeShaking: true,
   external: [

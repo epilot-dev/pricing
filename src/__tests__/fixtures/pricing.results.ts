@@ -5194,6 +5194,8 @@ export const oneItemPerRecurrenceTotals = {
     },
     {
       ...priceItem2,
+      type: 'recurring',
+      billing_period: 'monthly',
       amount_subtotal: 2895,
       amount_tax: 550,
       amount_total: 3446,

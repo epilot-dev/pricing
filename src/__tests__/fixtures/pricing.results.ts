@@ -740,6 +740,7 @@ export const severalItemsPerRecurrenceTotals = {
       product_id: 'prod-id#12324',
       price_id: 'price#1',
       pricing_model: 'per_unit',
+      type: 'one_time',
       taxes: [
         {
           tax: {
@@ -800,6 +801,8 @@ export const severalItemsPerRecurrenceTotals = {
       quantity: 1,
       product_id: 'prod-id#12324',
       price_id: 'price#2',
+      type: 'recurring',
+      billing_period: 'monthly',
       _price: {
         _id: 'price#2',
         unit_amount: 3447,
@@ -869,6 +872,8 @@ export const severalItemsPerRecurrenceTotals = {
       quantity: 3,
       product_id: 'prod-id#12324',
       price_id: 'price#3',
+      type: 'recurring',
+      billing_period: 'yearly',
       taxes: [
         {
           tax: {
@@ -938,6 +943,7 @@ export const severalItemsPerRecurrenceTotals = {
       quantity: 5,
       product_id: 'prod-id#12324',
       price_id: 'price#1',
+      type: 'one_time',
       taxes: [
         {
           tax: {
@@ -997,6 +1003,8 @@ export const severalItemsPerRecurrenceTotals = {
       quantity: 3,
       product_id: 'prod-id#12324',
       price_id: 'price#3',
+      type: 'recurring',
+      billing_period: 'yearly',
       taxes: [
         {
           tax: {
@@ -2020,6 +2028,7 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
       description: 'Winter Sale',
       price_id: 'price#1',
       product_id: 'prod-id#12324',
+      type: 'one_time',
       taxes: [
         {
           amount: 63024,
@@ -2053,6 +2062,8 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
       description: 'Winter Lease',
       price_id: 'price#2',
       product_id: 'prod-id#12324',
+      type: 'recurring',
+      billing_period: 'monthly',
       taxes: [
         {
           amount: 550,
@@ -2086,6 +2097,8 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
       description: 'Winter Lease',
       price_id: 'price#3',
       product_id: 'prod-id#12324',
+      type: 'recurring',
+      billing_period: 'yearly',
       taxes: [
         {
           amount: 818,
@@ -2119,6 +2132,8 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
       description: 'Winter Lease',
       price_id: 'price#6',
       product_id: 'prod-id#12324',
+      type: 'recurring',
+      billing_period: 'yearly',
       taxes: [{ amount: 1364, tax: tax10percent }],
       unit_amount: 4546,
       unit_amount_net: 4546,
@@ -2159,6 +2174,8 @@ export const priceWithDisplayOnRequestAndSimplePrices = {
       price_id: 'price#7',
       product_id: 'prod-id#12325',
       quantity: 1,
+      type: 'recurring',
+      billing_period: 'yearly',
       taxes: [
         {
           amount: 455,
@@ -2564,6 +2581,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
       quantity: 5,
       product_id: 'prod-id#12324',
       price_id: 'price#1',
+      type: 'one_time',
       taxes: [
         {
           tax: {
@@ -2670,6 +2688,8 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
       amount_total_decimal: '34.456224456678',
       amount_tax: 550,
       amount_total: 3446,
+      billing_period: 'monthly',
+      type: 'recurring',
       taxes: [
         {
           amount: 550,
@@ -2692,6 +2712,8 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
       quantity: 3,
       product_id: 'prod-id#12324',
       price_id: 'price#3',
+      type: 'recurring',
+      billing_period: 'yearly',
       taxes: [
         {
           tax: {
@@ -2761,6 +2783,7 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
       quantity: 5,
       product_id: 'prod-id#12324',
       price_id: 'price#1',
+      type: 'one_time',
       taxes: [
         {
           tax: {
@@ -2820,6 +2843,8 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
       quantity: 3,
       product_id: 'prod-id#12324',
       price_id: 'price#3',
+      type: 'recurring',
+      billing_period: 'yearly',
       taxes: [
         {
           tax: {
@@ -4231,6 +4256,7 @@ export const priceDetailsForOnePrice = {
         },
       ],
       unit_amount: 78946,
+      type: 'one_time',
       unit_amount_net: 66341,
       unit_amount_net_decimal: '663.408591980402',
       unit_amount_gross: 78946,
@@ -5170,6 +5196,7 @@ export const oneItemPerRecurrenceTotals = {
       description: 'Winter Sale',
       price_id: 'price#1',
       product_id: 'prod-id#12324',
+      type: 'one_time',
       taxes: [
         {
           amount: 63024,
@@ -5238,6 +5265,8 @@ export const oneItemPerRecurrenceTotals = {
       description: 'Winter Lease',
       price_id: 'price#3',
       product_id: 'prod-id#12324',
+      type: 'recurring',
+      billing_period: 'yearly',
       taxes: [
         {
           amount: 818,
@@ -5271,6 +5300,8 @@ export const oneItemPerRecurrenceTotals = {
       description: 'Winter Lease',
       price_id: 'price#6',
       product_id: 'prod-id#12324',
+      type: 'recurring',
+      billing_period: 'yearly',
       taxes: [{ amount: 1364, tax: tax10percent }],
       unit_amount: 4546,
       unit_amount_decimal: '45.456224456678',
@@ -5967,6 +5998,7 @@ export const computedPriceWithFixedDiscount = {
       quantity: 1,
       product_id: 'prod-id#12324',
       price_id: 'price#1',
+      type: 'one_time',
       taxes: [
         {
           tax: {
@@ -6067,6 +6099,7 @@ export const computedPriceWithMultipleFixedDiscounts = {
       quantity: 1,
       product_id: 'prod-id#12324',
       price_id: 'price#1',
+      type: 'one_time',
       taxes: [
         {
           tax: {
@@ -6274,6 +6307,7 @@ export const computedPriceWithFixedDiscountAndPriceMappings = {
       quantity: 1,
       product_id: 'prod-id#12324',
       price_id: 'price#1',
+      type: 'one_time',
       taxes: [
         {
           tax: {
@@ -6420,6 +6454,7 @@ export const computedPriceWithPercentageDiscount = {
       quantity: 1,
       product_id: 'prod-id#12324',
       price_id: 'price#1',
+      type: 'one_time',
       taxes: [
         {
           tax: {
@@ -6519,6 +6554,7 @@ export const computedPriceWithMultiplePercentageDiscounts = {
       quantity: 1,
       product_id: 'prod-id#12324',
       price_id: 'price#1',
+      type: 'one_time',
       taxes: [
         {
           tax: {
@@ -6762,6 +6798,7 @@ export const computedPriceWithoutAppliedCoupon = {
       pricing_model: 'per_unit',
       is_tax_inclusive: true,
       _coupons: [],
+      type: 'one_time',
       unit_amount: 10000,
       unit_amount_net: 9091,
       unit_amount_gross: 10000,
@@ -6913,6 +6950,7 @@ export const computedPriceWithAppliedCoupon = {
           requires_promo_code: true,
         },
       ],
+      type: 'one_time',
       unit_amount: 7500,
       unit_amount_net: 6818,
       unit_amount_gross: 7500,
@@ -7009,6 +7047,7 @@ export const computedPriceWithPercentageDiscountAndHighQuantity = {
       quantity: 5,
       product_id: 'prod-id#12324',
       price_id: 'price#1',
+      type: 'one_time',
       taxes: [
         {
           tax: {
@@ -7161,6 +7200,7 @@ export const computedPriceWithFixedDiscountAndHighQuantity = {
       quantity: 5,
       product_id: 'prod-id#12324',
       price_id: 'price#1',
+      type: 'one_time',
       taxes: [
         {
           tax: {
@@ -7298,6 +7338,7 @@ export const computedPriceWithFixedDiscountAndNoTax = {
       quantity: 1,
       product_id: 'prod-id#12324',
       price_id: 'price#1',
+      type: 'one_time',
       taxes: [{ rate: 'nontaxable', rateValue: 0, amount: 0 }],
       _price: {
         _id: 'price#1',
@@ -7426,6 +7467,7 @@ export const computedPriceWithPercentageDiscountAndExclusiveTax = {
       quantity: 1,
       product_id: 'prod-id#12324',
       price_id: 'price#1',
+      type: 'one_time',
       taxes: [
         {
           tax: {
@@ -7578,6 +7620,7 @@ export const computedPriceWithFixedDiscountAndExclusiveTax = {
       quantity: 1,
       product_id: 'prod-id#12324',
       price_id: 'price#1',
+      type: 'one_time',
       taxes: [
         {
           tax: {
@@ -7718,6 +7761,7 @@ export const computedResultWithPricesWithAndWithoutCoupons = {
       quantity: 1,
       product_id: 'prod-id#12324',
       price_id: 'price#1',
+      type: 'one_time',
       taxes: [
         {
           tax: {
@@ -7811,6 +7855,7 @@ export const computedResultWithPricesWithAndWithoutCoupons = {
       quantity: 1,
       product_id: 'prod-id#12324',
       price_id: 'price#1',
+      type: 'one_time',
       taxes: [
         {
           tax: {
@@ -7903,6 +7948,7 @@ export const computedResultWithPricesWithAndWithoutCoupons = {
     {
       price_id: 'adbd8cee-0db2-41dd-b93b-2d0ed57c77da',
       product_id: '11bd46e5-4c02-425c-bcce-5f5e022a2b45',
+      type: 'one_time',
       taxes: [{ rate: 'nontaxable', rateValue: 0, amount: 0 }],
       _price: {
         _id: 'adbd8cee-0db2-41dd-b93b-2d0ed57c77da',
@@ -7910,6 +7956,7 @@ export const computedResultWithPricesWithAndWithoutCoupons = {
         unit_amount_currency: 'EUR',
         unit_amount_decimal: '555666.77',
         sales_tax: 'standard',
+        tax: undefined,
         is_tax_inclusive: true,
         price_display_in_journeys: 'show_as_starting_price',
         type: 'one_time',
@@ -8026,6 +8073,7 @@ export const computedPriceWithFixedAmountCashbackCoupon = {
       quantity: 1,
       product_id: 'prod-id#12324',
       price_id: 'price#1',
+      type: 'one_time',
       taxes: [
         {
           tax: {
@@ -8172,6 +8220,7 @@ export const computedPriceWithFixedAmountCashbackCouponAndPriceMappings = {
       quantity: 1,
       product_id: 'prod-id#12324',
       price_id: 'price#1',
+      type: 'one_time',
       taxes: [
         {
           tax: {
@@ -8324,6 +8373,7 @@ export const computedPriceWithPercentageCashbackCoupon = {
       quantity: 1,
       product_id: 'prod-id#12324',
       price_id: 'price#1',
+      type: 'one_time',
       taxes: [
         {
           tax: {
@@ -8539,6 +8589,8 @@ export const computedRecurringPriceWithFixedAmountCashbackCoupon = {
           cashback_period: '12',
         },
       ],
+      type: 'recurring',
+      billing_period: 'monthly',
       currency: 'EUR',
       description: 'Winter Sale',
       unit_amount: 10000,

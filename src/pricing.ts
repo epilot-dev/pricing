@@ -494,7 +494,8 @@ const recomputeDetailTotals = (
   const recurrence = getPriceRecurrence(
     {
       ...priceItemToAppend,
-      billing_period: priceItemToAppend.billing_period || price?.billing_period,
+      type: priceItemToAppend.type ?? price?.type,
+      billing_period: priceItemToAppend.billing_period ?? price?.billing_period,
     },
     recurrences,
   );
@@ -557,11 +558,11 @@ const recomputeDetailTotals = (
    * Recurrences
    */
   if (!recurrence) {
-    const type = priceItemToAppend.type || price?.type;
+    const type = priceItemToAppend.type ?? price?.type;
 
     recurrences.push({
       type: type === 'recurring' ? type : 'one_time',
-      ...(priceItemToAppend?.type === 'recurring' && { billing_period: priceItemToAppend?.billing_period }),
+      ...(type === 'recurring' && { billing_period: priceItemToAppend?.billing_period ?? price?.billing_period }),
       unit_amount_gross: priceUnitAmountGross.getAmount(),
       unit_amount_net: priceUnitAmountNet?.getAmount() ?? undefined,
       amount_subtotal: priceSubtotal.getAmount(),
@@ -625,8 +626,8 @@ const recomputeDetailTotals = (
     const type = priceItemToAppend.type || price?.type;
 
     recurrencesByTax.push({
-      type: ['one_time', 'recurring'].includes(type!) ? type : 'one_time',
-      ...(recurrence?.type === 'recurring' && { billing_period: recurrence?.billing_period || price?.billing_period }),
+      type: type === 'recurring' ? type : 'one_time',
+      ...(type === 'recurring' && { billing_period: recurrence?.billing_period ?? price?.billing_period }),
       amount_total: priceTotal.getAmount(),
       amount_subtotal: priceSubtotal.getAmount(),
       amount_tax: priceTax.getAmount(),
@@ -922,6 +923,7 @@ export const computePriceItem = (
 
   /* If there's a coupon cashback period output it */
   const cashbackPeriod = coupon?.cashback_period;
+  const type = priceItem?.type ?? price?.type;
 
   return {
     ...priceItem,
@@ -937,6 +939,8 @@ export const computePriceItem = (
       },
     ],
     ...(priceItem._product && { _product: mapToProductSnapshot(priceItem._product) }),
+    type,
+    ...(type === 'recurring' && { billing_period: priceItem.billing_period ?? price?.billing_period }),
     _price: {
       ...mapToPriceSnapshot(price),
       ...(itemValues.price_display_in_journeys && {

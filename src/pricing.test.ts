@@ -23,6 +23,7 @@ import type {
   Tax,
 } from './types';
 import { getTaxValue } from './utils';
+import { taxRateless } from './__tests__/fixtures/tax.samples';
 
 describe('computeAggregatedAndPriceTotals', () => {
   describe('when is_composite_price = false', () => {
@@ -77,6 +78,36 @@ describe('computeAggregatedAndPriceTotals', () => {
       const result = computeAggregatedAndPriceTotals(priceItems);
 
       expect(result).toEqual(results.resultsWhenNoPricesProvided);
+    });
+
+    it('should return the right result when the price has rateless tax', () => {
+      const priceItems = [samples.priceItemRateless];
+
+      const result = computeAggregatedAndPriceTotals(priceItems);
+
+      expect(result).toEqual(
+        expect.objectContaining({
+          amount_subtotal: 1000,
+          amount_total: 1000,
+          items: expect.arrayContaining([
+            expect.objectContaining({
+              amount_subtotal: 1000,
+              amount_total: 1000,
+              unit_amount_decimal: '10',
+              unit_amount_gross: 1000,
+              unit_amount_gross_decimal: '10',
+              unit_amount_net: 1000,
+              taxes: [
+                {
+                  tax: taxRateless,
+                  amount: 0
+                }
+              ],
+            }),
+          ]),
+          total_details: expect.objectContaining({ amount_tax: 0 }),
+        }),
+      );
     });
 
     it('should return the right result when the price is nontaxable', () => {
@@ -151,6 +182,117 @@ describe('computeAggregatedAndPriceTotals', () => {
           ]),
           total_details: expect.objectContaining({ amount_tax: 0 }),
         }),
+      );
+    });
+
+    it('should return the right result when one of the price in composite price is rateless', () => {
+      const priceItems = [samples.compositePriceWithRateless];
+
+      const result = computeAggregatedAndPriceTotals(priceItems);
+
+      expect(result).toEqual(
+        expect.objectContaining({
+          amount_subtotal: 1017,
+          amount_total: 1114,
+          amount_tax: 97,
+          currency: "EUR",
+          items: expect.arrayContaining([
+            expect.objectContaining({
+              amount_subtotal: 1017,
+              amount_total: 1114,
+              amount_tax: 97,
+              item_components: expect.arrayContaining([
+                expect.objectContaining({
+                  unit_amount: 1069,
+                  amount_subtotal: 972,
+                  amount_total: 1069,
+                  amount_tax: 97,
+                  taxes: expect.arrayContaining([
+                    expect.objectContaining({
+                      tax: expect.objectContaining({
+                        _id: "10",
+                        rate: 10,
+                        type: "VAT",
+                      }),
+                      amount: 97,
+                    }),
+                  ]),
+                }),
+                expect.objectContaining({
+                  unit_amount: 45,
+                  amount_subtotal: 45,
+                  amount_total: 45,
+                  amount_tax: 0,
+                  taxes: expect.arrayContaining([
+                    expect.objectContaining({
+                      tax: expect.objectContaining({
+                        _id: "88",
+                        rate: null,
+                        type: "Custom",
+                      }),
+                      amount: 0,
+                    }),
+                  ]),
+                }),
+              ]),
+              total_details: expect.objectContaining({
+                amount_tax: 97,
+                breakdown: expect.objectContaining({
+                  taxes: expect.arrayContaining([
+                    expect.objectContaining({
+                      tax: expect.objectContaining({
+                        _id: "10",
+                        rate: 10,
+                        type: "VAT",
+                      }),
+                      amount: 97,
+                    }),
+                    expect.objectContaining({
+                      tax: expect.objectContaining({
+                        _id: "88",
+                        rate: null,
+                        type: "Custom",
+                      }),
+                      amount: 0,
+                    }),
+                  ]),
+                  recurrences: expect.arrayContaining([
+                    expect.objectContaining({
+                      type: "recurring",
+                      billing_period: "monthly",
+                      amount_subtotal: 1017,
+                      amount_total: 1114,
+                      amount_tax: 97,
+                    }),
+                  ]),
+                }),
+              }),
+            }),
+          ]),
+          total_details: expect.objectContaining({
+            amount_tax: 97,
+            breakdown: expect.objectContaining({
+              taxes: expect.arrayContaining([
+                expect.objectContaining({
+                  tax: expect.objectContaining({
+                    _id: "10",
+                    rate: 10,
+                    type: "VAT",
+                  }),
+                  amount: 97,
+                }),
+                expect.objectContaining({
+                  tax: expect.objectContaining({
+                    _id: "88",
+                    rate: null,
+                    type: "Custom",
+                  }),
+                  amount: 0,
+                }),
+              ])
+            }),
+          }),
+        })
       );
     });
 
@@ -924,6 +1066,7 @@ describe('getRecurrencesWithEstimatedPrices', () => {
 describe('getTaxValue', () => {
   it('should return the tax value correctly', () => {
     expect(getTaxValue(taxes.tax19percent)).toEqual(0.19);
+    expect(getTaxValue(taxes.taxRateless)).toEqual(0);
     expect(getTaxValue({ rate: 19.5 } as unknown as Tax)).toEqual(0.195);
   });
 

@@ -1250,7 +1250,7 @@ const getPriceRecurrence = (price: Price | undefined, recurrences: RecurrenceAmo
 const getPriceRecurrenceByTax = (
   price: Price | undefined,
   recurrencesByTax: RecurrenceAmountWithTax[],
-  taxRate?: number,
+  taxRate?: Tax['rate'],
 ) => {
   if (price?.type === 'recurring') {
     return recurrencesByTax.find(

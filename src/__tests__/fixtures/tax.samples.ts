@@ -32,3 +32,15 @@ export const tax6percent: EntityItem & Tax = {
   _created_at: '2022-06-29T20:26:19.020Z',
   _updated_at: '2022-06-29T20:26:19.020Z',
 };
+
+export const taxRateless: EntityItem & Tax = {
+  _id: '88',
+  rate: null,
+  description: 'This tax has no rate',
+  _schema: 'tax',
+  _org: '739224',
+  _title: 'This tax has no rate',
+  type: 'Custom',
+  _created_at: '2025-04-11T12:00:12.020Z',
+  _updated_at: '2025-04-11T12:00:12.020Z',
+};

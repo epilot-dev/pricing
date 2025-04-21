@@ -117,7 +117,9 @@ export const computePriceComponent = (
   { redeemedPromos = [] }: ComputePriceComponentOptions = {},
 ): PriceItem => {
   const tax = priceItemComponent.taxes?.[0]?.tax;
-  const priceMapping = priceItem.price_mappings?.find(({ price_id }) => priceItemComponent._price!._id === price_id);
+  const priceMapping = priceItem.price_mappings?.find(
+    ({ price_id }) => priceItemComponent.price_id === price_id || priceItemComponent._price!._id === price_id,
+  );
 
   const externalFeeMapping = priceItem.external_fees_mappings?.find(
     ({ price_id }) => priceItemComponent._price!._id === price_id,

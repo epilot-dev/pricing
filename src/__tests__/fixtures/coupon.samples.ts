@@ -47,6 +47,12 @@ export const highFixedDiscountCoupon: Coupon = {
   fixed_value_decimal: '10.00',
 };
 
+export const veryHighFixedDiscountCoupon: Coupon = {
+  ...fixedDiscountCoupon,
+  fixed_value: 1000000,
+  fixed_value_decimal: '10000.00',
+};
+
 export const fixedCashbackCoupon: Coupon = {
   _id: 'coupon#3',
   _schema: 'coupon',

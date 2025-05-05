@@ -2,7 +2,7 @@ import dinero from 'dinero.js';
 import type { Currency, Dinero } from 'dinero.js';
 
 import { CURRENCIES_SUBUNITS, DEFAULT_CURRENCY, DEFAULT_SUBUNIT } from '../currencies';
-import { Price } from '../types';
+import type { PriceUnit } from '../types';
 
 import {
   DECIMAL_PRECISION,
@@ -20,27 +20,13 @@ export const getCurrencySymbol = (currency: Currency, locale: string) => {
     .find((part) => part.type === 'currency')!.value;
 };
 
-const getCurrencySubunit = (currency: Currency, locale: string, language: string) => {
-  if (!CURRENCIES_SUBUNITS[currency]) {
-    const subunit = DEFAULT_SUBUNIT[language] || DEFAULT_SUBUNIT['default'];
-
-    return {
-      symbol: getCurrencySymbol(currency, locale),
-      subunit,
-    };
-  }
-
-  const subunit = CURRENCIES_SUBUNITS[currency]!.subunit[language] || CURRENCIES_SUBUNITS[currency]!.subunit['default'];
-
-  return {
-    symbol: getCurrencySymbol(currency, locale),
-    subunit,
-  };
+type SubunitAndSymbol = {
+  symbol: string;
+  subunit: string;
 };
 
-function formatWithSubunit(formattedDineroObject: string, subunit: { symbol: string; subunit: string }) {
-  return `${formattedDineroObject.replace(subunit.symbol, '').trimEnd()} ${subunit.subunit}`;
-}
+const formatWithSubunit = (formattedDineroObject: string, { symbol, subunit }: SubunitAndSymbol) =>
+  `${formattedDineroObject.replace(symbol, '').trimEnd()} ${subunit}`;
 
 /**
  * Returns the subunit and symbol of the currency, as well as the subunit pluralized if necessary.
@@ -51,25 +37,25 @@ function formatWithSubunit(formattedDineroObject: string, subunit: { symbol: str
  *
  * @returns {Object} The subunit and symbol of the currency, as well as the subunit pluralized if necessary.
  */
-const getFormattedCurrencySubunit = (
-  currency: Currency,
-  locale: string,
-  amount: number | string,
-): {
-  symbol: string;
-  subunit: string;
-} => {
+const getFormattedCurrencySubunit = (currency: Currency, locale: string, amount: number | string): SubunitAndSymbol => {
   const [language] = locale.split('-');
-  const subunit = getCurrencySubunit(currency, locale, language);
+  const currencySubunit = CURRENCIES_SUBUNITS[currency] ?? DEFAULT_SUBUNIT;
+
+  const subunit = currencySubunit[language] || currencySubunit['default'];
+
+  const subunitAndSymbol = {
+    symbol: getCurrencySymbol(currency, locale),
+    subunit,
+  };
 
   const oneCentRegex = /^010*$/;
   if (amount === 1 || (typeof amount === 'string' && oneCentRegex.test(amount))) {
-    return subunit;
+    return subunitAndSymbol;
   }
 
   return {
-    ...subunit,
-    subunit: `${subunit.subunit}${language !== 'de' ? 's' : ''}`,
+    ...subunitAndSymbol,
+    subunit: `${subunitAndSymbol.subunit}${language !== 'de' ? 's' : ''}`,
   };
 };
 
@@ -124,7 +110,7 @@ export const formatAmount = ({
   });
 
   if (enableSubunitDisplay && shouldDisplayAmountAsCents(integerAmount, currency)) {
-    const subunit = getFormattedCurrencySubunit(currency, locale, integerAmount);
+    const subunitAndSymbol = getFormattedCurrencySubunit(currency, locale, integerAmount);
 
     return formatWithSubunit(
       dAmount
@@ -132,7 +118,7 @@ export const formatAmount = ({
         .convertPrecision(DEFAULT_INTEGER_AMOUNT_PRECISION)
         .setLocale(locale)
         .toFormat(format || DEFAULT_SUBUNIT_FORMAT),
-      subunit,
+      subunitAndSymbol,
     );
   }
 
@@ -314,16 +300,16 @@ export const toDineroFromInteger: (integerAmount: number, currency?: Currency) =
  *
  * @returns {string} the formatted unit
  */
-export const formatPriceUnit = (unit: Price['unit'], hideGenericUnitLabel?: boolean) => {
+export const formatPriceUnit = (unit?: PriceUnit, hideGenericUnitLabel?: boolean) => {
   if (!hideGenericUnitLabel && !unit?.trim()) {
     return unitDisplayLabels.none;
   }
 
-  if (!isPriceBuiltInUnit(unit!)) {
+  if (!unit || !isPriceBuiltInUnit(unit)) {
     return String(unit ?? '').trim();
   }
 
-  return unitDisplayLabels[unit!];
+  return unitDisplayLabels[unit];
 };
 
 /**
@@ -332,13 +318,9 @@ export const formatPriceUnit = (unit: Price['unit'], hideGenericUnitLabel?: bool
  * @param {Price['unit']} unit - the built-in unit code or user custom unit
  * @returns {boolean} true if the unit is a built-in unit
  */
-export const isPriceBuiltInUnit = (unit: string): unit is NonNullable<Price['unit']> => {
-  return unitDisplayLabels[unit] !== undefined;
-};
+export const isPriceBuiltInUnit = (unit: string): unit is PriceUnit => unit in unitDisplayLabels;
 
-export const unitDisplayLabels: Record<NonNullable<Price['unit']>, string> & {
-  none: typeof GENERIC_UNIT_DISPLAY_LABEL;
-} = Object.freeze({
+export const unitDisplayLabels: Record<PriceUnit | 'none', string> = {
   none: GENERIC_UNIT_DISPLAY_LABEL,
   kw: 'kW',
   kwh: 'kWh',
@@ -353,7 +335,7 @@ export const unitDisplayLabels: Record<NonNullable<Price['unit']>, string> & {
   w: 'W',
   wp: 'Wp',
   kwp: 'kWp',
-});
+};
 
 /**
  * Gets the precision from the decimal numbers length, normalizing the value if the amount should be displayed as cents

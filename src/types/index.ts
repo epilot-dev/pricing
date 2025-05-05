@@ -30,6 +30,7 @@ export type {
   CashbackAmount,
   RedeemedPromo,
 } from '@epilot/pricing-client';
-import type { BillingPeriod } from '@epilot/pricing-client';
+import type { BillingPeriod, Price } from '@epilot/pricing-client';
 
 export type TimeFrequency = Exclude<BillingPeriod, 'one_time'>;
+export type PriceUnit = NonNullable<Price['unit']>;

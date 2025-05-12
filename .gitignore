@@ -1,7 +1,5 @@
-*.js
-!esbuild.config.js
-node_modules/
-docs/
+node_modules
+docs
 dist
 coverage
 .eslintcache

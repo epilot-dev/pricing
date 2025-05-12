@@ -449,7 +449,7 @@ export const convertPriceItemWithCouponAppliedToPriceItemDto = ({
       unit_amount_decimal: before_discount_unit_amount_decimal,
     }),
     _price: priceItem._price as Price,
-  } as PriceItemDto);
+  }) as PriceItemDto;
 
 /**
  * Returns a function that checks whether a price tier is eligible for a given quantity.
@@ -617,7 +617,7 @@ export const computeTieredGraduatedPriceItemValues = ({
 
   const totals = priceTiersForQuantity.reduce(
     (totals, tier, index) => {
-      const tierMinQuantity = index === 0 ? 0 : tiers[index - 1].up_to ?? undefined;
+      const tierMinQuantity = index === 0 ? 0 : (tiers[index - 1].up_to ?? undefined);
       const tierMaxQuantity = tier.up_to || Infinity;
       const graduatedQuantity = getQuantityForTier({
         min: tierMinQuantity,
@@ -736,23 +736,23 @@ export const computeExternalGetAGItemValues = ({
           unchangedPriceDisplayInJourneys: 'show_price',
         })
       : getAg.markup_pricing_model === MarkupPricingModel.tieredFlatFee && getAg.markup_tiers
-      ? computeTieredFlatFeePriceItemValues({
-          tiers: getAg.markup_tiers,
-          currency,
-          isTaxInclusive,
-          quantityToSelectTier: userInput,
-          tax,
-          quantity: userInput,
-          isUsingPriceMappingToSelectTier: true,
-          unchangedPriceDisplayInJourneys: 'show_price',
-        })
-      : ({
-          unit_amount_net: isTaxInclusive
-            ? toDinero(getAg.markup_amount_decimal)
-                .divide(1 + taxRate)
-                .getAmount()
-            : toDinero(getAg.markup_amount_decimal).getAmount(),
-        } as PriceItemsTotals);
+        ? computeTieredFlatFeePriceItemValues({
+            tiers: getAg.markup_tiers,
+            currency,
+            isTaxInclusive,
+            quantityToSelectTier: userInput,
+            tax,
+            quantity: userInput,
+            isUsingPriceMappingToSelectTier: true,
+            unchangedPriceDisplayInJourneys: 'show_price',
+          })
+        : ({
+            unit_amount_net: isTaxInclusive
+              ? toDinero(getAg.markup_amount_decimal)
+                  .divide(1 + taxRate)
+                  .getAmount()
+              : toDinero(getAg.markup_amount_decimal).getAmount(),
+          } as PriceItemsTotals);
 
   const relevantTier = markupValues.tiers_details?.[0]; // Changed ?. to && since we need both checks
   const unitAmountGetAgFeeNet =

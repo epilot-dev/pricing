@@ -143,33 +143,33 @@ export function getTierDescription(
     currency,
     locale,
     enableSubunitDisplay,
-    precision
+    precision,
   };
 
   const unitAmountDecimal =
     !showUnitAmount || tax === undefined
       ? tier.unit_amount_decimal
       : tax?.isInclusive
-      ? addSeparatorToDineroString(
-          toDinero(tier.unit_amount_decimal, formatOptions.currency)
-            .divide(1 + tax.rate / 100)
-            .getAmount()
-            .toString(),
-        )
-      : tier.unit_amount_decimal;
+        ? addSeparatorToDineroString(
+            toDinero(tier.unit_amount_decimal, formatOptions.currency)
+              .divide(1 + tax.rate / 100)
+              .getAmount()
+              .toString(),
+          )
+        : tier.unit_amount_decimal;
 
   const flatFeeAmountDecimal =
     !showFlatFeeAmount || tax === undefined
       ? tier.flat_fee_amount_decimal
       : tax?.isInclusive
-      ? addSeparatorToDineroString(
-          toDinero(tier.flat_fee_amount_decimal, formatOptions.currency)
-            .divide(1 + tax.rate / 100)
-            .getAmount()
-            .toString(),
-        )
-      : tier.flat_fee_amount_decimal;
-      
+        ? addSeparatorToDineroString(
+            toDinero(tier.flat_fee_amount_decimal, formatOptions.currency)
+              .divide(1 + tax.rate / 100)
+              .getAmount()
+              .toString(),
+          )
+        : tier.flat_fee_amount_decimal;
+
   const formatedAmountString =
     showUnitAmount &&
     formatAmountFromString({
@@ -257,32 +257,35 @@ export const computeCumulativeValue = (
 
   const breakdown: CumulativePriceBreakdownItem[] = [];
 
-  const total = priceTiersForQuantity.reduce((total: Dinero, tier: PriceTier, index: number) => {
-    const tierMinQuantity = index === 0 ? 0 : tiers[index - 1].up_to ?? undefined;
-    const tierMaxQuantity = tier.up_to || Infinity;
-    const graduatedQuantity = getQuantityForTier({
-      min: tierMinQuantity,
-      max: tierMaxQuantity,
-      quantity: quantityToSelectTier,
-    });
-    const tierAmount = toDinero(tier.unit_amount_decimal!, formatOptions.currency).multiply(graduatedQuantity);
+  const total = priceTiersForQuantity.reduce(
+    (total: Dinero, tier: PriceTier, index: number) => {
+      const tierMinQuantity = index === 0 ? 0 : (tiers[index - 1].up_to ?? undefined);
+      const tierMaxQuantity = tier.up_to || Infinity;
+      const graduatedQuantity = getQuantityForTier({
+        min: tierMinQuantity,
+        max: tierMaxQuantity,
+        quantity: quantityToSelectTier,
+      });
+      const tierAmount = toDinero(tier.unit_amount_decimal!, formatOptions.currency).multiply(graduatedQuantity);
 
-    breakdown.push({
-      quantityUsed: `${graduatedQuantity.toLocaleString(formatOptions.locale, {
-        maximumFractionDigits: 6,
-      })} ${formattedUnit}`,
-      tierAmountDecimal: `${formatAmountFromString({
-        decimalAmount: tier.unit_amount_decimal!,
-        ...formatOptions,
-      })}${formattedUnit ? `/${formattedUnit}` : ''}`,
-      totalAmountDecimal: formatAmountFromString({
-        decimalAmount: addSeparatorToDineroString(tierAmount.getAmount().toString()),
-        ...formatOptions,
-      }),
-    });
+      breakdown.push({
+        quantityUsed: `${graduatedQuantity.toLocaleString(formatOptions.locale, {
+          maximumFractionDigits: 6,
+        })} ${formattedUnit}`,
+        tierAmountDecimal: `${formatAmountFromString({
+          decimalAmount: tier.unit_amount_decimal!,
+          ...formatOptions,
+        })}${formattedUnit ? `/${formattedUnit}` : ''}`,
+        totalAmountDecimal: formatAmountFromString({
+          decimalAmount: addSeparatorToDineroString(tierAmount.getAmount().toString()),
+          ...formatOptions,
+        }),
+      });
 
-    return tierAmount.add(total);
-  }, toDinero('0', formatOptions.currency));
+      return tierAmount.add(total);
+    },
+    toDinero('0', formatOptions.currency),
+  );
 
   const startsAt =
     options.showStartsAt &&

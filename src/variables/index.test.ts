@@ -122,7 +122,6 @@ describe('processOrderTableData', () => {
   });
 
   it('return original data/skip processing if line items are empty', async () => {
-
     //when
     const data = await processOrderTableData(orderEntityDataWithEmptyLineItems as any, mockI18n);
 

@@ -167,7 +167,7 @@ describe('applyDiscounts', () => {
           coupon: percentageCashbackCoupon,
         },
       );
-      
+
       expect(result.unit_amount).toBe(789460000000000); // Original price remains unchanged
       expect(result.unit_amount_net).toBe(663411764705900);
       expect(result.unit_amount_gross).toBe(789460000000000);
@@ -181,61 +181,60 @@ describe('applyDiscounts', () => {
 
   describe('graduated tiered prices', () => {
     it('should apply percentage discount to graduated tiered prices correctly', () => {
-
       const result = applyDiscounts(
         {
           tiers_details: [
-              {
-                  quantity: 100,
-                  unit_amount: 5000,
-                  unit_amount_decimal: "050",
-                  unit_amount_net: 42016806722689,
-                  unit_amount_gross: 50000000000000,
-                  amount_subtotal: 4201680672268900,
-                  amount_total: 5000000000000000,
-                  amount_tax: 798319327731100
-              },
-              {
-                  quantity: 150,
-                  unit_amount: 4500,
-                  unit_amount_decimal: "045",
-                  unit_amount_net: 37815126050420,
-                  unit_amount_gross: 45000000000000,
-                  amount_subtotal: 5672268907563000,
-                  amount_total: 6750000000000000,
-                  amount_tax: 1077731092437000
-              },
-              {
-                  quantity: 250,
-                  unit_amount: 4000,
-                  unit_amount_decimal: "040",
-                  unit_amount_net: 33613445378151,
-                  unit_amount_gross: 40000000000000,
-                  amount_subtotal: 8403361344537750,
-                  amount_total: 10000000000000000,
-                  amount_tax: 1596638655462250
-              },
-              {
-                  quantity: 500,
-                  unit_amount: 3500,
-                  unit_amount_decimal: "035",
-                  unit_amount_net: 29411764705882,
-                  unit_amount_gross: 35000000000000,
-                  amount_subtotal: 14705882352941000,
-                  amount_total: 17500000000000000,
-                  amount_tax: 2794117647059000
-              }
+            {
+              quantity: 100,
+              unit_amount: 5000,
+              unit_amount_decimal: '050',
+              unit_amount_net: 42016806722689,
+              unit_amount_gross: 50000000000000,
+              amount_subtotal: 4201680672268900,
+              amount_total: 5000000000000000,
+              amount_tax: 798319327731100,
+            },
+            {
+              quantity: 150,
+              unit_amount: 4500,
+              unit_amount_decimal: '045',
+              unit_amount_net: 37815126050420,
+              unit_amount_gross: 45000000000000,
+              amount_subtotal: 5672268907563000,
+              amount_total: 6750000000000000,
+              amount_tax: 1077731092437000,
+            },
+            {
+              quantity: 250,
+              unit_amount: 4000,
+              unit_amount_decimal: '040',
+              unit_amount_net: 33613445378151,
+              unit_amount_gross: 40000000000000,
+              amount_subtotal: 8403361344537750,
+              amount_total: 10000000000000000,
+              amount_tax: 1596638655462250,
+            },
+            {
+              quantity: 500,
+              unit_amount: 3500,
+              unit_amount_decimal: '035',
+              unit_amount_net: 29411764705882,
+              unit_amount_gross: 35000000000000,
+              amount_subtotal: 14705882352941000,
+              amount_total: 17500000000000000,
+              amount_tax: 2794117647059000,
+            },
           ],
           unit_amount_gross: 170000000000000,
           unit_amount_net: 142857142857142,
           amount_subtotal: 32983193277310650,
           amount_total: 39250000000000000,
-          amount_tax: 6266806722689350
-      },
+          amount_tax: 6266806722689350,
+        },
         {
           ...baseParams,
           coupon: percentage10DiscountCoupon,
-          priceItem: (compositePriceItemWithTieredGraduatedComponent.item_components?.[0]!),
+          priceItem: compositePriceItemWithTieredGraduatedComponent.item_components?.[0]!,
           unitAmountMultiplier: 1000, // Total quantity
         },
       );
@@ -250,4 +249,4 @@ describe('applyDiscounts', () => {
       expect(result.discount_percentage).toBe(10);
     });
   });
-}); 
+});

@@ -301,7 +301,7 @@ export const getTieredUnitAmount = (
 export const getGetAgUnitAmount = (item: PriceItem, i18n: any, useUnitAmountNet: boolean) => {
   const amount = useUnitAmountNet
     ? item.unit_amount_net || 0
-    : (item.is_tax_inclusive ?? item._price?.is_tax_inclusive ? item.unit_amount_gross : item.unit_amount_net) || 0;
+    : ((item.is_tax_inclusive ?? item._price?.is_tax_inclusive) ? item.unit_amount_gross : item.unit_amount_net) || 0;
 
   if (!item._price?.is_composite_price) {
     return safeFormatAmount({
@@ -344,8 +344,8 @@ export const getHiddenAmountString = (t: any, displayInJourneys?: PriceDisplayTy
   return !displayInJourneys
     ? EMPTY_VALUE_PLACEHOLDER
     : displayInJourneys === 'show_as_starting_price'
-    ? `${t(displayInJourneys, EMPTY_VALUE_PLACEHOLDER)}${valueStr}`
-    : t(displayInJourneys, EMPTY_VALUE_PLACEHOLDER);
+      ? `${t(displayInJourneys, EMPTY_VALUE_PLACEHOLDER)}${valueStr}`
+      : t(displayInJourneys, EMPTY_VALUE_PLACEHOLDER);
 };
 
 export const getPriceDisplayInJourneys = (

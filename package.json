@@ -26,7 +26,8 @@
     "typegen": "echo '/* eslint-disable */\n/**\n * DO NOT MODIFY - GENERATED TYPES FROM OPENAPI\n **/' > src/types/pricing-types.d.ts && typegen ../../lambda/ApiHandlerFunction/openapi.yml >> src/types/pricing-types.d.ts",
     "prepare": "npm run build",
     "lint": "eslint src --ext js,ts,tsx --cache --color",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "prettify": "prettier --write ./src"
   },
   "prettier": {
     "printWidth": 120,

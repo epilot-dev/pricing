@@ -100,8 +100,8 @@ describe('computeAggregatedAndPriceTotals', () => {
               taxes: [
                 {
                   tax: taxRateless,
-                  amount: 0
-                }
+                  amount: 0,
+                },
               ],
             }),
           ]),
@@ -195,7 +195,7 @@ describe('computeAggregatedAndPriceTotals', () => {
           amount_subtotal: 1017,
           amount_total: 1114,
           amount_tax: 97,
-          currency: "EUR",
+          currency: 'EUR',
           items: expect.arrayContaining([
             expect.objectContaining({
               amount_subtotal: 1017,
@@ -210,9 +210,9 @@ describe('computeAggregatedAndPriceTotals', () => {
                   taxes: expect.arrayContaining([
                     expect.objectContaining({
                       tax: expect.objectContaining({
-                        _id: "10",
+                        _id: '10',
                         rate: 10,
-                        type: "VAT",
+                        type: 'VAT',
                       }),
                       amount: 97,
                     }),
@@ -226,9 +226,9 @@ describe('computeAggregatedAndPriceTotals', () => {
                   taxes: expect.arrayContaining([
                     expect.objectContaining({
                       tax: expect.objectContaining({
-                        _id: "88",
+                        _id: '88',
                         rate: null,
-                        type: "Custom",
+                        type: 'Custom',
                       }),
                       amount: 0,
                     }),
@@ -241,25 +241,25 @@ describe('computeAggregatedAndPriceTotals', () => {
                   taxes: expect.arrayContaining([
                     expect.objectContaining({
                       tax: expect.objectContaining({
-                        _id: "10",
+                        _id: '10',
                         rate: 10,
-                        type: "VAT",
+                        type: 'VAT',
                       }),
                       amount: 97,
                     }),
                     expect.objectContaining({
                       tax: expect.objectContaining({
-                        _id: "88",
+                        _id: '88',
                         rate: null,
-                        type: "Custom",
+                        type: 'Custom',
                       }),
                       amount: 0,
                     }),
                   ]),
                   recurrences: expect.arrayContaining([
                     expect.objectContaining({
-                      type: "recurring",
-                      billing_period: "monthly",
+                      type: 'recurring',
+                      billing_period: 'monthly',
                       amount_subtotal: 1017,
                       amount_total: 1114,
                       amount_tax: 97,
@@ -275,24 +275,24 @@ describe('computeAggregatedAndPriceTotals', () => {
               taxes: expect.arrayContaining([
                 expect.objectContaining({
                   tax: expect.objectContaining({
-                    _id: "10",
+                    _id: '10',
                     rate: 10,
-                    type: "VAT",
+                    type: 'VAT',
                   }),
                   amount: 97,
                 }),
                 expect.objectContaining({
                   tax: expect.objectContaining({
-                    _id: "88",
+                    _id: '88',
                     rate: null,
-                    type: "Custom",
+                    type: 'Custom',
                   }),
                   amount: 0,
                 }),
-              ])
+              ]),
             }),
           }),
-        })
+        }),
       );
     });
 
@@ -718,7 +718,9 @@ describe('computeAggregatedAndPriceTotals', () => {
     });
 
     it('should compute fixed amount cashbacks and totals correctly for recurring price', () => {
-      const result = computeAggregatedAndPriceTotals([samples.recurringPriceItemWithFixedAmountCashbackCoupon as PriceItemDto]);
+      const result = computeAggregatedAndPriceTotals([
+        samples.recurringPriceItemWithFixedAmountCashbackCoupon as PriceItemDto,
+      ]);
       expect(result).toEqual(results.computedRecurringPriceWithFixedAmountCashbackCoupon);
     });
 

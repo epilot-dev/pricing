@@ -322,7 +322,7 @@ describe('getTierDescription', () => {
         showStartsAt,
         enableSubunitDisplay,
         showOnRequest: shouldDisplayOnRequest,
-        precision
+        precision,
       });
 
       expect(result?.replace(/\s+/g, ' ').trim()).toEqual(expected);

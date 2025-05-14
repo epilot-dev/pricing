@@ -1,15 +1,3 @@
-import {
-  Components as PricingComponents,
-  CompositePriceItem,
-  Coupon,
-  PriceItem,
-  PriceItems,
-  Product,
-  RecurrenceAmount,
-  RecurrenceAmountWithTax,
-  RedeemedPromo,
-  BillingPeriod,
-} from '@epilot/pricing-client';
 import { Currency } from 'dinero.js';
 
 import { formatPriceUnit } from '../formatters';
@@ -37,6 +25,19 @@ import {
   unitAmountApproved,
   withValidLineItem,
 } from './utils';
+import type {
+  I18n,
+  Order,
+  CompositePriceItem,
+  Coupon,
+  PriceItem,
+  PriceItems,
+  Product,
+  RecurrenceAmount,
+  RecurrenceAmountWithTax,
+  RedeemedPromo,
+  BillingPeriod,
+} from '../types';
 
 export const RECURRENCE_ORDERING = [
   'one_time',
@@ -46,13 +47,6 @@ export const RECURRENCE_ORDERING = [
   'every_6_months',
   'yearly',
 ] as const;
-
-export type Order = PricingComponents.Schemas.Order;
-
-interface I18n {
-  t: (key: string, options?: any) => string;
-  language: string;
-}
 
 export const processOrderTableData = (order: Order, i18n: I18n) => {
   const data = {

@@ -1,3 +1,4 @@
+import { PriceItemDto } from '@epilot/pricing-client';
 import {
   compositePriceGetAG,
   compositePriceGetAGWithZeroInputMapping,
@@ -8,7 +9,6 @@ import {
   priceTieredVolumeGetAG,
 } from '../../__tests__/fixtures/price-getag.samples';
 import { computeAggregatedAndPriceTotals } from './computeTotals';
-import { PriceItemDto } from '../../types';
 
 describe('GetAG - computeAggregatedAndPriceTotals', () => {
   describe('when is_composite_price = false', () => {

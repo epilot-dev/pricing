@@ -1,7 +1,7 @@
 import { Currency } from 'dinero.js';
 
 import { formatPriceUnit } from '../money/formatters';
-import { getRecurrencesWithEstimatedPrices } from '../computations/pricing';
+import { getRecurrencesWithEstimatedPrices } from '../computations/getRecurrencesWithEstimatedPrices';
 import { PricingModel } from '../prices/constants';
 
 import { OrderTableData, RecurrenceByBillingPeriod } from './types';
@@ -39,15 +39,7 @@ import type {
   RedeemedPromo,
   BillingPeriod,
 } from '../types';
-
-export const RECURRENCE_ORDERING = [
-  'one_time',
-  'weekly',
-  'monthly',
-  'every_quarter',
-  'every_6_months',
-  'yearly',
-] as const;
+import { RECURRENCE_ORDERING } from './constants';
 
 export const processOrderTableData = (order: Order, i18n: I18n) => {
   const data = {
@@ -656,7 +648,9 @@ const getFormattedCouponDescription = (
 
 const formatPercentage = (formatPercentageValue: number | string) => `${formatPercentageValue}%`;
 
-// TODO: Use external cloning utils, check common utils used across consumers.
+/**
+ * @todo Use structuredClone
+ */
 const clone = <T>(item: T): T => {
   if (!item) {
     return item;

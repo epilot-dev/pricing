@@ -1,3 +1,4 @@
+import { PriceItemDto } from '@epilot/pricing-client';
 import {
   compositePriceDynamicManual,
   compositePriceDynamicRealtime,
@@ -7,7 +8,6 @@ import {
   priceDynamicRealtimeTaxinclusive,
 } from '../../__tests__/fixtures/price-dynamic-tariff.samples';
 import { computeAggregatedAndPriceTotals } from './computeTotals';
-import { PriceItemDto } from '../../types';
 
 describe('Dynamic Tariff - computeAggregatedAndPriceTotals', () => {
   describe('when is_composite_price = false', () => {

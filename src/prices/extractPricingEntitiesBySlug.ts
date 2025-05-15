@@ -1,5 +1,23 @@
-import type { PriceItem, CompositePriceItem } from '@epilot/pricing-client';
-import { PricingEntitiesExtractResult, RelationAttributeValue } from '../computations/pricing';
+import type { PriceItem, CompositePriceItem } from '../types';
+
+type RelationAttributeValue = {
+  $relation: { entity_id: string; _schema: string; _tags: string[] }[];
+};
+
+export interface PricingEntitiesExtractResult {
+  /**
+   * A relation attribute value containing all price entities from the given price items.
+   */
+  price: RelationAttributeValue;
+  /**
+   * A relation attribute value containing all product entities from the given price items.
+   */
+  product: RelationAttributeValue;
+  /**
+   * All pricing tags inferred from the products and prices of the provided price items.
+   */
+  _tags: string[];
+}
 
 /**
  * Extracts the pricing entities from a list of price items.

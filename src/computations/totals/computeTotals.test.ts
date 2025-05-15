@@ -4,6 +4,7 @@ import * as results from '../../__tests__/fixtures/pricing.results';
 import { taxRateless } from '../../__tests__/fixtures/tax.samples';
 import * as coupons from '../../coupons/__tests__/coupon.fixtures';
 import { computeAggregatedAndPriceTotals } from './computeTotals';
+import { computePriceItemDetails } from './computeTotals';
 
 describe('computeAggregatedAndPriceTotals', () => {
   describe('when is_composite_price = false', () => {
@@ -758,5 +759,31 @@ describe('computeAggregatedAndPriceTotals', () => {
       );
       expect(result).toEqual(results.computedCompositePriceWithComponentsWithPromoCodeRequiredCoupon);
     });
+  });
+});
+
+describe('computePriceItemDetails', () => {
+  it('computes the pricing details for a simple price', () => {
+    const result = computePriceItemDetails(samples.priceItem1);
+
+    expect(result).toStrictEqual(results.priceDetailsForOnePrice);
+  });
+
+  it('computes the pricing details for a composite price', () => {
+    const result = computePriceItemDetails(samples.compositePrice);
+
+    expect(result).toStrictEqual(results.priceDetailsForCompositePrice);
+  });
+
+  it('computes the pricing details for a composite price that one component has changed its tax', () => {
+    const result = computePriceItemDetails(samples.compositePriceWithTaxChanges);
+
+    expect(result).toStrictEqual(results.priceDetailsForCompositePriceWithTaxChanges);
+  });
+
+  it('should deliver the same result when recomputing the pricing details', () => {
+    const result = computePriceItemDetails(samples.compositePrice);
+    const resultRecomputed = computePriceItemDetails(result.items?.[0] as CompositePriceItemDto);
+    expect(result).toStrictEqual(resultRecomputed);
   });
 });

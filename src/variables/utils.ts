@@ -1,11 +1,10 @@
-import type { Currency } from 'dinero.js';
-
 import { formatAmount, formatAmountFromString, formatPriceUnit } from '../money/formatters';
 import { toDinero } from '../money/toDinero';
 import { normalizeTimeFrequency, normalizeValueToFrequencyUnit } from '../time-frequency/normalizers';
 import { PricingModel } from '../prices/constants';
 import { getDisplayTierByQuantity, getTierDescription } from '../tiers/utils';
 import type {
+  Currency,
   BillingPeriod,
   CompositePrice,
   CompositePriceItem,
@@ -20,7 +19,7 @@ import type {
 
 import { ExternalFeesMetadata, GetTieredUnitAmountOptions, PriceDisplayType, PriceItemWithParent } from './types';
 
-import { RECURRENCE_ORDERING } from '.';
+import { RECURRENCE_ORDERING } from './constants';
 import { TimeFrequency } from '../time-frequency/types';
 
 export const EMPTY_VALUE_PLACEHOLDER = '---';

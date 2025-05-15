@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// import type { i18n } from 'i18next';
-
 import {
   orderWithCompositeItem,
   orderWithCompositeItemResults,
@@ -10,9 +7,9 @@ import {
   priceWithCorrectQuantity,
   orderEntityDataWithEmptyLineItems,
   invalidOrderEntityData,
-} from './fixtures/orders';
+} from './__tests__/orders.fixtures';
 
-import { processOrderTableData } from '.';
+import { processOrderTableData } from './processOrderTableData';
 import { getHiddenAmountString, getPriceDisplayInJourneys, getQuantity, unitAmountApproved } from './utils';
 import type { I18n, CompositePrice, PriceInputMappings, PriceItem } from '../types';
 

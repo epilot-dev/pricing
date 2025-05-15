@@ -13,16 +13,12 @@ import type {
 import { DEFAULT_CURRENCY } from '../../money/constants';
 import { toDineroFromInteger } from '../../money/toDinero';
 import { getPriceRecurrence, getPriceRecurrenceByTax } from '../getPriceRecurrence';
-import {
-  isCompositePriceItemDto,
-  computeCompositePrice,
-  convertPriceComponentsPrecision,
-  computePriceItem,
-  isOnRequestUnitAmountApproved,
-  convertPriceItemPrecision,
-  computeRecurrenceAfterCashbackAmounts,
-  convertPricingPrecision,
-} from '../pricing';
+import { convertPriceComponentsPrecision, convertPriceItemPrecision, convertPricingPrecision } from '../pricing';
+import { computeRecurrenceAfterCashbackAmounts } from './computeRecurrenceAfterCashbackAmounts';
+import { computeCompositePrice } from './computeCompositePrice';
+import { isCompositePriceItemDto } from '../isCompositePriceItemDto';
+import { isOnRequestUnitAmountApproved } from '../approval';
+import { computePriceItem } from './computePriceItem';
 import { getImmutablePriceItem } from '../../prices/getImmutablePriceItem';
 
 type ComputeAggregatedAndPriceTotalsOptions = {

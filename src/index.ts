@@ -25,14 +25,11 @@ export {
   BillingPeriods,
 } from './time-frequency/constants';
 export type { TimeFrequencyNormalizerMatrix, TimeFrequency } from './time-frequency/types';
-export {
-  type PricingEntitiesExtractResult,
-  computePriceComponent,
-  computeQuantities,
-  isPriceItemApproved,
-  isRequiringApproval,
-  getRecurrencesWithEstimatedPrices,
-} from './computations/pricing';
+export { type PricingEntitiesExtractResult } from './prices/extractPricingEntitiesBySlug';
+export { getRecurrencesWithEstimatedPrices } from './computations/getRecurrencesWithEstimatedPrices';
+export { computePriceComponent } from './computations/totals/computeCompositePrice';
+export { isPriceItemApproved, isRequiringApproval } from './computations/approval';
+export { computeQuantities } from './computations/totals/computePriceItem';
 export { extractPricingEntitiesBySlug } from './prices/extractPricingEntitiesBySlug';
 export {
   computeAggregatedAndPriceTotals,
@@ -54,4 +51,4 @@ export type {
   BillingPeriod,
 } from './types';
 export { isTaxInclusivePrice } from './prices/utils';
-export { processOrderTableData } from './variables';
+export { processOrderTableData } from './variables/processOrderTableData';

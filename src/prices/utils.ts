@@ -1,4 +1,4 @@
-import type { Price, PriceItem, PriceItemDto } from '@epilot/pricing-client';
+import type { Price, PriceItem, PriceItemDto } from '../types';
 
 /**
  * Checks whether a price is tax inclusive or not.

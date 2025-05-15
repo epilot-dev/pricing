@@ -3,6 +3,12 @@ import { toDinero } from '../money/toDinero';
 import { TIME_FREQUENCY_NORMALIZATION_FACTORS } from './constants';
 import { TimeFrequency } from './types';
 
+export const normalizeTimeFrequencyFromDineroInputValue = (
+  dineroInputValue: Dinero,
+  timeValueFrequency: TimeFrequency,
+  targetTimeFrequency: TimeFrequency,
+): Dinero => dineroInputValue.multiply(getTimeFrequencyConversionFactor(timeValueFrequency, targetTimeFrequency));
+
 /**
  * This function will normalize an inputted value of a specific time frequency to the
  * desired time frequency based on constant values defined here {@link TIME_FREQUENCY_NORMALIZATION_FACTORS}.
@@ -51,12 +57,6 @@ const getTimeFrequencyConversionFactor = (
 
   return originFactor / targetFactor;
 };
-
-export const normalizeTimeFrequencyFromDineroInputValue = (
-  dineroInputValue: Dinero,
-  timeValueFrequency: TimeFrequency,
-  targetTimeFrequency: TimeFrequency,
-): Dinero => dineroInputValue.multiply(getTimeFrequencyConversionFactor(timeValueFrequency, targetTimeFrequency));
 
 /**
  * This function will normalize an inputted value of a specific time frequency to the

@@ -9,7 +9,7 @@ import type {
   PriceItem,
   Tax,
   Currency,
-} from '../types';
+} from '../shared/types';
 import { DEFAULT_CURRENCY } from '../money/constants';
 import { toDineroFromInteger } from '../money/toDinero';
 import { getPriceRecurrence, getPriceRecurrenceByTax } from '../prices/getPriceRecurrence';
@@ -20,7 +20,7 @@ import {
 } from '../prices/convertPrecision';
 import { computeRecurrenceAfterCashbackAmounts } from './computeRecurrenceAfterCashbackAmounts';
 import { computeCompositePrice } from './computeCompositePrice';
-import { isCompositePriceItemDto } from '../prices/isCompositePriceItemDto';
+import { isCompositePriceItemDto } from '../prices/utils';
 import { isOnRequestUnitAmountApproved } from '../prices/approval';
 import { computePriceItem } from './computePriceItem';
 import { getImmutablePriceItem } from '../prices/getImmutablePriceItem';

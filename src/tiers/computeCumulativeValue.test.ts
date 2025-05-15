@@ -1,6 +1,6 @@
-import { PriceTier } from '../types';
-import { baseTiersUnitAmount } from './__tests__/fixtures';
-import { mockedTranslationFn } from './__tests__/mockedTranslationFn';
+import { PriceTier } from '../shared/types';
+import { baseTiersUnitAmount } from './__tests__/tiers.fixtures';
+import { mockedTranslationFn } from './__tests__/mocks';
 import { computeCumulativeValue } from './computeCumulativeValue';
 
 const decimalTiers: PriceTier[] = [

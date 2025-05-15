@@ -15,5 +15,5 @@
     "strict": true
   },
   "include": ["src/**/*"],
-  "exclude": ["**/*.test.ts", "**/__tests__/*", "node_modules"]
+  "exclude": ["node_modules"]
 }

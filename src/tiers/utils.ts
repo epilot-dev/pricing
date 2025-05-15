@@ -6,7 +6,7 @@ import { addSeparatorToDineroString, formatAmountFromString } from '../money/for
 import { toDinero } from '../money/toDinero';
 import { DEFAULT_LOCALE } from '../money/constants';
 import { PricingModel } from '../prices/constants';
-import { Price, PriceTier, PriceTierEnhanced, Tax } from '../types';
+import { Price, PriceTier, PriceTierEnhanced, Tax } from '../shared/types';
 import { isNotPieceUnit } from '../shared/isNotPieceUnit';
 import { getTaxValue } from '../taxes/getTaxValue';
 

@@ -26,7 +26,7 @@ import { isPriceItemWithCouponApplied, isTaxInclusivePrice } from '../prices/uti
 import { normalizeValueToFrequencyUnit } from '../time-frequency/normalizers';
 import { TimeFrequency } from '../time-frequency/types';
 import { mapToProductSnapshot, mapToPriceSnapshot } from '../prices/mapToSnapshots';
-import { normalizePriceMappingInput } from '../price-mapping/normalizers';
+import { normalizePriceMappingInput } from '../prices/mapping';
 import { getSafeQuantity } from '../shared/getSafeQuantity';
 
 const computeExternalFee = (

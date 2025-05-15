@@ -1,5 +1,5 @@
 import { toDineroFromInteger } from '../money/toDinero';
-import type { CompositePriceItem, Price, PriceItem, PriceItemDto, PricingDetails } from '../types';
+import type { CompositePriceItem, Price, PriceItem, PriceItemDto, PricingDetails } from '../shared/types';
 import { PricingModel } from '../prices/constants';
 
 export const convertPriceComponentsPrecision = (items: PriceItem[], precision = 2): PriceItem[] =>

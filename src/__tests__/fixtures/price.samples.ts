@@ -6,7 +6,7 @@ import {
   PriceItem,
   PriceItemDto,
   TaxAmount,
-} from '../../types';
+} from '../../shared/types';
 
 import {
   fixedCashbackCoupon,

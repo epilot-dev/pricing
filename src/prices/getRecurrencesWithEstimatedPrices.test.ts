@@ -1,5 +1,5 @@
 import { getRecurrencesWithEstimatedPrices } from './getRecurrencesWithEstimatedPrices';
-import type { PriceItems } from '../types';
+import type { PriceItems } from '../shared/types';
 
 describe('getRecurrencesWithEstimatedPrices', () => {
   const monthlyEstimateComponent = {

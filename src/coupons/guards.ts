@@ -1,4 +1,4 @@
-import type { Coupon } from '../types';
+import type { Coupon } from '../shared/types';
 import type { FixedValueCoupon, PercentageCoupon, CashbackCoupon } from './types';
 
 export const isFixedValueCoupon = (coupon: Coupon): coupon is FixedValueCoupon =>

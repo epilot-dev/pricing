@@ -1,4 +1,4 @@
-import type { Tax, Price, TaxAmountDto } from '../types';
+import type { Tax, Price, TaxAmountDto } from '../shared/types';
 
 /**
  * Gets a price tax with the proper tax behavior override

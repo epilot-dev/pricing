@@ -1,4 +1,4 @@
-import type { Price, Product } from '../types';
+import type { Price, Product } from '../shared/types';
 
 export const ENTITY_FIELDS_EXCLUSION_LIST: Set<keyof Price> = new Set([
   '_org',

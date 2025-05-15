@@ -1,4 +1,4 @@
-import type { PriceTier } from '../../types';
+import type { PriceTier } from '../../shared/types';
 
 export const baseTiersUnitAmount: PriceTier[] = [
   { up_to: 10, unit_amount: 1000, unit_amount_decimal: '10.00' },

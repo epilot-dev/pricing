@@ -1,17 +1,17 @@
-import type { Price } from '../types';
+import type { Price } from '../shared/types';
 
-import { normalizePriceMappingInput } from './normalizers';
+import { normalizePriceMappingInput } from './mapping';
+
+const oneTimePrice = {
+  type: 'one_time',
+} as Price;
+
+const recurringPrice = {
+  type: 'recurring',
+  billing_period: 'monthly',
+} as Price;
 
 describe('normalizePriceMappingInput', () => {
-  const oneTimePrice = {
-    type: 'one_time',
-  } as Price;
-
-  const recurringPrice = {
-    type: 'recurring',
-    billing_period: 'monthly',
-  } as Price;
-
   it.each`
     priceMapping                                       | price             | expected
     ${{ value: 0.35435, frequency_unit: undefined }}   | ${oneTimePrice}   | ${0.35435}

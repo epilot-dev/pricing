@@ -13,7 +13,7 @@ export { getCurrencySymbol } from './money/getCurrencySymbol';
 export { type DineroConvertor, toDinero, toDineroFromInteger } from './money/toDinero';
 export { TaxRates } from './taxes/constants';
 export { DECIMAL_PRECISION, GENERIC_UNIT_DISPLAY_LABEL } from './money/constants';
-export { normalizePriceMappingInput } from './price-mapping/normalizers';
+export { normalizePriceMappingInput } from './prices/mapping';
 export {
   normalizeTimeFrequency,
   normalizeTimeFrequencyToDinero,
@@ -49,6 +49,6 @@ export type {
   Tax,
   TaxAmountBreakdown,
   BillingPeriod,
-} from './types';
+} from './shared/types';
 export { isTaxInclusivePrice } from './prices/utils';
 export { processOrderTableData } from './variables/processOrderTableData';

@@ -15,7 +15,7 @@ import type {
   TierDetails,
   I18n,
   TFunction,
-} from '../types';
+} from '../shared/types';
 
 import { ExternalFeesMetadata, GetTieredUnitAmountOptions, PriceDisplayType, PriceItemWithParent } from './types';
 

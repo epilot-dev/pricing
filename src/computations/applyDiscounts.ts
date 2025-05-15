@@ -1,4 +1,4 @@
-import type { Currency, Dinero, PriceItemDto, Tax, Coupon, BillingPeriod } from '../types';
+import type { Currency, Dinero, PriceItemDto, Tax, Coupon, BillingPeriod } from '../shared/types';
 import { PriceItemsTotals } from '../prices/types';
 import { clamp } from '../shared/clamp';
 import { isCashbackCoupon, isFixedValueCoupon, isPercentageCoupon } from '../coupons/guards';

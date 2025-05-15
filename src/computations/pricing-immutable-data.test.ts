@@ -4,7 +4,7 @@ import {
   pricesWithExternalDataSingleComposite,
 } from '../__tests__/fixtures/price-external-data.samples';
 import { computeAggregatedAndPriceTotals } from './computeTotals';
-import { CompositePriceItem, PriceItem } from '../types';
+import { CompositePriceItem, PriceItem } from '../shared/types';
 
 describe('Immutable data - computeAggregatedAndPriceTotals', () => {
   describe('with external pricing details', () => {

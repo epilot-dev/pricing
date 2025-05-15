@@ -1,4 +1,4 @@
-import type { PriceItem, Price } from '../types';
+import type { PriceItem, Price } from '../shared/types';
 
 export type PriceItemsTotals = Pick<
   PriceItem,

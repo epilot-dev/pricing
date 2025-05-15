@@ -1,4 +1,4 @@
-import type { PriceTier } from '../types';
+import type { PriceTier } from '../shared/types';
 
 /**
  * Returns a function that checks whether a price tier is eligible for a given quantity.

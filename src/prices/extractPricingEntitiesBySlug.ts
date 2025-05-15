@@ -1,4 +1,4 @@
-import type { PriceItem, CompositePriceItem } from '../types';
+import type { PriceItem, CompositePriceItem } from '../shared/types';
 
 type RelationAttributeValue = {
   $relation: { entity_id: string; _schema: string; _tags: string[] }[];

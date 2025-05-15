@@ -1,11 +1,11 @@
 import { Currency } from 'dinero.js';
 
 import { PricingModel } from '../prices/constants';
-import { PriceTier, Tax } from '../types';
+import { PriceTier, Tax } from '../shared/types';
 
 import { getDisplayTierByQuantity, getDisplayTiersByQuantity, getTierDescription } from './utils';
-import { baseTiersUnitAmount, baseTiersFlatFeeAmount } from './__tests__/fixtures';
-import { mockedTranslationFn } from './__tests__/mockedTranslationFn';
+import { baseTiersUnitAmount, baseTiersFlatFeeAmount } from './__tests__/tiers.fixtures';
+import { mockedTranslationFn } from './__tests__/mocks';
 
 describe('getDisplayTierByQuantity', () => {
   it.each`

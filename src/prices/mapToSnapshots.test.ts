@@ -1,4 +1,4 @@
-import type { Price, PriceItemDto } from '../types';
+import type { Price, PriceItemDto } from '../shared/types';
 import * as samples from '../__tests__/fixtures/price.samples';
 import { mapToPriceSnapshot, ENTITY_FIELDS_EXCLUSION_LIST, mapToProductSnapshot } from './mapToSnapshots';
 

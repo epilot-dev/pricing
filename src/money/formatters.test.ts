@@ -8,7 +8,7 @@ import {
   toIntegerAmount,
   unitDisplayLabels,
 } from './formatters';
-import { Currency } from '../types';
+import { Currency } from '../shared/types';
 import { toDinero } from './toDinero';
 
 describe('formatAmount', () => {
@@ -289,7 +289,7 @@ describe('formatPriceUnit', () => {
     (unitCode) => {
       const result = formatPriceUnit(unitCode);
 
-      expect(result).toStrictEqual(unitDisplayLabels[unitCode]);
+      expect(result).toStrictEqual(unitDisplayLabels[unitCode as keyof typeof unitDisplayLabels]);
     },
   );
 });

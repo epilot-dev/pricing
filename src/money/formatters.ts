@@ -2,7 +2,6 @@ import dinero from 'dinero.js';
 import type { Currency } from 'dinero.js';
 
 import { CURRENCIES_SUBUNITS, DEFAULT_CURRENCY, DEFAULT_SUBUNIT } from './constants';
-import type { PriceUnit } from '../types';
 
 import {
   DECIMAL_PRECISION,
@@ -270,32 +269,7 @@ export function addSeparatorToDineroString(dineroString: string) {
 export const toIntegerAmount: (decimalAmount: string) => number = (decimalAmount) =>
   toDinero(decimalAmount).convertPrecision(DEFAULT_INTEGER_AMOUNT_PRECISION).getAmount();
 
-/**
- * Checks whether a price unit is a built-in unit or not.
- *
- * @param {Price['unit']} unit - the built-in unit code or user custom unit
- * @returns {boolean} true if the unit is a built-in unit
- */
-export const isPriceBuiltInUnit = (unit: string): unit is PriceUnit => unit in unitDisplayLabels;
-
-/**
- * Formats built-in price units into a displayable representation. Eg. kw -> kW
- *
- * @returns {string} the formatted unit
- */
-export const formatPriceUnit = (unit?: PriceUnit, hideGenericUnitLabel?: boolean) => {
-  if (!hideGenericUnitLabel && !unit?.trim()) {
-    return unitDisplayLabels.none;
-  }
-
-  if (!unit || !isPriceBuiltInUnit(unit)) {
-    return String(unit ?? '').trim();
-  }
-
-  return unitDisplayLabels[unit];
-};
-
-export const unitDisplayLabels: Record<PriceUnit | 'none', string> = {
+export const unitDisplayLabels = {
   none: GENERIC_UNIT_DISPLAY_LABEL,
   kw: 'kW',
   kwh: 'kWh',
@@ -310,6 +284,33 @@ export const unitDisplayLabels: Record<PriceUnit | 'none', string> = {
   w: 'W',
   wp: 'Wp',
   kwp: 'kWp',
+} as const;
+
+export type PriceUnit = keyof typeof unitDisplayLabels;
+
+/**
+ * Checks whether a price unit is a built-in unit or not.
+ *
+ * @param {Price['unit']} unit - the built-in unit code or user custom unit
+ * @returns {boolean} true if the unit is a built-in unit
+ */
+export const isPriceBuiltInUnit = (unit: string): unit is PriceUnit => unit in unitDisplayLabels;
+
+/**
+ * Formats built-in price units into a displayable representation. Eg. kw -> kW
+ *
+ * @returns {string} the formatted unit
+ */
+export const formatPriceUnit = (unit?: string, hideGenericUnitLabel?: boolean) => {
+  if (!hideGenericUnitLabel && !unit?.trim()) {
+    return unitDisplayLabels.none;
+  }
+
+  if (unit && unit in unitDisplayLabels) {
+    return unitDisplayLabels[unit as keyof typeof unitDisplayLabels];
+  }
+
+  return String(unit ?? '').trim();
 };
 
 /**

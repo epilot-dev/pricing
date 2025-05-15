@@ -1,5 +1,5 @@
 import type { PriceItem, CompositePriceItem, Price } from '@epilot/pricing-client';
-import { isCompositePriceItem } from './isCompositePriceItem';
+import { isCompositePriceItem } from './utils';
 
 /**
  * Determines if a price item is approved based on its display mode and approval property.

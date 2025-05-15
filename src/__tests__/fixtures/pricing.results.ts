@@ -1,4 +1,4 @@
-import { CompositePriceItem, PriceItem, Tax, TaxAmount } from '../../types';
+import { CompositePriceItem, PriceItem, Tax, TaxAmount } from '../../shared/types';
 
 import { incompletePriceItem, priceItem1, priceItem2, priceItem3, priceItem6 } from './price.samples';
 import { tax10percent, tax19percent, tax6percent } from './tax.samples';

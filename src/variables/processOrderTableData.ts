@@ -38,7 +38,7 @@ import type {
   RecurrenceAmountWithTax,
   RedeemedPromo,
   BillingPeriod,
-} from '../types';
+} from '../shared/types';
 import { RECURRENCE_ORDERING } from './constants';
 
 export const processOrderTableData = (order: Order, i18n: I18n) => {

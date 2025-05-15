@@ -1,5 +1,5 @@
-import type { PriceItems } from '../types';
-import { isCompositePriceItem } from './isCompositePriceItem';
+import type { PriceItems } from '../shared/types';
+import { isCompositePriceItem } from './utils';
 
 export const getRecurrencesWithEstimatedPrices = (lineItems: PriceItems | undefined) => {
   const recurrences: Record<string, boolean> = {};

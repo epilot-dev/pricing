@@ -11,7 +11,7 @@ import {
 
 import { processOrderTableData } from './processOrderTableData';
 import { getHiddenAmountString, getPriceDisplayInJourneys, getQuantity, unitAmountApproved } from './utils';
-import type { I18n, CompositePrice, PriceInputMappings, PriceItem } from '../types';
+import type { I18n, CompositePrice, PriceInputMappings, PriceItem } from '../shared/types';
 
 const mockI18n = {
   t: (key: string, fallback: string) => key || fallback,

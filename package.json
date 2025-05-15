@@ -58,6 +58,7 @@
   "devDependencies": {
     "@epilot/eslint-config": "^3.0.5",
     "@epilot/pricing-client": "^3.47.5",
+    "@jest/types": "^29.6.3",
     "@types/dinero.js": "^1.9.4",
     "@types/jest": "^29.5.14",
     "concurrently": "^9.1.2",

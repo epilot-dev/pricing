@@ -1,6 +1,6 @@
 import { TimeFrequency } from '../types';
 
-export enum OperationType {
+enum OperationType {
   MULTIPLY = 'multiply',
   DIVIDE = 'divide',
 }

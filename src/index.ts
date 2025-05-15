@@ -1,4 +1,3 @@
-export type { Currency } from 'dinero.js';
 export { DEFAULT_CURRENCY } from './currencies';
 export {
   type AmountFormatter,
@@ -46,6 +45,7 @@ export {
   getTierDescription,
 } from './tiers';
 export type {
+  Currency,
   Product,
   CompositePrice,
   PriceTierDisplayMode,

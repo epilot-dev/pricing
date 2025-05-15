@@ -23,12 +23,12 @@ import { ExternalFeesMetadata, GetTieredUnitAmountOptions, PriceDisplayType, Pri
 import { RECURRENCE_ORDERING } from '.';
 
 export const EMPTY_VALUE_PLACEHOLDER = '---';
-export const TEMPORARY_TAX_MAPPER = {
+const TEMPORARY_TAX_MAPPER = {
   standard: '19%',
   reduced: '7%',
-} as {
-  [key: string]: any;
-};
+} as const;
+
+type TaxRateName = keyof typeof TEMPORARY_TAX_MAPPER;
 
 export const safeFormatAmount = ({
   amount,
@@ -76,7 +76,7 @@ export const safeFormatAmount = ({
   }
 };
 
-export const safeFormatAmountWithPrefix = ({
+const safeFormatAmountWithPrefix = ({
   prefix,
   ...options
 }: {
@@ -209,7 +209,7 @@ export const getUnitAmount = (
   });
 };
 
-export const getTieredUnitAmount = (
+const getTieredUnitAmount = (
   item: PriceItemWithParent,
   i18n: I18n,
   { isUnitAmountApproved, useUnitAmountNet }: GetTieredUnitAmountOptions,
@@ -300,7 +300,7 @@ export const getTieredUnitAmount = (
   }
 };
 
-export const getGetAgUnitAmount = (item: PriceItem, i18n: I18n, useUnitAmountNet: boolean) => {
+const getGetAgUnitAmount = (item: PriceItem, i18n: I18n, useUnitAmountNet: boolean) => {
   const amount = useUnitAmountNet
     ? item.unit_amount_net || 0
     : ((item.is_tax_inclusive ?? item._price?.is_tax_inclusive) ? item.unit_amount_gross : item.unit_amount_net) || 0;
@@ -367,7 +367,13 @@ export const getPriceDisplayInJourneys = (
   }
 };
 
-export const processTaxRecurrences = (item: any, i18n: I18n) => {
+export const processTaxRecurrences = (
+  /**
+   * @todo Type narrowly
+   */
+  item: any,
+  i18n: I18n,
+) => {
   const taxes: Tax[] = [];
   for (let index = 0; index < item.total_details.breakdown.taxes.length; index++) {
     taxes.push({
@@ -385,7 +391,10 @@ export const processTaxRecurrences = (item: any, i18n: I18n) => {
 
 export const getTaxRate = (source: any, i18n: I18n, index = 0) => {
   if (source.taxes?.[index]?.rate) {
-    return TEMPORARY_TAX_MAPPER[source.taxes?.[index]?.rate] || i18n.t('table_order.no_tax');
+    const taxRate = source.taxes?.[index]?.rate as string | undefined;
+    return taxRate && taxRate in TEMPORARY_TAX_MAPPER
+      ? TEMPORARY_TAX_MAPPER[taxRate as TaxRateName]
+      : i18n.t('table_order.no_tax');
   } else if (source.taxes?.[index]?.tax?.rate) {
     return source.taxes?.[index]?.tax?.rate + '%';
   }

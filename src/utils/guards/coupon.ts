@@ -1,11 +1,6 @@
 import type { Currency } from 'dinero.js';
 
-import type { Coupon } from '../../types';
-
-/* Types coming from OpenAPI spec include an [k: string]: any key, which makes type narrowing harder */
-export type RemoveIndexSignature<T> = {
-  [Property in keyof T as string extends Property ? never : number extends Property ? never : Property]: T[Property];
-};
+import type { Coupon, RemoveIndexSignature } from '../../types';
 
 type BaseCoupon = RemoveIndexSignature<Coupon>;
 

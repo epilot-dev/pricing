@@ -1,6 +1,6 @@
 import { PriceItemDto } from '../../types';
 
-export const externalCompositePrice: PriceItemDto = {
+const externalCompositePrice: PriceItemDto = {
   _id: 'price-12312414',
   is_composite_price: true,
   description: 'Home Energy Package Composite',
@@ -539,7 +539,7 @@ export const externalCompositePrice: PriceItemDto = {
   },
 } as any;
 
-export const internalCompositePrice: PriceItemDto = {
+const internalCompositePrice: PriceItemDto = {
   description: 'Epilot Home Energy Package Composite',
   internal_description: 'Epilot Home Energy Package Composite',
   pricing_model: null,
@@ -1454,7 +1454,7 @@ export const internalCompositePrice: PriceItemDto = {
   ],
 } as any;
 
-export const internalSimplePrice: PriceItemDto = {
+const internalSimplePrice: PriceItemDto = {
   _id: 'efe9ff76-865c-4287-8de9-422cfc741ff9',
   description: 'Basic Model - No Wifi.',
   type: 'one_time',
@@ -2324,7 +2324,7 @@ export const internalSimplePrice: PriceItemDto = {
   },
 } as any;
 
-export const internalSimplePriceV2: PriceItemDto = {
+const internalSimplePriceV2: PriceItemDto = {
   _id: 'efe9ff76-865c-4287-8de9-422cfc741ff8',
   description: 'Advanced Model- With Wifi.',
   type: 'one_time',
@@ -3194,7 +3194,7 @@ export const internalSimplePriceV2: PriceItemDto = {
   },
 } as any;
 
-export const externalSimplePrice: PriceItemDto = {
+const externalSimplePrice: PriceItemDto = {
   _id: 'price-73f857a4-0fbc-4aa6-983f-87c0d6d410a6',
   unit_amount_currency: 'EUR',
   description: 'Single Price',

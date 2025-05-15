@@ -15,6 +15,7 @@ import {
 import { processOrderTableData } from '.';
 import { getHiddenAmountString, getPriceDisplayInJourneys, getQuantity, unitAmountApproved } from './utils';
 import type { I18n, CompositePrice, PriceInputMappings, PriceItem } from '../types';
+import { beforeEach, describe, it, expect, vi } from 'vitest';
 
 const mockI18n = {
   t: (key: string, fallback: string) => key || fallback,
@@ -22,7 +23,7 @@ const mockI18n = {
 } as I18n;
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 describe('processOrderTableData', () => {

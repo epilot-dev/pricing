@@ -11,10 +11,11 @@ import {
   toIntegerAmount,
   unitDisplayLabels,
 } from '.';
+import { describe, expect, it, vi } from 'vitest';
 
 describe('formatAmount', () => {
   it('should be resilient by formatting invalid amounts. defaulting to zero and providing a good log msg', () => {
-    const consoleErrorSpy = jest.spyOn(console, 'error');
+    const consoleErrorSpy = vi.spyOn(console, 'error');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formattedAmount = formatAmount({ amount: { invalid: 'thing' } as any });
 

@@ -16,6 +16,17 @@ yarn add @epilot/pricing
 npm install --save @epilot/pricing
 ```
 
+## Development
+
+### Testing
+
+This project uses Vitest for testing. To run tests:
+
+```bash
+npm test           # Run all tests
+npm run test:watch # Run tests in watch mode
+```
+
 ## ⚠️ Disclaimer
 
 This library is made available as an open source contribution to the community to ensure that all our clients and integrators can have the flexibility to build their own custom frontends and integrations with our platform [^1].

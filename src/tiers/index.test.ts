@@ -9,6 +9,7 @@ import {
   getDisplayTiersByQuantity,
   getTierDescription,
 } from './index';
+import { describe, it, expect, vi, Mock } from 'vitest';
 
 const baseTiersUnitAmount: PriceTier[] = [
   { up_to: 10, unit_amount: 1000, unit_amount_decimal: '10.00' },
@@ -75,7 +76,7 @@ const mockTranslations = {
   ['starts_at' as string]: 'Starts at',
 };
 
-const t = jest.fn().mockImplementation((key: string, { defaultValue }) => mockTranslations[key] ?? defaultValue ?? key);
+const t = vi.fn().mockImplementation((key: string, { defaultValue }) => mockTranslations[key] ?? defaultValue ?? key);
 
 describe('getDisplayTierByQuantity', () => {
   it.each`
@@ -311,7 +312,7 @@ describe('getTierDescription', () => {
       unit: string;
       locale: string;
       currency: Currency;
-      t: jest.Mock;
+      t: Mock;
       showStartsAt: boolean;
       enableSubunitDisplay: boolean;
       shouldDisplayOnRequest?: boolean;
@@ -355,7 +356,7 @@ describe('getTierDescription', () => {
       unit: string;
       locale: string;
       currency: Currency;
-      t: jest.Mock;
+      t: Mock;
       showStartsAt: boolean;
       enableSubunitDisplay: boolean;
       shouldDisplayOnRequest?: boolean;

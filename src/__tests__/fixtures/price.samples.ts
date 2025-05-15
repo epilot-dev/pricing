@@ -11,7 +11,6 @@ import {
 import {
   fixedCashbackCoupon,
   fixedDiscountCoupon,
-  lowFixedCashbackCoupon,
   highFixedDiscountCoupon,
   highPercentageDiscountCoupon,
   percentage10DiscountCoupon,
@@ -3395,7 +3394,7 @@ export const compositePriceCashbackCombinedWithComponentCashbacks: CompositePric
       },
       {
         ...(compositePriceWithComponentsWithCoupons._price!.price_components as Price)[1]!,
-        _coupons: [lowFixedCashbackCoupon],
+        _coupons: [fixedCashbackCoupon],
       },
     ],
   },

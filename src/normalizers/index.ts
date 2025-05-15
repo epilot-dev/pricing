@@ -114,7 +114,7 @@ export const normalizeTimeFrequency = (
   targetTimeFrequency: TimeFrequency,
   precision = 4,
 ): number => {
-  const targetPrecision = typeof precision !== undefined && precision >= 0 ? precision : 4;
+  const targetPrecision = typeof precision !== 'undefined' && precision >= 0 ? precision : 4;
 
   return Number(
     normalizeTimeFrequencyToDinero(

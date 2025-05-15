@@ -13,13 +13,13 @@ import {
 } from './fixtures/orders';
 
 import { processOrderTableData } from '.';
-import { CompositePrice, PriceItem } from '@epilot/pricing-client';
 import { getHiddenAmountString, getPriceDisplayInJourneys, getQuantity, unitAmountApproved } from './utils';
+import type { I18n, CompositePrice, PriceInputMappings, PriceItem } from '../types';
 
 const mockI18n = {
   t: (key: string, fallback: string) => key || fallback,
   language: 'de',
-};
+} as I18n;
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -122,7 +122,6 @@ describe('processOrderTableData', () => {
   });
 
   it('return original data/skip processing if line items are empty', async () => {
-
     //when
     const data = await processOrderTableData(orderEntityDataWithEmptyLineItems as any, mockI18n);
 
@@ -190,7 +189,7 @@ describe('getQuantity', () => {
       parentItem: PriceItem | undefined;
       quantity: number;
       parentQuantity: number;
-      mappings: any;
+      mappings: PriceInputMappings;
       expected: string;
     }) => {
       const mappedParentItem = parentItem && {

@@ -1,4 +1,10 @@
-import {
+import type { Currency } from 'dinero.js';
+
+import { formatAmount, formatAmountFromString, formatPriceUnit, toDinero } from '../formatters';
+import { normalizeTimeFrequency, normalizeValueToFrequencyUnit } from '../normalizers';
+import { PricingModel } from '../pricing';
+import { getDisplayTierByQuantity, getTierDescription } from '../tiers';
+import type {
   BillingPeriod,
   CompositePrice,
   CompositePriceItem,
@@ -7,14 +13,10 @@ import {
   RecurrenceAmount,
   Tax,
   TierDetails,
-} from '@epilot/pricing-client';
-import { Currency } from 'dinero.js';
-
-import { formatAmount, formatAmountFromString, formatPriceUnit, toDinero } from '../formatters';
-import { normalizeTimeFrequency, normalizeValueToFrequencyUnit } from '../normalizers';
-import { PricingModel } from '../pricing';
-import { getDisplayTierByQuantity, getTierDescription } from '../tiers';
-import { TimeFrequency } from '../types';
+  I18n,
+  TFunction,
+  TimeFrequency,
+} from '../types';
 
 import { ExternalFeesMetadata, GetTieredUnitAmountOptions, PriceDisplayType, PriceItemWithParent } from './types';
 
@@ -155,7 +157,7 @@ export const unitAmountApproved = (item: PriceItemWithParent): boolean => {
 
 export const getUnitAmount = (
   item: PriceItemWithParent,
-  i18n: any,
+  i18n: I18n,
   {
     isUnitAmountApproved,
     useUnitAmountNet,
@@ -209,7 +211,7 @@ export const getUnitAmount = (
 
 export const getTieredUnitAmount = (
   item: PriceItemWithParent,
-  i18n: any,
+  i18n: I18n,
   { isUnitAmountApproved, useUnitAmountNet }: GetTieredUnitAmountOptions,
 ) => {
   if (!item._price?.tiers?.length) {
@@ -219,7 +221,7 @@ export const getTieredUnitAmount = (
   const language = i18n.language;
   const parentItem = item.parent_item;
   const itemPriceMapping = (item.price_mappings || parentItem?.price_mappings)?.find(
-    (mapping: any) => mapping.price_id === item.price_id,
+    (mapping) => mapping.price_id === item.price_id,
   );
   const { value: numberInput, frequency_unit: frequencyUnit } = itemPriceMapping || {};
   const tax = useUnitAmountNet
@@ -298,10 +300,10 @@ export const getTieredUnitAmount = (
   }
 };
 
-export const getGetAgUnitAmount = (item: PriceItem, i18n: any, useUnitAmountNet: boolean) => {
+export const getGetAgUnitAmount = (item: PriceItem, i18n: I18n, useUnitAmountNet: boolean) => {
   const amount = useUnitAmountNet
     ? item.unit_amount_net || 0
-    : (item.is_tax_inclusive ?? item._price?.is_tax_inclusive ? item.unit_amount_gross : item.unit_amount_net) || 0;
+    : ((item.is_tax_inclusive ?? item._price?.is_tax_inclusive) ? item.unit_amount_gross : item.unit_amount_net) || 0;
 
   if (!item._price?.is_composite_price) {
     return safeFormatAmount({
@@ -318,7 +320,7 @@ export const getSafeAmount = (value: unknown) =>
 export const processRecurrences = (
   item: any,
   { currency }: { currency?: Currency },
-  { language: locale, t }: any,
+  { language: locale, t }: I18n,
   prefix?: string,
 ) =>
   RECURRENCE_ORDERING
@@ -338,14 +340,14 @@ export const processRecurrences = (
       billing_period: billing_period ? t(`table_order.recurrences.billing_period.${billing_period}`) : '',
     }));
 
-export const getHiddenAmountString = (t: any, displayInJourneys?: PriceDisplayType, value?: string | number) => {
+export const getHiddenAmountString = (t: TFunction, displayInJourneys?: PriceDisplayType, value?: string | number) => {
   const valueStr = (value === 0 ? '0' : value) ? ` ${value}` : '';
 
   return !displayInJourneys
     ? EMPTY_VALUE_PLACEHOLDER
     : displayInJourneys === 'show_as_starting_price'
-    ? `${t(displayInJourneys, EMPTY_VALUE_PLACEHOLDER)}${valueStr}`
-    : t(displayInJourneys, EMPTY_VALUE_PLACEHOLDER);
+      ? `${t(displayInJourneys, EMPTY_VALUE_PLACEHOLDER)}${valueStr}`
+      : t(displayInJourneys, EMPTY_VALUE_PLACEHOLDER);
 };
 
 export const getPriceDisplayInJourneys = (
@@ -365,7 +367,7 @@ export const getPriceDisplayInJourneys = (
   }
 };
 
-export const processTaxRecurrences = (item: any, i18n: any) => {
+export const processTaxRecurrences = (item: any, i18n: I18n) => {
   const taxes: Tax[] = [];
   for (let index = 0; index < item.total_details.breakdown.taxes.length; index++) {
     taxes.push({
@@ -381,7 +383,7 @@ export const processTaxRecurrences = (item: any, i18n: any) => {
   return taxes;
 };
 
-export const getTaxRate = (source: any, i18n: any, index = 0) => {
+export const getTaxRate = (source: any, i18n: I18n, index = 0) => {
   if (source.taxes?.[index]?.rate) {
     return TEMPORARY_TAX_MAPPER[source.taxes?.[index]?.rate] || i18n.t('table_order.no_tax');
   } else if (source.taxes?.[index]?.tax?.rate) {
@@ -447,9 +449,9 @@ export const getFormattedTieredDetails = (
 export const isCompositePrice = (priceItem: PriceItem | CompositePriceItem): priceItem is CompositePriceItem =>
   Boolean(priceItem.is_composite_price || priceItem._price?.is_composite_price);
 
-export const getQuantity = (item: PriceItem, parentItem: PriceItem) => {
+export const getQuantity = (item: PriceItem, parentItem?: PriceItem) => {
   if (!parentItem && item._price?.variable_price) {
-    const itemPriceMapping = item.price_mappings?.find((mapping: any) => mapping.price_id === item.price_id);
+    const itemPriceMapping = item.price_mappings?.find((mapping) => mapping.price_id === item.price_id);
     const quantity =
       typeof itemPriceMapping?.value === 'number'
         ? `${itemPriceMapping?.value} ${formatPriceUnit(item?._price?.unit, true)}`
@@ -461,7 +463,7 @@ export const getQuantity = (item: PriceItem, parentItem: PriceItem) => {
     return parentItem.quantity == 1 ? `${item.quantity}` : `${parentItem.quantity} x ${item.quantity}`;
   }
   if (parentItem && item._price?.variable_price) {
-    const itemPriceMapping = parentItem.price_mappings?.find((mapping: any) => mapping.price_id === item.price_id);
+    const itemPriceMapping = parentItem.price_mappings?.find((mapping) => mapping.price_id === item.price_id);
 
     const quantity =
       typeof itemPriceMapping?.value === 'number'
@@ -490,7 +492,7 @@ export const getDisplayUnit = (item: PriceItem) => {
 export const processExternalFeesMetadata = (
   externalFeesMetadata: ExternalFeesMetadata,
   currency: Currency,
-  i18n: any,
+  i18n: I18n,
   variableUnit?: string,
 ) => {
   const billingPeriod = externalFeesMetadata.billing_period;
@@ -536,7 +538,7 @@ const processVariableBreakdown = (
   externalFeesMetadata: ExternalFeesMetadata,
   result: ExternalFeesMetadata,
   currency: Currency,
-  i18n: any,
+  i18n: I18n,
   billingPeriod: string,
   variableUnit?: string,
 ) => {
@@ -571,7 +573,7 @@ const processStaticBreakdown = (
   externalFeesMetadata: ExternalFeesMetadata,
   result: ExternalFeesMetadata,
   currency: Currency,
-  i18n: any,
+  i18n: I18n,
   billingPeriod: string,
 ) => {
   if (result.breakdown.static) {
@@ -656,7 +658,7 @@ const normalizeToYearlyAmounts = (
   amount: number | string | undefined,
   billingPeriod: TimeFrequency,
   currency: Currency,
-  i18n: any,
+  i18n: I18n,
 ) => {
   const yearlyDecimalAmountNormalized = normalizeValueToFrequencyUnit(
     amount || 0,

@@ -1,3 +1,4 @@
+export type { i18n as I18n, TFunction } from 'i18next';
 export type {
   Price,
   PriceItem,
@@ -29,7 +30,10 @@ export type {
   PriceDynamicTariff,
   CashbackAmount,
   RedeemedPromo,
+  Order,
+  TierDetails,
 } from '@epilot/pricing-client';
+
 import type { BillingPeriod, Price } from '@epilot/pricing-client';
 
 export type TimeFrequency = Exclude<BillingPeriod, 'one_time'>;

@@ -1,15 +1,3 @@
-import {
-  Components as PricingComponents,
-  CompositePriceItem,
-  Coupon,
-  PriceItem,
-  PriceItems,
-  Product,
-  RecurrenceAmount,
-  RecurrenceAmountWithTax,
-  RedeemedPromo,
-  BillingPeriod,
-} from '@epilot/pricing-client';
 import { Currency } from 'dinero.js';
 
 import { formatPriceUnit } from '../formatters';
@@ -37,6 +25,19 @@ import {
   unitAmountApproved,
   withValidLineItem,
 } from './utils';
+import type {
+  I18n,
+  Order,
+  CompositePriceItem,
+  Coupon,
+  PriceItem,
+  PriceItems,
+  Product,
+  RecurrenceAmount,
+  RecurrenceAmountWithTax,
+  RedeemedPromo,
+  BillingPeriod,
+} from '../types';
 
 export const RECURRENCE_ORDERING = [
   'one_time',
@@ -46,13 +47,6 @@ export const RECURRENCE_ORDERING = [
   'every_6_months',
   'yearly',
 ] as const;
-
-export type Order = PricingComponents.Schemas.Order;
-
-interface I18n {
-  t: (key: string, options?: any) => string;
-  language: string;
-}
 
 export const processOrderTableData = (order: Order, i18n: I18n) => {
   const data = {
@@ -254,7 +248,7 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
           ({
             ...item,
             coupon,
-          } as any),
+          }) as any,
       );
 
       return [item, ...componentItems, ...couponItems];
@@ -487,7 +481,7 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
         price: {
           type: item._price?.type,
           description: item.is_composite_component
-            ? item.description ?? item._price?.description
+            ? (item.description ?? item._price?.description)
             : item._price?.description,
           long_description: item._price?.long_description,
           unit_amount: unitAmountDisplayValue || '',
@@ -540,7 +534,7 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
         name: isCoupon ? item.coupon.name : item._product?.name || item.description,
         description: isCoupon
           ? getFormattedCouponDescription(item.coupon, i18n, redeemedPromoCode)
-          : item._product?.description ?? item.description,
+          : (item._product?.description ?? item.description),
         is_composite_price: item.is_composite_price,
         is_composite_component: item.is_composite_component,
         type: i18n.t(item._product?.type),

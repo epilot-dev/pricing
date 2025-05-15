@@ -7,8 +7,6 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "lib": ["esnext", "dom"],
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "noImplicitAny": true,
     "noUnusedLocals": true,
@@ -18,5 +16,5 @@
     "strict": true
   },
   "include": ["src/**/*"],
-  "exclude": ["**/*.test.ts", "**/__tests__/*"]
+  "exclude": ["**/*.test.ts", "**/__tests__/*", "node_modules"]
 }

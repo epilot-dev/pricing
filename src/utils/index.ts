@@ -110,7 +110,7 @@ export const getQuantityForTier = ({ min, max, quantity }: { min?: number; max: 
   return toDinero(quantity.toString(), DEFAULT_CURRENCY).subtract(toDinero(min.toString(), DEFAULT_CURRENCY)).toUnit();
 };
 
-const clamp = (value: number, minimum: number, maximum: number) => Math.min(Math.max(value, minimum), maximum);
+export const clamp = (value: number, minimum: number, maximum: number) => Math.min(Math.max(value, minimum), maximum);
 
 export const computePerUnitPriceItemValues = ({
   unitAmountDecimal,

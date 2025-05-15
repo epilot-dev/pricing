@@ -38,10 +38,12 @@ const expectedNamedExports = [
   'isTaxInclusivePrice',
   'processOrderTableData',
 ];
+
 /**
  * There are multiple MFEs, APIs and customers depending on niche exports of the pricing library.
  * After an export has been introduced, it cannot be removed with the certainty that the change won't create breaking changes.
  * This test adds a sanity check to ensure that no exports are accidentally removed.
+ * If new library exports are added, they should be included in the expectedNamedExports array.
  */
 describe('exports', () => {
   it.each(expectedNamedExports)('should export %s', (key) =>

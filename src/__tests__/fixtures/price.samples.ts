@@ -17,7 +17,7 @@ import {
   percentageCashbackCoupon,
   percentageDiscountCoupon,
   promoCodeRequiredPercentageDiscountCoupon,
-} from './coupon.samples';
+} from '../../coupons/__tests__/coupon.fixtures';
 import { tax10percent, tax19percent, tax6percent, taxRateless } from './tax.samples';
 
 export const priceItem1: PriceItemDto = {

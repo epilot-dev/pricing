@@ -32,11 +32,10 @@ export type {
   Order,
   TierDetails,
 } from '@epilot/pricing-client';
-export type { Currency } from 'dinero.js';
+export type { Currency, Dinero } from 'dinero.js';
 
-import type { BillingPeriod, Price } from '@epilot/pricing-client';
+import type { Price } from '@epilot/pricing-client';
 
-export type TimeFrequency = Exclude<BillingPeriod, 'one_time'>;
 export type PriceUnit = NonNullable<Price['unit']>;
 
 /* Types coming from OpenAPI spec include an [k: string]: any key, which makes type narrowing harder */

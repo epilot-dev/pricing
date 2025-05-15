@@ -1,7 +1,7 @@
 import { Currency } from 'dinero.js';
 
 import { formatPriceUnit } from '../money/formatters';
-import { getRecurrencesWithEstimatedPrices } from '../computations/getRecurrencesWithEstimatedPrices';
+import { getRecurrencesWithEstimatedPrices } from '../prices/getRecurrencesWithEstimatedPrices';
 import { PricingModel } from '../prices/constants';
 
 import { OrderTableData, RecurrenceByBillingPeriod } from './types';

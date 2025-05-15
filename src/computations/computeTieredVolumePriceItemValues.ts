@@ -1,7 +1,7 @@
 import type { PriceTier, Tax, Price } from '@epilot/pricing-client';
 import type { Currency } from 'dinero.js';
 import { toDineroFromInteger } from '../money/toDinero';
-import { PriceItemsTotals } from './types';
+import { PriceItemsTotals } from '../prices/types';
 import { getPriceTierForQuantity } from '../tiers/getPriceTiersForQuantity';
 import { computePerUnitPriceItemValues } from './computePerUnitPriceItemValues';
 

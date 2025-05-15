@@ -1,4 +1,4 @@
-import type { Tax, Price, TaxAmountDto } from '@epilot/pricing-client';
+import type { Tax, Price, TaxAmountDto } from '../types';
 
 /**
  * Gets a price tax with the proper tax behavior override

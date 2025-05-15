@@ -1,4 +1,4 @@
-import type { PriceItemDto, CompositePriceItemDto } from '@epilot/pricing-client';
+import type { PriceItemDto, CompositePriceItemDto } from '../types';
 
 export const isCompositePriceItemDto = (
   priceItem: PriceItemDto | CompositePriceItemDto,

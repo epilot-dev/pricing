@@ -1,7 +1,7 @@
 import type { Tax } from '@epilot/pricing-client';
 import type { Currency, Dinero } from 'dinero.js';
 import { toDinero } from '../money/toDinero';
-import { PriceItemsTotals } from './types';
+import { PriceItemsTotals } from '../prices/types';
 import { getTaxValue } from '../taxes/getTaxValue';
 
 export const computePerUnitPriceItemValues = ({

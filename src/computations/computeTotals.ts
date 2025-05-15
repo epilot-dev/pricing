@@ -9,17 +9,21 @@ import type {
   PriceItem,
   Tax,
   Currency,
-} from '../../types';
-import { DEFAULT_CURRENCY } from '../../money/constants';
-import { toDineroFromInteger } from '../../money/toDinero';
-import { getPriceRecurrence, getPriceRecurrenceByTax } from '../getPriceRecurrence';
-import { convertPriceComponentsPrecision, convertPriceItemPrecision, convertPricingPrecision } from '../pricing';
+} from '../types';
+import { DEFAULT_CURRENCY } from '../money/constants';
+import { toDineroFromInteger } from '../money/toDinero';
+import { getPriceRecurrence, getPriceRecurrenceByTax } from '../prices/getPriceRecurrence';
+import {
+  convertPriceComponentsPrecision,
+  convertPriceItemPrecision,
+  convertPricingPrecision,
+} from '../prices/convertPrecision';
 import { computeRecurrenceAfterCashbackAmounts } from './computeRecurrenceAfterCashbackAmounts';
 import { computeCompositePrice } from './computeCompositePrice';
-import { isCompositePriceItemDto } from '../isCompositePriceItemDto';
-import { isOnRequestUnitAmountApproved } from '../approval';
+import { isCompositePriceItemDto } from '../prices/isCompositePriceItemDto';
+import { isOnRequestUnitAmountApproved } from '../prices/approval';
 import { computePriceItem } from './computePriceItem';
-import { getImmutablePriceItem } from '../../prices/getImmutablePriceItem';
+import { getImmutablePriceItem } from '../prices/getImmutablePriceItem';
 
 type ComputeAggregatedAndPriceTotalsOptions = {
   redeemedPromos?: Array<RedeemedPromo>;

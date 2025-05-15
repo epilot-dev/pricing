@@ -1,6 +1,6 @@
-import type { RecurrenceAmount, CashbackAmount } from '../../types';
-import { toDineroFromInteger } from '../../money/toDinero';
-import { normalizeTimeFrequencyFromDineroInputValue } from '../../time-frequency/normalizers';
+import type { RecurrenceAmount, CashbackAmount } from '../types';
+import { toDineroFromInteger } from '../money/toDinero';
+import { normalizeTimeFrequencyFromDineroInputValue } from '../time-frequency/normalizers';
 
 /**
  * Recurrence amounts after cashbacks can only be computed

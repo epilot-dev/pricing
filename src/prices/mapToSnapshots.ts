@@ -1,4 +1,4 @@
-import type { Price, Product } from '@epilot/pricing-client';
+import type { Price, Product } from '../types';
 
 export const ENTITY_FIELDS_EXCLUSION_LIST: Set<keyof Price> = new Set([
   '_org',

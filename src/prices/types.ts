@@ -1,4 +1,4 @@
-import type { PriceItem, Price } from '@epilot/pricing-client';
+import type { PriceItem, Price } from '../types';
 
 export type PriceItemsTotals = Pick<
   PriceItem,

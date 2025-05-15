@@ -26,16 +26,16 @@ export {
 } from './time-frequency/constants';
 export type { TimeFrequencyNormalizerMatrix, TimeFrequency } from './time-frequency/types';
 export { type PricingEntitiesExtractResult } from './prices/extractPricingEntitiesBySlug';
-export { getRecurrencesWithEstimatedPrices } from './computations/getRecurrencesWithEstimatedPrices';
-export { computePriceComponent } from './computations/totals/computeCompositePrice';
-export { isPriceItemApproved, isRequiringApproval } from './computations/approval';
-export { computeQuantities } from './computations/totals/computePriceItem';
+export { getRecurrencesWithEstimatedPrices } from './prices/getRecurrencesWithEstimatedPrices';
+export { computePriceComponent } from './computations/computeCompositePrice';
+export { isPriceItemApproved, isRequiringApproval } from './prices/approval';
+export { computeQuantities } from './computations/computePriceItem';
 export { extractPricingEntitiesBySlug } from './prices/extractPricingEntitiesBySlug';
 export {
   computeAggregatedAndPriceTotals,
   computePriceItemDetails,
   type ComputeAggregatedAndPriceTotals,
-} from './computations/totals/computeTotals';
+} from './computations/computeTotals';
 export { PricingModel } from './prices/constants';
 export { getDisplayTierByQuantity, getDisplayTiersByQuantity, getTierDescription } from './tiers/utils';
 export { computeCumulativeValue } from './tiers/computeCumulativeValue';

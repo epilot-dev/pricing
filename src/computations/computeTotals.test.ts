@@ -1,8 +1,8 @@
 import type { PriceItemDto, CompositePriceItemDto, PriceItemsDto, Price } from '@epilot/pricing-client';
-import * as samples from '../../__tests__/fixtures/price.samples';
-import * as results from '../../__tests__/fixtures/pricing.results';
-import { taxRateless } from '../../__tests__/fixtures/tax.samples';
-import * as coupons from '../../coupons/__tests__/coupon.fixtures';
+import * as samples from '../__tests__/fixtures/price.samples';
+import * as results from '../__tests__/fixtures/pricing.results';
+import { taxRateless } from '../__tests__/fixtures/tax.samples';
+import * as coupons from '../coupons/__tests__/coupon.fixtures';
 import { computeAggregatedAndPriceTotals } from './computeTotals';
 import { computePriceItemDetails } from './computeTotals';
 

@@ -1,7 +1,7 @@
-import * as samples from '../../__tests__/fixtures/price.samples';
+import * as samples from '../__tests__/fixtures/price.samples';
 import { computeAggregatedAndPriceTotals } from './computeTotals';
-import { TimeFrequency } from '../../time-frequency/types';
-import { Price, PriceInputMappings, PriceTier } from '../../types';
+import { TimeFrequency } from '../time-frequency/types';
+import { Price, PriceInputMappings, PriceTier } from '../types';
 
 describe('computeAggregatedAndPriceTotals', () => {
   describe('when is_composite_price = false', () => {

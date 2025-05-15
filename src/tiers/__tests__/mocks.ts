@@ -1,4 +1,4 @@
-import { mockTranslations } from './fixtures';
+import { mockTranslations } from './tiers.fixtures';
 
 export const mockedTranslationFn = jest
   .fn()

@@ -6,7 +6,7 @@ import {
   priceDynamicManual,
   priceDynamicRealtime,
   priceDynamicRealtimeTaxinclusive,
-} from '../../__tests__/fixtures/price-dynamic-tariff.samples';
+} from '../__tests__/fixtures/price-dynamic-tariff.samples';
 import { computeAggregatedAndPriceTotals } from './computeTotals';
 
 describe('Dynamic Tariff - computeAggregatedAndPriceTotals', () => {

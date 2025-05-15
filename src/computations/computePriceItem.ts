@@ -8,26 +8,26 @@ import type {
   Price,
 } from '@epilot/pricing-client';
 import type { Currency } from 'dinero.js';
-import { isValidCoupon } from '../../coupons/guards';
-import { getCouponOrder } from '../../coupons/utils';
-import { DEFAULT_CURRENCY } from '../../money/constants';
-import { applyDiscounts } from '../../prices/applyDiscounts';
-import { computeExternalDynamicTariffValues } from '../../prices/computeExternalDynamicTariffValues';
-import { computeExternalGetAGItemValues } from '../../prices/computeExternalGetAGItemValues';
-import { computePerUnitPriceItemValues } from '../../prices/computePerUnitPriceItemValues';
-import { computeTieredFlatFeePriceItemValues } from '../../prices/computeTieredFlatFeePriceItemValues';
-import { computeTieredGraduatedPriceItemValues } from '../../prices/computeTieredGraduatedPriceItemValues';
-import { computeTieredVolumePriceItemValues } from '../../prices/computeTieredVolumePriceItemValues';
-import { PricingModel } from '../../prices/constants';
-import { convertPriceItemWithCouponAppliedToPriceItemDto } from '../../prices/convertPriceItemWithCouponAppliedToPriceItemDto';
-import { getPriceTax } from '../../prices/getPriceTax';
-import { PriceItemsTotals } from '../../prices/types';
-import { isPriceItemWithCouponApplied, isTaxInclusivePrice } from '../../prices/utils';
-import { normalizeValueToFrequencyUnit } from '../../time-frequency/normalizers';
-import { TimeFrequency } from '../../time-frequency/types';
-import { mapToProductSnapshot, mapToPriceSnapshot } from '../mapToSnapshots';
-import { normalizePriceMappingInput } from '../../price-mapping/normalizers';
-import { getSafeQuantity } from '../../shared/getSafeQuantity';
+import { isValidCoupon } from '../coupons/guards';
+import { getCouponOrder } from '../coupons/utils';
+import { DEFAULT_CURRENCY } from '../money/constants';
+import { applyDiscounts } from './applyDiscounts';
+import { computeExternalDynamicTariffValues } from './computeExternalDynamicTariffValues';
+import { computeExternalGetAGItemValues } from './computeExternalGetAGItemValues';
+import { computePerUnitPriceItemValues } from './computePerUnitPriceItemValues';
+import { computeTieredFlatFeePriceItemValues } from './computeTieredFlatFeePriceItemValues';
+import { computeTieredGraduatedPriceItemValues } from './computeTieredGraduatedPriceItemValues';
+import { computeTieredVolumePriceItemValues } from './computeTieredVolumePriceItemValues';
+import { PricingModel } from '../prices/constants';
+import { convertPriceItemWithCouponAppliedToPriceItemDto } from '../prices/convertPrecision';
+import { getPriceTax } from '../prices/getPriceTax';
+import { PriceItemsTotals } from '../prices/types';
+import { isPriceItemWithCouponApplied, isTaxInclusivePrice } from '../prices/utils';
+import { normalizeValueToFrequencyUnit } from '../time-frequency/normalizers';
+import { TimeFrequency } from '../time-frequency/types';
+import { mapToProductSnapshot, mapToPriceSnapshot } from '../prices/mapToSnapshots';
+import { normalizePriceMappingInput } from '../price-mapping/normalizers';
+import { getSafeQuantity } from '../shared/getSafeQuantity';
 
 const computeExternalFee = (
   externalFeeMapping: ExternalFeeMapping | undefined,

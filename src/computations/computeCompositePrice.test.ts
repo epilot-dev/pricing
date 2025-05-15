@@ -1,6 +1,6 @@
 import type { CompositePriceItemDto } from '@epilot/pricing-client';
-import * as samples from '../../__tests__/fixtures/price.samples';
-import * as results from '../../__tests__/fixtures/pricing.results';
+import * as samples from '../__tests__/fixtures/price.samples';
+import * as results from '../__tests__/fixtures/pricing.results';
 import { computeCompositePrice } from './computeCompositePrice';
 
 describe('computeCompositePrice', () => {

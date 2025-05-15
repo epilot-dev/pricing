@@ -7,7 +7,7 @@ import {
   priceGetAG,
   priceTieredFlatFeeGetAG,
   priceTieredVolumeGetAG,
-} from '../../__tests__/fixtures/price-getag.samples';
+} from '../__tests__/fixtures/price-getag.samples';
 import { computeAggregatedAndPriceTotals } from './computeTotals';
 
 describe('GetAG - computeAggregatedAndPriceTotals', () => {

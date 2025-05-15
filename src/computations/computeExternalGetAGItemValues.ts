@@ -1,8 +1,8 @@
 import type { PriceGetAg, Tax } from '@epilot/pricing-client';
 import type { Currency } from 'dinero.js';
 import { toDinero, toDineroFromInteger } from '../money/toDinero';
-import { PriceItemsTotals } from './types';
-import { MarkupPricingModel, TypeGetAg } from './constants';
+import { PriceItemsTotals } from '../prices/types';
+import { MarkupPricingModel, TypeGetAg } from '../prices/constants';
 import { getTaxValue } from '../taxes/getTaxValue';
 import { computeTieredFlatFeePriceItemValues } from './computeTieredFlatFeePriceItemValues';
 import { computeTieredVolumePriceItemValues } from './computeTieredVolumePriceItemValues';

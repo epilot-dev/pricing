@@ -1,4 +1,4 @@
-import type { PriceItems } from '@epilot/pricing-client';
+import type { PriceItems } from '../types';
 import { isCompositePriceItem } from './isCompositePriceItem';
 
 export const getRecurrencesWithEstimatedPrices = (lineItems: PriceItems | undefined) => {

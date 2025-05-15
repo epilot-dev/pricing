@@ -27,7 +27,9 @@
     "prepare": "npm run build",
     "lint": "eslint src --ext js,ts,tsx --cache --color",
     "prepublishOnly": "npm run build",
-    "prettify": "prettier --write ./src"
+    "prettify": "prettier --write ./src",
+    "check-circular-dependencies": "npx madge src/index.ts -c",
+    "check-unused-exports": "npx knip"
   },
   "prettier": {
     "printWidth": 120,

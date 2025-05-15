@@ -7,20 +7,21 @@ import {
   RecurrenceAmountWithTax,
 } from '@epilot/pricing-client';
 
-export interface PriceItemWithParent extends PriceItem, CompositePriceItem {
-  parent_item: CompositePriceItem;
-}
+export type PriceItemWithParent = PriceItem &
+  CompositePriceItem & {
+    parent_item: CompositePriceItem;
+  };
 
 export type PriceDisplayType = 'show_as_on_request' | 'show_as_starting_price';
 
-export type StaticFee = BaseFee;
+type StaticFee = BaseFee;
 
-export interface GetTieredUnitAmountOptions {
+export type GetTieredUnitAmountOptions = {
   isUnitAmountApproved: boolean;
   useUnitAmountNet: boolean;
-}
+};
 
-export interface ExternalFeesMetadata {
+export type ExternalFeesMetadata = {
   billing_period: string;
   breakdown: {
     static: {
@@ -51,9 +52,9 @@ export interface ExternalFeesMetadata {
     display_variable_nt_yearly?: string;
     display_variable_nt_per_unit?: string;
   };
-}
+};
 
-export interface BaseFee {
+type BaseFee = {
   /** Billing period based amount */
   amount: number | string;
   amount_decimal: string;
@@ -64,23 +65,23 @@ export interface BaseFee {
 
   /** Display label */
   label: string;
-}
+};
 
-export interface VariableFee extends BaseFee {
+type VariableFee = BaseFee & {
   /** Per unit amounts */
   unit_amount?: number | string;
   unit_amount_decimal?: string;
-}
+};
 
-export interface Cashback {
+type Cashback = {
   name: string;
   period: string;
   amount: string | number;
-}
+};
 
-export interface Breakdown {
+type Breakdown = {
   recurrences?: RecurrenceAmount[];
-}
+};
 
 export interface RecurrenceByBillingPeriod {
   totalLabel?: string;
@@ -97,7 +98,7 @@ export interface RecurrenceByBillingPeriod {
   recurrencesByTax: RecurrenceAmountWithTax;
 }
 
-export interface OrderTableData extends Omit<Order, 'products'> {
+export type OrderTableData = Omit<Order, 'products'> & {
   products: Product[];
   total_details: Order['total_details'] & {
     amount_tax: string;
@@ -114,4 +115,4 @@ export interface OrderTableData extends Omit<Order, 'products'> {
     ['every_6_months']?: RecurrenceAmount;
     ['yearly']?: RecurrenceAmount;
   };
-}
+};

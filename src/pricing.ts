@@ -51,23 +51,27 @@ export enum PricingModel {
   externalGetAG = 'external_getag',
 }
 export enum MarkupPricingModel {
+  /**
+   * Is currently not used.
+   */
   perUnit = 'per_unit',
   tieredVolume = 'tiered_volume',
   tieredFlatFee = 'tiered_flatfee',
 }
 export enum TypeGetAg {
   basePrice = 'base_price',
+  /**
+   * Is currently not used.
+   */
   workPrice = 'work_price',
 }
 
 export enum ModeDynamicTariff {
+  /**
+   * Is currently not used.
+   */
   dayAheadMarket = 'day_ahead_market',
   manual = 'manual',
-}
-
-export enum IntervalDynamicTariff {
-  hourly = 'hourly',
-  monthly = 'monthly_average',
 }
 
 export type ComputeAggregatedAndPriceTotals = typeof computeAggregatedAndPriceTotals;
@@ -783,7 +787,7 @@ export const mapToProductSnapshot = (product?: Product): Product | undefined =>
 /**
  * Computes all price item total amounts to integers with a decimal precision of DECIMAL_PRECISION.
  */
-export const computePriceItem = (
+const computePriceItem = (
   _priceItem: PriceItemDto,
   {
     tax: applicableTax,

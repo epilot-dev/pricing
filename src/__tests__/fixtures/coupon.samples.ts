@@ -83,6 +83,9 @@ export const percentageCashbackCoupon: Coupon = {
   cashback_period: '12',
 };
 
+/**
+ * @todo Add test case with immediate cashback.
+ */
 export const immediateFixedCashbackCoupon: Coupon = {
   ...fixedCashbackCoupon,
   cashback_period: '0',

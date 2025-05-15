@@ -66,7 +66,7 @@ export const fixedCashbackCoupon: Coupon = {
   fixed_value: 1000,
   fixed_value_decimal: '10.00',
   fixed_value_currency: 'EUR',
-  cashback_period: '0',
+  cashback_period: '12',
 };
 
 export const lowFixedCashbackCoupon: Coupon = {
@@ -82,7 +82,7 @@ export const lowFixedCashbackCoupon: Coupon = {
   fixed_value: 500,
   fixed_value_decimal: '5.00',
   fixed_value_currency: 'EUR',
-  cashback_period: '12',
+  cashback_period: '0',
 };
 
 export const percentageCashbackCoupon: Coupon = {

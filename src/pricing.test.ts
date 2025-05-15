@@ -801,6 +801,8 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[1].amount_total).toEqual(500)
     });
 
+    // TODO: add tests for requires_promo_code
+
     it('should deliver the same result when recomputing the pricing details with discount coupons', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageDiscount]);
       const resultRecomputed = computeAggregatedAndPriceTotals(result.items as PriceItemsDto);

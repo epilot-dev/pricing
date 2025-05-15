@@ -778,7 +778,7 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[0].amount_total).toEqual(2000)
     });
 
-    it.only('should compute fixed cashbacks correctly when applied at the composite price level + component level with different cashback periods', () => {
+    it('should compute fixed cashbacks correctly when applied at the composite price level + component level with different cashback periods', () => {
       const priceItems = [{
         ...samples.compositePriceCashbackCombinedWithComponentCashbacks,
         _coupons: [coupons.lowFixedCashbackCoupon],
@@ -795,9 +795,9 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(computedPriceItem?.item_components?.[1].after_cashback_amount_total).toEqual(9981)
       expect(computedPriceItem?.item_components?.[1].after_cashback_amount_total_decimal).toEqual('99.807692307692')
       expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.length).toEqual(2)
-      expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[0].cashback_period).toEqual('0')
+      expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[0].cashback_period).toEqual('12')
       expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[0].amount_total).toEqual(1000)
-      expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[1].cashback_period).toEqual('12')
+      expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[1].cashback_period).toEqual('0')
       expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[1].amount_total).toEqual(500)
     });
 

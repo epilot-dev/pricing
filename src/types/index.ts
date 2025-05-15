@@ -1,3 +1,4 @@
+export type { i18n as I18n, TFunction } from 'i18next';
 export type {
   Price,
   PriceItem,
@@ -32,7 +33,8 @@ export type {
   Order,
   TierDetails,
 } from '@epilot/pricing-client';
-import type { BillingPeriod } from '@epilot/pricing-client';
+
+import type { BillingPeriod, Price } from '@epilot/pricing-client';
 
 export type TimeFrequency = Exclude<BillingPeriod, 'one_time'>;
-export { i18n as I18n, TFunction } from 'i18next';
+export type PriceUnit = NonNullable<Price['unit']>;

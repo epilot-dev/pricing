@@ -8,7 +8,7 @@ import {
   priceTieredVolumeGetAG,
 } from './__tests__/fixtures/price-getag.samples';
 import { computeAggregatedAndPriceTotals } from './pricing';
-import { PriceItemDto } from './types';
+import type { PriceItemDto } from './types';
 
 describe('GetAG - computeAggregatedAndPriceTotals', () => {
   describe('when is_composite_price = false', () => {

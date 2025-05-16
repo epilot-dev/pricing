@@ -1,9 +1,7 @@
 import dinero from 'dinero.js';
 import type { Currency, Dinero } from 'dinero.js';
-
 import { CURRENCIES_SUBUNITS, DEFAULT_CURRENCY, DEFAULT_SUBUNIT } from '../currencies';
 import type { PriceUnit } from '../types';
-
 import {
   DECIMAL_PRECISION,
   DEFAULT_FORMAT,

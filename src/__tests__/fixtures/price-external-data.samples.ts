@@ -1,4 +1,4 @@
-import { PriceItemDto } from '../../types';
+import type { PriceItemDto } from '../../types';
 
 const externalCompositePrice: PriceItemDto = {
   _id: 'price-12312414',

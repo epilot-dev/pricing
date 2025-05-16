@@ -1,8 +1,6 @@
 import type { Dinero } from 'dinero.js';
-
 import { getSafeQuantity, toDinero } from '../formatters';
 import type { Price, PriceInputMapping, TimeFrequency } from '../types';
-
 import { TIME_FREQUENCY_NORMALIZATION_FACTORS } from './constants';
 
 /**

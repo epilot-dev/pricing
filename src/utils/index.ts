@@ -1,5 +1,4 @@
 import type { Currency, Dinero } from 'dinero.js';
-
 import { DEFAULT_CURRENCY } from '../currencies';
 import { toDineroFromInteger, toDinero } from '../formatters';
 import { TaxRates } from '../formatters/constants';
@@ -16,7 +15,6 @@ import type {
   PriceTier,
   Tax,
 } from '../types';
-
 import { isPercentageCoupon, isCashbackCoupon, isFixedValueCoupon } from './guards/coupon';
 
 export type PriceItemsTotals = Pick<

@@ -2,6 +2,7 @@ import * as coupons from './__tests__/fixtures/coupon.samples';
 import * as samples from './__tests__/fixtures/price.samples';
 import * as results from './__tests__/fixtures/pricing.results';
 import * as taxes from './__tests__/fixtures/tax.samples';
+import { taxRateless } from './__tests__/fixtures/tax.samples';
 import {
   ENTITY_FIELDS_EXCLUSION_LIST,
   computeAggregatedAndPriceTotals,
@@ -23,7 +24,6 @@ import type {
   Tax,
 } from './types';
 import { getTaxValue } from './utils';
-import { taxRateless } from './__tests__/fixtures/tax.samples';
 
 describe('computeAggregatedAndPriceTotals', () => {
   describe('when is_composite_price = false', () => {

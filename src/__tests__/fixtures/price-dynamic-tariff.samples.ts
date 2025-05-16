@@ -1,4 +1,4 @@
-import { PriceItemDto } from './../../types';
+import type { PriceItemDto } from './../../types';
 import { tax19percent } from './tax.samples';
 
 export const priceDynamicManual: PriceItemDto = {

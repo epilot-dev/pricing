@@ -1,8 +1,6 @@
-import { Currency } from 'dinero.js';
-
+import type { Currency } from 'dinero.js';
 import { PricingModel } from '../pricing';
-import { PriceTier, Tax } from '../types';
-
+import type { PriceTier, Tax } from '../types';
 import {
   computeCumulativeValue,
   getDisplayTierByQuantity,

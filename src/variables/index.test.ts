@@ -1,3 +1,4 @@
+import type { I18n, CompositePrice, PriceInputMappings, PriceItem } from '../shared/types';
 import {
   orderWithCompositeItem,
   orderWithCompositeItemResults,
@@ -8,10 +9,8 @@ import {
   orderEntityDataWithEmptyLineItems,
   invalidOrderEntityData,
 } from './__tests__/orders.fixtures';
-
 import { processOrderTableData } from './processOrderTableData';
 import { getHiddenAmountString, getPriceDisplayInJourneys, getQuantity, unitAmountApproved } from './utils';
-import type { I18n, CompositePrice, PriceInputMappings, PriceItem } from '../shared/types';
 
 const mockI18n = {
   t: (key: string, fallback: string) => key || fallback,
@@ -103,34 +102,34 @@ describe('processOrderTableData', () => {
   });
 
   it('returns correct data avoiding reprocessing of flatten items', async () => {
-    //when
+    // when
     const dataWithFlattenLineItems1 = await processOrderTableData(initialOrderEntityData as any, mockI18n);
 
-    //then
+    // then
     expect(dataWithFlattenLineItems1.products.length).toBe(12);
     expect(dataWithFlattenLineItems1.products[1].price).toEqual(expect.objectContaining(priceWithCorrectQuantity));
 
-    //when
+    // when
     const dataWithFlattenLineItems2 = await processOrderTableData(dataWithFlattenLineItems1 as any, mockI18n);
 
-    //then
+    // then
     expect(dataWithFlattenLineItems2.products.length).toBe(12);
     expect(dataWithFlattenLineItems2.products[1].price).toEqual(expect.objectContaining(priceWithCorrectQuantity));
   });
 
   it('return original data/skip processing if line items are empty', async () => {
-    //when
+    // when
     const data = await processOrderTableData(orderEntityDataWithEmptyLineItems as any, mockI18n);
 
-    //then
+    // then
     expect(data).toEqual(orderEntityDataWithEmptyLineItems);
   });
 
   it('return original data/skip processing if line items are invalid', async () => {
-    //when
+    // when
     const data = await processOrderTableData(invalidOrderEntityData as any, mockI18n);
 
-    //then
+    // then
     expect(data).toEqual(invalidOrderEntityData);
   });
 });

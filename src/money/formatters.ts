@@ -1,8 +1,6 @@
 import dinero from 'dinero.js';
 import type { Currency } from 'dinero.js';
-
 import { CURRENCIES_SUBUNITS, DEFAULT_CURRENCY, DEFAULT_SUBUNIT } from './constants';
-
 import {
   DECIMAL_PRECISION,
   DEFAULT_FORMAT,
@@ -12,8 +10,8 @@ import {
   GENERIC_UNIT_DISPLAY_LABEL,
   MAX_SUPPORTED_FORMAT_PRECISION,
 } from './constants';
-import { toDinero } from './toDinero';
 import { getCurrencySymbol } from './getCurrencySymbol';
+import { toDinero } from './toDinero';
 
 type SubunitAndSymbol = {
   symbol: string;

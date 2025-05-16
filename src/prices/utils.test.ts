@@ -1,5 +1,5 @@
-import type { CompositePrice, Price } from '../shared/types';
 import * as samples from '../__tests__/fixtures/price.samples';
+import type { CompositePrice, Price } from '../shared/types';
 import { isCompositePriceItemDto } from './utils';
 
 describe('handleCompositePrices', () => {

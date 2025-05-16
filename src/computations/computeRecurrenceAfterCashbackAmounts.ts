@@ -1,5 +1,5 @@
-import type { RecurrenceAmount, CashbackAmount } from '../shared/types';
 import { toDineroFromInteger } from '../money/toDinero';
+import type { RecurrenceAmount, CashbackAmount } from '../shared/types';
 import { normalizeTimeFrequencyFromDineroInputValue } from '../time-frequency/normalizers';
 
 /**

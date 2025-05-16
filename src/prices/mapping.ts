@@ -1,11 +1,9 @@
 import type { Dinero } from 'dinero.js';
-
 import { toDinero } from '../money/toDinero';
 import { getSafeQuantity } from '../shared/getSafeQuantity';
 import type { Price, PriceInputMapping } from '../shared/types';
-
-import type { TimeFrequency } from '../time-frequency/types';
 import { normalizeTimeFrequencyToDinero } from '../time-frequency/normalizers';
+import type { TimeFrequency } from '../time-frequency/types';
 
 /**
  * This function takes in a quantity, block mapping number, block mapping frequency, price, and parent quantity

@@ -1,5 +1,5 @@
-import { OperationType } from './constants';
-import { BillingPeriod } from '../shared/types';
+import type { BillingPeriod } from '../shared/types';
+import type { OperationType } from './constants';
 
 export type TimeFrequency = Exclude<BillingPeriod, 'one_time'>;
 

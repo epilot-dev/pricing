@@ -1,10 +1,22 @@
-import { Currency } from 'dinero.js';
-
+import type { Currency } from 'dinero.js';
 import { formatPriceUnit } from '../money/formatters';
-import { getRecurrencesWithEstimatedPrices } from '../prices/getRecurrencesWithEstimatedPrices';
 import { PricingModel } from '../prices/constants';
-
-import { OrderTableData, RecurrenceByBillingPeriod } from './types';
+import { getRecurrencesWithEstimatedPrices } from '../prices/getRecurrencesWithEstimatedPrices';
+import type {
+  I18n,
+  Order,
+  CompositePriceItem,
+  Coupon,
+  PriceItem,
+  PriceItems,
+  Product,
+  RecurrenceAmount,
+  RecurrenceAmountWithTax,
+  RedeemedPromo,
+  BillingPeriod,
+} from '../shared/types';
+import { RECURRENCE_ORDERING } from './constants';
+import type { OrderTableData, RecurrenceByBillingPeriod } from './types';
 import {
   computeRecurrenceAmounts,
   EMPTY_VALUE_PLACEHOLDER,
@@ -26,20 +38,6 @@ import {
   unitAmountApproved,
   withValidLineItem,
 } from './utils';
-import type {
-  I18n,
-  Order,
-  CompositePriceItem,
-  Coupon,
-  PriceItem,
-  PriceItems,
-  Product,
-  RecurrenceAmount,
-  RecurrenceAmountWithTax,
-  RedeemedPromo,
-  BillingPeriod,
-} from '../shared/types';
-import { RECURRENCE_ORDERING } from './constants';
 
 export const processOrderTableData = (order: Order, i18n: I18n) => {
   const data = {

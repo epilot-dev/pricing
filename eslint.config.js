@@ -8,6 +8,7 @@ export default [
   js.configs.recommended,
   ...epilotConfig,
   {
+    files: ['**/*.{js,ts,tsx}'],
     ignores: ['node_modules', 'dist'],
     languageOptions: {
       sourceType: 'module',
@@ -16,13 +17,33 @@ export default [
       },
     },
     rules: {
-      'import/order': ['warn'],
+      'import/order': [
+        'error',
+        {
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object'],
+          'newlines-between': 'never',
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: true,
+          },
+          warnOnUnassignedImports: true,
+        },
+      ],
       'spaced-comment': ['warn'],
       'padding-line-between-statements': ['off'],
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-non-null-assertion': 'warn',
       '@typescript-eslint/no-non-null-asserted-optional-chain': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          prefer: 'type-imports',
+          disallowTypeAnnotations: false,
+          fixStyle: 'separate-type-imports',
+        },
+      ],
       'prettier/prettier': ['error', prettierOptions],
     },
     settings: {

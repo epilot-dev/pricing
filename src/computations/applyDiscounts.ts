@@ -1,9 +1,9 @@
-import type { Currency, Dinero, PriceItemDto, Tax, Coupon, BillingPeriod } from '../shared/types';
-import { PriceItemsTotals } from '../prices/types';
-import { clamp } from '../shared/clamp';
 import { isCashbackCoupon, isFixedValueCoupon, isPercentageCoupon } from '../coupons/guards';
 import { toDineroFromInteger, toDinero } from '../money/toDinero';
 import { PricingModel } from '../prices/constants';
+import type { PriceItemsTotals } from '../prices/types';
+import { clamp } from '../shared/clamp';
+import type { Currency, Dinero, PriceItemDto, Tax, Coupon, BillingPeriod } from '../shared/types';
 import { getTaxValue } from '../taxes/getTaxValue';
 import { normalizeTimeFrequencyFromDineroInputValue } from '../time-frequency/normalizers';
 

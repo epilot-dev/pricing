@@ -1,7 +1,7 @@
 import type { Dinero } from 'dinero.js';
 import { toDinero } from '../money/toDinero';
 import { TIME_FREQUENCY_NORMALIZATION_FACTORS } from './constants';
-import { TimeFrequency } from './types';
+import type { TimeFrequency } from './types';
 
 export const normalizeTimeFrequencyFromDineroInputValue = (
   dineroInputValue: Dinero,

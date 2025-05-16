@@ -1,4 +1,4 @@
-import { PriceItemDto } from '@epilot/pricing-client';
+import type { PriceItemDto } from '@epilot/pricing-client';
 import {
   compositePriceDynamicManual,
   compositePriceDynamicRealtime,

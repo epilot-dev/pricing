@@ -1,6 +1,7 @@
-import { Currency } from 'dinero.js';
-import { DEFAULT_CURRENCY } from '../money/constants';
-import { applyDiscounts } from './applyDiscounts';
+import type { Currency } from 'dinero.js';
+import { priceItem1 } from '../__tests__/fixtures/price.samples';
+import { compositePriceItemWithTieredGraduatedComponent } from '../__tests__/fixtures/price.samples';
+import { tax19percent } from '../__tests__/fixtures/tax.samples';
 import {
   fixedCashbackCoupon,
   fixedDiscountCoupon,
@@ -10,9 +11,8 @@ import {
   percentageDiscountCoupon,
   veryHighFixedDiscountCoupon,
 } from '../coupons/__tests__/coupon.fixtures';
-import { priceItem1 } from '../__tests__/fixtures/price.samples';
-import { tax19percent } from '../__tests__/fixtures/tax.samples';
-import { compositePriceItemWithTieredGraduatedComponent } from '../__tests__/fixtures/price.samples';
+import { DEFAULT_CURRENCY } from '../money/constants';
+import { applyDiscounts } from './applyDiscounts';
 
 describe('applyDiscounts', () => {
   const baseParams = {

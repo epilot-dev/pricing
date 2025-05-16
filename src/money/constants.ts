@@ -1,4 +1,4 @@
-import { CurrencySubunitMap } from './types';
+import type { CurrencySubunitMap } from './types';
 
 export const CURRENCIES_SUBUNITS: CurrencySubunitMap = {
   EUR: {

@@ -1,14 +1,14 @@
-import { PriceTier, Tax } from '@epilot/pricing-client';
-import { Currency, Dinero } from 'dinero.js';
-import { getDisplayTiersByQuantity } from './utils';
-import { formatAmountFromString, addSeparatorToDineroString } from '../money/formatters';
-import { toDinero } from '../money/toDinero';
+import type { PriceTier, Tax } from '@epilot/pricing-client';
+import type { Currency, Dinero } from 'dinero.js';
 import { DEFAULT_LOCALE } from '../money/constants';
 import { DEFAULT_CURRENCY } from '../money/constants';
+import { formatAmountFromString, addSeparatorToDineroString } from '../money/formatters';
+import { toDinero } from '../money/toDinero';
 import { PricingModel } from '../prices/constants';
-import { getTaxValue } from '../taxes/getTaxValue';
 import { isNotPieceUnit } from '../shared/isNotPieceUnit';
+import { getTaxValue } from '../taxes/getTaxValue';
 import { getQuantityForTier } from './getQuantityForTier';
+import { getDisplayTiersByQuantity } from './utils';
 
 type CumulativePriceBreakdownItem = {
   quantityUsed: string;

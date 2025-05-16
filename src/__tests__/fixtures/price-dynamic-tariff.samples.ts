@@ -1,4 +1,4 @@
-import { PriceItemDto } from '../../shared/types';
+import type { PriceItemDto } from '../../shared/types';
 import { tax19percent } from './tax.samples';
 
 export const priceDynamicManual: PriceItemDto = {

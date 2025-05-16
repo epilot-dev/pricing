@@ -1,8 +1,6 @@
 import { formatAmount, formatAmountFromString, formatPriceUnit } from '../money/formatters';
 import { toDinero } from '../money/toDinero';
-import { normalizeTimeFrequency, normalizeValueToFrequencyUnit } from '../time-frequency/normalizers';
 import { PricingModel } from '../prices/constants';
-import { getDisplayTierByQuantity, getTierDescription } from '../tiers/utils';
 import type {
   Currency,
   BillingPeriod,
@@ -16,11 +14,11 @@ import type {
   I18n,
   TFunction,
 } from '../shared/types';
-
-import { ExternalFeesMetadata, GetTieredUnitAmountOptions, PriceDisplayType, PriceItemWithParent } from './types';
-
+import { getDisplayTierByQuantity, getTierDescription } from '../tiers/utils';
+import { normalizeTimeFrequency, normalizeValueToFrequencyUnit } from '../time-frequency/normalizers';
+import type { TimeFrequency } from '../time-frequency/types';
 import { RECURRENCE_ORDERING } from './constants';
-import { TimeFrequency } from '../time-frequency/types';
+import type { ExternalFeesMetadata, GetTieredUnitAmountOptions, PriceDisplayType, PriceItemWithParent } from './types';
 
 export const EMPTY_VALUE_PLACEHOLDER = '---';
 const TEMPORARY_TAX_MAPPER = {

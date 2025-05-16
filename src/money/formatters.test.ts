@@ -1,5 +1,5 @@
+import type { Currency } from '../shared/types';
 import { GENERIC_UNIT_DISPLAY_LABEL } from './constants';
-
 import {
   formatAmount,
   formatAmountFromString,
@@ -8,7 +8,6 @@ import {
   toIntegerAmount,
   unitDisplayLabels,
 } from './formatters';
-import { Currency } from '../shared/types';
 import { toDinero } from './toDinero';
 
 describe('formatAmount', () => {

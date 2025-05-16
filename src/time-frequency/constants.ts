@@ -1,4 +1,4 @@
-import { BillingPeriod } from '@epilot/pricing-client';
+import type { BillingPeriod } from '@epilot/pricing-client';
 import type { NormalizationFactor, TimeFrequencyNormalizerMatrix } from './types';
 
 /**

@@ -1,5 +1,4 @@
 import type { Price } from '../shared/types';
-
 import { normalizePriceMappingInput } from './mapping';
 
 const oneTimePrice = {

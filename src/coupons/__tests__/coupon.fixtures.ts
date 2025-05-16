@@ -1,4 +1,4 @@
-import { Coupon } from '../../shared/types';
+import type { Coupon } from '../../shared/types';
 
 export const percentageDiscountCoupon: Coupon = {
   _id: 'coupon#1',

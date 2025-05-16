@@ -1,8 +1,8 @@
 import type { PriceDynamicTariff, Tax } from '@epilot/pricing-client';
 import type { Currency } from 'dinero.js';
 import { toDinero } from '../money/toDinero';
-import { PriceItemsTotals } from '../prices/types';
 import { ModeDynamicTariff } from '../prices/constants';
+import type { PriceItemsTotals } from '../prices/types';
 import { getTaxValue } from '../taxes/getTaxValue';
 import { computePerUnitPriceItemValues } from './computePerUnitPriceItemValues';
 

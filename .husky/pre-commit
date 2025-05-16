@@ -1,1 +1,1 @@
-concurrently npm:lint npm:typecheck
+concurrently npm:lint npm:typecheck npm:test

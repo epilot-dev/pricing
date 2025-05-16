@@ -20,5 +20,3 @@ export const toDinero = (unitAmountDecimal?: string, currency: Currency = DEFAUL
 
   return toDineroFromInteger(unitAmountInteger, currency);
 };
-
-export type DineroConvertor = typeof toDinero;

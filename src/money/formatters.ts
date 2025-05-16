@@ -118,8 +118,6 @@ export const formatAmount = ({
   return dAmount.setLocale(locale).toFormat(format || DEFAULT_FORMAT);
 };
 
-export type AmountFormatter = typeof formatAmount;
-
 /**
  * Gets the precision and format from a decimal amount (string)
  * @param {string} decimalAmount - The decimal amount to get the precision and format from
@@ -283,16 +281,6 @@ export const unitDisplayLabels = {
   wp: 'Wp',
   kwp: 'kWp',
 } as const;
-
-export type PriceUnit = keyof typeof unitDisplayLabels;
-
-/**
- * Checks whether a price unit is a built-in unit or not.
- *
- * @param {Price['unit']} unit - the built-in unit code or user custom unit
- * @returns {boolean} true if the unit is a built-in unit
- */
-export const isPriceBuiltInUnit = (unit: string): unit is PriceUnit => unit in unitDisplayLabels;
 
 /**
  * Formats built-in price units into a displayable representation. Eg. kw -> kW

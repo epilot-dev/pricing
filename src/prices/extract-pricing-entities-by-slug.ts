@@ -4,7 +4,7 @@ type RelationAttributeValue = {
   $relation: { entity_id: string; _schema: string; _tags: string[] }[];
 };
 
-export interface PricingEntitiesExtractResult {
+type PricingEntitiesExtractResult = {
   /**
    * A relation attribute value containing all price entities from the given price items.
    */
@@ -17,7 +17,7 @@ export interface PricingEntitiesExtractResult {
    * All pricing tags inferred from the products and prices of the provided price items.
    */
   _tags: string[];
-}
+};
 
 /**
  * Extracts the pricing entities from a list of price items.

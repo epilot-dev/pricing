@@ -2,7 +2,7 @@ import type { Coupon } from '@epilot/pricing-client';
 import type { Currency } from 'dinero.js';
 import type { RemoveIndexSignature } from '../shared/type-utils';
 
-export type BaseCoupon = RemoveIndexSignature<Coupon>;
+type BaseCoupon = RemoveIndexSignature<Coupon>;
 
 export type FixedValueCoupon = Omit<BaseCoupon, 'percentage_value'> & {
   type: 'fixed';

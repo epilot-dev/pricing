@@ -28,7 +28,7 @@ type ComputePriceComponentOptions = {
   redeemedPromos?: Array<RedeemedPromo>;
 };
 
-export const computePriceComponent = (
+const computePriceComponent = (
   priceItemComponent: PriceItemDto,
   priceItem: CompositePriceItemDto,
   { redeemedPromos = [] }: ComputePriceComponentOptions = {},

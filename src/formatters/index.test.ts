@@ -1,7 +1,5 @@
-import { Currency } from 'dinero.js';
-
+import type { Currency } from 'dinero.js';
 import { GENERIC_UNIT_DISPLAY_LABEL } from './constants';
-
 import {
   formatAmount,
   formatAmountFromString,

@@ -1,4 +1,4 @@
-import {
+import type {
   CompositePrice,
   CompositePriceItem,
   CompositePriceItemDto,
@@ -7,7 +7,6 @@ import {
   PriceItemDto,
   TaxAmount,
 } from '../../types';
-
 import {
   fixedCashbackCoupon,
   fixedDiscountCoupon,

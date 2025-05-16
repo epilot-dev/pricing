@@ -1,4 +1,4 @@
-import { EntityItem, Tax } from '../../types';
+import type { EntityItem, Tax } from '../../types';
 
 export const tax10percent: EntityItem & Tax = {
   _id: '10',

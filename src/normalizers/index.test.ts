@@ -1,5 +1,4 @@
-import { Price } from '../types';
-
+import type { Price } from '../types';
 import { normalizePriceMappingInput, normalizeValueToFrequencyUnit } from '.';
 
 describe('normalizePriceMappingInput', () => {

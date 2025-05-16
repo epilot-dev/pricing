@@ -1,5 +1,4 @@
 import type { Currency } from 'dinero.js';
-
 import { DEFAULT_CURRENCY } from './currencies';
 import { toDineroFromInteger, toDinero, getSafeQuantity } from './formatters';
 import {
@@ -27,6 +26,7 @@ import type {
   TaxAmountDto,
   TimeFrequency,
 } from './types';
+import type { PriceItemsTotals } from './utils';
 import {
   computeExternalGetAGItemValues,
   computeExternalDynamicTariffValues,
@@ -35,7 +35,6 @@ import {
   computeTieredGraduatedPriceItemValues,
   computeTieredVolumePriceItemValues,
   isTaxInclusivePrice,
-  PriceItemsTotals,
   applyDiscounts,
   convertPriceItemWithCouponAppliedToPriceItemDto,
   isPriceItemWithCouponApplied,

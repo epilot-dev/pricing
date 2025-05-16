@@ -1,4 +1,4 @@
-import { TimeFrequency } from '../types';
+import type { TimeFrequency } from '../types';
 
 enum OperationType {
   MULTIPLY = 'multiply',

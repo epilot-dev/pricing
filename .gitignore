@@ -3,7 +3,6 @@ docs
 dist
 coverage
 .eslintcache
-.vscode
 .idea
 .yalc
 yalc.lock

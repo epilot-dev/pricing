@@ -1,5 +1,4 @@
 import type { Currency } from 'dinero.js';
-
 import { formatAmount, formatAmountFromString, formatPriceUnit, toDinero } from '../formatters';
 import { normalizeTimeFrequency, normalizeValueToFrequencyUnit } from '../normalizers';
 import { PricingModel } from '../pricing';
@@ -17,9 +16,7 @@ import type {
   TFunction,
   TimeFrequency,
 } from '../types';
-
-import { ExternalFeesMetadata, GetTieredUnitAmountOptions, PriceDisplayType, PriceItemWithParent } from './types';
-
+import type { ExternalFeesMetadata, GetTieredUnitAmountOptions, PriceDisplayType, PriceItemWithParent } from './types';
 import { RECURRENCE_ORDERING } from '.';
 
 export const EMPTY_VALUE_PLACEHOLDER = '---';

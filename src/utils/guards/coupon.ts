@@ -1,5 +1,4 @@
 import type { Currency } from 'dinero.js';
-
 import type { Coupon, RemoveIndexSignature } from '../../types';
 
 type BaseCoupon = RemoveIndexSignature<Coupon>;

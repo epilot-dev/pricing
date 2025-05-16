@@ -1,4 +1,4 @@
-import { Currency } from 'dinero.js';
+import type { Currency } from 'dinero.js';
 
 type CurrencySubunit = {
   default: string;

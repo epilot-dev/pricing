@@ -1,11 +1,9 @@
-/* eslint-disable prettier/prettier */
-import { Currency, Dinero } from 'dinero.js';
-
+import type { Currency, Dinero } from 'dinero.js';
 import { DEFAULT_CURRENCY } from '../currencies';
 import { addSeparatorToDineroString, formatAmountFromString, toDinero } from '../formatters';
 import { DEFAULT_LOCALE } from '../formatters/constants';
 import { PricingModel } from '../pricing';
-import { Price, PriceTier, PriceTierEnhanced, Tax } from '../types';
+import type { Price, PriceTier, PriceTierEnhanced, Tax } from '../types';
 import { getQuantityForTier, getTaxValue, isNotPieceUnit } from '../utils';
 
 const byInputQuantity = (tiers: PriceTier[], quantity: number) => (_: PriceTier, index: number) =>

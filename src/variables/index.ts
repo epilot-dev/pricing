@@ -1,9 +1,20 @@
-import { Currency } from 'dinero.js';
-
+import type { Currency } from 'dinero.js';
 import { formatPriceUnit } from '../formatters';
 import { getRecurrencesWithEstimatedPrices, PricingModel } from '../pricing';
-
-import { OrderTableData, RecurrenceByBillingPeriod } from './types';
+import type {
+  I18n,
+  Order,
+  CompositePriceItem,
+  Coupon,
+  PriceItem,
+  PriceItems,
+  Product,
+  RecurrenceAmount,
+  RecurrenceAmountWithTax,
+  RedeemedPromo,
+  BillingPeriod,
+} from '../types';
+import type { OrderTableData, RecurrenceByBillingPeriod } from './types';
 import {
   computeRecurrenceAmounts,
   EMPTY_VALUE_PLACEHOLDER,
@@ -25,19 +36,6 @@ import {
   unitAmountApproved,
   withValidLineItem,
 } from './utils';
-import type {
-  I18n,
-  Order,
-  CompositePriceItem,
-  Coupon,
-  PriceItem,
-  PriceItems,
-  Product,
-  RecurrenceAmount,
-  RecurrenceAmountWithTax,
-  RedeemedPromo,
-  BillingPeriod,
-} from '../types';
 
 export const RECURRENCE_ORDERING = [
   'one_time',

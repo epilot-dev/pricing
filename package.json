@@ -70,7 +70,6 @@
     "husky": "^9.1.7",
     "i18next": "^25.1.2",
     "nodemon": "^3.1.10",
-    "openapi-client-axios-typegen": "^7.7.0",
     "ts-node": "^10.9.2",
     "typedoc": "^0.28.4",
     "typedoc-plugin-markdown": "^4.6.3",

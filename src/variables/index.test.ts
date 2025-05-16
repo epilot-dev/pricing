@@ -9,7 +9,7 @@ import {
   orderEntityDataWithEmptyLineItems,
   invalidOrderEntityData,
 } from './__tests__/orders.fixtures';
-import { processOrderTableData } from './processOrderTableData';
+import { processOrderTableData } from './process-order-table-data';
 import { getHiddenAmountString, getPriceDisplayInJourneys, getQuantity, unitAmountApproved } from './utils';
 
 const mockI18n = {

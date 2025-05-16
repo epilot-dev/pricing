@@ -1,10 +1,10 @@
 import { isCashbackCoupon, isFixedValueCoupon, isPercentageCoupon } from '../coupons/guards';
-import { toDineroFromInteger, toDinero } from '../money/toDinero';
+import { toDineroFromInteger, toDinero } from '../money/to-dinero';
 import { PricingModel } from '../prices/constants';
 import type { PriceItemsTotals } from '../prices/types';
 import { clamp } from '../shared/clamp';
 import type { Currency, Dinero, PriceItemDto, Tax, Coupon, BillingPeriod } from '../shared/types';
-import { getTaxValue } from '../taxes/getTaxValue';
+import { getTaxValue } from '../taxes/get-tax-value';
 import { normalizeTimeFrequencyFromDineroInputValue } from '../time-frequency/normalizers';
 
 export const applyDiscounts = (

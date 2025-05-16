@@ -1,5 +1,5 @@
 import type { PriceItem, CompositePriceItem, PricingDetails } from '@epilot/pricing-client';
-import { toDinero } from '../money/toDinero';
+import { toDinero } from '../money/to-dinero';
 
 const convertAmountsToDinero = <Item extends PriceItem | CompositePriceItem>(item: Item): Item => {
   const dineroTotal = toDinero(item.amount_total_decimal || '0');

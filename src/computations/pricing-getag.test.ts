@@ -8,7 +8,7 @@ import {
   priceTieredFlatFeeGetAG,
   priceTieredVolumeGetAG,
 } from '../__tests__/fixtures/price-getag.samples';
-import { computeAggregatedAndPriceTotals } from './computeTotals';
+import { computeAggregatedAndPriceTotals } from './compute-totals';
 
 describe('GetAG - computeAggregatedAndPriceTotals', () => {
   describe('when is_composite_price = false', () => {

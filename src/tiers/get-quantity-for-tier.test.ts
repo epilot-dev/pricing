@@ -1,4 +1,4 @@
-import { getQuantityForTier } from './getQuantityForTier';
+import { getQuantityForTier } from './get-quantity-for-tier';
 
 describe('getQuantityForTier', () => {
   it('should return the correct result when quantity is 1', () => {

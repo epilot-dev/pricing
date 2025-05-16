@@ -1,5 +1,5 @@
 import * as samples from '../__tests__/fixtures/price.samples';
-import { extractPricingEntitiesBySlug } from './extractPricingEntitiesBySlug';
+import { extractPricingEntitiesBySlug } from './extract-pricing-entities-by-slug';
 
 describe('extractPricingEntitiesBySlug', () => {
   it('should return the pricing relations without duplicates', () => {

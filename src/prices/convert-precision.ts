@@ -1,4 +1,4 @@
-import { toDineroFromInteger } from '../money/toDinero';
+import { toDineroFromInteger } from '../money/to-dinero';
 import { PricingModel } from '../prices/constants';
 import type { CompositePriceItem, Price, PriceItem, PriceItemDto, PricingDetails } from '../shared/types';
 

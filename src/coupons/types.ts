@@ -1,6 +1,6 @@
 import type { Coupon } from '@epilot/pricing-client';
 import type { Currency } from 'dinero.js';
-import type { RemoveIndexSignature } from '../shared/typeUtils';
+import type { RemoveIndexSignature } from '../shared/type-utils';
 
 export type BaseCoupon = RemoveIndexSignature<Coupon>;
 

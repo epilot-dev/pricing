@@ -3,8 +3,8 @@ import * as samples from '../__tests__/fixtures/price.samples';
 import * as results from '../__tests__/fixtures/pricing.results';
 import { taxRateless } from '../__tests__/fixtures/tax.samples';
 import * as coupons from '../coupons/__tests__/coupon.fixtures';
-import { computeAggregatedAndPriceTotals } from './computeTotals';
-import { computePriceItemDetails } from './computeTotals';
+import { computeAggregatedAndPriceTotals } from './compute-totals';
+import { computePriceItemDetails } from './compute-totals';
 
 describe('computeAggregatedAndPriceTotals', () => {
   describe('when is_composite_price = false', () => {

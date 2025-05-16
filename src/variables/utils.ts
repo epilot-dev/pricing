@@ -1,5 +1,5 @@
 import { formatAmount, formatAmountFromString, formatPriceUnit } from '../money/formatters';
-import { toDinero } from '../money/toDinero';
+import { toDinero } from '../money/to-dinero';
 import { PricingModel } from '../prices/constants';
 import type {
   Currency,

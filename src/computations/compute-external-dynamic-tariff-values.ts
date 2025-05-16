@@ -1,10 +1,10 @@
 import type { PriceDynamicTariff, Tax } from '@epilot/pricing-client';
 import type { Currency } from 'dinero.js';
-import { toDinero } from '../money/toDinero';
+import { toDinero } from '../money/to-dinero';
 import { ModeDynamicTariff } from '../prices/constants';
 import type { PriceItemsTotals } from '../prices/types';
-import { getTaxValue } from '../taxes/getTaxValue';
-import { computePerUnitPriceItemValues } from './computePerUnitPriceItemValues';
+import { getTaxValue } from '../taxes/get-tax-value';
+import { computePerUnitPriceItemValues } from './compute-per-unit-price-item-values';
 
 export const computeExternalDynamicTariffValues = ({
   dynamicTariff,

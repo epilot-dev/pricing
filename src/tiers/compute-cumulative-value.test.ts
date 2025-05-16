@@ -1,7 +1,7 @@
 import type { PriceTier } from '../shared/types';
 import { mockedTranslationFn } from './__tests__/mocks';
 import { baseTiersUnitAmount } from './__tests__/tiers.fixtures';
-import { computeCumulativeValue } from './computeCumulativeValue';
+import { computeCumulativeValue } from './compute-cumulative-value';
 
 const decimalTiers: PriceTier[] = [
   {

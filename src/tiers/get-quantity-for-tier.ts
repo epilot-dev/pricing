@@ -1,5 +1,5 @@
 import { DEFAULT_CURRENCY } from '../money/constants';
-import { toDinero } from '../money/toDinero';
+import { toDinero } from '../money/to-dinero';
 
 /**
  * Gets the quantity for a specific tier.

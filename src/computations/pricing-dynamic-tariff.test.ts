@@ -7,7 +7,7 @@ import {
   priceDynamicRealtime,
   priceDynamicRealtimeTaxinclusive,
 } from '../__tests__/fixtures/price-dynamic-tariff.samples';
-import { computeAggregatedAndPriceTotals } from './computeTotals';
+import { computeAggregatedAndPriceTotals } from './compute-totals';
 
 describe('Dynamic Tariff - computeAggregatedAndPriceTotals', () => {
   describe('when is_composite_price = false', () => {

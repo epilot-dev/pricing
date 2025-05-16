@@ -12,22 +12,22 @@ import { isValidCoupon } from '../coupons/guards';
 import { getCouponOrder } from '../coupons/utils';
 import { DEFAULT_CURRENCY } from '../money/constants';
 import { PricingModel } from '../prices/constants';
-import { convertPriceItemWithCouponAppliedToPriceItemDto } from '../prices/convertPrecision';
-import { getPriceTax } from '../prices/getPriceTax';
+import { convertPriceItemWithCouponAppliedToPriceItemDto } from '../prices/convert-precision';
+import { getPriceTax } from '../prices/get-price-tax';
+import { mapToProductSnapshot, mapToPriceSnapshot } from '../prices/map-to-snapshots';
 import { normalizePriceMappingInput } from '../prices/mapping';
-import { mapToProductSnapshot, mapToPriceSnapshot } from '../prices/mapToSnapshots';
 import type { PriceItemsTotals } from '../prices/types';
 import { isPriceItemWithCouponApplied, isTaxInclusivePrice } from '../prices/utils';
-import { getSafeQuantity } from '../shared/getSafeQuantity';
+import { getSafeQuantity } from '../shared/get-safe-quantity';
 import { normalizeValueToFrequencyUnit } from '../time-frequency/normalizers';
 import type { TimeFrequency } from '../time-frequency/types';
-import { applyDiscounts } from './applyDiscounts';
-import { computeExternalDynamicTariffValues } from './computeExternalDynamicTariffValues';
-import { computeExternalGetAGItemValues } from './computeExternalGetAGItemValues';
-import { computePerUnitPriceItemValues } from './computePerUnitPriceItemValues';
-import { computeTieredFlatFeePriceItemValues } from './computeTieredFlatFeePriceItemValues';
-import { computeTieredGraduatedPriceItemValues } from './computeTieredGraduatedPriceItemValues';
-import { computeTieredVolumePriceItemValues } from './computeTieredVolumePriceItemValues';
+import { applyDiscounts } from './apply-discounts';
+import { computeExternalDynamicTariffValues } from './compute-external-dynamic-tariff-values';
+import { computeExternalGetAGItemValues } from './compute-external-get-agitem-values';
+import { computePerUnitPriceItemValues } from './compute-per-unit-price-item-values';
+import { computeTieredFlatFeePriceItemValues } from './compute-tiered-flat-fee-price-item-values';
+import { computeTieredGraduatedPriceItemValues } from './compute-tiered-graduated-price-item-values';
+import { computeTieredVolumePriceItemValues } from './compute-tiered-volume-price-item-values';
 
 const computeExternalFee = (
   externalFeeMapping: ExternalFeeMapping | undefined,

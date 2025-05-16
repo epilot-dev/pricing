@@ -3,11 +3,11 @@ import type { Currency, Dinero } from 'dinero.js';
 import { DEFAULT_LOCALE } from '../money/constants';
 import { DEFAULT_CURRENCY } from '../money/constants';
 import { formatAmountFromString, addSeparatorToDineroString } from '../money/formatters';
-import { toDinero } from '../money/toDinero';
+import { toDinero } from '../money/to-dinero';
 import { PricingModel } from '../prices/constants';
-import { isNotPieceUnit } from '../shared/isNotPieceUnit';
-import { getTaxValue } from '../taxes/getTaxValue';
-import { getQuantityForTier } from './getQuantityForTier';
+import { isNotPieceUnit } from '../shared/is-not-piece-unit';
+import { getTaxValue } from '../taxes/get-tax-value';
+import { getQuantityForTier } from './get-quantity-for-tier';
 import { getDisplayTiersByQuantity } from './utils';
 
 type CumulativePriceBreakdownItem = {

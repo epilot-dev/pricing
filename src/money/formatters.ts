@@ -10,8 +10,8 @@ import {
   GENERIC_UNIT_DISPLAY_LABEL,
   MAX_SUPPORTED_FORMAT_PRECISION,
 } from './constants';
-import { getCurrencySymbol } from './getCurrencySymbol';
-import { toDinero } from './toDinero';
+import { getCurrencySymbol } from './get-currency-symbol';
+import { toDinero } from './to-dinero';
 
 type SubunitAndSymbol = {
   symbol: string;

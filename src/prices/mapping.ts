@@ -1,6 +1,6 @@
 import type { Dinero } from 'dinero.js';
-import { toDinero } from '../money/toDinero';
-import { getSafeQuantity } from '../shared/getSafeQuantity';
+import { toDinero } from '../money/to-dinero';
+import { getSafeQuantity } from '../shared/get-safe-quantity';
 import type { Price, PriceInputMapping } from '../shared/types';
 import { normalizeTimeFrequencyToDinero } from '../time-frequency/normalizers';
 import type { TimeFrequency } from '../time-frequency/types';

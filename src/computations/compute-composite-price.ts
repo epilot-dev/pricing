@@ -8,12 +8,12 @@ import type {
   TaxAmountDto,
 } from '@epilot/pricing-client';
 import { DEFAULT_CURRENCY } from '../money/constants';
-import { toDinero } from '../money/toDinero';
+import { toDinero } from '../money/to-dinero';
 import { PricingModel } from '../prices/constants';
-import { getPriceTax } from '../prices/getPriceTax';
-import { mapToPriceSnapshot, mapToProductSnapshot } from '../prices/mapToSnapshots';
-import { getSafeQuantity } from '../shared/getSafeQuantity';
-import { computePriceItem } from './computePriceItem';
+import { getPriceTax } from '../prices/get-price-tax';
+import { mapToPriceSnapshot, mapToProductSnapshot } from '../prices/map-to-snapshots';
+import { getSafeQuantity } from '../shared/get-safe-quantity';
+import { computePriceItem } from './compute-price-item';
 
 type PriceComponent = NonNullable<CompositePriceItemDto['item_components']>[number]['_price'] & {
   _itemRef?: PriceItemDto;

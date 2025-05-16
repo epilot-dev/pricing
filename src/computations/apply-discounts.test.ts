@@ -12,7 +12,7 @@ import {
   veryHighFixedDiscountCoupon,
 } from '../coupons/__tests__/coupon.fixtures';
 import { DEFAULT_CURRENCY } from '../money/constants';
-import { applyDiscounts } from './applyDiscounts';
+import { applyDiscounts } from './apply-discounts';
 
 describe('applyDiscounts', () => {
   const baseParams = {

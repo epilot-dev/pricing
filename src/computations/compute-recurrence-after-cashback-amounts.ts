@@ -1,4 +1,4 @@
-import { toDineroFromInteger } from '../money/toDinero';
+import { toDineroFromInteger } from '../money/to-dinero';
 import type { RecurrenceAmount, CashbackAmount } from '../shared/types';
 import { normalizeTimeFrequencyFromDineroInputValue } from '../time-frequency/normalizers';
 

@@ -1,4 +1,4 @@
-import { getPriceTiersForQuantity } from './getPriceTiersForQuantity';
+import { getPriceTiersForQuantity } from './get-price-tiers-for-quantity';
 
 describe('getPriceTiersForQuantity', () => {
   const tiers = [

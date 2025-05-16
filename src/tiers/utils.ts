@@ -2,11 +2,11 @@ import type { Currency } from 'dinero.js';
 import { DEFAULT_CURRENCY } from '../money/constants';
 import { DEFAULT_LOCALE } from '../money/constants';
 import { addSeparatorToDineroString, formatAmountFromString } from '../money/formatters';
-import { toDinero } from '../money/toDinero';
+import { toDinero } from '../money/to-dinero';
 import { PricingModel } from '../prices/constants';
-import { isNotPieceUnit } from '../shared/isNotPieceUnit';
+import { isNotPieceUnit } from '../shared/is-not-piece-unit';
 import type { Price, PriceTier, PriceTierEnhanced, Tax } from '../shared/types';
-import { getTaxValue } from '../taxes/getTaxValue';
+import { getTaxValue } from '../taxes/get-tax-value';
 
 const byInputQuantity = (tiers: PriceTier[], quantity: number) => (_: PriceTier, index: number) =>
   quantity > (tiers[index - 1]?.up_to || 0);

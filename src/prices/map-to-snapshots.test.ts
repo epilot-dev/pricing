@@ -1,6 +1,6 @@
 import * as samples from '../__tests__/fixtures/price.samples';
 import type { Price, PriceItemDto } from '../shared/types';
-import { mapToPriceSnapshot, ENTITY_FIELDS_EXCLUSION_LIST, mapToProductSnapshot } from './mapToSnapshots';
+import { mapToPriceSnapshot, ENTITY_FIELDS_EXCLUSION_LIST, mapToProductSnapshot } from './map-to-snapshots';
 
 describe('mapToPriceSnapshot', () => {
   it('should return an empty object if price is falsy', () => {

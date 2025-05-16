@@ -1,5 +1,5 @@
 import type { Dinero } from 'dinero.js';
-import { toDinero } from '../money/toDinero';
+import { toDinero } from '../money/to-dinero';
 import { TIME_FREQUENCY_NORMALIZATION_FACTORS } from './constants';
 import type { TimeFrequency } from './types';
 

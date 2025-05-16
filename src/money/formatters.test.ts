@@ -8,7 +8,7 @@ import {
   toIntegerAmount,
   unitDisplayLabels,
 } from './formatters';
-import { toDinero } from './toDinero';
+import { toDinero } from './to-dinero';
 
 describe('formatAmount', () => {
   it('should be resilient by formatting invalid amounts. defaulting to zero and providing a good log msg', () => {

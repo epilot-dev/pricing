@@ -1,10 +1,10 @@
 import type { PriceTier, Tax, Price } from '@epilot/pricing-client';
 import type { Currency } from 'dinero.js';
-import { toDineroFromInteger } from '../money/toDinero';
+import { toDineroFromInteger } from '../money/to-dinero';
 import type { PriceItemsTotals } from '../prices/types';
-import { getPriceTiersForQuantity } from '../tiers/getPriceTiersForQuantity';
-import { getQuantityForTier } from '../tiers/getQuantityForTier';
-import { computePerUnitPriceItemValues } from './computePerUnitPriceItemValues';
+import { getPriceTiersForQuantity } from '../tiers/get-price-tiers-for-quantity';
+import { getQuantityForTier } from '../tiers/get-quantity-for-tier';
+import { computePerUnitPriceItemValues } from './compute-per-unit-price-item-values';
 
 export const computeTieredGraduatedPriceItemValues = ({
   tiers = [],

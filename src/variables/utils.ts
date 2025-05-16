@@ -1,9 +1,8 @@
-import type { Currency } from 'dinero.js';
-import { formatAmount, formatAmountFromString, formatPriceUnit, toDinero } from '../formatters';
-import { normalizeTimeFrequency, normalizeValueToFrequencyUnit } from '../normalizers';
-import { PricingModel } from '../pricing';
-import { getDisplayTierByQuantity, getTierDescription } from '../tiers';
+import { formatAmount, formatAmountFromString, formatPriceUnit } from '../money/formatters';
+import { toDinero } from '../money/to-dinero';
+import { PricingModel } from '../prices/constants';
 import type {
+  Currency,
   BillingPeriod,
   CompositePrice,
   CompositePriceItem,
@@ -14,10 +13,12 @@ import type {
   TierDetails,
   I18n,
   TFunction,
-  TimeFrequency,
-} from '../types';
+} from '../shared/types';
+import { getDisplayTierByQuantity, getTierDescription } from '../tiers/utils';
+import { normalizeTimeFrequency, normalizeValueToFrequencyUnit } from '../time-frequency/normalizers';
+import type { TimeFrequency } from '../time-frequency/types';
+import { RECURRENCE_ORDERING } from './constants';
 import type { ExternalFeesMetadata, GetTieredUnitAmountOptions, PriceDisplayType, PriceItemWithParent } from './types';
-import { RECURRENCE_ORDERING } from '.';
 
 export const EMPTY_VALUE_PLACEHOLDER = '---';
 const TEMPORARY_TAX_MAPPER = {
@@ -228,6 +229,9 @@ const getTieredUnitAmount = (
       }
     : undefined;
 
+  /**
+   * @todo Instead of using normalizeTimeFrequency, use normalizeValueToFrequencyUnit
+   */
   const normalizedInput =
     item._price?.pricing_model !== PricingModel.tieredGraduated &&
     numberInput &&

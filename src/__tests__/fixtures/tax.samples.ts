@@ -1,4 +1,4 @@
-import type { EntityItem, Tax } from '../../types';
+import type { EntityItem, Tax } from '../../shared/types';
 
 export const tax10percent: EntityItem & Tax = {
   _id: '10',

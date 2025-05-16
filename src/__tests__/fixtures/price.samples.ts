@@ -1,12 +1,3 @@
-import type {
-  CompositePrice,
-  CompositePriceItem,
-  CompositePriceItemDto,
-  Price,
-  PriceItem,
-  PriceItemDto,
-  TaxAmount,
-} from '../../types';
 import {
   fixedCashbackCoupon,
   fixedDiscountCoupon,
@@ -16,7 +7,16 @@ import {
   percentageCashbackCoupon,
   percentageDiscountCoupon,
   promoCodeRequiredPercentageDiscountCoupon,
-} from './coupon.samples';
+} from '../../coupons/__tests__/coupon.fixtures';
+import type {
+  CompositePrice,
+  CompositePriceItem,
+  CompositePriceItemDto,
+  Price,
+  PriceItem,
+  PriceItemDto,
+  TaxAmount,
+} from '../../shared/types';
 import { tax10percent, tax19percent, tax6percent, taxRateless } from './tax.samples';
 
 export const priceItem1: PriceItemDto = {

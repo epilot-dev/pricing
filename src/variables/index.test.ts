@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// import type { i18n } from 'i18next';
-
-import type { I18n, CompositePrice, PriceInputMappings, PriceItem } from '../types';
+import type { I18n, CompositePrice, PriceInputMappings, PriceItem } from '../shared/types';
 import {
   orderWithCompositeItem,
   orderWithCompositeItemResults,
@@ -11,9 +8,9 @@ import {
   priceWithCorrectQuantity,
   orderEntityDataWithEmptyLineItems,
   invalidOrderEntityData,
-} from './fixtures/orders';
+} from './__tests__/orders.fixtures';
+import { processOrderTableData } from './process-order-table-data';
 import { getHiddenAmountString, getPriceDisplayInJourneys, getQuantity, unitAmountApproved } from './utils';
-import { processOrderTableData } from '.';
 
 const mockI18n = {
   t: (key: string, fallback: string) => key || fallback,

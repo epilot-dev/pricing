@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import type { PriceTier } from '../shared/types';
 import { mockedTranslationFn } from './__tests__/mocks';
 import { baseTiersUnitAmount } from './__tests__/tiers.fixtures';

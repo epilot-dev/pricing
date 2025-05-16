@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { I18n, CompositePrice, PriceInputMappings, PriceItem } from '../shared/types';
 import {
   orderWithCompositeItem,
@@ -18,7 +19,7 @@ const mockI18n = {
 } as I18n;
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 describe('processOrderTableData', () => {

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import type { Price } from '../shared/types';
 import { normalizePriceMappingInput } from './mapping';
 

@@ -1,4 +1,6 @@
 import type { Currency } from 'dinero.js';
+import type { Mock } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { PricingModel } from '../prices/constants';
 import type { PriceTier, Tax } from '../shared/types';
 import { mockedTranslationFn } from './__tests__/mocks';
@@ -239,7 +241,7 @@ describe('getTierDescription', () => {
       unit: string;
       locale: string;
       currency: Currency;
-      t: jest.Mock;
+      t: Mock;
       showStartsAt: boolean;
       enableSubunitDisplay: boolean;
       shouldDisplayOnRequest?: boolean;
@@ -283,7 +285,7 @@ describe('getTierDescription', () => {
       unit: string;
       locale: string;
       currency: Currency;
-      t: jest.Mock;
+      t: Mock;
       showStartsAt: boolean;
       enableSubunitDisplay: boolean;
       shouldDisplayOnRequest?: boolean;

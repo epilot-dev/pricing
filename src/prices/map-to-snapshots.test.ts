@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import * as samples from '../__tests__/fixtures/price.samples';
 import type { Price, PriceItemDto } from '../shared/types';
 import { mapToPriceSnapshot, ENTITY_FIELDS_EXCLUSION_LIST, mapToProductSnapshot } from './map-to-snapshots';

@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest';
 import type { Currency } from '../shared/types';
 import { GENERIC_UNIT_DISPLAY_LABEL } from './constants';
 import {
@@ -12,7 +13,7 @@ import { toDinero } from './to-dinero';
 
 describe('formatAmount', () => {
   it('should be resilient by formatting invalid amounts. defaulting to zero and providing a good log msg', () => {
-    const consoleErrorSpy = jest.spyOn(console, 'error');
+    const consoleErrorSpy = vi.spyOn(console, 'error');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formattedAmount = formatAmount({ amount: { invalid: 'thing' } as any });
 

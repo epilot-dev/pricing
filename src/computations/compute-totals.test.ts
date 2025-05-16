@@ -1,4 +1,5 @@
 import type { PriceItemDto, CompositePriceItemDto, PriceItemsDto, Price } from '@epilot/pricing-client';
+import { describe, expect, it } from 'vitest';
 import * as samples from '../__tests__/fixtures/price.samples';
 import * as results from '../__tests__/fixtures/pricing.results';
 import { taxRateless } from '../__tests__/fixtures/tax.samples';

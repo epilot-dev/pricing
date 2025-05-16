@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import * as samples from '../__tests__/fixtures/price.samples';
 import { extractPricingEntitiesBySlug } from './extract-pricing-entities-by-slug';
 

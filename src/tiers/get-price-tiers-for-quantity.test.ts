@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { getPriceTiersForQuantity } from './get-price-tiers-for-quantity';
 
 describe('getPriceTiersForQuantity', () => {

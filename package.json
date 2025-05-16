@@ -16,8 +16,8 @@
   "type": "module",
   "scripts": {
     "start": "mkdir -p dist && cp -r src/types dist/types && nodemon --watch src --ext ts --exec 'node esbuild.config.js'",
-    "test": "jest",
-    "test:watch": "jest --watch",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest --coverage",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
     "gen-docs": "rm -rf docs && typedoc --plugin typedoc-plugin-markdown --out docs src && echo '{ \"label\": \"Pricing Library\", \"position\": 0 }' > docs/_category_.json",
@@ -62,22 +62,20 @@
   "devDependencies": {
     "@epilot/eslint-config": "^3.0.5",
     "@epilot/pricing-client": "^3.47.5",
-    "@jest/types": "^29.6.3",
     "@types/dinero.js": "^1.9.4",
-    "@types/jest": "^29.5.14",
+    "@vitest/coverage-v8": "^1.6.1",
     "concurrently": "^9.1.2",
     "esbuild": "^0.25.4",
     "eslint": "^9.26.0",
     "eslint-plugin-prettier": "^5.4.0",
     "husky": "^9.1.7",
     "i18next": "^25.1.2",
-    "jest": "^29.7.0",
     "nodemon": "^3.1.10",
     "openapi-client-axios-typegen": "^7.7.0",
-    "ts-jest": "^29.3.2",
     "ts-node": "^10.9.2",
     "typedoc": "^0.28.4",
     "typedoc-plugin-markdown": "^4.6.3",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "vitest": "^1.6.1"
   }
 }

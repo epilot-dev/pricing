@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import type { PriceItems } from '../shared/types';
 import { getRecurrencesWithEstimatedPrices } from './get-recurrences-with-estimated-prices';
 
@@ -38,7 +39,7 @@ describe('getRecurrencesWithEstimatedPrices', () => {
     },
   };
 
-  test('should return recurrences with estimated prices (composite price, monthly estimated)', () => {
+  it('should return recurrences with estimated prices (composite price, monthly estimated)', () => {
     // given
     const priceDetails = [
       {
@@ -58,7 +59,7 @@ describe('getRecurrencesWithEstimatedPrices', () => {
     expect(result).toEqual({ monthly: true, one_time: false });
   });
 
-  test('should return recurrences with estimated prices (composite price, one time and monthly estimated)', () => {
+  it('should return recurrences with estimated prices (composite price, one time and monthly estimated)', () => {
     // given
     const priceDetails = [
       {
@@ -78,7 +79,7 @@ describe('getRecurrencesWithEstimatedPrices', () => {
     expect(result).toEqual({ monthly: true, one_time: true });
   });
 
-  test('should return recurrences with estimated prices (composite price, none estimated)', () => {
+  it('should return recurrences with estimated prices (composite price, none estimated)', () => {
     // given
     const priceDetails = [
       {
@@ -98,7 +99,7 @@ describe('getRecurrencesWithEstimatedPrices', () => {
     expect(result).toEqual({ monthly: false, one_time: false });
   });
 
-  test('should return recurrences with estimated prices (simple price, none estimated)', () => {
+  it('should return recurrences with estimated prices (simple price, none estimated)', () => {
     // given
     const priceDetails: PriceItems = [oneTimeComponent, monthlyComponent];
 
@@ -109,7 +110,7 @@ describe('getRecurrencesWithEstimatedPrices', () => {
     expect(result).toEqual({ monthly: false, one_time: false });
   });
 
-  test('should return recurrences with estimated prices (simple price, monthly estimated)', () => {
+  it('should return recurrences with estimated prices (simple price, monthly estimated)', () => {
     // given
     const priceDetails = [oneTimeComponent, monthlyComponent, monthlyEstimateComponent] as PriceItems;
 
@@ -120,7 +121,7 @@ describe('getRecurrencesWithEstimatedPrices', () => {
     expect(result).toEqual({ monthly: true, one_time: false });
   });
 
-  test('should return recurrences with estimated prices (simple price, one time and monthly estimated)', () => {
+  it('should return recurrences with estimated prices (simple price, one time and monthly estimated)', () => {
     // given
     const priceDetails = [
       oneTimeComponent,
@@ -136,7 +137,7 @@ describe('getRecurrencesWithEstimatedPrices', () => {
     expect(result).toEqual({ monthly: true, one_time: true });
   });
 
-  test('should return recurrences with estimated prices (mixed prices, one time and monthly estimated)', () => {
+  it('should return recurrences with estimated prices (mixed prices, one time and monthly estimated)', () => {
     // given
     const priceDetails = [
       {

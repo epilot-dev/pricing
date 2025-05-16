@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import * as samples from '../__tests__/fixtures/price.samples';
 import type { Price, PriceInputMappings, PriceTier } from '../shared/types';
 import type { TimeFrequency } from '../time-frequency/types';

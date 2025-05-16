@@ -1,4 +1,5 @@
 import type { Currency } from 'dinero.js';
+import { describe, expect, it } from 'vitest';
 import { priceItem1 } from '../__tests__/fixtures/price.samples';
 import { compositePriceItemWithTieredGraduatedComponent } from '../__tests__/fixtures/price.samples';
 import { tax19percent } from '../__tests__/fixtures/tax.samples';

@@ -8,11 +8,9 @@ import {
   normalizeValueToFrequencyUnit,
 } from './normalizers';
 import type {
-  BillingPeriod,
   CashbackAmount,
   CompositePriceItem,
   CompositePriceItemDto,
-  Coupon,
   ExternalFeeMapping,
   Price,
   PriceInputMapping,
@@ -765,15 +763,20 @@ const recomputeDetailTotalsFromCompositePrice = (
 };
 
 /**
- * Computes cashback amounts for composite price items with top-level cashback coupons.
- * Now it's an internal function of recomputeDetailTotalsFromCompositePrice
+ * Extracts the coupon IDs from the redeemed promotions.
  */
-const computeCompositePriceCashbacks = (
+const getRedeemedPromoCouponIds = (redeemedPromos: Array<RedeemedPromo>) => {
+  return redeemedPromos.flatMap(({ coupons }) => coupons?.map(({ _id }) => _id));
+};
+
+/**
+ * Gets the applied cashback coupons from the composite price item.
+ */
+const getAppliedCompositeCashbackCoupons = (
   compositePriceItem: CompositePriceItem,
-  itemBreakdown: PricingDetails,
   redeemedPromos: Array<RedeemedPromo> = [],
 ) => {
-  const redeemedPromoCouponIds = redeemedPromos.flatMap(({ coupons }) => coupons?.map(({ _id }) => _id));
+  const redeemedPromoCouponIds = getRedeemedPromoCouponIds(redeemedPromos);
 
   const cashbackCoupons = compositePriceItem?._coupons
     ?.filter(isValidCoupon)
@@ -781,89 +784,101 @@ const computeCompositePriceCashbacks = (
     .filter((coupon) => (coupon.requires_promo_code ? redeemedPromoCouponIds.includes(coupon._id) : true))
     .sort(getCouponOrder);
 
-  if (!cashbackCoupons?.length) {
+  return cashbackCoupons;
+};
+
+/**
+ * Computes cashback amounts for composite price items with top-level cashback coupons.
+ */
+const computeCompositePriceCashbacks = (
+  compositePriceItem: CompositePriceItem,
+  itemBreakdown: PricingDetails,
+  redeemedPromos: Array<RedeemedPromo> = [],
+) => {
+  // Extract cashback coupons from the composite price item
+  const appliedCashbackCoupons = getAppliedCompositeCashbackCoupons(compositePriceItem, redeemedPromos);
+
+  if (!appliedCashbackCoupons?.length) {
     return {};
   }
 
-  /* Only apply the first coupon (FOR NOW; TODO: support multiple cashbacks in the composite level) */
-  const appliedCashbackCoupons = cashbackCoupons?.slice(0, 1);
-  const [cashbackCoupon] = appliedCashbackCoupons ?? [];
+  // Create a data structure to track full-precision cashback totals by period
+  const cashbackTotals: Record<string, Dinero> = {};
 
-  let unitCashbackAmount: Dinero | undefined;
-
-  const unitAmountGross = toDineroFromInteger(
-    itemBreakdown.amount_total!,
-    (compositePriceItem.currency || DEFAULT_CURRENCY).toUpperCase() as Currency,
-  );
-  const unitAmountMultiplier = getSafeQuantity(compositePriceItem.quantity);
-
-  if (!cashbackCoupon) {
-    return {};
-  }
-
-  if (isFixedValueCoupon(cashbackCoupon)) {
-    unitCashbackAmount = toDinero(cashbackCoupon.fixed_value_decimal, cashbackCoupon.fixed_value_currency);
-  } else {
-    const cashbackPercentage = clamp(Number(cashbackCoupon.percentage_value), 0, 100);
-    unitCashbackAmount = unitAmountGross.multiply(cashbackPercentage).divide(100);
-  }
-
-  const cashbackAmount = unitCashbackAmount.multiply(unitAmountMultiplier);
-
-  const normalizedCashbackAmount = normalizeTimeFrequencyFromDineroInputValue(
-    cashbackAmount,
-    'yearly',
-    compositePriceItem._price?.billing_period as BillingPeriod,
-  );
-
-  const afterCashbackAmountTotal = unitAmountGross.subtract(normalizedCashbackAmount);
-
-  const cashback_amount = cashbackAmount.getAmount();
-  const after_cashback_amount_total = afterCashbackAmountTotal.getAmount();
-  const cashbackPeriod = cashbackCoupon?.cashback_period as '0' | '12' | undefined;
-
-  // Update cashbacks in the breakdown
+  // Create a shared cashbacks array for all iterations
   const cashbacks = [...(itemBreakdown.total_details?.breakdown?.cashbacks ?? [])];
 
-  if (!cashback_amount || !cashbackPeriod) {
-    return {};
+  for (const cashbackCoupon of appliedCashbackCoupons) {
+    let unitCashbackAmount: Dinero | undefined;
+
+    if (isFixedValueCoupon(cashbackCoupon)) {
+      unitCashbackAmount = toDinero(cashbackCoupon.fixed_value_decimal, cashbackCoupon.fixed_value_currency);
+    } else {
+      const cashbackPercentage = clamp(Number(cashbackCoupon.percentage_value), 0, 100);
+      const unitAmountGross = toDineroFromInteger(
+        itemBreakdown.amount_total!,
+        (compositePriceItem.currency || DEFAULT_CURRENCY).toUpperCase() as Currency,
+      );
+      unitCashbackAmount = unitAmountGross.multiply(cashbackPercentage).divide(100);
+    }
+
+    const unitAmountMultiplier = getSafeQuantity(compositePriceItem.quantity);
+    const cashbackAmount = unitCashbackAmount.multiply(unitAmountMultiplier);
+    const cashback_amount = cashbackAmount.getAmount();
+    const cashbackPeriod = cashbackCoupon?.cashback_period ?? '0';
+
+    // Update applied cashbacks with amounts - convert precision immediately
+    const convertedValues = convertCashbackAmountsPrecision(cashback_amount, undefined, 2);
+    cashbackCoupon.cashback_amount = convertedValues.cashback_amount!;
+    cashbackCoupon.cashback_amount_decimal = convertedValues.cashback_amount_decimal!;
+
+    // Update cashback totals with full precision
+    if (cashbackTotals[cashbackPeriod]) {
+      cashbackTotals[cashbackPeriod] = cashbackTotals[cashbackPeriod].add(cashbackAmount);
+    } else {
+      cashbackTotals[cashbackPeriod] = cashbackAmount;
+    }
+
+    // Update existing breakdown for backward compatibility
+    const cashbackMatch = cashbacks.find((cashback) => cashback.cashback_period === cashbackPeriod);
+
+    if (cashbackMatch) {
+      const cashbackAmountTotal = toDineroFromInteger(cashbackMatch.amount_total);
+      cashbackMatch.amount_total = cashbackAmountTotal.add(toDineroFromInteger(cashback_amount)).getAmount();
+    } else {
+      cashbacks.push({
+        cashback_period: cashbackPeriod,
+        amount_total: cashback_amount,
+      });
+    }
   }
 
-  const cashbackMatch = cashbacks.find((cashback) => cashback.cashback_period === cashbackPeriod);
-
-  if (cashbackMatch) {
-    const cashbackAmountTotal = toDineroFromInteger(cashbackMatch.amount_total);
-    cashbackMatch.amount_total = cashbackAmountTotal.add(toDineroFromInteger(cashback_amount)).getAmount();
-  } else {
-    cashbacks.push({
-      cashback_period: cashbackPeriod,
-      amount_total: cashback_amount,
-    });
+  // Convert totals to the desired precision
+  const cashback_totals: Record<string, { cashback_amount: number; cashback_amount_decimal: string }> = {};
+  for (const period in cashbackTotals) {
+    const totalAmount = cashbackTotals[period];
+    const convertedValues = convertCashbackAmountsPrecision(totalAmount.getAmount(), undefined, 2);
+    cashback_totals[period] = {
+      cashback_amount: convertedValues.cashback_amount!,
+      cashback_amount_decimal: convertedValues.cashback_amount_decimal!,
+    };
   }
 
-  const cashbackAmountsWithPrecision = convertCashbackAmountsPrecision(
-    cashback_amount,
-    after_cashback_amount_total,
-    cashbackPeriod,
-    appliedCashbackCoupons,
-    2,
-  );
-
-  const updatedTotalDetails = {
-    ...itemBreakdown.total_details,
-    breakdown: {
-      ...itemBreakdown.total_details?.breakdown,
-      cashbacks: cashbacks,
-    },
-  };
-
+  // Return all required data
   return {
     pricingDetails: {
       ...itemBreakdown,
-      total_details: updatedTotalDetails,
+      total_details: {
+        ...itemBreakdown.total_details,
+        breakdown: {
+          ...itemBreakdown.total_details?.breakdown,
+          cashbacks: cashbacks,
+        },
+      },
     },
     cashbacksMetadata: {
-      ...cashbackAmountsWithPrecision,
+      ...(Object.keys(cashback_totals).length > 0 && { cashback_totals }),
+      ...(appliedCashbackCoupons.length > 0 && { _coupons: appliedCashbackCoupons }),
     },
   };
 };
@@ -1031,7 +1046,7 @@ export const computePriceItem = (
       });
   }
 
-  const redeemedPromoCouponIds = redeemedPromos.flatMap(({ coupons }) => coupons?.map(({ _id }) => _id));
+  const redeemedPromoCouponIds = getRedeemedPromoCouponIds(redeemedPromos);
 
   const coupons = priceItem._coupons
     ?.filter(isValidCoupon)
@@ -1499,8 +1514,6 @@ export const computeQuantities = (price: Price | undefined, quantity: number, pr
 export const convertCashbackAmountsPrecision = (
   cashbackAmount: number | undefined,
   afterCashbackAmountTotal: number | undefined,
-  cashbackPeriod: '0' | '12' | undefined,
-  appliedCashbackCoupons: Coupon[] | undefined,
   precision = 2,
 ) => {
   return {
@@ -1516,8 +1529,6 @@ export const convertCashbackAmountsPrecision = (
           .getAmount(),
         after_cashback_amount_total_decimal: toDineroFromInteger(afterCashbackAmountTotal).toUnit().toString(),
       }),
-    ...(Number.isInteger(cashbackAmount) && { cashback_period: cashbackPeriod ?? '0' }),
-    ...(appliedCashbackCoupons && { _coupons: appliedCashbackCoupons }),
   };
 };
 

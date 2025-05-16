@@ -15,7 +15,7 @@
   ],
   "type": "module",
   "scripts": {
-    "start": "mkdir -p dist && cp -r src/types dist/types && nodemon --watch src --ext ts --exec 'node esbuild.config.js'",
+    "start": "nodemon --watch src --ext ts --exec 'node esbuild.config.js'",
     "test": "vitest run --coverage",
     "test:watch": "vitest --coverage",
     "typecheck": "tsc --noEmit",
@@ -23,8 +23,7 @@
     "gen-docs": "rm -rf docs && typedoc --plugin typedoc-plugin-markdown --out docs src && echo '{ \"label\": \"Pricing Library\", \"position\": 0 }' > docs/_category_.json",
     "clean": "rm -rf dist",
     "bundle-definition": "node esbuild.config.js",
-    "build": "npm run clean && tsc && mkdir -p dist && cp -r src/types dist/types && npm run bundle-definition",
-    "typegen": "echo '/* eslint-disable */\n/**\n * DO NOT MODIFY - GENERATED TYPES FROM OPENAPI\n **/' > src/types/pricing-types.d.ts && typegen ../../lambda/ApiHandlerFunction/openapi.yml >> src/types/pricing-types.d.ts",
+    "build": "npm run clean && tsc && npm run bundle-definition",
     "prepare": "npm run build",
     "lint": "eslint src --ext js,ts,tsx --cache --color",
     "lint:fix": "eslint src --ext js,ts,tsx --cache --color --fix",

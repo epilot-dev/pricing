@@ -41,7 +41,7 @@ export const getCouponOrder = <C extends Coupon>(a: C, b: C): number => {
  * Get all coupon ids from redeemed promos.
  */
 export const getRedeemedPromoCouponIds = (redeemedPromos: Array<RedeemedPromo>): Array<string> => {
-  return redeemedPromos.flatMap(({ coupons }) => coupons?.map(({ _id }) => _id) ?? [])
+  return redeemedPromos.flatMap(({ coupons }) => coupons?.map(({ _id }) => _id) ?? []);
 };
 
 /**

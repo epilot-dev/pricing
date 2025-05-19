@@ -67,8 +67,16 @@ export const computeAggregatedAndPriceTotals = (
       const compositePriceItemToAppend =
         (immutablePriceItem as CompositePriceItem | undefined) ?? computeCompositePrice(priceItem, { redeemedPromos });
 
-      const itemBreakdown = recomputeDetailTotalsFromCompositePrice(undefined, compositePriceItemToAppend, redeemedPromos);
-      const updatedTotals = recomputeDetailTotalsFromCompositePrice(details, compositePriceItemToAppend, redeemedPromos);
+      const itemBreakdown = recomputeDetailTotalsFromCompositePrice(
+        undefined,
+        compositePriceItemToAppend,
+        redeemedPromos,
+      );
+      const updatedTotals = recomputeDetailTotalsFromCompositePrice(
+        details,
+        compositePriceItemToAppend,
+        redeemedPromos,
+      );
 
       const newItem = {
         ...compositePriceItemToAppend,

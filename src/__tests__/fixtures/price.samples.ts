@@ -3361,7 +3361,7 @@ export const compositePriceWithFixedCashbackCoupon: CompositePriceItemDto = {
       },
     ],
   },
-}
+};
 
 export const compositePriceWithPercentageCashbackCoupon: CompositePriceItemDto = {
   ...compositePriceWithComponentsWithCoupons,
@@ -3379,7 +3379,7 @@ export const compositePriceWithPercentageCashbackCoupon: CompositePriceItemDto =
       },
     ],
   },
-}
+};
 
 export const compositePriceCashbackCombinedWithComponentCashbacks: CompositePriceItemDto = {
   ...compositePriceWithComponentsWithCoupons,
@@ -3397,4 +3397,4 @@ export const compositePriceCashbackCombinedWithComponentCashbacks: CompositePric
       },
     ],
   },
-}
+};

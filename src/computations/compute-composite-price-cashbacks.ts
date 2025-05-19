@@ -2,9 +2,7 @@ import { isFixedValueCoupon } from '../coupons/guards';
 import { getAppliedCompositeCashbackCoupons } from '../coupons/utils';
 import { DEFAULT_CURRENCY } from '../money/constants';
 import { toDinero, toDineroFromInteger } from '../money/to-dinero';
-import {
-  convertCashbackAmountsPrecision,
-} from '../prices/convert-precision';
+import { convertCashbackAmountsPrecision } from '../prices/convert-precision';
 import { clamp } from '../shared/clamp';
 import { getSafeQuantity } from '../shared/get-safe-quantity';
 import type {
@@ -14,7 +12,7 @@ import type {
   Currency,
   CashbackTotals,
   Coupon,
-  Dinero
+  Dinero,
 } from '../shared/types';
 
 /**

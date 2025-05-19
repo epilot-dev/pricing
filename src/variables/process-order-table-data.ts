@@ -2,6 +2,7 @@ import type { Currency } from 'dinero.js';
 import { formatPriceUnit } from '../money/formatters';
 import { PricingModel } from '../prices/constants';
 import { getRecurrencesWithEstimatedPrices } from '../prices/get-recurrences-with-estimated-prices';
+import { isTruthy } from '../shared/is-truthy';
 import type {
   I18n,
   Order,
@@ -79,9 +80,9 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
       recurrences.find(
         ({ type, billing_period }) => type == interval || (type === 'recurring' && billing_period === interval),
       ),
-    ).filter(Boolean);
+    ).filter(isTruthy);
 
-    data.total_details.breakdown.recurrences = sortedRecurrences as RecurrenceAmount[];
+    data.total_details.breakdown.recurrences = sortedRecurrences;
     data.total_details.recurrences = [];
     data.total_details.recurrencesByTax = {};
 

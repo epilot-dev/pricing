@@ -169,7 +169,7 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
 
         data.total_details.recurrences.push({
           ...recurrenceByBillingPeriodTotal,
-          recurrencesByTax: recurrencesByBillingPeriodWithTaxes as unknown as RecurrenceAmountWithTax,
+          recurrencesByTax: recurrencesByBillingPeriodWithTaxes as unknown as RecurrenceAmountWithTax[],
         });
       } else {
         data.total_details.recurrences.push(recurrenceByBillingPeriodTotal);

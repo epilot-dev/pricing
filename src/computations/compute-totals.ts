@@ -15,7 +15,6 @@ import type {
   PricingDetails,
   CompositePriceItem,
   PriceItemDto,
-  CompositePriceItemDto,
   Price,
   PriceItem,
   Tax,
@@ -136,18 +135,6 @@ export const computeAggregatedAndPriceTotals = (
 
   return convertPricingPrecision(priceDetails, 2);
 };
-
-/**
- * Computes the pricing details for a given PriceItem in isolation.
- * The computed price item will be the only entry from the PricingDetails items array.
- *
- * @param priceItem - the price item to compute
- * @returns the pricing details
- */
-export const computePriceItemDetails = (
-  priceItem: PriceItemDto | CompositePriceItemDto,
-  options?: ComputeAggregatedAndPriceTotalsOptions,
-) => computeAggregatedAndPriceTotals([priceItem], options);
 
 /**
  * Computes all the pricing total amounts to integers with a decimal precision of DECIMAL_PRECISION.
@@ -411,5 +398,3 @@ const recomputeDetailTotalsFromCompositePrice = (
     };
   }, details || initialPricingDetails);
 };
-
-export type ComputeAggregatedAndPriceTotals = typeof computeAggregatedAndPriceTotals;

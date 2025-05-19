@@ -800,15 +800,11 @@ const computeCompositePriceCashbacks = (
   // Extract cashback coupons from the composite price item
   const appliedCashbackCoupons = getAppliedCompositeCashbackCoupons(compositePriceItem, redeemedPromos);
 
-  if (!appliedCashbackCoupons?.length) {
-    return {};
-  }
-
   const cashbackTotals: Record<string, Dinero> = {};
   const appliedCashbacksWithAmounts: Coupon[] = [];
   const cashbacks = [...(itemBreakdown.total_details?.breakdown?.cashbacks ?? [])];
 
-  for (const cashbackCoupon of appliedCashbackCoupons) {
+  for (const cashbackCoupon of appliedCashbackCoupons ?? []) {
     let unitCashbackAmount: Dinero | undefined;
 
     if (isFixedValueCoupon(cashbackCoupon)) {
@@ -857,7 +853,6 @@ const computeCompositePriceCashbacks = (
   }
 
   // Convert totals to the desired precision
-  // TODO: use pricing-client types once available
   const cashback_totals: CashbackTotals = {};
   for (const period in cashbackTotals) {
     const totalAmount = cashbackTotals[period];
@@ -882,7 +877,7 @@ const computeCompositePriceCashbacks = (
     },
     cashbacksMetadata: {
       ...(Object.keys(cashback_totals).length > 0 && { cashback_totals }),
-      ...(appliedCashbacksWithAmounts.length > 0 && { _coupons: appliedCashbacksWithAmounts }),
+      ...(appliedCashbackCoupons && { _coupons: appliedCashbacksWithAmounts }),
     },
   };
 };

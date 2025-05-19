@@ -25,6 +25,7 @@ import type {
 import { getTaxValue } from './utils';
 import { taxRateless } from './__tests__/fixtures/tax.samples';
 import { CompositePrice } from '@epilot/pricing-client';
+import { fixedCashbackCoupon } from './__tests__/fixtures/coupon.samples';
 
 describe('computeAggregatedAndPriceTotals', () => {
   describe('when is_composite_price = false', () => {
@@ -903,7 +904,60 @@ describe('computeAggregatedAndPriceTotals', () => {
       expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[1].amount_total).toEqual(500)
     });
 
-    // TODO: Add TESTS for requires_promo_code
+    it('should not apply cashbacks in composite price if it has requires_promo_code set to true and redeemedPromos is empty', () => {
+      const priceItems = [
+        {
+          ...samples.compositePriceWithFixedCashbackCoupon,
+          _coupons: [{
+            ...fixedCashbackCoupon,
+            requires_promo_code: true,
+          }],
+        },
+      ]
+
+      const result = computeAggregatedAndPriceTotals(priceItems, {
+        redeemedPromos: [],
+      });
+
+      const computedPriceItem = result.items?.[0] as CompositePriceItem
+
+      expect(computedPriceItem).toBeDefined();
+      expect(computedPriceItem?._coupons).toEqual([]);
+      expect(computedPriceItem?.cashback_totals).toBeUndefined();
+    });
+
+    it('should apply cashbacks in composite price if it has requires_promo_code set to true and redeemedPromos includes the coupon', () => {
+      const priceItems = [
+        {
+          ...samples.compositePriceWithFixedCashbackCoupon,
+          _coupons: [{
+            ...fixedCashbackCoupon,
+            requires_promo_code: true,
+          }],
+        },
+      ]
+      const result = computeAggregatedAndPriceTotals(priceItems, {
+        redeemedPromos: [
+          {
+            code: 'SUMMER25',
+            coupons: [priceItems[0]!._coupons?.[0]!],
+          },
+        ],
+      });
+      const computedPriceItem = result.items?.[0] as CompositePriceItem
+      expect(computedPriceItem?._coupons).toEqual([{
+        ...priceItems[0]!._coupons?.[0]!,
+        cashback_amount: 1000,
+        cashback_amount_decimal: '10',
+        cashback_period: '12',
+      }]);
+      expect(computedPriceItem?.cashback_totals).toEqual({
+        "12": {
+          cashback_amount: 1000,
+          cashback_amount_decimal: '10',
+        },
+      });
+    });
 
     it('should deliver the same result when recomputing the pricing details with discount coupons', () => {
       const result = computeAggregatedAndPriceTotals([samples.priceItemWithPercentageDiscount]);

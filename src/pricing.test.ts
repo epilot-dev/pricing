@@ -14,7 +14,7 @@ import {
   mapToProductSnapshot,
 } from './pricing';
 import type {
-  CompositePrice,
+  CompositePriceItem,
   CompositePriceItemDto,
   Price,
   PriceItemDto,
@@ -24,7 +24,7 @@ import type {
 } from './types';
 import { getTaxValue } from './utils';
 import { taxRateless } from './__tests__/fixtures/tax.samples';
-import { CompositePriceItemWithCashbacks } from '@epilot/pricing-client';
+import { CompositePrice } from '@epilot/pricing-client';
 
 describe('computeAggregatedAndPriceTotals', () => {
   describe('when is_composite_price = false', () => {
@@ -725,7 +725,7 @@ describe('computeAggregatedAndPriceTotals', () => {
 
     it('should compute fixed cashbacks correctly when applied at the composite price level', () => {
       const result = computeAggregatedAndPriceTotals([samples.compositePriceWithFixedCashbackCoupon]);
-      const computedPriceItem = result.items?.[0] as CompositePriceItemWithCashbacks
+      const computedPriceItem = result.items?.[0] as CompositePriceItem
       expect(computedPriceItem?._coupons).toEqual([{
         ...samples.compositePriceWithFixedCashbackCoupon._coupons?.[0]!,
         cashback_amount: 1000,
@@ -757,7 +757,7 @@ describe('computeAggregatedAndPriceTotals', () => {
         },
       ]
       const result = computeAggregatedAndPriceTotals(priceItems);
-      const computedPriceItem = result.items?.[0] as CompositePriceItemWithCashbacks
+      const computedPriceItem = result.items?.[0] as CompositePriceItem
       expect(computedPriceItem?._coupons).toEqual([
         {
           ...priceItems[0]!._coupons?.[0]!,
@@ -797,7 +797,7 @@ describe('computeAggregatedAndPriceTotals', () => {
         },
       ]
       const result = computeAggregatedAndPriceTotals(priceItems);
-      const computedPriceItem = result.items?.[0] as CompositePriceItemWithCashbacks
+      const computedPriceItem = result.items?.[0] as CompositePriceItem
       expect(computedPriceItem?._coupons).toEqual([
         {
           ...priceItems[0]!._coupons?.[0]!,
@@ -825,7 +825,7 @@ describe('computeAggregatedAndPriceTotals', () => {
 
     it('should compute percentage cashbacks correctly when applied at the composite price level', () => {
       const result = computeAggregatedAndPriceTotals([samples.compositePriceWithPercentageCashbackCoupon]);
-      const computedPriceItem = result.items?.[0] as CompositePriceItemWithCashbacks
+      const computedPriceItem = result.items?.[0] as CompositePriceItem
       expect(computedPriceItem?._coupons).toEqual([{
         ...samples.compositePriceWithPercentageCashbackCoupon._coupons?.[0]!,
         cashback_amount: 1100,
@@ -851,7 +851,7 @@ describe('computeAggregatedAndPriceTotals', () => {
 
     it('should compute fixed cashbacks correctly when applied at the composite price level + component level with the same cashback period', () => {
       const result = computeAggregatedAndPriceTotals([samples.compositePriceCashbackCombinedWithComponentCashbacks]);
-      const computedPriceItem = result.items?.[0] as CompositePriceItemWithCashbacks
+      const computedPriceItem = result.items?.[0] as CompositePriceItem
       expect(computedPriceItem?._coupons).toEqual([{
         ...samples.compositePriceCashbackCombinedWithComponentCashbacks._coupons?.[0]!,
         cashback_amount: 1000,
@@ -879,7 +879,7 @@ describe('computeAggregatedAndPriceTotals', () => {
         _coupons: [coupons.lowFixedCashbackCoupon],
       }]
       const result = computeAggregatedAndPriceTotals(priceItems);
-      const computedPriceItem = result.items?.[0] as CompositePriceItemWithCashbacks
+      const computedPriceItem = result.items?.[0] as CompositePriceItem
       expect(computedPriceItem?._coupons).toEqual([{
         ...priceItems[0]!._coupons?.[0]!,
         cashback_amount: 500,

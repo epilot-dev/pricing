@@ -9,6 +9,7 @@ import {
 } from './normalizers';
 import type {
   CashbackAmount,
+  CashbackTotals,
   CompositePriceItem,
   CompositePriceItemDto,
   Coupon,
@@ -857,7 +858,7 @@ const computeCompositePriceCashbacks = (
 
   // Convert totals to the desired precision
   // TODO: use pricing-client types once available
-  const cashback_totals: Record<string, { cashback_amount: number; cashback_amount_decimal: string }> = {};
+  const cashback_totals: CashbackTotals = {};
   for (const period in cashbackTotals) {
     const totalAmount = cashbackTotals[period];
     const convertedValues = convertCashbackAmountsPrecision(totalAmount.getAmount(), undefined, 2);

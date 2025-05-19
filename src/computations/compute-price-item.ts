@@ -9,7 +9,7 @@ import type {
 } from '@epilot/pricing-client';
 import type { Currency } from 'dinero.js';
 import { isValidCoupon } from '../coupons/guards';
-import { getCouponOrder } from '../coupons/utils';
+import { getCouponOrder, getRedeemedPromoCouponIds } from '../coupons/utils';
 import { DEFAULT_CURRENCY } from '../money/constants';
 import { PricingModel } from '../prices/constants';
 import { convertPriceItemWithCouponAppliedToPriceItemDto } from '../prices/convert-precision';
@@ -179,7 +179,7 @@ export const computePriceItem = (
       });
   }
 
-  const redeemedPromoCouponIds = redeemedPromos.flatMap(({ coupons }) => coupons?.map(({ _id }) => _id));
+  const redeemedPromoCouponIds = getRedeemedPromoCouponIds(redeemedPromos);
 
   const coupons = priceItem._coupons
     ?.filter(isValidCoupon)

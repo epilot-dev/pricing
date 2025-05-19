@@ -304,3 +304,25 @@ export const convertPriceItemWithCouponAppliedToPriceItemDto = ({
     }),
     _price: priceItem._price as Price,
   }) as PriceItemDto;
+
+
+  export const convertCashbackAmountsPrecision = (
+    cashbackAmount: number | undefined,
+    afterCashbackAmountTotal: number | undefined,
+    precision = 2,
+  ) => {
+    return {
+      ...(cashbackAmount &&
+        typeof cashbackAmount === 'number' && {
+          cashback_amount: toDineroFromInteger(cashbackAmount).convertPrecision(precision).getAmount(),
+          cashback_amount_decimal: toDineroFromInteger(cashbackAmount).toUnit().toString(),
+        }),
+      ...(afterCashbackAmountTotal &&
+        typeof afterCashbackAmountTotal === 'number' && {
+          after_cashback_amount_total: toDineroFromInteger(afterCashbackAmountTotal)
+            .convertPrecision(precision)
+          .getAmount(),
+        after_cashback_amount_total_decimal: toDineroFromInteger(afterCashbackAmountTotal).toUnit().toString(),
+      }),
+  };
+};

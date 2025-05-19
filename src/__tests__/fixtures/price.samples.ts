@@ -3344,3 +3344,57 @@ export const compositePriceWithComponentsWithPromoCodeRequiredCoupon: CompositeP
     ],
   },
 };
+
+export const compositePriceWithFixedCashbackCoupon: CompositePriceItemDto = {
+  ...compositePriceWithComponentsWithCoupons,
+  _coupons: [fixedCashbackCoupon],
+  _price: {
+    ...compositePriceWithComponentsWithCoupons._price,
+    price_components: [
+      {
+        ...(compositePriceWithComponentsWithCoupons._price!.price_components as Price)[0]!,
+        _coupons: [],
+      },
+      {
+        ...(compositePriceWithComponentsWithCoupons._price!.price_components as Price)[1]!,
+        _coupons: [],
+      },
+    ],
+  },
+}
+
+export const compositePriceWithPercentageCashbackCoupon: CompositePriceItemDto = {
+  ...compositePriceWithComponentsWithCoupons,
+  _coupons: [percentageCashbackCoupon],
+  _price: {
+    ...compositePriceWithComponentsWithCoupons._price,
+    price_components: [
+      {
+        ...(compositePriceWithComponentsWithCoupons._price!.price_components as Price)[0]!,
+        _coupons: [],
+      },
+      {
+        ...(compositePriceWithComponentsWithCoupons._price!.price_components as Price)[1]!,
+        _coupons: [],
+      },
+    ],
+  },
+}
+
+export const compositePriceCashbackCombinedWithComponentCashbacks: CompositePriceItemDto = {
+  ...compositePriceWithComponentsWithCoupons,
+  _coupons: [fixedCashbackCoupon],
+  _price: {
+    ...compositePriceWithComponentsWithCoupons._price,
+    price_components: [
+      {
+        ...(compositePriceWithComponentsWithCoupons._price!.price_components as Price)[0]!,
+        _coupons: [],
+      },
+      {
+        ...(compositePriceWithComponentsWithCoupons._price!.price_components as Price)[1]!,
+        _coupons: [fixedCashbackCoupon],
+      },
+    ],
+  },
+}

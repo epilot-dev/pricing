@@ -95,7 +95,7 @@ export interface RecurrenceByBillingPeriod {
   full_amount_tax: string;
   type: string;
   is_discount_recurrence: boolean;
-  recurrencesByTax: RecurrenceAmountWithTax;
+  recurrencesByTax: RecurrenceAmountWithTax[];
 }
 
 export type OrderTableData = Omit<Order, 'products'> & {

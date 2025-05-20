@@ -1,15 +1,8 @@
 import { getAppliedCompositeCashbackCoupons } from '../coupons/utils';
 import { toDinero, toDineroFromInteger } from '../money/to-dinero';
-import { convertCashbackAmountsPrecision } from '../prices/convert-precision';
+import { convertCashbackAmountsPrecision, convertCashbackTotalsPrecision } from '../prices/convert-precision';
 import { getSafeQuantity } from '../shared/get-safe-quantity';
-import type {
-  RedeemedPromo,
-  PricingDetails,
-  CompositePriceItem,
-  CashbackTotals,
-  Coupon,
-  Dinero,
-} from '../shared/types';
+import type { RedeemedPromo, PricingDetails, CompositePriceItem, Dinero, Coupon } from '../shared/types';
 
 /**
  * Computes cashback amounts for composite price items with top-level cashback coupons.
@@ -19,7 +12,6 @@ export const computeCompositePriceCashbacks = (
   itemBreakdown: PricingDetails,
   redeemedPromos: Array<RedeemedPromo> = [],
 ) => {
-  // Extract cashback coupons from the composite price item
   const appliedCashbackCoupons = getAppliedCompositeCashbackCoupons(compositePriceItem, redeemedPromos);
 
   const cashbackTotals: Record<string, Dinero> = {};
@@ -65,17 +57,6 @@ export const computeCompositePriceCashbacks = (
     }
   }
 
-  // Convert totals to the desired precision
-  const cashback_totals: CashbackTotals = {};
-  for (const period in cashbackTotals) {
-    const totalAmount = cashbackTotals[period];
-    const convertedValues = convertCashbackAmountsPrecision(totalAmount.getAmount(), undefined, 2);
-    cashback_totals[period] = {
-      cashback_amount: convertedValues.cashback_amount!,
-      cashback_amount_decimal: convertedValues.cashback_amount_decimal!,
-    };
-  }
-
   // Return all required data
   return {
     pricingDetails: {
@@ -89,7 +70,9 @@ export const computeCompositePriceCashbacks = (
       },
     },
     cashbacksMetadata: {
-      ...(Object.keys(cashback_totals).length > 0 && { cashback_totals }),
+      ...(Object.keys(cashbackTotals).length > 0 && {
+        cashback_totals: convertCashbackTotalsPrecision(cashbackTotals),
+      }),
       ...(appliedCashbackCoupons && { _coupons: appliedCashbacksWithAmounts }),
     },
   };

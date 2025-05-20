@@ -46,6 +46,7 @@ export const getRedeemedPromoCouponIds = (redeemedPromos: Array<RedeemedPromo>):
 
 /**
  * Gets the applied cashback coupons from the composite price item.
+ * For now, ONLY Fixed cashback coupons are supported.
  */
 export const getAppliedCompositeCashbackCoupons = (
   compositePriceItem: CompositePriceItem,
@@ -54,7 +55,7 @@ export const getAppliedCompositeCashbackCoupons = (
   const redeemedPromoCouponIds = getRedeemedPromoCouponIds(redeemedPromos);
 
   const cashbackCoupons = compositePriceItem?._coupons
-    ?.filter(isFixedValueCoupon) // for now, only fixed cashback coupons are supported
+    ?.filter(isFixedValueCoupon)
     .filter(isCashbackCoupon)
     .filter((coupon) => (coupon.requires_promo_code ? redeemedPromoCouponIds.includes(coupon._id) : true))
     .sort(getCouponOrder);

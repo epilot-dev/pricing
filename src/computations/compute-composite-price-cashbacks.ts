@@ -1,15 +1,11 @@
-import { isFixedValueCoupon } from '../coupons/guards';
 import { getAppliedCompositeCashbackCoupons } from '../coupons/utils';
-import { DEFAULT_CURRENCY } from '../money/constants';
 import { toDinero, toDineroFromInteger } from '../money/to-dinero';
 import { convertCashbackAmountsPrecision } from '../prices/convert-precision';
-import { clamp } from '../shared/clamp';
 import { getSafeQuantity } from '../shared/get-safe-quantity';
 import type {
   RedeemedPromo,
   PricingDetails,
   CompositePriceItem,
-  Currency,
   CashbackTotals,
   Coupon,
   Dinero,
@@ -33,16 +29,7 @@ export const computeCompositePriceCashbacks = (
   for (const cashbackCoupon of appliedCashbackCoupons ?? []) {
     let unitCashbackAmount: Dinero | undefined;
 
-    if (isFixedValueCoupon(cashbackCoupon)) {
-      unitCashbackAmount = toDinero(cashbackCoupon.fixed_value_decimal, cashbackCoupon.fixed_value_currency);
-    } else {
-      const cashbackPercentage = clamp(Number(cashbackCoupon.percentage_value), 0, 100);
-      const unitAmountGross = toDineroFromInteger(
-        itemBreakdown.amount_total!,
-        (compositePriceItem.currency || DEFAULT_CURRENCY).toUpperCase() as Currency,
-      );
-      unitCashbackAmount = unitAmountGross.multiply(cashbackPercentage).divide(100);
-    }
+    unitCashbackAmount = toDinero(cashbackCoupon.fixed_value_decimal, cashbackCoupon.fixed_value_currency);
 
     const unitAmountMultiplier = getSafeQuantity(compositePriceItem.quantity);
     const cashbackAmount = unitCashbackAmount.multiply(unitAmountMultiplier);

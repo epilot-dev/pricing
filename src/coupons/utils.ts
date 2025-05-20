@@ -1,5 +1,5 @@
 import type { CompositePriceItem, Coupon, RedeemedPromo } from '@epilot/pricing-client';
-import { isCashbackCoupon, isPercentageCoupon, isFixedValueCoupon, isValidCoupon } from './guards';
+import { isCashbackCoupon, isPercentageCoupon, isFixedValueCoupon } from './guards';
 
 const getTimestamp = (dateString?: string): number => {
   const date = new Date(dateString ?? '');
@@ -54,7 +54,7 @@ export const getAppliedCompositeCashbackCoupons = (
   const redeemedPromoCouponIds = getRedeemedPromoCouponIds(redeemedPromos);
 
   const cashbackCoupons = compositePriceItem?._coupons
-    ?.filter(isValidCoupon)
+    ?.filter(isFixedValueCoupon) // for now, only fixed cashback coupons are supported
     .filter(isCashbackCoupon)
     .filter((coupon) => (coupon.requires_promo_code ? redeemedPromoCouponIds.includes(coupon._id) : true))
     .sort(getCouponOrder);

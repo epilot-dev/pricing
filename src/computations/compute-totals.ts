@@ -410,8 +410,7 @@ const recomputeDetailTotalsFromCompositePrice = (
     };
   }, details || initialPricingDetails);
 
-  // Calculate cashbacks at top level composite
-  const { pricingDetails: totalDetailsWithCashbacks, cashbacksMetadata } = computeCompositePriceCashbacks(
+  const { pricingDetails: totalDetailsWithCashbacks, itemMetadata } = computeCompositePriceCashbacks(
     compositePriceItem,
     totalDetailsComponents,
     redeemedPromos,
@@ -421,7 +420,7 @@ const recomputeDetailTotalsFromCompositePrice = (
     ...totalDetailsComponents,
     ...totalDetailsWithCashbacks,
     ...(isItemBreakdown && {
-      ...cashbacksMetadata,
+      ...itemMetadata,
     }),
   };
 

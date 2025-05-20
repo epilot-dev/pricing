@@ -57,7 +57,6 @@ export const computeCompositePriceCashbacks = (
     }
   }
 
-  // Return all required data
   return {
     pricingDetails: {
       ...itemBreakdown,
@@ -69,7 +68,7 @@ export const computeCompositePriceCashbacks = (
         },
       },
     },
-    cashbacksMetadata: {
+    itemMetadata: {
       ...(Object.keys(cashbackTotals).length > 0 && {
         cashback_totals: convertCashbackTotalsPrecision(cashbackTotals),
       }),

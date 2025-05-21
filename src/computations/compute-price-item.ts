@@ -68,7 +68,7 @@ export const computeQuantities = (price: Price | undefined, quantity: number, pr
  * Computes all price item total amounts to integers with a decimal precision of DECIMAL_PRECISION.
  */
 export const computePriceItem = (
-  _priceItem: PriceItemDto,
+  _priceItem: PriceItemDto | PriceItem,
   {
     tax: applicableTax,
     quantity,
@@ -209,7 +209,7 @@ export const computePriceItem = (
   const type = priceItem?.type ?? price?.type;
 
   return {
-    ...priceItem,
+    ...(priceItem as PriceItem),
     ...itemValues,
     ...(appliedCoupons && { _coupons: appliedCoupons }),
     currency,

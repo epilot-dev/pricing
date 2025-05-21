@@ -107,14 +107,14 @@ export const computeAggregatedAndPriceTotals = (
         });
 
       const updatedTotals = isOnRequestUnitAmountApproved(
-        priceItem,
+        priceItem as PriceItem,
         priceItemToAppend?._price?.price_display_in_journeys ?? price?.price_display_in_journeys,
         undefined,
       )
-        ? recomputeDetailTotals(details, price, priceItemToAppend)
+        ? recomputeDetailTotals(details, price, priceItemToAppend as PriceItem)
         : details;
 
-      const newItem = convertPriceItemPrecision(priceItemToAppend, 2);
+      const newItem = convertPriceItemPrecision(priceItemToAppend as PriceItem, 2);
 
       return {
         ...updatedTotals,

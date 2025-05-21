@@ -7,10 +7,9 @@ import type {
   RecurrenceAmountWithTax,
 } from '@epilot/pricing-client';
 
-export type PriceItemWithParent = PriceItem &
-  CompositePriceItem & {
-    parent_item: CompositePriceItem;
-  };
+export type PriceItemWithParent =
+  | (PriceItem & { parent_item: CompositePriceItem })
+  | (CompositePriceItem & { parent_item: CompositePriceItem });
 
 export type PriceDisplayType = 'show_as_on_request' | 'show_as_starting_price';
 

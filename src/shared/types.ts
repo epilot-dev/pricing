@@ -1,4 +1,6 @@
-export type { i18n as I18n, TFunction } from 'i18next';
+export type { TFunction } from 'i18next';
+import type { i18n } from 'i18next';
+export type I18n = Pick<i18n, 't' | 'language'>;
 export type {
   Price,
   PriceItem,

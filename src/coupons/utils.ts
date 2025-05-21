@@ -23,14 +23,18 @@ export const getCouponOrder = <C extends Coupon>(a: C, b: C): number => {
     return isPercentageCoupon(a) ? -1 : 1;
   }
 
-  /* If category is percentage, the higher the percentage, the higher the coupon */
+  let difference = 0;
+
   if (isPercentageCoupon(a)) {
-    return Number(b.percentage_value ?? 0) - Number(a.percentage_value ?? 0);
+    /* If category is percentage, the higher the percentage, the higher the coupon */
+    difference = Number(b.percentage_value ?? 0) - Number(a.percentage_value ?? 0);
+  } else if (isFixedValueCoupon(a)) {
+    /* If category is fixed, the higher the value, the higher the coupon */
+    difference = (b.fixed_value ?? 0) - (a.fixed_value ?? 0);
   }
 
-  /* If category is fixed, the higher the value, the higher the coupon */
-  if (isFixedValueCoupon(a)) {
-    return (b.fixed_value ?? 0) - (a.fixed_value ?? 0);
+  if (difference !== 0) {
+    return difference;
   }
 
   /* If they're the same in every way described above, the one with a lowest _created_at comes first */

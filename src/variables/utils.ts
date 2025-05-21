@@ -1,6 +1,7 @@
 import { formatAmount, formatAmountFromString, formatPriceUnit } from '../money/formatters';
 import { toDinero } from '../money/to-dinero';
 import { PricingModel } from '../prices/constants';
+import { isTruthy } from '../shared/is-truthy';
 import type {
   Currency,
   BillingPeriod,
@@ -332,7 +333,7 @@ export const processRecurrences = (
       ),
     )
     /* Filter out any which weren't matched */
-    .filter(Boolean)
+    .filter(isTruthy)
     .map(({ amount_total = 0, amount_subtotal = 0, amount_tax = 0, billing_period, ...recurrence }) => ({
       ...recurrence,
       amount_total: safeFormatAmountWithPrefix({ amount: amount_total, currency, locale, prefix }),

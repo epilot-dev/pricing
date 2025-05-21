@@ -17,6 +17,16 @@ export default defineConfig({
          * Don't count coverage for barrel file
          */
         'src/index.ts',
+        /**
+         * Exclude test fixtures and sample files
+         */
+        '**/*.fixtures.ts',
+        '**/*.samples.ts',
+        '**/fixtures/**',
+        '**/samples/**',
+        '**/__tests__/**/*.ts',
+        '**/__mocks__/**/*.ts',
+        '**/*.results.ts',
       ],
       thresholds: {
         branches: 65,

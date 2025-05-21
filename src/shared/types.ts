@@ -1,6 +1,5 @@
 export type { TFunction } from 'i18next';
-import type { i18n } from 'i18next';
-export type I18n = Pick<i18n, 't' | 'language'>;
+
 export type {
   Price,
   PriceItem,
@@ -38,3 +37,6 @@ export type CashbackTotals = Record<string, { cashback_amount: number; cashback_
 export type CompositePriceItem = BaseCompositePriceItem & {
   cashback_totals?: CashbackTotals;
 };
+
+import type { i18n } from 'i18next';
+export type I18n = Pick<i18n, 't' | 'language'>;

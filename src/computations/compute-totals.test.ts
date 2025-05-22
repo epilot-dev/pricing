@@ -920,7 +920,7 @@ it('should compute fixed cashbacks correctly when applied at the composite price
   expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[1].amount_total).toEqual(500);
 });
 
-it.only('should not apply cashbacks in composite price if it has requires_promo_code set to true and redeemedPromos is empty', () => {
+it('should not apply cashbacks in composite price if it has requires_promo_code set to true and redeemedPromos is empty', () => {
   const priceItems = [
     {
       ...samples.compositePriceWithFixedCashbackCoupon,

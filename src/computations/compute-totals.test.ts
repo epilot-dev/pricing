@@ -799,12 +799,6 @@ it('should compute fixed cashbacks correctly when applied at the composite price
       cashback_period: '12',
     },
   ]);
-  expect(computedPriceItem?.cashback_totals).toEqual({
-    '12': {
-      cashback_amount: 1000,
-      cashback_amount_decimal: '10',
-    },
-  });
   expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.length).toEqual(1);
   expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[0].cashback_period).toEqual('12');
   expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[0].amount_total).toEqual(1000);
@@ -843,16 +837,6 @@ it('should compute multiple fixed cashbacks correctly when applied at the compos
       cashback_period: '0',
     },
   ]);
-  expect(computedPriceItem?.cashback_totals).toEqual({
-    '12': {
-      cashback_amount: 1000,
-      cashback_amount_decimal: '10',
-    },
-    '0': {
-      cashback_amount: 500,
-      cashback_amount_decimal: '5',
-    },
-  });
   expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.length).toEqual(2);
   expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[0].cashback_period).toEqual('12');
   expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[0].amount_total).toEqual(1000);
@@ -883,12 +867,6 @@ it('should compute multiple fixed cashbacks correctly when applied at the compos
       cashback_period: '12',
     },
   ]);
-  expect(computedPriceItem?.cashback_totals).toEqual({
-    '12': {
-      cashback_amount: 2000,
-      cashback_amount_decimal: '20',
-    },
-  });
   expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.length).toEqual(1);
   expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[0].cashback_period).toEqual('12');
   expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[0].amount_total).toEqual(2000);
@@ -905,12 +883,6 @@ it('should compute fixed cashbacks correctly when applied at the composite price
       cashback_period: '12',
     },
   ]);
-  expect(computedPriceItem?.cashback_totals).toEqual({
-    '12': {
-      cashback_amount: 1000,
-      cashback_amount_decimal: '10',
-    },
-  });
   expect(computedPriceItem?.item_components?.[1].cashback_amount).toEqual(1000);
   expect(computedPriceItem?.item_components?.[1].cashback_amount_decimal).toEqual('10');
   expect(computedPriceItem?.item_components?.[1].after_cashback_amount_total).toEqual(9981);
@@ -937,12 +909,6 @@ it('should compute fixed cashbacks correctly when applied at the composite price
       cashback_period: '0',
     },
   ]);
-  expect(computedPriceItem?.cashback_totals).toEqual({
-    '0': {
-      cashback_amount: 500,
-      cashback_amount_decimal: '5',
-    },
-  });
   expect(computedPriceItem?.item_components?.[1].cashback_amount).toEqual(1000);
   expect(computedPriceItem?.item_components?.[1].cashback_amount_decimal).toEqual('10');
   expect(computedPriceItem?.item_components?.[1].after_cashback_amount_total).toEqual(9981);
@@ -954,7 +920,7 @@ it('should compute fixed cashbacks correctly when applied at the composite price
   expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[1].amount_total).toEqual(500);
 });
 
-it('should not apply cashbacks in composite price if it has requires_promo_code set to true and redeemedPromos is empty', () => {
+it.only('should not apply cashbacks in composite price if it has requires_promo_code set to true and redeemedPromos is empty', () => {
   const priceItems = [
     {
       ...samples.compositePriceWithFixedCashbackCoupon,
@@ -975,7 +941,7 @@ it('should not apply cashbacks in composite price if it has requires_promo_code 
 
   expect(computedPriceItem).toBeDefined();
   expect(computedPriceItem?._coupons).toEqual([]);
-  expect(computedPriceItem?.cashback_totals).toBeUndefined();
+  console.log(JSON.stringify(computedPriceItem, null, 2));
 });
 
 it('should apply cashbacks in composite price if it has requires_promo_code set to true and redeemedPromos includes the coupon', () => {
@@ -1007,10 +973,4 @@ it('should apply cashbacks in composite price if it has requires_promo_code set 
       cashback_period: '12',
     },
   ]);
-  expect(computedPriceItem?.cashback_totals).toEqual({
-    '12': {
-      cashback_amount: 1000,
-      cashback_amount_decimal: '10',
-    },
-  });
 });

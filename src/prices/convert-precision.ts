@@ -1,14 +1,6 @@
 import { toDineroFromInteger } from '../money/to-dinero';
 import { PricingModel } from '../prices/constants';
-import type {
-  CashbackTotals,
-  CompositePriceItem,
-  Price,
-  PriceItem,
-  PriceItemDto,
-  PricingDetails,
-  Dinero,
-} from '../shared/types';
+import type { CompositePriceItem, Price, PriceItem, PriceItemDto, PricingDetails } from '../shared/types';
 
 export const convertPriceComponentsPrecision = (items: PriceItem[], precision = 2): PriceItem[] =>
   items.map((component) => convertPriceItemPrecision(component, precision));
@@ -332,18 +324,4 @@ export const convertCashbackAmountsPrecision = (
         after_cashback_amount_total_decimal: toDineroFromInteger(afterCashbackAmountTotal).toUnit().toString(),
       }),
   };
-};
-
-export const convertCashbackTotalsPrecision = (
-  cashbackTotals: Record<string, Dinero>,
-  precision = 2,
-): CashbackTotals => {
-  return Object.entries(cashbackTotals).reduce<CashbackTotals>((result, [period, totalAmount]) => {
-    const convertedValues = convertCashbackAmountsPrecision(totalAmount.getAmount(), undefined, precision);
-    result[period] = {
-      cashback_amount: convertedValues.cashback_amount!,
-      cashback_amount_decimal: convertedValues.cashback_amount_decimal!,
-    };
-    return result;
-  }, {});
 };

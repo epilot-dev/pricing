@@ -1,6 +1,6 @@
 import { getAppliedCompositeCashbackCoupons } from '../coupons/utils';
 import { toDinero, toDineroFromInteger } from '../money/to-dinero';
-import { convertCashbackAmountsPrecision, convertCashbackTotalsPrecision } from '../prices/convert-precision';
+import { convertCashbackAmountsPrecision } from '../prices/convert-precision';
 import { getSafeQuantity } from '../shared/get-safe-quantity';
 import type { RedeemedPromo, PricingDetails, CompositePriceItem, Dinero, Coupon } from '../shared/types';
 
@@ -14,7 +14,6 @@ export const computeCompositePriceCashbacks = (
 ) => {
   const appliedCashbackCoupons = getAppliedCompositeCashbackCoupons(compositePriceItem, redeemedPromos);
 
-  const cashbackTotals: Record<string, Dinero> = {};
   const appliedCashbacksWithAmounts: Coupon[] = [];
   const cashbacks = [...(itemBreakdown.total_details?.breakdown?.cashbacks ?? [])];
 
@@ -28,7 +27,7 @@ export const computeCompositePriceCashbacks = (
     const cashback_amount = cashbackAmount.getAmount();
     const cashbackPeriod = cashbackCoupon?.cashback_period ?? '0';
 
-    // Update applied cashbacks with amounts - convert precision immediately
+    // Update applied cashbacks with amounts
     const cashbackAmountWithPrecision = convertCashbackAmountsPrecision(cashback_amount, undefined, 2);
     appliedCashbacksWithAmounts.push({
       ...cashbackCoupon,
@@ -36,14 +35,7 @@ export const computeCompositePriceCashbacks = (
       cashback_amount_decimal: cashbackAmountWithPrecision.cashback_amount_decimal!,
     });
 
-    // Update cashback totals with full precision
-    if (cashbackTotals[cashbackPeriod]) {
-      cashbackTotals[cashbackPeriod] = cashbackTotals[cashbackPeriod].add(cashbackAmount);
-    } else {
-      cashbackTotals[cashbackPeriod] = cashbackAmount;
-    }
-
-    // Update existing breakdown for backward compatibility
+    // Update existing breakdown
     const cashbackMatch = cashbacks.find((cashback) => cashback.cashback_period === cashbackPeriod);
 
     if (cashbackMatch) {
@@ -69,9 +61,6 @@ export const computeCompositePriceCashbacks = (
       },
     },
     itemMetadata: {
-      ...(Object.keys(cashbackTotals).length > 0 && {
-        cashback_totals: convertCashbackTotalsPrecision(cashbackTotals),
-      }),
       ...(appliedCashbackCoupons && { _coupons: appliedCashbacksWithAmounts }),
     },
   };

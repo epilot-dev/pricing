@@ -9,7 +9,7 @@ import type { CompositePriceItem, CompositePriceItemDto, Price, PriceItem, Price
 export const isTaxInclusivePrice = (price?: Pick<Price, 'is_tax_inclusive'>): boolean =>
   price?.is_tax_inclusive ?? true;
 
-export const isPriceItemWithCouponApplied = (priceItem: PriceItem | PriceItemDto) =>
+export const isPriceItemWithCouponApplied = (priceItem: PriceItem | PriceItemDto): priceItem is PriceItem =>
   'before_discount_unit_amount_decimal' in priceItem || 'after_cashback_amount_total' in priceItem;
 
 export const isCompositePriceItem = (priceItem: PriceItem | CompositePriceItem): priceItem is CompositePriceItem =>

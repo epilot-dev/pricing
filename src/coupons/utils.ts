@@ -1,4 +1,4 @@
-import type { Coupon } from '@epilot/pricing-client';
+import type { CompositePriceItem, Coupon, RedeemedPromo } from '@epilot/pricing-client';
 import { isCashbackCoupon, isPercentageCoupon, isFixedValueCoupon } from './guards';
 
 const getTimestamp = (dateString?: string): number => {
@@ -39,4 +39,30 @@ export const getCouponOrder = <C extends Coupon>(a: C, b: C): number => {
 
   /* If they're the same in every way described above, the one with a lowest _created_at comes first */
   return getTimestamp(a._created_at) - getTimestamp(b._created_at);
+};
+
+/**
+ * Get all coupon ids from redeemed promos.
+ */
+export const getRedeemedPromoCouponIds = (redeemedPromos: Array<RedeemedPromo>): Array<string> => {
+  return redeemedPromos.flatMap(({ coupons }) => coupons?.map(({ _id }) => _id) ?? []);
+};
+
+/**
+ * Gets the applied cashback coupons from the composite price item.
+ * For now, ONLY Fixed cashback coupons are supported.
+ */
+export const getAppliedCompositeCashbackCoupons = (
+  compositePriceItem: CompositePriceItem,
+  redeemedPromos: Array<RedeemedPromo> = [],
+) => {
+  const redeemedPromoCouponIds = getRedeemedPromoCouponIds(redeemedPromos);
+
+  const cashbackCoupons = compositePriceItem?._coupons
+    ?.filter(isFixedValueCoupon)
+    .filter(isCashbackCoupon)
+    .filter((coupon) => (coupon.requires_promo_code ? redeemedPromoCouponIds.includes(coupon._id) : true))
+    .sort(getCouponOrder);
+
+  return cashbackCoupons;
 };

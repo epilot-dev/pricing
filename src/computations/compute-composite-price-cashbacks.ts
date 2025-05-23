@@ -60,8 +60,6 @@ export const computeCompositePriceCashbacks = (
         },
       },
     },
-    itemMetadata: {
-      ...(appliedCashbackCoupons && { _coupons: appliedCashbacksWithAmounts }),
-    },
+    ...(appliedCashbackCoupons && { _coupons: appliedCashbacksWithAmounts }),
   };
 };

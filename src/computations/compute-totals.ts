@@ -410,7 +410,7 @@ const recomputeDetailTotalsFromCompositePrice = (
     };
   }, details || initialPricingDetails);
 
-  const { pricingDetails: totalDetailsWithCashbacks, itemMetadata } = computeCompositePriceCashbacks(
+  const { pricingDetails: totalDetailsWithCashbacks, ...metadata } = computeCompositePriceCashbacks(
     compositePriceItem,
     totalDetailsComponents,
     redeemedPromos,
@@ -420,7 +420,7 @@ const recomputeDetailTotalsFromCompositePrice = (
     ...totalDetailsComponents,
     ...totalDetailsWithCashbacks,
     ...(isItemBreakdown && {
-      ...itemMetadata,
+      ...metadata,
     }),
   };
 

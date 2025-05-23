@@ -60,11 +60,11 @@
     "dinero.js": "^1.9.1"
   },
   "peerDependencies": {
-    "@epilot/pricing-client": "^3.47.5"
+    "@epilot/pricing-client": "^3.47.9"
   },
   "devDependencies": {
     "@epilot/eslint-config": "^3.0.5",
-    "@epilot/pricing-client": "3.47.9-alpha.5",
+    "@epilot/pricing-client": "3.47.9",
     "@types/dinero.js": "^1.9.4",
     "@vitest/coverage-v8": "^1.6.1",
     "concurrently": "^9.1.2",

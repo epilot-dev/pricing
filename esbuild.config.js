@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'fs/promises';
 import esbuild from 'esbuild';
 import packageJson from './package.json' with { type: 'json' };
 
@@ -10,12 +10,12 @@ const externalDeps = [
 const buildFormats = [
   {
     format: 'esm',
-    outfile: 'dist/esm/index.js',
+    outfile: 'dist/esm/index.mjs',
     platform: 'node',
   },
   {
     format: 'cjs',
-    outfile: 'dist/cjs/index.js',
+    outfile: 'dist/cjs/index.cjs',
     platform: 'node',
   },
 ];
@@ -37,10 +37,10 @@ function buildForFormat({ format, outfile, platform }) {
       {
         name: 'log-bundle-size',
         setup(build) {
-          build.onEnd(() => {
-            const size = fs.statSync(outfile).size;
+          build.onEnd(async () => {
+            const { size } = await fs.stat(outfile);
             const sizeInMB = (size / (1024 * 1024)).toFixed(2);
-            console.log(`\n[${format.toUpperCase()}] ${outfile}: ${sizeInMB} MB (${size} bytes)`);
+            console.log(`\n[${format.toUpperCase()}] ${outfile}: ${sizeInMB} MB`);
           });
         },
       },
@@ -50,10 +50,9 @@ function buildForFormat({ format, outfile, platform }) {
 
 async function buildAll() {
   for (const { format, outfile, platform } of buildFormats) {
-    await buildForFormat({ format, outfile, platform }).then(async (result) => {
-      // Output analysis to console
-      console.log(await esbuild.analyzeMetafile(result.metafile));
-    });
+    const result = await buildForFormat({ format, outfile, platform });
+    // Output analysis to console
+    console.log(await esbuild.analyzeMetafile(result.metafile));
   }
 }
 

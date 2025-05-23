@@ -182,7 +182,7 @@ export const getUnitAmount = (
   }
 
   if (item._price?.pricing_model === PricingModel.externalGetAG) {
-    return getGetAgUnitAmount(item, i18n, useUnitAmountNet);
+    return getGetAgUnitAmount(item as PriceItem, i18n, useUnitAmountNet);
   }
 
   let amount;

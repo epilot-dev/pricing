@@ -1,6 +1,5 @@
 export type { TFunction } from 'i18next';
-import type { i18n } from 'i18next';
-export type I18n = Pick<i18n, 't' | 'language'>;
+
 export type {
   Price,
   PriceItem,
@@ -15,7 +14,6 @@ export type {
   TaxAmount,
   CompositePrice,
   CompositePriceItemDto,
-  CompositePriceItem,
   EntityItem,
   TaxAmountBreakdown,
   RecurrenceAmount,
@@ -30,5 +28,8 @@ export type {
   RedeemedPromo,
   Order,
   TierDetails,
+  CompositePriceItem,
 } from '@epilot/pricing-client';
 export type { Currency, Dinero } from 'dinero.js';
+import type { i18n } from 'i18next';
+export type I18n = Pick<i18n, 't' | 'language'>;

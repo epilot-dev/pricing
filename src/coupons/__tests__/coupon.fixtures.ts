@@ -41,6 +41,22 @@ export const fixedDiscountCoupon: Coupon = {
   fixed_value_currency: 'EUR',
 };
 
+export const lowFixedCashbackCoupon: Coupon = {
+  _id: 'coupon#4',
+  _schema: 'coupon',
+  _org: 'org#1',
+  _created_at: '2022-06-15T09:17:06.510Z',
+  _updated_at: '2022-06-17T11:48:20.104Z',
+  _title: 'VIP Cashback',
+  name: 'VIP Cashback',
+  type: 'fixed',
+  category: 'cashback',
+  fixed_value: 500,
+  fixed_value_decimal: '5.00',
+  fixed_value_currency: 'EUR',
+  cashback_period: '0',
+};
+
 export const highFixedDiscountCoupon: Coupon = {
   ...fixedDiscountCoupon,
   fixed_value: 1000,

@@ -4,7 +4,9 @@ import * as samples from '../__tests__/fixtures/price.samples';
 import * as results from '../__tests__/fixtures/pricing.results';
 import { taxRateless } from '../__tests__/fixtures/tax.samples';
 import * as coupons from '../coupons/__tests__/coupon.fixtures';
+import { fixedCashbackCoupon } from '../coupons/__tests__/coupon.fixtures';
 import { PricingModel } from '../prices/constants';
+import type { CompositePriceItem } from '../shared/types';
 import { computeAggregatedAndPriceTotals } from './compute-totals';
 
 describe('computeAggregatedAndPriceTotals', () => {
@@ -661,15 +663,15 @@ describe('computeAggregatedAndPriceTotals', () => {
       const result = computeAggregatedAndPriceTotals([
         samples.priceItemWithPercentageDiscount,
         samples.priceItemWithPercentageDiscount,
-        samples.priceItem,
+        samples.priceItem as PriceItemDto,
       ]);
       expect(result).toEqual(results.computedResultWithPricesWithAndWithoutCoupons);
     });
 
-    it('should disregard any coupons set on a composite price when computing discounts and totals', () => {
+    it('should disregard any discounts coupons set on a composite price when computing discounts and totals', () => {
       const resultWithoutCoupons = computeAggregatedAndPriceTotals([samples.compositePrice]);
       const resultWithCoupons = computeAggregatedAndPriceTotals([
-        { ...samples.compositePrice, _coupons: [coupons.fixedCashbackCoupon] },
+        { ...samples.compositePrice, _coupons: [coupons.highFixedDiscountCoupon] },
       ]);
       expect(resultWithCoupons.total_details).toEqual(resultWithoutCoupons.total_details);
     });
@@ -842,4 +844,191 @@ describe('computeAggregatedAndPriceTotals', () => {
       }
     });
   });
+});
+
+it('should compute fixed cashbacks correctly when applied at the composite price level', () => {
+  const result = computeAggregatedAndPriceTotals([samples.compositePriceWithFixedCashbackCoupon]);
+  const computedPriceItem = result.items?.[0] as CompositePriceItem;
+  expect(computedPriceItem?._coupons).toEqual([
+    {
+      ...samples.compositePriceWithFixedCashbackCoupon._coupons?.[0]!,
+      cashback_amount: 1000,
+      cashback_amount_decimal: '10',
+      cashback_period: '12',
+    },
+  ]);
+  expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.length).toEqual(1);
+  expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[0].cashback_period).toEqual('12');
+  expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[0].amount_total).toEqual(1000);
+  expect(
+    computedPriceItem?.item_components?.every(
+      (item) =>
+        !item._coupons?.length &&
+        !item.cashback_amount &&
+        !item.cashback_amount_decimal &&
+        !item.after_cashback_amount_total &&
+        !item.after_cashback_amount_total_decimal,
+    ),
+  ).toBe(true);
+});
+
+it('should compute multiple fixed cashbacks correctly when applied at the composite price level with different cashback periods', () => {
+  const priceItems = [
+    {
+      ...samples.compositePriceWithFixedCashbackCoupon,
+      _coupons: [coupons.fixedCashbackCoupon, coupons.lowFixedCashbackCoupon],
+    },
+  ];
+  const result = computeAggregatedAndPriceTotals(priceItems);
+  const computedPriceItem = result.items?.[0] as CompositePriceItem;
+  expect(computedPriceItem?._coupons).toEqual([
+    {
+      ...priceItems[0]!._coupons?.[0]!,
+      cashback_amount: 1000,
+      cashback_amount_decimal: '10',
+      cashback_period: '12',
+    },
+    {
+      ...priceItems[0]!._coupons?.[1]!,
+      cashback_amount: 500,
+      cashback_amount_decimal: '5',
+      cashback_period: '0',
+    },
+  ]);
+  expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.length).toEqual(2);
+  expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[0].cashback_period).toEqual('12');
+  expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[0].amount_total).toEqual(1000);
+  expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[1].cashback_period).toEqual('0');
+  expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[1].amount_total).toEqual(500);
+});
+
+it('should compute multiple fixed cashbacks correctly when applied at the composite price level with same cashback periods', () => {
+  const priceItems = [
+    {
+      ...samples.compositePriceWithFixedCashbackCoupon,
+      _coupons: [coupons.fixedCashbackCoupon, coupons.fixedCashbackCoupon],
+    },
+  ];
+  const result = computeAggregatedAndPriceTotals(priceItems);
+  const computedPriceItem = result.items?.[0] as CompositePriceItem;
+  expect(computedPriceItem?._coupons).toEqual([
+    {
+      ...priceItems[0]!._coupons?.[0]!,
+      cashback_amount: 1000,
+      cashback_amount_decimal: '10',
+      cashback_period: '12',
+    },
+    {
+      ...priceItems[0]!._coupons?.[1]!,
+      cashback_amount: 1000,
+      cashback_amount_decimal: '10',
+      cashback_period: '12',
+    },
+  ]);
+  expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.length).toEqual(1);
+  expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[0].cashback_period).toEqual('12');
+  expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[0].amount_total).toEqual(2000);
+});
+
+it('should compute fixed cashbacks correctly when applied at the composite price level + component level with the same cashback period', () => {
+  const result = computeAggregatedAndPriceTotals([samples.compositePriceCashbackCombinedWithComponentCashbacks]);
+  const computedPriceItem = result.items?.[0] as CompositePriceItem;
+  expect(computedPriceItem?._coupons).toEqual([
+    {
+      ...samples.compositePriceCashbackCombinedWithComponentCashbacks._coupons?.[0]!,
+      cashback_amount: 1000,
+      cashback_amount_decimal: '10',
+      cashback_period: '12',
+    },
+  ]);
+  expect(computedPriceItem?.item_components?.[1].cashback_amount).toEqual(1000);
+  expect(computedPriceItem?.item_components?.[1].cashback_amount_decimal).toEqual('10');
+  expect(computedPriceItem?.item_components?.[1].after_cashback_amount_total).toEqual(9981);
+  expect(computedPriceItem?.item_components?.[1].after_cashback_amount_total_decimal).toEqual('99.807692307692');
+  expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.length).toEqual(1);
+  expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[0].cashback_period).toEqual('12');
+  expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[0].amount_total).toEqual(2000);
+});
+
+it('should compute fixed cashbacks correctly when applied at the composite price level + component level with different cashback periods', () => {
+  const priceItems = [
+    {
+      ...samples.compositePriceCashbackCombinedWithComponentCashbacks,
+      _coupons: [coupons.lowFixedCashbackCoupon],
+    },
+  ];
+  const result = computeAggregatedAndPriceTotals(priceItems);
+  const computedPriceItem = result.items?.[0] as CompositePriceItem;
+  expect(computedPriceItem?._coupons).toEqual([
+    {
+      ...priceItems[0]!._coupons?.[0]!,
+      cashback_amount: 500,
+      cashback_amount_decimal: '5',
+      cashback_period: '0',
+    },
+  ]);
+  expect(computedPriceItem?.item_components?.[1].cashback_amount).toEqual(1000);
+  expect(computedPriceItem?.item_components?.[1].cashback_amount_decimal).toEqual('10');
+  expect(computedPriceItem?.item_components?.[1].after_cashback_amount_total).toEqual(9981);
+  expect(computedPriceItem?.item_components?.[1].after_cashback_amount_total_decimal).toEqual('99.807692307692');
+  expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.length).toEqual(2);
+  expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[0].cashback_period).toEqual('12');
+  expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[0].amount_total).toEqual(1000);
+  expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[1].cashback_period).toEqual('0');
+  expect(computedPriceItem?.total_details?.breakdown?.cashbacks?.[1].amount_total).toEqual(500);
+});
+
+it('should not apply cashbacks in composite price if it has requires_promo_code set to true and redeemedPromos is empty', () => {
+  const priceItems = [
+    {
+      ...samples.compositePriceWithFixedCashbackCoupon,
+      _coupons: [
+        {
+          ...fixedCashbackCoupon,
+          requires_promo_code: true,
+        },
+      ],
+    },
+  ];
+
+  const result = computeAggregatedAndPriceTotals(priceItems, {
+    redeemedPromos: [],
+  });
+
+  const computedPriceItem = result.items?.[0] as CompositePriceItem;
+
+  expect(computedPriceItem).toBeDefined();
+  expect(computedPriceItem?._coupons).toEqual([]);
+  console.log(JSON.stringify(computedPriceItem, null, 2));
+});
+
+it('should apply cashbacks in composite price if it has requires_promo_code set to true and redeemedPromos includes the coupon', () => {
+  const priceItems = [
+    {
+      ...samples.compositePriceWithFixedCashbackCoupon,
+      _coupons: [
+        {
+          ...fixedCashbackCoupon,
+          requires_promo_code: true,
+        },
+      ],
+    },
+  ];
+  const result = computeAggregatedAndPriceTotals(priceItems, {
+    redeemedPromos: [
+      {
+        code: 'SUMMER25',
+        coupons: [priceItems[0]!._coupons?.[0]!],
+      },
+    ],
+  });
+  const computedPriceItem = result.items?.[0] as CompositePriceItem;
+  expect(computedPriceItem?._coupons).toEqual([
+    {
+      ...priceItems[0]!._coupons?.[0]!,
+      cashback_amount: 1000,
+      cashback_amount_decimal: '10',
+      cashback_period: '12',
+    },
+  ]);
 });

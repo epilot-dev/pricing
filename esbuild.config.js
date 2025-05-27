@@ -1,49 +1,71 @@
-import fs from 'fs';
-
+import fs from 'fs/promises';
 import esbuild from 'esbuild';
-
 import packageJson from './package.json' with { type: 'json' };
 
-const buildOptions = {
-  entryPoints: ['./src/index.ts'],
-  bundle: true,
-  outfile: 'dist/index.js',
-  platform: 'node',
-  format: 'cjs',
-  sourcemap: true,
-  target: 'node18',
-  minify: true,
-  treeShaking: true,
-  external: [...Object.keys(packageJson.peerDependencies ?? {}), ...Object.keys(packageJson.dependencies ?? {})],
-  plugins: [
-    {
-      name: 'log-bundle-size',
-      setup(build) {
-        build.onEnd(() => {
-          const filePath = 'dist/index.js';
-          const size = fs.statSync(filePath).size;
-          const sizeInMB = (size / (1024 * 1024)).toFixed(2);
-          console.log(`\nBundle size: ${sizeInMB} MB (${size} bytes)`);
-        });
+const externalDeps = [
+  ...Object.keys(packageJson.peerDependencies ?? {}),
+  ...Object.keys(packageJson.dependencies ?? {}),
+];
+
+const buildFormats = [
+  {
+    format: 'esm',
+    outfile: 'dist/esm/index.mjs',
+    platform: 'node',
+  },
+  {
+    format: 'cjs',
+    outfile: 'dist/cjs/index.cjs',
+    platform: 'node',
+  },
+];
+
+function buildForFormat({ format, outfile, platform }) {
+  return esbuild.build({
+    entryPoints: ['./src/index.ts'],
+    bundle: true,
+    outfile,
+    platform,
+    format,
+    sourcemap: true,
+    target: 'node18',
+    minify: true,
+    treeShaking: true,
+    external: externalDeps,
+    metafile: true,
+    plugins: [
+      {
+        name: 'log-bundle-size',
+        setup(build) {
+          build.onEnd(async () => {
+            const { size } = await fs.stat(outfile);
+            const sizeInMB = (size / (1024 * 1024)).toFixed(2);
+            console.log(`\n[${format.toUpperCase()}] ${outfile}: ${sizeInMB} MB`);
+          });
+        },
       },
-    },
-  ],
-  metafile: true,
-};
+    ],
+  });
+}
+
+async function buildAll() {
+  for (const { format, outfile, platform } of buildFormats) {
+    const result = await buildForFormat({ format, outfile, platform });
+    // Output analysis to console
+    console.log(await esbuild.analyzeMetafile(result.metafile));
+  }
+}
 
 if (process.argv.includes('--watch')) {
-  // Watch mode
-  esbuild.context(buildOptions).then((context) => {
+  // Watch mode - only build the first format
+  buildForFormat(buildFormats[0]).then((context) => {
     context.watch();
     console.log('Watching for changes...');
   });
 } else {
   // Build mode with analysis
-  esbuild
-    .build(buildOptions)
-    .then(async (result) => {
-      // Output analysis to console
-      console.log(await esbuild.analyzeMetafile(result.metafile));
-    })
-    .catch(() => process.exit(1));
+  buildAll().catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
 }

@@ -1,10 +1,17 @@
 {
   "name": "@epilot/pricing",
-  "version": "4.52.0",
-  "private": true,
+  "version": "5.0.4",
   "description": "Pricing Library",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/cjs/index.cjs",
+  "module": "./dist/esm/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.cjs"
+    }
+  },
+  "types": "./dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/epilot-dev/pricing.git"
@@ -40,10 +47,8 @@
     "semi": true
   },
   "files": [
-    "dist/*.js",
-    "dist/*.d.ts",
-    "dist/**/*.js",
-    "dist/**/*.d.ts",
+    "dist/**/*",
+    "!*.map",
     "!*.test.*",
     "!**/*.test.*",
     "!node_modules",
@@ -56,11 +61,12 @@
     "dinero.js": "^1.9.1"
   },
   "peerDependencies": {
-    "@epilot/pricing-client": "^3.47.5"
+    "@epilot/pricing-client": "^3.47.10",
+    "i18next": "^25.1.2"
   },
   "devDependencies": {
     "@epilot/eslint-config": "^3.0.5",
-    "@epilot/pricing-client": "^3.47.5",
+    "@epilot/pricing-client": "^3.47.10",
     "@types/dinero.js": "^1.9.4",
     "@vitest/coverage-v8": "^1.6.1",
     "concurrently": "^9.1.2",

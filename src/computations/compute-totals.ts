@@ -21,6 +21,7 @@ import type {
   Currency,
 } from '../shared/types';
 import { computeCompositePrice } from './compute-composite-price';
+import { computeCompositePriceCashbacks } from './compute-composite-price-cashbacks';
 import { computePriceItem } from './compute-price-item';
 import { computeRecurrenceAfterCashbackAmounts } from './compute-recurrence-after-cashback-amounts';
 
@@ -66,8 +67,16 @@ export const computeAggregatedAndPriceTotals = (
       const compositePriceItemToAppend =
         (immutablePriceItem as CompositePriceItem | undefined) ?? computeCompositePrice(priceItem, { redeemedPromos });
 
-      const itemBreakdown = recomputeDetailTotalsFromCompositePrice(undefined, compositePriceItemToAppend);
-      const updatedTotals = recomputeDetailTotalsFromCompositePrice(details, compositePriceItemToAppend);
+      const itemBreakdown = recomputeDetailTotalsFromCompositePrice(
+        undefined,
+        compositePriceItemToAppend,
+        redeemedPromos,
+      );
+      const updatedTotals = recomputeDetailTotalsFromCompositePrice(
+        details,
+        compositePriceItemToAppend,
+        redeemedPromos,
+      );
 
       const newItem = {
         ...compositePriceItemToAppend,
@@ -107,14 +116,14 @@ export const computeAggregatedAndPriceTotals = (
         });
 
       const updatedTotals = isOnRequestUnitAmountApproved(
-        priceItem,
+        priceItem as PriceItem,
         priceItemToAppend?._price?.price_display_in_journeys ?? price?.price_display_in_journeys,
         undefined,
       )
-        ? recomputeDetailTotals(details, price, priceItemToAppend)
+        ? recomputeDetailTotals(details, price, priceItemToAppend as PriceItem)
         : details;
 
-      const newItem = convertPriceItemPrecision(priceItemToAppend, 2);
+      const newItem = convertPriceItemPrecision(priceItemToAppend as PriceItem, 2);
 
       return {
         ...updatedTotals,
@@ -362,7 +371,8 @@ const recomputeDetailTotals = (
 const recomputeDetailTotalsFromCompositePrice = (
   details: PricingDetails | undefined,
   compositePriceItem: CompositePriceItem,
-): PricingDetails => {
+  redeemedPromos: Array<RedeemedPromo> = [],
+): PricingDetails & { cashbacksMetadata?: Record<string, unknown> } => {
   const initialPricingDetails: PricingDetails = {
     amount_subtotal: 0,
     amount_total: 0,
@@ -378,7 +388,9 @@ const recomputeDetailTotalsFromCompositePrice = (
     },
   };
 
-  return (compositePriceItem.item_components ?? []).reduce((detailTotals, itemComponent) => {
+  const isItemBreakdown = !details;
+
+  const totalDetailsComponents = (compositePriceItem.item_components ?? []).reduce((detailTotals, itemComponent) => {
     const updatedTotals = isOnRequestUnitAmountApproved(
       itemComponent,
       itemComponent._price?.price_display_in_journeys,
@@ -397,4 +409,20 @@ const recomputeDetailTotalsFromCompositePrice = (
       ...updatedTotals,
     };
   }, details || initialPricingDetails);
+
+  const { pricingDetails: totalDetailsWithCashbacks, ...metadata } = computeCompositePriceCashbacks(
+    compositePriceItem,
+    totalDetailsComponents,
+    redeemedPromos,
+  );
+
+  const totalDetails = {
+    ...totalDetailsComponents,
+    ...totalDetailsWithCashbacks,
+    ...(isItemBreakdown && {
+      ...metadata,
+    }),
+  };
+
+  return totalDetails;
 };

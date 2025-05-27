@@ -5,6 +5,7 @@ import * as results from '../__tests__/fixtures/pricing.results';
 import { taxRateless } from '../__tests__/fixtures/tax.samples';
 import * as coupons from '../coupons/__tests__/coupon.fixtures';
 import { fixedCashbackCoupon } from '../coupons/__tests__/coupon.fixtures';
+import { PricingModel } from '../prices/constants';
 import type { CompositePriceItem } from '../shared/types';
 import { computeAggregatedAndPriceTotals } from './compute-totals';
 
@@ -662,7 +663,7 @@ describe('computeAggregatedAndPriceTotals', () => {
       const result = computeAggregatedAndPriceTotals([
         samples.priceItemWithPercentageDiscount,
         samples.priceItemWithPercentageDiscount,
-        samples.priceItem,
+        samples.priceItem as PriceItemDto,
       ]);
       expect(result).toEqual(results.computedResultWithPricesWithAndWithoutCoupons);
     });
@@ -785,6 +786,63 @@ describe('computeAggregatedAndPriceTotals', () => {
     const result = computeAggregatedAndPriceTotals([samples.compositePrice]);
     const resultRecomputed = computeAggregatedAndPriceTotals([result.items?.[0] as CompositePriceItemDto]);
     expect(result).toStrictEqual(resultRecomputed);
+  });
+
+  describe('specific price item computations (via computePriceItem)', () => {
+    it('should handle usage_based_commitment type for unitAmountMultiplier (lines 41-42 in compute-price-item.ts)', () => {
+      const usageBasedPriceItem = {
+        product_id: 'prod-usage',
+        price_id: 'price-usage',
+        quantity: 1,
+        type: 'usage_based_commitment',
+        commitment_amount: 5,
+        pricing_model: PricingModel.perUnit,
+        _price: {
+          _id: 'price-usage',
+          name: 'Usage Based Commitment Price',
+          pricing_model: PricingModel.perUnit,
+          unit_amount: 1000,
+          unit_amount_decimal: '10.00',
+          unit_amount_currency: 'EUR',
+          billing_period: 'monthly',
+          type: 'recurring',
+        },
+      } as unknown as PriceItemDto;
+
+      const result = computeAggregatedAndPriceTotals([usageBasedPriceItem]);
+
+      expect(result.items).toBeDefined();
+      if (result.items) {
+        expect(result.items[0].amount_subtotal).toBe(1000);
+        expect(result.items[0].amount_total).toBe(1000);
+      }
+    });
+
+    it('should use default unitAmountMultiplier when not usage_based_commitment (lines 41-42 else branch)', () => {
+      const standardPriceItem: PriceItemDto = {
+        product_id: 'prod-standard',
+        price_id: 'price-standard',
+        quantity: 1,
+        type: 'recurring',
+        pricing_model: PricingModel.perUnit,
+        _price: {
+          _id: 'price-standard',
+          name: 'Standard Price',
+          pricing_model: PricingModel.perUnit,
+          unit_amount: 2000,
+          unit_amount_decimal: '20.00',
+          unit_amount_currency: 'EUR',
+          billing_period: 'monthly',
+          type: 'recurring',
+        },
+      };
+      const result = computeAggregatedAndPriceTotals([standardPriceItem]);
+      expect(result.items).toBeDefined();
+      if (result.items) {
+        expect(result.items[0].amount_subtotal).toBe(2000);
+        expect(result.items[0].amount_total).toBe(2000);
+      }
+    });
   });
 });
 

@@ -142,7 +142,7 @@ export const computeCompositePrice = (
   return {
     ...priceItem,
     ...(priceItem._product && { _product: mapToProductSnapshot(priceItem._product) }),
-    _price: mapToPriceSnapshot(priceItem._price as Price | undefined),
+    _price: mapToPriceSnapshot(priceItem._price),
     currency: priceItem._price?.unit_amount_currency || DEFAULT_CURRENCY,
     ...(itemDescription && { description: itemDescription }),
     item_components: computedItemComponents,

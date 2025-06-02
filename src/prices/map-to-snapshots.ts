@@ -1,4 +1,4 @@
-import type { Price, Product } from '../shared/types';
+import type { CompositePriceItemDto, Price, Product } from '../shared/types';
 
 export const ENTITY_FIELDS_EXCLUSION_LIST: Set<keyof Price> = new Set([
   '_org',
@@ -25,7 +25,7 @@ const isArrayOfPrices = (prices: unknown): prices is Price[] => Array.isArray(pr
 /**
  * Converts a Price entity into a PriceDTO without all fields present on the entity fields exclusion list.
  */
-export const mapToPriceSnapshot = (price?: Price): Price =>
+export const mapToPriceSnapshot = <TPrice extends Price | CompositePriceItemDto>(price?: TPrice): TPrice =>
   price
     ? (Object.fromEntries(
         Object.entries(price)
@@ -37,8 +37,8 @@ export const mapToPriceSnapshot = (price?: Price): Price =>
               return [key, value];
             }
           }),
-      ) as Price)
-    : ({} as Price);
+      ) as TPrice)
+    : ({} as TPrice);
 
 /**
  * Converts a Product entity into a ProductDTO without all fields present on the entity fields exclusion list.

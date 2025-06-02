@@ -19,10 +19,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: npm run build
-      - run: npm run lint
-      - run: npm test
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - run: pnpm run lint
+      - run: pnpm test
 
   publish:
     name: Publish
@@ -35,8 +35,8 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      - run: npm run build
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
       - run: npx lerna publish from-package --yes --no-verify-access --ignore-prepublish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

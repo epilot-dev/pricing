@@ -941,7 +941,6 @@ it('should not apply cashbacks in composite price if it has requires_promo_code 
 
   expect(computedPriceItem).toBeDefined();
   expect(computedPriceItem?._coupons).toEqual([]);
-  console.log(JSON.stringify(computedPriceItem, null, 2));
 });
 
 it('should apply cashbacks in composite price if it has requires_promo_code set to true and redeemedPromos includes the coupon', () => {

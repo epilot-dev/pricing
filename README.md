@@ -16,6 +16,10 @@ yarn add @epilot/pricing
 npm install --save @epilot/pricing
 ```
 
+```bash
+pnpm add @epilot/pricing
+```
+
 ## ⚠️ Disclaimer
 
 This library is made available as an open source contribution to the community to ensure that all our clients and integrators can have the flexibility to build their own custom frontends and integrations with our platform [^1].

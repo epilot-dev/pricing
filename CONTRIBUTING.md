@@ -7,7 +7,7 @@ Since it is inside a monorepo, `lerna` will manage it, And you just need to go t
 To regenerate the docs and update our portal, do:
 
 ```bash
-npm run gen-docs
+pnpm run gen-docs
 ```
 
 Now browse to our docs repo and do:

@@ -20,6 +20,7 @@
   "keywords": [
     "pricing"
   ],
+  "packageManager": "pnpm@9.15.4",
   "type": "module",
   "scripts": {
     "start": "nodemon --watch src --ext ts --exec 'node esbuild.config.js'",
@@ -30,11 +31,11 @@
     "gen-docs": "rm -rf docs && typedoc --plugin typedoc-plugin-markdown --out docs src && echo '{ \"label\": \"Pricing Library\", \"position\": 0 }' > docs/_category_.json",
     "clean": "rm -rf dist",
     "bundle-definition": "node esbuild.config.js",
-    "build": "npm run clean && tsc && npm run bundle-definition",
-    "prepare": "npm run build",
+    "build": "pnpm run clean && tsc && pnpm run bundle-definition",
+    "prepare": "pnpm run build",
     "lint": "eslint src --ext js,ts,tsx --cache --color",
     "lint:fix": "eslint src --ext js,ts,tsx --cache --color --fix",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "pnpm run build",
     "prettify": "prettier --write ./src",
     "check-circular-dependencies": "npx madge src/index.ts -c",
     "check-unused-exports": "npx knip"

@@ -132,6 +132,7 @@ export const computeCompositePrice = (
         },
       ],
       ...(component._coupons && { _coupons: component._coupons }),
+      ...(existingItemComponent?._coupons && { _coupons: existingItemComponent._coupons }),
     };
 
     return computePriceComponent(itemComponent, priceItem, options);

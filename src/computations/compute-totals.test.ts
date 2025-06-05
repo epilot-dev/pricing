@@ -538,6 +538,47 @@ describe('computeAggregatedAndPriceTotals', () => {
           ],
         });
       });
+      it('should compute prices correctly when computing a composite price item with a custom item with coupons inside', () => {
+        const compositePriceWithCustomItemCoupon = {
+          ...samples.compositePriceWithCustomItem,
+          item_components: [
+            {
+              ...(samples.compositePriceWithCustomItem.item_components?.[0] as PriceItemDto),
+              _coupons: [fixedCashbackCoupon], // custom delete coupons from the custom item
+              _price: {
+                ...(samples.compositePriceWithCustomItem.item_components?.[0]!._price as Price),
+                _coupons: [],
+              },
+            },
+            {
+              ...(samples.compositePriceWithCustomItem.item_components?.[1] as PriceItemDto),
+            },
+            {
+              ...(samples.compositePriceWithCustomItem.item_components?.[2] as PriceItemDto),
+            },
+            {
+              ...(samples.compositePriceWithCustomItem.item_components?.[3] as PriceItemDto),
+            },
+          ],
+        };
+
+        const result = computeAggregatedAndPriceTotals([compositePriceWithCustomItemCoupon]);
+
+        expect((result.items?.[0] as CompositePriceItemDto | undefined)?.item_components?.length).toEqual(4);
+        expect((result.items?.[0] as CompositePriceItemDto | undefined)?.item_components?.[0]?._coupons).toEqual([
+          fixedCashbackCoupon,
+        ]);
+        expect(
+          (result.items?.[0] as CompositePriceItemDto | undefined)?.item_components?.[0]?._price?._coupons,
+        ).toEqual([]);
+        expect(result.items?.[0]?.amount_total).toEqual(61114);
+        expect(result.total_details?.breakdown?.cashbacks).toEqual([
+          {
+            amount_total: 10000,
+            cashback_period: '12',
+          },
+        ]);
+      });
     });
 
     describe('when component has quantity=0', () => {

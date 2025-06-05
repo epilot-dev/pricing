@@ -1,8 +1,9 @@
 import type { PriceItemDto, CompositePriceItemDto, PriceItemsDto, Price } from '@epilot/pricing-client';
 import { describe, expect, it } from 'vitest';
 import * as samples from '../__tests__/fixtures/price.samples';
+import { compositePriceWithComponentsWithCoupons } from '../__tests__/fixtures/price.samples';
 import * as results from '../__tests__/fixtures/pricing.results';
-import { taxRateless } from '../__tests__/fixtures/tax.samples';
+import { tax10percent, taxRateless } from '../__tests__/fixtures/tax.samples';
 import * as coupons from '../coupons/__tests__/coupon.fixtures';
 import { fixedCashbackCoupon } from '../coupons/__tests__/coupon.fixtures';
 import type { CompositePriceItem } from '../shared/types';
@@ -537,6 +538,107 @@ describe('computeAggregatedAndPriceTotals', () => {
             },
           ],
         });
+      });
+      it.only('should compute prices correctly when computing a composite price item with a custom item with coupons inside', () => {
+        const compositePriceWithCustomItemCoupon = {
+          ...samples.compositePriceWithCustomItem,
+          item_components: [
+            {
+              ...(samples.compositePriceWithCustomItem.item_components?.[0] as PriceItemDto),
+              _coupons: [fixedCashbackCoupon], // custom delete coupons from the custom item
+              _price: {
+                ...(samples.compositePriceWithCustomItem.item_components?.[0]!._price as Price),
+                _coupons: [],
+              },
+            },
+            {
+              ...(samples.compositePriceWithCustomItem.item_components?.[1] as PriceItemDto),
+            },
+            {
+              ...(samples.compositePriceWithCustomItem.item_components?.[2] as PriceItemDto),
+            },
+            {
+              ...(samples.compositePriceWithCustomItem.item_components?.[3] as PriceItemDto),
+            },
+          ],
+        };
+
+        const result = computeAggregatedAndPriceTotals([compositePriceWithCustomItemCoupon]);
+
+        expect((result.items?.[0] as CompositePriceItemDto | undefined)?.item_components?.length).toEqual(4);
+        expect((result.items?.[0] as CompositePriceItemDto | undefined)?.item_components?.[0]?._coupons).toEqual([
+          fixedCashbackCoupon,
+        ]);
+        expect(
+          (result.items?.[0] as CompositePriceItemDto | undefined)?.item_components?.[0]?._price?._coupons,
+        ).toEqual([]);
+        expect(result.items?.[0]?.amount_total).toEqual(61114);
+        expect(result.total_details?.breakdown?.cashbacks).toEqual([
+          {
+            amount_total: 10000,
+            cashback_period: '12',
+          },
+        ]);
+        // expect(result).toEqual({
+        //   amount_subtotal: 53031,
+        //   currency: 'EUR',
+        //   amount_total: 61114,
+        //   amount_tax: 8083,
+        //   total_details: expect.anything(),
+        //   items: [
+        //     {
+        //       price_id: 'price#4',
+        //       product_id: 'prod-id#1234',
+        //       quantity: 1,
+        //       description: 'Eletricity Pack 1',
+        //       item_components: [
+        //         {
+        //           description: 'custom item',
+        //           quantity: 10,
+        //           unit_amount: 1000,
+        //           unit_amount_currency: 'EUR',
+        //           unit_amount_decimal: '10',
+        //           unit_amount_gross: 1000,
+        //           unit_amount_gross_decimal: '10',
+        //           type: 'one_time',
+        //           _price: {},
+        //           _product: {},
+        //           currency: 'EUR',
+        //           unit_amount_net: 1000,
+        //           unit_amount_net_decimal: '10',
+        //           amount_subtotal: 10000,
+        //           amount_total: 10000,
+        //           amount_subtotal_decimal: '100',
+        //           amount_total_decimal: '100',
+        //           amount_tax: 0,
+        //           product_id: 'prod-id#1234',
+        //           price_id: undefined,
+        //           taxes: [
+        //             {
+        //               amount: 0,
+        //               rate: 'nontaxable',
+        //               rateValue: 0,
+        //             },
+        //           ],
+        //           pricing_model: 'per_unit',
+        //           is_tax_inclusive: true,
+        //         },
+        //         expect.any(Object),
+        //         expect.any(Object),
+        //         expect.any(Object),
+        //       ],
+        //       _price: expect.any(Object),
+        //       _product: expect.any(Object),
+        //       currency: 'EUR',
+        //       amount_subtotal: 53031,
+        //       amount_subtotal_decimal: '530.31077734696',
+        //       amount_total: 61114,
+        //       amount_total_decimal: '611.14',
+        //       amount_tax: 8083,
+        //       total_details: expect.anything(),
+        //     },
+        //   ],
+        // });
       });
     });
 

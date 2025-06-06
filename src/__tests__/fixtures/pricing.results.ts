@@ -6035,6 +6035,7 @@ export const computedPriceWithFixedDiscount = {
         description: 'Winter Sale',
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
+        variable_price: true,
       },
       _product: { _tags: ['product-tag-1', 'product-tag-2'] },
       pricing_model: 'per_unit',
@@ -6136,6 +6137,7 @@ export const computedPriceWithMultipleFixedDiscounts = {
         description: 'Winter Sale',
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
+        variable_price: true,
       },
       _product: {
         _tags: ['product-tag-1', 'product-tag-2'],
@@ -6344,6 +6346,7 @@ export const computedPriceWithFixedDiscountAndPriceMappings = {
         description: 'Winter Sale',
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
+        variable_price: true,
       },
       _product: {
         _tags: ['product-tag-1', 'product-tag-2'],
@@ -6491,6 +6494,7 @@ export const computedPriceWithPercentageDiscount = {
         description: 'Winter Sale',
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
+        variable_price: true,
       },
       _product: { _tags: ['product-tag-1', 'product-tag-2'] },
       pricing_model: 'per_unit',
@@ -6591,6 +6595,7 @@ export const computedPriceWithMultiplePercentageDiscounts = {
         description: 'Winter Sale',
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
+        variable_price: true,
       },
       _product: {
         _tags: ['product-tag-1', 'product-tag-2'],
@@ -6790,6 +6795,7 @@ export const computedPriceWithoutAppliedCoupon = {
         description: 'Winter Sale',
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
+        variable_price: true,
       },
       _product: {
         _tags: ['product-tag-1', 'product-tag-2'],
@@ -6929,6 +6935,7 @@ export const computedPriceWithAppliedCoupon = {
         description: 'Winter Sale',
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
+        variable_price: true,
       },
       _product: {
         _tags: ['product-tag-1', 'product-tag-2'],
@@ -7084,6 +7091,7 @@ export const computedPriceWithPercentageDiscountAndHighQuantity = {
         description: 'Winter Sale',
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
+        variable_price: true,
       },
       _product: {
         _tags: ['product-tag-1', 'product-tag-2'],
@@ -7237,6 +7245,7 @@ export const computedPriceWithFixedDiscountAndHighQuantity = {
         description: 'Winter Sale',
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
+        variable_price: true,
       },
       _product: {
         _tags: ['product-tag-1', 'product-tag-2'],
@@ -7350,6 +7359,7 @@ export const computedPriceWithFixedDiscountAndNoTax = {
         description: 'Winter Sale',
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
+        variable_price: true,
       },
       _product: { _tags: ['product-tag-1', 'product-tag-2'] },
       pricing_model: 'per_unit',
@@ -7504,6 +7514,7 @@ export const computedPriceWithPercentageDiscountAndExclusiveTax = {
         description: 'Winter Sale',
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
+        variable_price: true,
       },
       _product: {
         _tags: ['product-tag-1', 'product-tag-2'],
@@ -7657,6 +7668,7 @@ export const computedPriceWithFixedDiscountAndExclusiveTax = {
         description: 'Winter Sale',
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
+        variable_price: true,
       },
       _product: {
         _tags: ['product-tag-1', 'product-tag-2'],
@@ -7798,6 +7810,7 @@ export const computedResultWithPricesWithAndWithoutCoupons = {
         description: 'Winter Sale',
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
+        variable_price: true,
       },
       _product: { _tags: ['product-tag-1', 'product-tag-2'] },
       pricing_model: 'per_unit',
@@ -7892,6 +7905,7 @@ export const computedResultWithPricesWithAndWithoutCoupons = {
         description: 'Winter Sale',
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
+        variable_price: true,
       },
       _product: { _tags: ['product-tag-1', 'product-tag-2'] },
       pricing_model: 'per_unit',
@@ -8110,6 +8124,7 @@ export const computedPriceWithFixedAmountCashbackCoupon = {
         description: 'Winter Sale',
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
+        variable_price: true,
       },
       _product: {
         _tags: ['product-tag-1', 'product-tag-2'],
@@ -8257,6 +8272,7 @@ export const computedPriceWithFixedAmountCashbackCouponAndPriceMappings = {
         description: 'Winter Sale',
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
+        variable_price: true,
       },
       _product: {
         _tags: ['product-tag-1', 'product-tag-2'],
@@ -8410,6 +8426,7 @@ export const computedPriceWithPercentageCashbackCoupon = {
         description: 'Winter Sale',
         _title: 'Winter Sale',
         pricing_model: 'per_unit',
+        variable_price: true,
       },
       _product: {
         _tags: ['product-tag-1', 'product-tag-2'],
@@ -8565,6 +8582,7 @@ export const computedRecurringPriceWithFixedAmountCashbackCoupon = {
         termination_time_unit: 'weeks',
         renewal_duration_amount: 1,
         renewal_duration_unit: 'years',
+        variable_price: true,
       },
       _product: {
         _tags: ['product-tag-1', 'product-tag-2'],

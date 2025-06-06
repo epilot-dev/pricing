@@ -595,6 +595,23 @@ describe('computeAggregatedAndPriceTotals', () => {
         );
       });
     });
+
+    describe('when there are mappings for not variable components', () => {
+      it('should return the right result', () => {
+        const priceItems = [samples.compositePriceWithMappingForNotVariableComponent];
+
+        const result = computeAggregatedAndPriceTotals(priceItems);
+
+        console.log(result.amount_total);
+
+        expect(result).toEqual(
+          expect.objectContaining({
+            amount_total: 1000,
+            amount_subtotal: 840,
+          }),
+        );
+      });
+    });
   });
 
   describe('when coupons are applied', () => {

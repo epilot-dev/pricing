@@ -14,9 +14,11 @@ export const priceGetAG: PriceItemDto = {
       category: 'power',
       markup_amount: 10,
       markup_amount_decimal: '0.10',
+      type: 'work_price',
     },
     billing_period: 'monthly',
     tax: [tax19percent],
+    variable_price: true,
   },
   _product: {
     _tags: [],
@@ -78,6 +80,7 @@ export const priceTieredVolumeGetAG: PriceItemDto = {
     },
     billing_period: 'monthly',
     tax: [tax19percent],
+    variable_price: true,
   },
   _product: {
     _tags: [],
@@ -139,6 +142,7 @@ export const priceTieredFlatFeeGetAG: PriceItemDto = {
     },
     billing_period: 'monthly',
     tax: [tax19percent],
+    variable_price: true,
   },
   _product: {
     _tags: [],
@@ -422,11 +426,12 @@ export const compositePriceGetAGWithZeroInputMapping: PriceItemDto = {
       _schema: 'price',
       pricing_model: 'external_getag',
       is_tax_inclusive: true,
-      variable_price: false,
+      variable_price: true,
       get_ag: {
         category: 'power',
         markup_amount: 1000,
         markup_amount_decimal: '10.00',
+        type: 'work_price',
       },
       taxes: [
         {
@@ -455,6 +460,7 @@ export const compositePriceGetAGWithZeroInputMapping: PriceItemDto = {
         category: 'power',
         markup_amount: 10,
         markup_amount_decimal: '0.10',
+        type: 'work_price',
       },
     },
   ],

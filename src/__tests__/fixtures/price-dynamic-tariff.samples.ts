@@ -17,6 +17,7 @@ export const priceDynamicManual: PriceItemDto = {
     },
     billing_period: 'monthly',
     tax: [tax19percent],
+    variable_price: true,
   },
   _product: {
     _tags: [],
@@ -56,6 +57,7 @@ export const priceDynamicRealtime: PriceItemDto = {
     },
     billing_period: 'monthly',
     tax: [tax19percent],
+    variable_price: true,
   },
   _product: {
     _tags: [],
@@ -96,6 +98,7 @@ export const priceDynamicRealtimeTaxinclusive: PriceItemDto = {
     },
     billing_period: 'monthly',
     tax: [tax19percent],
+    variable_price: true,
   },
   _product: {
     _tags: [],

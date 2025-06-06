@@ -50,6 +50,15 @@ const computeExternalFee = (
 
 export const computeQuantities = (price: Price | undefined, quantity: number, priceMapping?: PriceInputMapping) => {
   const safeQuantity = getSafeQuantity(quantity);
+
+  if (!price?.variable_price) {
+    return {
+      safeQuantity,
+      unitAmountMultiplier: safeQuantity,
+      isUsingPriceMappingToSelectTier: false,
+    };
+  }
+
   const normalizedPriceMappingInput = normalizePriceMappingInput(priceMapping, price);
   const quantityToSelectTier = normalizedPriceMappingInput ? normalizedPriceMappingInput.toUnit() : 1;
   const unitAmountMultiplier = normalizedPriceMappingInput
@@ -117,7 +126,7 @@ export const computePriceItem = (
         tiers: price.tiers,
         currency,
         isTaxInclusive,
-        quantityToSelectTier,
+        quantityToSelectTier: quantityToSelectTier === undefined ? 1 : quantityToSelectTier,
         tax: priceTax,
         unitAmountMultiplier,
         unchangedPriceDisplayInJourneys: priceItem._price?.unchanged_price_display_in_journeys,
@@ -128,7 +137,7 @@ export const computePriceItem = (
         tiers: price.tiers,
         currency,
         isTaxInclusive,
-        quantityToSelectTier,
+        quantityToSelectTier: quantityToSelectTier === undefined ? 1 : quantityToSelectTier,
         tax: priceTax,
         quantity: safeQuantity,
         isUsingPriceMappingToSelectTier,
@@ -140,7 +149,7 @@ export const computePriceItem = (
         tiers: price.tiers,
         currency,
         isTaxInclusive,
-        quantityToSelectTier,
+        quantityToSelectTier: quantityToSelectTier === undefined ? 1 : quantityToSelectTier,
         tax: priceTax,
         quantity: safeQuantity,
         isUsingPriceMappingToSelectTier,
@@ -163,7 +172,7 @@ export const computePriceItem = (
         currency,
         isTaxInclusive,
         unitAmountMultiplier,
-        userInput: quantityToSelectTier,
+        userInput: quantityToSelectTier === undefined ? 1 : quantityToSelectTier,
         externalFeeAmountDecimal,
         tax: priceTax,
       });

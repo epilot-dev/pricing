@@ -153,7 +153,7 @@ export function getTierDescription(
   const startsAt =
     showStartsAt &&
     t('starts_at', {
-      ns: 'entity',
+      ns: '',
       defaultValue: 'Starts at',
     });
 

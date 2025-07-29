@@ -1,4 +1,4 @@
-import type { PriceItemDto } from '@epilot/pricing-client';
+import type { PriceItem, PriceItemDto } from '@epilot/pricing-client';
 import { describe, expect, it } from 'vitest';
 import {
   compositePriceGetAG,
@@ -34,6 +34,8 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                 markup_amount_net: 8,
                 markup_amount: 10,
                 markup_amount_decimal: '0.10',
+                markup_amount_gross: 10,
+                markup_amount_gross_decimal: '0.1',
                 unit_amount_gross: 14,
                 unit_amount_gross_decimal: '0.1414434',
                 unit_amount_net: 12,
@@ -75,6 +77,8 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                 category: 'power',
                 markup_amount: 10,
                 markup_amount_decimal: '0.10',
+                markup_amount_gross: 10,
+                markup_amount_gross_decimal: '0.1',
                 unit_amount_gross: 14,
                 unit_amount_gross_decimal: '0.1414434',
                 unit_amount_net: 12,
@@ -112,6 +116,33 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
       expect(result.amount_total).toBe(0);
     });
 
+    it('returns the correct markups if tax is not inclusive', () => {
+      const priceItems = [
+        {
+          ...priceGetAG,
+          _price: { ...priceGetAG._price, is_tax_inclusive: false },
+        } as PriceItemDto,
+      ];
+
+      const result = computeAggregatedAndPriceTotals(priceItems);
+
+      expect((result.items?.[0] as PriceItem).get_ag).toStrictEqual(
+        expect.objectContaining({
+          markup_amount_net_decimal: '0.1',
+          markup_amount_net: 10,
+          markup_amount: 10,
+          markup_amount_decimal: '0.10',
+          markup_amount_gross: 12,
+          markup_amount_gross_decimal: '0.119',
+          unit_amount_gross: 14,
+          unit_amount_gross_decimal: '0.1414434',
+          unit_amount_net: 12,
+          unit_amount_net_decimal: '0.11886',
+          category: 'power',
+        }),
+      );
+    });
+
     describe('when margins are tiered', () => {
       describe('when model is tiered_volume', () => {
         it('returns the correct amount_total', () => {
@@ -135,6 +166,8 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                     markup_amount_net: 8,
                     markup_amount: 10,
                     markup_amount_decimal: '0.10',
+                    markup_amount_gross: 10,
+                    markup_amount_gross_decimal: '0.1',
                     unit_amount_gross: 14,
                     unit_amount_gross_decimal: '0.1414434',
                     unit_amount_net: 12,
@@ -153,6 +186,25 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                   ]),
                 }),
               }),
+            }),
+          );
+        });
+
+        it('returns the correct markups if tax is not inclusive', () => {
+          const priceItems = [
+            { ...priceTieredVolumeGetAG, _price: { ...priceTieredVolumeGetAG._price, is_tax_inclusive: false } },
+          ] as PriceItemDto[];
+
+          const result = computeAggregatedAndPriceTotals(priceItems);
+
+          expect((result.items?.[0] as PriceItem).get_ag).toStrictEqual(
+            expect.objectContaining({
+              markup_amount_net_decimal: '0.1',
+              markup_amount_net: 10,
+              markup_amount: 10,
+              markup_amount_decimal: '0.10',
+              markup_amount_gross: 12,
+              markup_amount_gross_decimal: '0.119',
             }),
           );
         });
@@ -179,6 +231,8 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                     markup_amount_net: 840,
                     markup_amount: 1000,
                     markup_amount_decimal: '10.00',
+                    markup_amount_gross: 1000,
+                    markup_amount_gross_decimal: '10',
                     unit_amount_gross: 538,
                     unit_amount_gross_decimal: '5.380783333334',
                     unit_amount_net: 452,
@@ -197,6 +251,25 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                   ]),
                 }),
               }),
+            }),
+          );
+        });
+
+        it('returns the correct markups if tax is not inclusive', () => {
+          const priceItems = [
+            { ...priceTieredFlatFeeGetAG, _price: { ...priceTieredFlatFeeGetAG._price, is_tax_inclusive: false } },
+          ] as PriceItemDto[];
+
+          const result = computeAggregatedAndPriceTotals(priceItems);
+
+          expect((result.items?.[0] as PriceItem).get_ag).toStrictEqual(
+            expect.objectContaining({
+              markup_amount_net_decimal: '10',
+              markup_amount_net: 1000,
+              markup_amount: 1000,
+              markup_amount_decimal: '10.00',
+              markup_amount_gross: 1190,
+              markup_amount_gross_decimal: '11.9',
             }),
           );
         });
@@ -230,6 +303,8 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                     category: 'power',
                     markup_amount: 1000,
                     markup_amount_decimal: '10.00',
+                    markup_amount_gross: 1000,
+                    markup_amount_gross_decimal: '10',
                     unit_amount_gross: 538,
                     unit_amount_gross_decimal: '5.380783333334',
                     unit_amount_net: 452,
@@ -247,6 +322,8 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                     category: 'power',
                     markup_amount: 10,
                     markup_amount_decimal: '0.10',
+                    markup_amount_gross: 10,
+                    markup_amount_gross_decimal: '0.1',
                     unit_amount_gross: 14,
                     unit_amount_gross_decimal: '0.1414434',
                     unit_amount_net: 12,
@@ -313,6 +390,8 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                     category: 'power',
                     markup_amount: 1000,
                     markup_amount_decimal: '10.00',
+                    markup_amount_gross: 1000,
+                    markup_amount_gross_decimal: '10',
                     unit_amount_gross: 538,
                     unit_amount_gross_decimal: '5.380783333334',
                     unit_amount_net: 452,
@@ -331,6 +410,8 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                     category: 'power',
                     markup_amount: 10,
                     markup_amount_decimal: '0.10',
+                    markup_amount_gross: 10,
+                    markup_amount_gross_decimal: '0.1',
                     unit_amount_gross: 14,
                     unit_amount_gross_decimal: '0.1414434',
                     unit_amount_net: 12,
@@ -380,6 +461,8 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                         category: 'power',
                         markup_amount: 1000,
                         markup_amount_decimal: '10.00',
+                        markup_amount_gross: 1000,
+                        markup_amount_gross_decimal: '10',
                         unit_amount_gross: 538,
                         unit_amount_gross_decimal: '5.380783333334',
                         unit_amount_net: 452,
@@ -393,6 +476,8 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                         category: 'power',
                         markup_amount: 10,
                         markup_amount_decimal: '0.10',
+                        markup_amount_gross: 10,
+                        markup_amount_gross_decimal: '0.1',
                         unit_amount_gross: 14,
                         unit_amount_gross_decimal: '0.1414434',
                         unit_amount_net: 12,
@@ -442,6 +527,8 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
                         category: 'power',
                         markup_amount: 1000,
                         markup_amount_decimal: '10.00',
+                        markup_amount_gross: 1000,
+                        markup_amount_gross_decimal: '10',
                         unit_amount_gross: 538,
                         unit_amount_gross_decimal: '5.380783333334',
                         unit_amount_net: 452,

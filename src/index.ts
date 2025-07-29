@@ -34,3 +34,7 @@ export type {
   BillingPeriod,
 } from './shared/types';
 export { processOrderTableData } from './variables/process-order-table-data';
+export { formatFeeAmountFromString } from './getag/formatters';
+export { extractGetAgConfig } from './getag/extract-config';
+export { getTaxValue } from './taxes/get-tax-value';
+export { getAmountWithTax } from './taxes/get-amount-with-tax';

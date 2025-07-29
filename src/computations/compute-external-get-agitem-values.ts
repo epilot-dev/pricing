@@ -36,6 +36,7 @@ export const computeExternalGetAGItemValues = ({
         unit_amount_net: 0,
         unit_amount_gross: 0,
         markup_amount_net: 0,
+        markup_amount_gross: 0,
       },
     };
   }
@@ -70,6 +71,11 @@ export const computeExternalGetAGItemValues = ({
                   .divide(1 + taxRate)
                   .getAmount()
               : toDinero(getAg.markup_amount_decimal).getAmount(),
+            unit_amount_gross: isTaxInclusive
+              ? toDinero(getAg.markup_amount_decimal).getAmount()
+              : toDinero(getAg.markup_amount_decimal)
+                  .multiply(1 + taxRate)
+                  .getAmount(),
           } as PriceItemsTotals);
 
   const relevantTier = markupValues.tiers_details?.[0]; // Changed ?. to && since we need both checks
@@ -85,6 +91,7 @@ export const computeExternalGetAGItemValues = ({
   const unitAmountGross = unitAmountNet.multiply(1 + taxRate);
   const unitTaxAmount = unitAmountGross.subtract(unitAmountNet);
   const unitAmountMarkupNet = toDineroFromInteger(markupValues.unit_amount_net || 0);
+  const unitAmountMarkupGross = toDineroFromInteger(markupValues.unit_amount_gross || 0);
 
   // Amount Subtotal = Unit Amount Net * Quantity
   const amountSubtotal =
@@ -104,6 +111,7 @@ export const computeExternalGetAGItemValues = ({
       unit_amount_net: unitAmountGetAgFeeNet.getAmount(),
       unit_amount_gross: unitAmountGetAgFeeGross.getAmount(),
       markup_amount_net: unitAmountMarkupNet.getAmount(),
+      markup_amount_gross: unitAmountMarkupGross.getAmount(),
       markup_amount: (relevantTier ? relevantTier?.unit_amount : getAg.markup_amount) || 0,
       // ToDo: Move the computation of the decimal value on the convert precision step
       markup_amount_decimal: (relevantTier ? relevantTier?.unit_amount_decimal : getAg.markup_amount_decimal) || '0',

@@ -30,6 +30,10 @@ const expectedNamedExports = [
   'getDisplayTiersByQuantity',
   'getTierDescription',
   'processOrderTableData',
+  'formatFeeAmountFromString',
+  'extractGetAgConfig',
+  'getAmountWithTax',
+  'getTaxValue',
 ];
 
 /**

@@ -136,6 +136,10 @@ export const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): 
           .convertPrecision(precision)
           .getAmount(),
         markup_amount_net_decimal: toDineroFromInteger(priceItem.get_ag.markup_amount_net!).toUnit().toString(),
+        markup_amount_gross: toDineroFromInteger(priceItem.get_ag.markup_amount_gross!)
+          .convertPrecision(precision)
+          .getAmount(),
+        markup_amount_gross_decimal: toDineroFromInteger(priceItem.get_ag.markup_amount_gross!).toUnit().toString(),
       },
     }),
   ...(priceItem.dynamic_tariff &&

@@ -464,7 +464,6 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
 
       return {
         ...baseProduct,
-        ...(tiersDetails && { tiers_details: tiersDetails }),
         price: {
           type: isCashbackCoupon ? 'one_time' : item.type || item._price?.type,
           description: item.is_composite_component
@@ -516,6 +515,7 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
             item._price?.pricing_model === PricingModel.tieredVolume ||
             item._price?.pricing_model === PricingModel.tieredGraduated ||
             item._price?.pricing_model === PricingModel.tieredFlatFee,
+          ...(tiersDetails && tiersDetails.length === 1 && { ...tiersDetails[0] }),
         },
         ...item._product,
         name: isCoupon ? item.coupon.name : item?.product_name || item._product?.name || item.description,

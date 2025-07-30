@@ -40,7 +40,7 @@ import {
   withValidLineItem,
 } from './utils';
 
-export const processOrderTableDataLib = (data: any, i18n: I18n) => {
+export const processOrderTableData = (data: any, i18n: I18n) => {
   /* Utility to avoid having to call safeFormatAmount and pass extensive options object */
   const formatAmount = (amount: number) =>
     safeFormatAmount({ amount, currency: data.currency as Currency, locale: i18n.language });
@@ -587,14 +587,3 @@ const getFormattedCouponDescription = (
 };
 
 const formatPercentage = (formatPercentageValue: number | string) => `${formatPercentageValue}%`;
-
-/**
- * @todo Use structuredClone
- */
-const clone = <T>(item: T): T => {
-  if (!item) {
-    return item;
-  }
-
-  return JSON.parse(JSON.stringify(item));
-};

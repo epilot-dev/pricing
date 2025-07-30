@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash';
 import { formatAmount, formatAmountFromString, formatPriceUnit } from '../money/formatters';
 import { toDinero } from '../money/to-dinero';
 import { PricingModel } from '../prices/constants';
@@ -14,6 +15,7 @@ import type {
   TierDetails,
   I18n,
   TFunction,
+  Coupon,
 } from '../shared/types';
 import { getDisplayTierByQuantity, getTierDescription } from '../tiers/utils';
 import { normalizeTimeFrequency, normalizeValueToFrequencyUnit } from '../time-frequency/normalizers';
@@ -688,4 +690,14 @@ const normalizeToYearlyAmounts = (
     })}`,
     amount_yearly_decimal: normalizedAmountDecimal,
   };
+};
+
+export const getCouponItems = (item: PriceItem): (PriceItem & { coupon: Coupon })[] => {
+  const clonedItem = cloneDeep(item);
+
+  const couponItems = ((clonedItem._coupons as Array<Coupon> | undefined) ?? [])?.map<PriceItem & { coupon: Coupon }>(
+    (coupon) => ({ ...clonedItem, coupon }),
+  );
+
+  return couponItems;
 };

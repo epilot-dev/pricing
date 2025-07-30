@@ -1,11 +1,11 @@
 import type { Currency } from 'dinero.js';
+import { cloneDeep } from 'lodash';
 import { formatPriceUnit } from '../money/formatters';
 import { PricingModel } from '../prices/constants';
 import { getRecurrencesWithEstimatedPrices } from '../prices/get-recurrences-with-estimated-prices';
 import { isTruthy } from '../shared/is-truthy';
 import type {
   I18n,
-  Order,
   CompositePriceItem,
   Coupon,
   PriceItem,
@@ -14,14 +14,14 @@ import type {
   RecurrenceAmount,
   RecurrenceAmountWithTax,
   RedeemedPromo,
-  BillingPeriod,
+  Price,
 } from '../shared/types';
 import { RECURRENCE_ORDERING } from './constants';
-import type { OrderTableData, RecurrenceByBillingPeriod } from './types';
 import {
   computeRecurrenceAmounts,
   EMPTY_VALUE_PLACEHOLDER,
   fillPostSpaces,
+  getCouponItems,
   getDisplayUnit,
   getFormattedTieredDetails,
   getHiddenAmountString,
@@ -40,11 +40,7 @@ import {
   withValidLineItem,
 } from './utils';
 
-export const processOrderTableData = (order: Order, i18n: I18n) => {
-  const data = {
-    ...order,
-    total_details: order.total_details as OrderTableData['total_details'],
-  } as OrderTableData;
+export const processOrderTableDataLib = (data: any, i18n: I18n) => {
   /* Utility to avoid having to call safeFormatAmount and pass extensive options object */
   const formatAmount = (amount: number) =>
     safeFormatAmount({ amount, currency: data.currency as Currency, locale: i18n.language });
@@ -56,13 +52,13 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
     data.total_details.cashbacks = cashbacks?.map((cashback) => {
       const period = i18n.t(`table_order.cashback_period.${cashback.cashback_period}`, 'immediately');
 
-      const amount = formatAmount(cashback.amount_total ?? 0);
-
       const name = i18n.t('table_order.cashback', {
         value: '',
-        cashbackPeriodLabel: '',
         redeemedPromo: '',
+        cashbackPeriodLabel: '',
       });
+
+      const amount = formatAmount(cashback.amount_total ?? 0);
 
       return { name, period, amount };
     });
@@ -72,7 +68,8 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
   /**
    * @todo Type RecurrenceAmount is missing amount_tax_decimal in spec
    */
-  const recurrences = data.total_details?.breakdown?.recurrences;
+  const recurrences: Array<RecurrenceAmount & { amount_tax_decimal?: string }> | undefined =
+    data.total_details?.breakdown?.recurrences;
   const estimatedIntervals = getRecurrencesWithEstimatedPrices(data.line_items);
 
   if (recurrences?.length) {
@@ -87,8 +84,7 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
     data.total_details.recurrencesByTax = {};
 
     // build prices based on billing period for custom variables
-    for (const value of sortedRecurrences) {
-      const recurrence = value || ({} as RecurrenceAmount);
+    for (const recurrence of sortedRecurrences) {
       /**
        * @todo Instead of mutating recurrence,
        * just compute properties when constructing recurrenceByBillingPeriodTotal
@@ -96,7 +92,7 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
        */
       Object.assign(
         recurrence,
-        computeRecurrenceAmounts(recurrence, { currency: data.currency as Currency, locale: i18n.language }),
+        computeRecurrenceAmounts(recurrence, { currency: data.currency, locale: i18n.language }),
       );
 
       const recurrencesByTax =
@@ -112,10 +108,10 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
       const recurrenceByBillingPeriodTotal = {
         ...(shouldShowDetailedRecurrence && { totalLabel: i18n.t('table_order.gross_total') }),
         billing_period: estimatedIntervals[interval]
-          ? (`${i18n.t('table_order.estimated', {
+          ? `${i18n.t('table_order.estimated', {
               interval: i18n.t(`table_order.recurrences.billing_period.${interval}`),
-            })}` as BillingPeriod)
-          : (`${i18n.t(`table_order.recurrences.billing_period.${interval}`)}` as BillingPeriod),
+            })}`
+          : `${i18n.t(`table_order.recurrences.billing_period.${interval}`)}`,
         /**
          * @todo Instead of setting every property just spread the recurrence object
          */
@@ -126,18 +122,18 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
         amount_tax: recurrence.amount_tax,
         amount_tax_decimal: recurrence.amount_tax_decimal,
         full_amount_tax: i18n.t('table_order.incl_vat').replace('!!amount!!', (recurrence.amount_tax || '').toString()),
-        type: recurrence.type || 'one_time',
-      } as RecurrenceByBillingPeriod;
+        type: recurrence.type,
+      };
 
       // This is required for some customers custom variables. Do not remove.
-      data.total_details[interval] = recurrenceByBillingPeriodTotal as RecurrenceAmount;
+      data.total_details[interval] = recurrenceByBillingPeriodTotal;
 
       /* If recurrence has a discount associated, push another line containing the discount details */
       if ('discount_amount' in recurrence && typeof recurrence.discount_amount === 'number') {
         data.total_details.recurrences.push({
           is_discount_recurrence: true,
-          amount_total: formatAmount(-recurrence.discount_amount) as string,
-        } as RecurrenceByBillingPeriod);
+          amount_total: formatAmount(-recurrence.discount_amount),
+        });
       }
 
       if (shouldShowDetailedRecurrence && recurrencesByTax.length) {
@@ -149,7 +145,7 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
            */
           Object.assign(
             recurrenceByTax,
-            computeRecurrenceAmounts(recurrenceByTax, { currency: data.currency as Currency, locale: i18n.language }),
+            computeRecurrenceAmounts(recurrenceByTax, { currency: data.currency, locale: i18n.language }),
           );
         }
         const recurrencesByBillingPeriodWithTaxes = recurrencesByTax.map((recurrenceByTax) => ({
@@ -161,15 +157,15 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
 
         // This is required for some customers custom variables. Do not remove.
         recurrencesByBillingPeriodWithTaxes.forEach((recurrenceByTax) => {
-          const index = `${getRecurrenceInterval(
-            recurrenceByTax as Pick<RecurrenceAmount, 'billing_period' | 'type'>,
-          )}-${recurrenceByTax.tax}`;
-          data.total_details.recurrencesByTax[index] = recurrenceByTax as unknown as RecurrenceAmountWithTax;
+          data.total_details.recurrencesByTax[
+            `${getRecurrenceInterval(recurrenceByTax as Pick<RecurrenceAmount, 'billing_period' | 'type'>)}-${
+              recurrenceByTax.tax
+            }`
+          ] = recurrenceByTax;
         });
-
         data.total_details.recurrences.push({
           ...recurrenceByBillingPeriodTotal,
-          recurrencesByTax: recurrencesByBillingPeriodWithTaxes as unknown as RecurrenceAmountWithTax[],
+          recurrencesByTax: recurrencesByBillingPeriodWithTaxes,
         });
       } else {
         data.total_details.recurrences.push(recurrenceByBillingPeriodTotal);
@@ -190,29 +186,23 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
      * Line items arrive with 1 price per line, regardless of whether they're simple or composite.
      * We need to "unwrap" price components into individual line items.
      */
-    const flattenLineItems = (
-      data.line_items as Array<(PriceItem | CompositePriceItem) & { _position: string }>
-    ).flatMap<PriceItems[number]>((item, itemIndex) => {
+    const flattenLineItems = (data.line_items as Array<any>).flatMap<PriceItems[number]>((item, itemIndex) => {
       const parentPosition = itemIndex + 1;
       item._position = fillPostSpaces(`${parentPosition}.`, 4);
-      if (!isCompositePrice(item) && Array.isArray(item.tiers_details)) {
+      if (Array.isArray(item.tiers_details)) {
         item.tiers_details = (item.tiers_details as Array<any>).map((tierDetail, tierDetailIndex) => ({
           ...tierDetail,
           _position: fillPostSpaces(`${parentPosition}.${tierDetailIndex + 1}.`, 6),
         }));
       }
 
-      let componentItems = [] as any;
+      let componentItems: any = [];
 
-      if (isCompositePrice(item)) {
+      if (item.is_composite_price || item._price?.is_composite_price) {
         item.is_composite_price = true;
         if (Array.isArray(item.item_components)) {
-          const clonedItem = clone(item);
-          componentItems = (
-            item.item_components as Array<
-              PriceItem & { _position: string; is_composite_component: boolean; parent_item: CompositePriceItem }
-            >
-          ).flatMap((component, componentIndex) => {
+          const clonedItem = cloneDeep(item);
+          componentItems = (item.item_components as Array<any>).flatMap((component, componentIndex) => {
             const childPosition = `${parentPosition}.${componentIndex + 1}`;
 
             component._position = fillPostSpaces(`${childPosition}.`, 6);
@@ -226,35 +216,28 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
               }));
             }
 
-            const couponItems = ((component._coupons as Array<Coupon> | undefined) ?? [])?.map<
-              PriceItem & { coupon: Coupon }
-            >((coupon) => ({ ...component, coupon }));
+            const couponItems = getCouponItems(component);
 
             return [component, ...couponItems];
           });
         }
       }
 
-      const couponItems = ((item._coupons as Array<Coupon> | undefined) ?? [])?.map<PriceItem & { coupon: Coupon }>(
-        (coupon) =>
-          ({
-            ...item,
-            coupon,
-          }) as any,
-      );
+      const couponItems = getCouponItems(item);
 
-      return [item, ...componentItems, ...couponItems];
+      return [item, ...couponItems, ...componentItems];
     });
 
     /**
      * @todo Type flattenLineItems correctly to enable correct computation of products below
      */
-    const lineItems = flattenLineItems.filter(Boolean) as any[];
+    const lineItems = flattenLineItems.filter(isTruthy) as any[];
     data.line_items = lineItems;
 
     const products = lineItems.map<Product>((item) => {
       /* If an item refers to a coupons, we want it to render the discount amounts */
       const isCoupon = Boolean(item.coupon);
+      const couponId = item.coupon?._id;
       const isDiscountCoupon = item.coupon?.category === 'discount';
       const isCashbackCoupon = item.coupon?.category === 'cashback';
       /* If an item contains coupons, we want it to render the before discount amounts */
@@ -262,7 +245,7 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
         !isCoupon && Boolean(item._coupons?.filter((coupon: Coupon) => coupon?.category === 'discount').length);
 
       const redeemedPromoCode: RedeemedPromo | undefined = data?.redeemed_promos?.find((promo: RedeemedPromo) =>
-        promo.coupons.some((c) => c._id === item.coupon?._id),
+        promo.coupons.some((c) => c._id === couponId),
       );
 
       /**
@@ -315,7 +298,16 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
       } else if (isDiscountCoupon) {
         amountTotal = -((item as PriceItem).discount_amount ?? 0);
       } else if (isCashbackCoupon) {
-        amountTotal = -((item as PriceItem).cashback_amount ?? 0);
+        if (isCompositePrice(item)) {
+          // for composite prices we can have multiple cashback coupons
+          // we need to find the one that belongs to the item of the current coupon product item
+          amountTotal = -(
+            (item as CompositePriceItem)._coupons?.find((coupon: Coupon) => coupon._id === couponId)?.cashback_amount ??
+            0
+          );
+        } else {
+          amountTotal = -((item as PriceItem).cashback_amount ?? 0);
+        }
       } else {
         amountTotal = (item as PriceItem).amount_total ?? 0;
       }
@@ -377,7 +369,10 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
             recurrences = processRecurrences(item, data as { currency?: Currency }, i18n);
           }
 
-          amountTotalFormatted = '';
+          if (!isCashbackCoupon) {
+            amountTotalFormatted = '';
+          }
+
           unitAmountNetFormatted = '';
           unitAmountFormatted = '';
           unitAmountSubtotalFormatted = '';
@@ -409,11 +404,11 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
       /**
        * Process Quantity data
        */
-      if (item._price?.variable_price) {
+      if (item._price?.variable_price && !isCoupon) {
         const itemPriceMapping = (item.parent_item ?? item).price_mappings?.find(
-          (mapping: { price_id: string }) => mapping.price_id === item.price_id,
+          (mapping: any) => mapping.price_id === item.price_id,
         );
-        if (item._price?.type !== 'one_time') {
+        if ((item.type && item.type !== 'one_time') || item._price?.type !== 'one_time') {
           item.quantity_billing_period = itemPriceMapping?.frequency_unit
             ? i18n.t('table_order.recurrences.billing_period.' + itemPriceMapping?.frequency_unit)
             : '';
@@ -436,17 +431,17 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
       const unit = formatPriceUnit(item._price?.unit, true);
       const tiersDetails = getFormattedTieredDetails(item.tiers_details, item, isUnitAmountApproved, i18n.language);
 
-      if (item._price?.billing_period) {
-        item._price.billing_period = i18n.t(
-          'table_order.recurrences.billing_period.' + item._price?.billing_period,
-          item._price?.billing_period,
+      if (item?.billing_period || item._price?.billing_period) {
+        item.billing_period = i18n.t(
+          'table_order.recurrences.billing_period.' + (item?.billing_period || item._price?.billing_period),
+          item?.billing_period || item._price?.billing_period,
         );
       }
 
       if (item.external_fees_metadata) {
         const unit =
           isCompositePrice(item) && Array.isArray(item._price?.price_components)
-            ? item._price?.price_components.find((component) => component.variable_price && component.unit)?.unit
+            ? item._price?.price_components.find((component: Price) => component.variable_price && component.unit)?.unit
             : item._price?.unit;
 
         item.external_fees_metadata = processExternalFeesMetadata(
@@ -471,13 +466,13 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
         ...baseProduct,
         ...(tiersDetails && { tiers_details: tiersDetails }),
         price: {
-          type: item._price?.type,
+          type: isCashbackCoupon ? 'one_time' : item.type || item._price?.type,
           description: item.is_composite_component
             ? (item.description ?? item._price?.description)
             : item._price?.description,
           long_description: item._price?.long_description,
-          unit_amount: unitAmountDisplayValue || '',
-          unit_amount_net: unitAmountNetDisplayValue || '',
+          unit_amount: isCashbackCoupon ? '' : unitAmountDisplayValue || '',
+          unit_amount_net: isCashbackCoupon ? '' : unitAmountNetDisplayValue || '',
           amount_subtotal: isUnitAmountApproved
             ? safeFormatAmount({
                 amount: item.amount_subtotal || 0,
@@ -510,9 +505,9 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
             : item.amount_tax,
           price_display_in_journeys: i18n.t(item._price?.price_display_in_journeys),
           billing_period:
-            item._price?.type === 'recurring'
-              ? item._price?.billing_period
-              : i18n.t(`table_order.recurrences.billing_period.${item._price?.type}`),
+            item?.type === 'recurring' || item._price?.type === 'recurring'
+              ? item?.billing_period
+              : i18n.t(`table_order.recurrences.billing_period.${item?.type || item._price?.type}`),
           quantity: quantityDisplayValue,
           quantity_billing_period: item.quantity_billing_period,
           unit: unit,
@@ -523,74 +518,19 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
             item._price?.pricing_model === PricingModel.tieredFlatFee,
         },
         ...item._product,
-        name: isCoupon ? item.coupon.name : item._product?.name || item.description,
+        name: isCoupon ? item.coupon.name : item?.product_name || item._product?.name || item.description,
         description: isCoupon
           ? getFormattedCouponDescription(item.coupon, i18n, redeemedPromoCode)
-          : (item._product?.description ?? item.description),
+          : item?.product_description || item._product?.description || item.description,
         is_composite_price: item.is_composite_price,
         is_composite_component: item.is_composite_component,
         type: i18n.t(item._product?.type),
       };
     });
 
-    /**
-     * @HACK To support orders with products and prices attributes hydrated and also renamed to _products and _prices,
-     * due to a bad design decision by sunwheel.
-     *
-     * Keep `products` and `prices` attribute values when present:
-     * - For some reason, sunwheel removed/overwrote them, but these attributes when specified on an entity are needed and should NOT be overwritten.
-     * - I'm prefixing them with an underscore to avoid conflicts with overwriter attributes (under use).
-     *
-     * Better approach: when we augment entities with extra data, we should place them under a proper namespace.
-     * Such as `$computed.products` and `$computed.prices`.
-     *
-     * Additionally, I need to hydrate these relation attributes to be able to use them in the template.
-     * I could hydrate them on the template root, but I wouldn't know what would break bcoz of that. Many parts of the code depend on
-     * non hydrated entities `$relation`. Since the code seems to hydrate manually through some sort of cache.
-     *
-     * @author Pinho
-     */
-    // const [hydratedProducts = [], hydratedPrices = []] = await Promise.all([
-    //   hydrateRelation(c, 'product', data.products),
-    //   hydrateRelation(c, 'price', data.prices),
-    // ]);
-
-    /**
-     * Hydrate cross sellable products
-     * usecase: #meerbusch-poc-taskforce
-     */
-    // const hydratedProductsWithCrossSell = await hydrateCrossSellableProducts(c, hydratedProducts as Product[]);
-
-    /**
-     * TODO: we should come up with a v3 in which we drop support for these.
-     */
-    // data._products = hydratedProductsWithCrossSell;
-    // data._prices = hydratedPrices;
-
-    /**
-     * From v1 onwards we make relation attributes available using the syntax of $<schema-name>.
-     *
-     * Since the process-order-table/order table transformer is destructive on the products and prices attributes,
-     * we need to compute these $relation attributes here in an harded-code way.
-     */
-    // if (Array.isArray(hydratedProductsWithCrossSell) && hydratedProductsWithCrossSell.length) {
-    //   data.$product = hydratedProductsWithCrossSell.filter(Boolean).map(
-    //     /* Omit unecessary keys */
-    //     ({ _acl, _relations, product_images, product_downloads, workflows, $relation, ...partialProduct }: Product) =>
-    //       partialProduct,
-    //   );
-    // }
-
-    // if (Array.isArray(hydratedPrices) && hydratedPrices.length) {
-    //   data.$price = (hydratedPrices as unknown[] as Price[]).filter(Boolean).map((price) => {
-    //     const { _acl, _relations, workflows, $relation, ...partialPrice } = price;
-
-    //     return partialPrice;
-    //   });
-    // }
-
     data.products = products;
     data.product = products?.[0];
+
     delete data.prices;
     delete data.price;
 
@@ -604,12 +544,13 @@ export const processOrderTableData = (order: Order, i18n: I18n) => {
       currency: data.currency,
       locale: i18n.language,
     });
+
     if (data.total_details?.amount_tax) {
       data.total_details.amount_tax = safeFormatAmount({
         amount: data.total_details.amount_tax || 0,
         currency: data.currency,
         locale: i18n.language,
-      }) as never;
+      });
     }
   }
 

@@ -393,17 +393,26 @@ export const processTaxRecurrences = (
   return taxes;
 };
 
-export const getTaxRate = (source: any, i18n: I18n, index = 0) => {
-  if (source.taxes?.[index]?.rate) {
-    const taxRate = source.taxes?.[index]?.rate as string | undefined;
-    return taxRate && taxRate in TEMPORARY_TAX_MAPPER
-      ? TEMPORARY_TAX_MAPPER[taxRate as TaxRateName]
-      : i18n.t('table_order.no_tax');
-  } else if (source.taxes?.[index]?.tax?.rate) {
-    return source.taxes?.[index]?.tax?.rate + '%';
+export const getTaxRate = (source: any, i18n: any, index = 0) => {
+  const tax = source.taxes?.[index]?.tax;
+
+  if (tax !== undefined) {
+    const rate = tax.rate;
+    const description = tax.description;
+
+    if (rate === null) {
+      return description || i18n.t('table_order.no_tax', '(no tax)');
+    }
+
+    const mappedRate = TEMPORARY_TAX_MAPPER[rate as TaxRateName];
+    if (mappedRate) {
+      return mappedRate;
+    }
+
+    return rate ? `${rate}%` : i18n.t('table_order.no_tax', '(no tax)');
   }
 
-  return i18n.t('table_order.no_tax');
+  return i18n.t('table_order.no_tax', '(no tax)');
 };
 
 export const getFormattedTieredDetails = (

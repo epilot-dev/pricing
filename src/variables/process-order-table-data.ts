@@ -1,5 +1,4 @@
 import type { Currency } from 'dinero.js';
-import { cloneDeep } from 'lodash';
 import { formatPriceUnit } from '../money/formatters';
 import { PricingModel } from '../prices/constants';
 import { getRecurrencesWithEstimatedPrices } from '../prices/get-recurrences-with-estimated-prices';
@@ -18,6 +17,7 @@ import type {
 } from '../shared/types';
 import { RECURRENCE_ORDERING } from './constants';
 import {
+  clone,
   computeRecurrenceAmounts,
   EMPTY_VALUE_PLACEHOLDER,
   fillPostSpaces,
@@ -201,7 +201,7 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
       if (item.is_composite_price || item._price?.is_composite_price) {
         item.is_composite_price = true;
         if (Array.isArray(item.item_components)) {
-          const clonedItem = cloneDeep(item);
+          const clonedItem = clone(item);
           componentItems = (item.item_components as Array<any>).flatMap((component, componentIndex) => {
             const childPosition = `${parentPosition}.${componentIndex + 1}`;
 

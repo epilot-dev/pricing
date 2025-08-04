@@ -1,4 +1,3 @@
-import { cloneDeep } from 'lodash';
 import { formatAmount, formatAmountFromString, formatPriceUnit } from '../money/formatters';
 import { toDinero } from '../money/to-dinero';
 import { PricingModel } from '../prices/constants';
@@ -702,11 +701,18 @@ const normalizeToYearlyAmounts = (
 };
 
 export const getCouponItems = (item: PriceItem): (PriceItem & { coupon: Coupon })[] => {
-  const clonedItem = cloneDeep(item);
+  const clonedItem = clone(item);
 
   const couponItems = ((clonedItem._coupons as Array<Coupon> | undefined) ?? [])?.map<PriceItem & { coupon: Coupon }>(
     (coupon) => ({ ...clonedItem, coupon }),
   );
 
   return couponItems;
+};
+
+export const clone = <T>(item: T): T => {
+  if (!item) {
+    return item;
+  }
+  return JSON.parse(JSON.stringify(item));
 };

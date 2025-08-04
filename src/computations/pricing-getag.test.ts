@@ -138,11 +138,120 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
           unit_amount_gross_decimal: '0.1414434',
           unit_amount_net: 12,
           unit_amount_net_decimal: '0.11886',
+          markup_total_amount_net: 10,
+          markup_total_amount_gross: 12,
           category: 'power',
         }),
       );
     });
 
+    it('returns the correct markups if tax is not inclusive with additional markups', () => {
+      const priceItems = [
+        {
+          ...priceGetAG,
+          _price: {
+            ...priceGetAG._price,
+            is_tax_inclusive: false,
+            get_ag: {
+              ...priceGetAG._price?.get_ag,
+              additional_markups_enabled: true,
+              additional_markups: {
+                procurement: {
+                  amount_decimal: '0.05',
+                  amount: 5,
+                },
+              },
+            },
+          },
+        } as PriceItemDto,
+      ];
+
+      const result = computeAggregatedAndPriceTotals(priceItems);
+
+      expect((result.items?.[0] as PriceItem).get_ag).toStrictEqual(
+        expect.objectContaining({
+          additional_markups_enabled: true,
+          additional_markups: {
+            procurement: {
+              amount_decimal: '0.05',
+              amount: 5,
+              amount_net: 5,
+              amount_gross: 6,
+              amount_gross_decimal: '0.0595',
+              amount_net_decimal: '0.05',
+            },
+          },
+          markup_amount_net_decimal: '0.1',
+          markup_amount_net: 10,
+          markup_amount: 10,
+          markup_amount_decimal: '0.10',
+          markup_total_amount_gross: 18,
+          markup_total_amount_gross_decimal: '0.1785',
+          unit_amount_gross: 14,
+          unit_amount_gross_decimal: '0.1414434',
+          unit_amount_net: 12,
+          unit_amount_net_decimal: '0.11886',
+          markup_total_amount_net: 15,
+          markup_total_amount_net_decimal: '0.15',
+          category: 'power',
+          type: 'work_price',
+        }),
+      );
+    });
+
+    it('returns the correct markups if tax is inclusive with additional markups', () => {
+      const priceItems = [
+        {
+          ...priceGetAG,
+          _price: {
+            ...priceGetAG._price,
+            is_tax_inclusive: true,
+            get_ag: {
+              ...priceGetAG._price?.get_ag,
+              additional_markups_enabled: true,
+              additional_markups: {
+                procurement: {
+                  amount_decimal: '0.05',
+                  amount: 5,
+                },
+              },
+            },
+          },
+        } as PriceItemDto,
+      ];
+
+      const result = computeAggregatedAndPriceTotals(priceItems);
+
+      expect((result.items?.[0] as PriceItem).get_ag).toStrictEqual(
+        expect.objectContaining({
+          additional_markups_enabled: true,
+          additional_markups: {
+            procurement: {
+              amount_decimal: '0.05',
+              amount: 5,
+              amount_gross: 5,
+              amount_gross_decimal: '0.05',
+              amount_net: 4,
+              amount_net_decimal: '0.042016806723',
+            },
+          },
+          markup_amount_gross: 10,
+          markup_amount_gross_decimal: '0.1',
+          markup_amount_net: 8,
+          markup_amount_net_decimal: '0.084033613445',
+          markup_total_amount_gross: 15,
+          markup_total_amount_gross_decimal: '0.15',
+          markup_total_amount_net: 13,
+          markup_total_amount_net_decimal: '0.126050420168',
+          unit_amount_gross: 14,
+          unit_amount_gross_decimal: '0.1414434',
+          unit_amount_net: 12,
+          unit_amount_net_decimal: '0.11886',
+          category: 'power',
+          type: 'work_price',
+        }),
+      );
+    });
     describe('when margins are tiered', () => {
       describe('when model is tiered_volume', () => {
         it('returns the correct amount_total', () => {

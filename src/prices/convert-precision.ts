@@ -140,6 +140,32 @@ export const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): 
           .convertPrecision(precision)
           .getAmount(),
         markup_amount_gross_decimal: toDineroFromInteger(priceItem.get_ag.markup_amount_gross!).toUnit().toString(),
+        additional_markups: Object.entries(priceItem.get_ag.additional_markups || {}).reduce(
+          (acc, [key, value]) => ({
+            ...acc,
+            [key]: {
+              amount: value.amount,
+              amount_net: toDineroFromInteger(value.amount_net!).convertPrecision(precision).getAmount(),
+              amount_gross: toDineroFromInteger(value.amount_gross!).convertPrecision(precision).getAmount(),
+              amount_decimal: value.amount_decimal,
+              amount_net_decimal: toDineroFromInteger(value.amount_net!).toUnit().toString(),
+              amount_gross_decimal: toDineroFromInteger(value.amount_gross!).toUnit().toString(),
+            },
+          }),
+          {},
+        ),
+        markup_total_amount_net: toDineroFromInteger(priceItem.get_ag.markup_total_amount_net!)
+          .convertPrecision(precision)
+          .getAmount(),
+        markup_total_amount_net_decimal: toDineroFromInteger(priceItem.get_ag.markup_total_amount_net!)
+          .toUnit()
+          .toString(),
+        markup_total_amount_gross: toDineroFromInteger(priceItem.get_ag.markup_total_amount_gross!)
+          .convertPrecision(precision)
+          .getAmount(),
+        markup_total_amount_gross_decimal: toDineroFromInteger(priceItem.get_ag.markup_total_amount_gross!)
+          .toUnit()
+          .toString(),
       },
     }),
   ...(priceItem.dynamic_tariff &&

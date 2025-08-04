@@ -37,12 +37,15 @@ export const computeExternalGetAGItemValues = ({
         unit_amount_gross: 0,
         markup_amount_net: 0,
         markup_amount_gross: 0,
+        markup_total_amount_net: 0,
+        markup_total_amount_gross: 0,
       },
     };
   }
 
   const taxRate = getTaxValue(tax);
 
+  // Markup
   const markupValues =
     getAg.markup_pricing_model === MarkupPricingModel.tieredVolume && getAg.markup_tiers
       ? computeTieredVolumePriceItemValues({
@@ -79,6 +82,60 @@ export const computeExternalGetAGItemValues = ({
           } as PriceItemsTotals);
 
   const relevantTier = markupValues.tiers_details?.[0]; // Changed ?. to && since we need both checks
+
+  // Additional Markups - Unit Amounts
+  const unitAmountsAdditionalMarkups =
+    getAg.type === TypeGetAg.workPrice && getAg.additional_markups_enabled && getAg.additional_markups
+      ? Object.entries(getAg.additional_markups).reduce(
+          (acc, [key, value]) => ({
+            ...acc,
+            [key]: {
+              amount_net: isTaxInclusive
+                ? toDinero(value.amount_decimal)
+                    .divide(1 + taxRate)
+                    .getAmount()
+                : toDinero(value.amount_decimal).getAmount(),
+              amount_gross: isTaxInclusive
+                ? toDinero(value.amount_decimal).getAmount()
+                : toDinero(value.amount_decimal)
+                    .multiply(1 + taxRate)
+                    .getAmount(),
+              amount_decimal: value.amount_decimal,
+              amount: value.amount,
+            },
+          }),
+          {} as PriceGetAg['additional_markups'],
+        )
+      : undefined;
+
+  // Total Additional Markup Amounts (sum of all additional markups)
+  const totalAdditionalMarkupValues = unitAmountsAdditionalMarkups
+    ? Object.values(unitAmountsAdditionalMarkups).reduce(
+        (acc, curr) => ({
+          amount_net: toDineroFromInteger(acc.amount_net || 0)
+            .add(toDineroFromInteger(curr.amount_net || 0))
+            .getAmount(),
+          amount_gross: toDineroFromInteger(acc.amount_gross || 0)
+            .add(toDineroFromInteger(curr.amount_gross || 0))
+            .getAmount(),
+        }),
+        { amount_net: 0, amount_gross: 0 },
+      )
+    : undefined;
+
+  // Total Markups (sum of all markups)
+  const totalMarkupValues = totalAdditionalMarkupValues
+    ? {
+        unit_amount_net: toDineroFromInteger(markupValues.unit_amount_net || 0)
+          .add(toDineroFromInteger(totalAdditionalMarkupValues.amount_net || 0))
+          .getAmount(),
+        unit_amount_gross: toDineroFromInteger(markupValues.unit_amount_gross || 0)
+          .add(toDineroFromInteger(totalAdditionalMarkupValues.amount_gross || 0))
+          .getAmount(),
+      }
+    : markupValues;
+
+  // Fee Amount
   const unitAmountGetAgFeeNet =
     getAg.type === TypeGetAg.basePrice
       ? toDinero(externalFeeAmountDecimal)
@@ -86,12 +143,15 @@ export const computeExternalGetAGItemValues = ({
   const unitAmountGetAgFeeGross = unitAmountGetAgFeeNet.multiply(1 + taxRate);
 
   // Unit Amount = Markup amount + Fee Amount
-  const unitAmountNet = unitAmountGetAgFeeNet.add(toDineroFromInteger(markupValues.unit_amount_net || 0));
+  const unitAmountNet = unitAmountGetAgFeeNet.add(toDineroFromInteger(totalMarkupValues.unit_amount_net || 0));
 
   const unitAmountGross = unitAmountNet.multiply(1 + taxRate);
   const unitTaxAmount = unitAmountGross.subtract(unitAmountNet);
+
   const unitAmountMarkupNet = toDineroFromInteger(markupValues.unit_amount_net || 0);
   const unitAmountMarkupGross = toDineroFromInteger(markupValues.unit_amount_gross || 0);
+  const unitAmountTotalMarkupNet = toDineroFromInteger(totalMarkupValues.unit_amount_net || 0);
+  const unitAmountTotalMarkupGross = toDineroFromInteger(totalMarkupValues.unit_amount_gross || 0);
 
   // Amount Subtotal = Unit Amount Net * Quantity
   const amountSubtotal =
@@ -113,6 +173,9 @@ export const computeExternalGetAGItemValues = ({
       markup_amount_net: unitAmountMarkupNet.getAmount(),
       markup_amount_gross: unitAmountMarkupGross.getAmount(),
       markup_amount: (relevantTier ? relevantTier?.unit_amount : getAg.markup_amount) || 0,
+      markup_total_amount_net: unitAmountTotalMarkupNet.getAmount(),
+      markup_total_amount_gross: unitAmountTotalMarkupGross.getAmount(),
+      additional_markups: unitAmountsAdditionalMarkups,
       // ToDo: Move the computation of the decimal value on the convert precision step
       markup_amount_decimal: (relevantTier ? relevantTier?.unit_amount_decimal : getAg.markup_amount_decimal) || '0',
     },

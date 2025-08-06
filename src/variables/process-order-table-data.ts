@@ -465,6 +465,7 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
       return {
         ...baseProduct,
         price: {
+          ...(tiersDetails && tiersDetails.length > 1 && { tiers_details: tiersDetails }),
           type: isCashbackCoupon ? 'one_time' : item.type || item._price?.type,
           description: item.is_composite_component
             ? (item.description ?? item._price?.description)

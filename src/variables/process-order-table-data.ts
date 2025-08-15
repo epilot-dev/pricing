@@ -2,6 +2,7 @@ import type { Currency } from 'dinero.js';
 import { formatPriceUnit } from '../money/formatters';
 import { PricingModel } from '../prices/constants';
 import { getRecurrencesWithEstimatedPrices } from '../prices/get-recurrences-with-estimated-prices';
+import { isCompositePrice } from '../prices/utils';
 import { isTruthy } from '../shared/is-truthy';
 import type {
   I18n,
@@ -31,7 +32,6 @@ import {
   getSafeAmount,
   getTaxRate,
   getUnitAmount,
-  isCompositePrice,
   processExternalFeesMetadata,
   processRecurrences,
   processTaxRecurrences,

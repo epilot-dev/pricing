@@ -1,6 +1,7 @@
 import { formatAmount, formatAmountFromString, formatPriceUnit } from '../money/formatters';
 import { toDinero } from '../money/to-dinero';
 import { PricingModel } from '../prices/constants';
+import { isCompositePrice } from '../prices/utils';
 import { isTruthy } from '../shared/is-truthy';
 import type {
   Currency,
@@ -466,9 +467,6 @@ export const getFormattedTieredDetails = (
     }) ?? []
   );
 };
-
-export const isCompositePrice = (priceItem: PriceItem | CompositePriceItem): priceItem is CompositePriceItem =>
-  Boolean(priceItem.is_composite_price || priceItem._price?.is_composite_price);
 
 export const getQuantity = (item: PriceItem, parentItem?: PriceItem) => {
   if (!parentItem && item._price?.variable_price) {

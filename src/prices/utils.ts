@@ -18,3 +18,6 @@ export const isCompositePriceItem = (priceItem: PriceItem | CompositePriceItem):
 export const isCompositePriceItemDto = (
   priceItem: PriceItemDto | CompositePriceItemDto,
 ): priceItem is CompositePriceItemDto => Boolean(priceItem.is_composite_price || priceItem._price?.is_composite_price);
+
+export const isCompositePrice = (priceItem: PriceItem | CompositePriceItem): priceItem is CompositePriceItem =>
+  Boolean(priceItem.is_composite_price || priceItem._price?.is_composite_price);

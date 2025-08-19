@@ -602,8 +602,6 @@ describe('computeAggregatedAndPriceTotals', () => {
 
         const result = computeAggregatedAndPriceTotals(priceItems);
 
-        console.log(result.amount_total);
-
         expect(result).toEqual(
           expect.objectContaining({
             amount_total: 1000,

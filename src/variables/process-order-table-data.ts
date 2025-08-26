@@ -417,7 +417,6 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
 
       // Remove unnecessary data
       delete item._product?.price_options;
-      delete item._product?.product_images;
       delete item._product?._availability_files;
       delete item.item_components;
 
@@ -465,6 +464,7 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
       return {
         ...baseProduct,
         ...(tiersDetails && tiersDetails.length > 1 && { tiers_details: tiersDetails }),
+        product_images: item._product?.product_images,
         price: {
           type: isCashbackCoupon ? 'one_time' : item.type || item._price?.type,
           description: item.is_composite_component

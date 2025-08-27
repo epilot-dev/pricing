@@ -11,6 +11,7 @@ import {
   invalidOrderEntityData,
 } from './__tests__/orders.fixtures';
 import { processOrderTableData } from './process-order-table-data';
+import type { PriceDisplayType } from './types';
 import { getHiddenAmountString, getPriceDisplayInJourneys, getQuantity, unitAmountApproved } from './utils';
 
 const mockI18n = {
@@ -278,6 +279,7 @@ describe('unitAmountApproved', () => {
 describe('getHiddenAmountString', () => {
   it('should return "---" for a composite price with no matching component', async () => {
     const priceItem = {
+      is_composite_price: true,
       _price: {
         price_display_in_journeys: 'show_as_on_request',
       },
@@ -297,6 +299,7 @@ describe('getHiddenAmountString', () => {
 
   it('should return the translation for a composite price', async () => {
     const priceItem = {
+      is_composite_price: true,
       _price: {
         price_display_in_journeys: 'show_as_on_request',
       },
@@ -321,15 +324,17 @@ describe('getHiddenAmountString', () => {
 
   it('should return the translation for a non-composite price with a parentItem', async () => {
     const priceItem = {
+      pricing_model: 'per_unit',
       _price: {
-        price_display_in_journeys: 'other_value',
+        price_display_in_journeys: 'other_value' as PriceDisplayType,
+        pricing_model: 'per_unit',
       },
       parent_item: {
         _price: {
           price_display_in_journeys: 'show_as_on_request',
         },
       },
-    };
+    } as PriceItem;
 
     const result = getHiddenAmountString(mockI18n.t, getPriceDisplayInJourneys(priceItem));
 
@@ -341,7 +346,7 @@ describe('getHiddenAmountString', () => {
       _price: {
         price_display_in_journeys: 'show_as_on_request',
       },
-    };
+    } as PriceItem;
 
     const result = getHiddenAmountString(mockI18n.t, getPriceDisplayInJourneys(priceItem));
     const resultWithAmount = getHiddenAmountString(mockI18n.t, getPriceDisplayInJourneys(priceItem), '€123.45');
@@ -355,7 +360,7 @@ describe('getHiddenAmountString', () => {
       _price: {
         price_display_in_journeys: 'show_as_starting_price',
       },
-    };
+    } as PriceItem;
 
     const resultWithFormattedString = getHiddenAmountString(
       mockI18n.t,

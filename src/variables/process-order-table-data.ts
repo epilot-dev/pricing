@@ -18,6 +18,7 @@ import type {
 } from '../shared/types';
 import { RECURRENCE_ORDERING } from './constants';
 import { processExternalFeesMetadata } from './getag/metadata';
+import { processExternalFeesTable } from './getag/table';
 import {
   clone,
   computeRecurrenceAmounts,
@@ -415,6 +416,28 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
         }
       }
 
+      if (item.external_fees_metadata) {
+        const unit =
+          isCompositePrice(item) && Array.isArray(item._price?.price_components)
+            ? item._price?.price_components.find((component: Price) => component.variable_price && component.unit)?.unit
+            : item._price?.unit;
+
+        item.external_fees_table = processExternalFeesTable(
+          item,
+          item.external_fees_metadata,
+          item.currency,
+          i18n,
+          unit,
+        );
+
+        item.external_fees_metadata = processExternalFeesMetadata(
+          item.external_fees_metadata,
+          item.currency,
+          i18n,
+          unit,
+        );
+      }
+
       // Remove unnecessary data
       delete item._product?.price_options;
       delete item._product?.product_images;
@@ -435,20 +458,6 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
         item.billing_period = i18n.t(
           'table_order.recurrences.billing_period.' + (item?.billing_period || item._price?.billing_period),
           item?.billing_period || item._price?.billing_period,
-        );
-      }
-
-      if (item.external_fees_metadata) {
-        const unit =
-          isCompositePrice(item) && Array.isArray(item._price?.price_components)
-            ? item._price?.price_components.find((component: Price) => component.variable_price && component.unit)?.unit
-            : item._price?.unit;
-
-        item.external_fees_metadata = processExternalFeesMetadata(
-          item.external_fees_metadata,
-          item.currency,
-          i18n,
-          unit,
         );
       }
 

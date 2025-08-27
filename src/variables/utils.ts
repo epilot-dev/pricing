@@ -1,5 +1,4 @@
 import { formatAmount, formatAmountFromString, formatPriceUnit } from '../money/formatters';
-import { toDinero } from '../money/to-dinero';
 import { PricingModel } from '../prices/constants';
 import { isCompositePrice } from '../prices/utils';
 import { isTruthy } from '../shared/is-truthy';
@@ -18,10 +17,10 @@ import type {
   Coupon,
 } from '../shared/types';
 import { getDisplayTierByQuantity, getTierDescription } from '../tiers/utils';
-import { normalizeTimeFrequency, normalizeValueToFrequencyUnit } from '../time-frequency/normalizers';
+import { normalizeTimeFrequency } from '../time-frequency/normalizers';
 import type { TimeFrequency } from '../time-frequency/types';
 import { RECURRENCE_ORDERING } from './constants';
-import type { ExternalFeesMetadata, GetTieredUnitAmountOptions, PriceDisplayType, PriceItemWithParent } from './types';
+import type { GetTieredUnitAmountOptions, PriceDisplayType, PriceItemWithParent } from './types';
 
 export const EMPTY_VALUE_PLACEHOLDER = '---';
 const TEMPORARY_TAX_MAPPER = {
@@ -393,7 +392,12 @@ export const processTaxRecurrences = (
   return taxes;
 };
 
-export const getTaxRate = (source: any, i18n: any, index = 0) => {
+export const getTaxRate = (
+  source: any,
+  i18n: any,
+  index = 0,
+  emptyTaxPlaceholder = i18n.t('table_order.no_tax', '(no tax)'),
+) => {
   const tax = source.taxes?.[index]?.tax;
 
   if (tax !== undefined) {
@@ -401,7 +405,7 @@ export const getTaxRate = (source: any, i18n: any, index = 0) => {
     const description = tax.description;
 
     if (rate === null) {
-      return description || i18n.t('table_order.no_tax', '(no tax)');
+      return description || emptyTaxPlaceholder;
     }
 
     const mappedRate = TEMPORARY_TAX_MAPPER[rate as TaxRateName];
@@ -409,10 +413,10 @@ export const getTaxRate = (source: any, i18n: any, index = 0) => {
       return mappedRate;
     }
 
-    return rate ? `${rate}%` : i18n.t('table_order.no_tax', '(no tax)');
+    return rate ? `${rate}%` : emptyTaxPlaceholder;
   }
 
-  return i18n.t('table_order.no_tax', '(no tax)');
+  return emptyTaxPlaceholder;
 };
 
 export const getFormattedTieredDetails = (

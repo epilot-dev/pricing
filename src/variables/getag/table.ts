@@ -1,8 +1,8 @@
 import type { Currency, TimeFrequency } from '@epilot/pricing';
-import type { CompositePriceItem, PriceItem, Tax } from '@epilot/pricing-client';
+import type { CompositePriceItem, PriceItem } from '@epilot/pricing-client';
 import { formatPriceUnit } from '../../money/formatters';
-import { isCompositePrice } from '../../prices/utils';
 import type { I18n } from '../../shared/types';
+import { extractTaxFromPriceItem } from '../../taxes/extract-tax-from-price';
 import type { ExternalFeesMetadata, ExternalFeesTable } from '../types';
 import { processExternalDisplayFeesTable } from './display-fees-table';
 import { processMarkupsFeesTable } from './markup-fees-table';
@@ -19,25 +19,8 @@ export const processExternalFeesTable = (
 ) => {
   const unitPricePeriod: TimeFrequency = 'monthly';
   const billingPeriod = externalFeesMetadata.billing_period as TimeFrequency;
-
-  // TODO: find a better way to get the tax
-  let tax: Tax | undefined;
-
-  if (isCompositePrice(item) && item._price?.price_components) {
-    const componentWithTax = Array.isArray(item._price.price_components)
-      ? item._price.price_components.find(
-          (component) => component.tax && Array.isArray(component.tax) && component.tax.length > 0,
-        )
-      : undefined;
-    if (componentWithTax && componentWithTax.tax && Array.isArray(componentWithTax.tax)) {
-      tax = componentWithTax.tax[0];
-    }
-  } else if (item._price?.tax && Array.isArray(item._price.tax) && item._price.tax.length > 0) {
-    tax = item._price.tax[0];
-  }
-
+  const tax = extractTaxFromPriceItem(item);
   const taxRate = tax?.rate;
-
   const formattedUnit = formatPriceUnit(unit, true);
 
   const result: Partial<ExternalFeesTable> = {

@@ -17,6 +17,7 @@ import type {
   Price,
 } from '../shared/types';
 import { RECURRENCE_ORDERING } from './constants';
+import { processExternalFeesMetadata } from './getag/metadata';
 import {
   clone,
   computeRecurrenceAmounts,
@@ -32,7 +33,6 @@ import {
   getSafeAmount,
   getTaxRate,
   getUnitAmount,
-  processExternalFeesMetadata,
   processRecurrences,
   processTaxRecurrences,
   safeFormatAmount,

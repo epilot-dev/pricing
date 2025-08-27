@@ -17,8 +17,7 @@ import type {
   Price,
 } from '../shared/types';
 import { RECURRENCE_ORDERING } from './constants';
-import { processExternalFeesMetadata } from './getag/metadata';
-import { processExternalFeesTable } from './getag/table';
+import { processExternalFeesDetails } from './getag/details';
 import {
   clone,
   computeRecurrenceAmounts,
@@ -422,15 +421,8 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
             ? item._price?.price_components.find((component: Price) => component.variable_price && component.unit)?.unit
             : item._price?.unit;
 
-        item.external_fees_table = processExternalFeesTable(
+        item.external_fees_details = processExternalFeesDetails(
           item,
-          item.external_fees_metadata,
-          item.currency,
-          i18n,
-          unit,
-        );
-
-        item.external_fees_metadata = processExternalFeesMetadata(
           item.external_fees_metadata,
           item.currency,
           i18n,

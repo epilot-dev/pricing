@@ -1,6 +1,6 @@
-import type { ExternalFeesTable } from '../types';
+import type { ExternalFeesDetails } from '../types';
 
-export const processExternalDisplayFeesTable = (result: ExternalFeesTable) => {
+export const processExternalDisplayFeesDetails = (result: ExternalFeesDetails) => {
   // Add aggregated display breakdowns for groups + result
   const groups = Object.values(result.groups || {});
 

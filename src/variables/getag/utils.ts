@@ -6,7 +6,7 @@ import type { Currency, I18n, Tax } from '../../shared/types';
 import { getAmountWithTax } from '../../taxes/get-amount-with-tax';
 import { normalizeValueToFrequencyUnit } from '../../time-frequency/normalizers';
 import type { TimeFrequency } from '../../time-frequency/types';
-import type { ExternalFeesMetadata, ExternalFeesTableFee, StaticFee, VariableFee } from '../types';
+import type { ExternalFeesMetadata, ExternalFeesDetailsFee, StaticFee, VariableFee } from '../types';
 import { safeFormatAmount } from '../utils';
 
 const normalizeToYearlyAmounts = (
@@ -87,16 +87,25 @@ const isVariableFee = (fee: StaticFee | VariableFee): fee is VariableFee => {
   return fee != null && 'unit_amount' in fee;
 };
 
-const getTableFee = (
-  fee: StaticFee | VariableFee | undefined,
-  label: string,
-  currency: Currency,
-  i18n: I18n,
-  billingPeriod: TimeFrequency,
-  unitPricePeriod: TimeFrequency,
-  tax?: Tax,
-  variableUnit?: string,
-): ExternalFeesTableFee | undefined => {
+const getDetailsFee = ({
+  fee,
+  label,
+  currency,
+  i18n,
+  billingPeriod,
+  unitPricePeriod,
+  tax,
+  variableUnit,
+}: {
+  fee: StaticFee | VariableFee | undefined;
+  label: string;
+  currency: Currency;
+  i18n: I18n;
+  billingPeriod: TimeFrequency;
+  unitPricePeriod: TimeFrequency;
+  tax?: Tax;
+  variableUnit?: string;
+}): ExternalFeesDetailsFee | undefined => {
   if (!fee) {
     return undefined;
   }
@@ -155,9 +164,18 @@ const getTableFee = (
   }
 };
 
-const getMarkupTableFee = (
-  priceGetAgConfig: PriceGetAg | undefined,
-  externalFeesMetadata: ExternalFeesMetadata,
+const getMarkupDetailsFee = ({
+  priceGetAgConfig,
+  externalFeesMetadata,
+  options,
+  currency,
+  i18n,
+  billingPeriod,
+  unitPricePeriod,
+  variableUnit,
+}: {
+  priceGetAgConfig: PriceGetAg | undefined;
+  externalFeesMetadata: ExternalFeesMetadata;
   options:
     | {
         type: 'base_price';
@@ -170,13 +188,13 @@ const getMarkupTableFee = (
         type: 'additional_markup';
         tariffType: TariffTypeGetAg;
         key: string;
-      },
-  currency: Currency,
-  i18n: I18n,
-  billingPeriod: TimeFrequency,
-  unitPricePeriod: TimeFrequency,
-  variableUnit?: string,
-): ExternalFeesTableFee | undefined => {
+      };
+  currency: Currency;
+  i18n: I18n;
+  billingPeriod: TimeFrequency;
+  unitPricePeriod: TimeFrequency;
+  variableUnit?: string;
+}): ExternalFeesDetailsFee | undefined => {
   if (!priceGetAgConfig) {
     return undefined;
   }
@@ -288,8 +306,8 @@ export {
   getConsumptionBasedAmounts,
   getNormalizedAmountDecimal,
   getYearlyDecimalAmount,
-  getTableFee,
-  getMarkupTableFee,
+  getDetailsFee,
+  getMarkupDetailsFee,
   normalizeToYearlyAmounts,
   isVariableFee,
 };

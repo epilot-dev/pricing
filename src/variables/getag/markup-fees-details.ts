@@ -1,11 +1,11 @@
 import { extractGetAgConfig } from '../../getag/extract-config';
 import type { CompositePriceItem, Currency, I18n, PriceItem } from '../../shared/types';
 import type { TimeFrequency } from '../../time-frequency/types';
-import type { ExternalFeesMetadata, ExternalFeesTable, ExternalFeesTableGroup } from '../types';
-import { getMarkupTableFee } from './utils';
+import type { ExternalFeesMetadata, ExternalFeesDetails, ExternalFeesDetailsGroup } from '../types';
+import { getMarkupDetailsFee } from './utils';
 
-export const processMarkupsFeesTable = (
-  result: Partial<ExternalFeesTable> = {},
+export const processMarkupsFeesDetails = (
+  result: Partial<ExternalFeesDetails> = {},
   item: PriceItem | CompositePriceItem,
   externalFeesMetadata: ExternalFeesMetadata,
   currency: Currency,
@@ -18,60 +18,60 @@ export const processMarkupsFeesTable = (
   const workPrice = extractGetAgConfig(item, { type: 'work_price', tariffType: 'HT' });
   const workPriceNT = extractGetAgConfig(item, { type: 'work_price', tariffType: 'NT' });
 
-  const markupBasePrice = getMarkupTableFee(
-    basePrice,
+  const markupBasePrice = getMarkupDetailsFee({
+    priceGetAgConfig: basePrice,
     externalFeesMetadata,
-    { type: 'base_price' },
+    options: { type: 'base_price' },
     currency,
     i18n,
     billingPeriod,
     unitPricePeriod,
     variableUnit,
-  );
+  });
 
-  const markupWorkPrice = getMarkupTableFee(
-    workPrice,
+  const markupWorkPrice = getMarkupDetailsFee({
+    priceGetAgConfig: workPrice,
     externalFeesMetadata,
-    { type: 'work_price', tariffType: 'HT' },
+    options: { type: 'work_price', tariffType: 'HT' },
     currency,
     i18n,
     billingPeriod,
     unitPricePeriod,
     variableUnit,
-  );
+  });
 
-  const markupWorkPriceNT = getMarkupTableFee(
-    workPriceNT,
+  const markupWorkPriceNT = getMarkupDetailsFee({
+    priceGetAgConfig: workPriceNT,
     externalFeesMetadata,
-    { type: 'work_price', tariffType: 'NT' },
+    options: { type: 'work_price', tariffType: 'NT' },
     currency,
     i18n,
     billingPeriod,
     unitPricePeriod,
     variableUnit,
-  );
+  });
 
-  const procurementMarkup = getMarkupTableFee(
-    workPrice,
+  const procurementMarkup = getMarkupDetailsFee({
+    priceGetAgConfig: workPrice,
     externalFeesMetadata,
-    { type: 'additional_markup', tariffType: 'HT', key: 'procurement' },
+    options: { type: 'additional_markup', tariffType: 'HT', key: 'procurement' },
     currency,
     i18n,
     billingPeriod,
     unitPricePeriod,
     variableUnit,
-  );
+  });
 
-  const procurementMarkupNT = getMarkupTableFee(
-    workPriceNT,
+  const procurementMarkupNT = getMarkupDetailsFee({
+    priceGetAgConfig: workPriceNT,
     externalFeesMetadata,
-    { type: 'additional_markup', tariffType: 'NT', key: 'procurement' },
+    options: { type: 'additional_markup', tariffType: 'NT', key: 'procurement' },
     currency,
     i18n,
     billingPeriod,
     unitPricePeriod,
     variableUnit,
-  );
+  });
 
   const hasHTandNT = markupWorkPrice && markupWorkPriceNT;
   const hasAdditionalMarkups = workPrice?.additional_markups_enabled || workPriceNT?.additional_markups_enabled;
@@ -103,8 +103,8 @@ export const processMarkupsFeesTable = (
             markup_work_price: markupWorkPrice || markupWorkPriceNT,
             ...(hasAdditionalMarkups && { markup_procurement: procurementMarkup || procurementMarkupNT }),
           }),
-    } as ExternalFeesTableGroup['fees'],
-  } as ExternalFeesTableGroup;
+    } as ExternalFeesDetailsGroup['fees'],
+  } as ExternalFeesDetailsGroup;
 
   return result;
 };

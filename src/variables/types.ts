@@ -121,20 +121,20 @@ export type OrderTableData = Omit<Order, 'products'> & {
   };
 };
 
-export interface ExternalFeesTableFee extends StaticFee, VariableFee {}
+export interface ExternalFeesDetailsFee extends StaticFee, VariableFee {}
 
-export interface ExternalFeesTableGroup {
-  fees: Record<string, ExternalFeesTableFee>;
+export interface ExternalFeesDetailsGroup {
+  fees: Record<string, ExternalFeesDetailsFee>;
   label: string;
   display_fees_unit_price: string;
   display_fees_yearly: string;
 }
 
-export interface ExternalFeesTable {
+export interface ExternalFeesDetails {
   unit_price_period: string;
   tax_behavior?: string;
   unit?: string;
-  groups: Record<string, ExternalFeesTableGroup>;
+  groups: Record<string, ExternalFeesDetailsGroup>;
   display_fees_unit_price: string;
   display_fees_yearly: string;
 }

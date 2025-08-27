@@ -3,14 +3,14 @@ import type { CompositePriceItem, PriceItem } from '@epilot/pricing-client';
 import { formatPriceUnit } from '../../money/formatters';
 import type { I18n } from '../../shared/types';
 import { extractTaxFromPriceItem } from '../../taxes/extract-tax-from-price';
-import type { ExternalFeesMetadata, ExternalFeesTable } from '../types';
-import { processExternalDisplayFeesTable } from './display-fees-table';
-import { processMarkupsFeesTable } from './markup-fees-table';
-import { processMeterFeesTable } from './meter-fees-table';
-import { processNetworkOperatingFeesTable } from './network-fees-table';
-import { processOtherFeesTable } from './other-fees-table';
+import type { ExternalFeesMetadata, ExternalFeesDetails } from '../types';
+import { processExternalDisplayFeesDetails } from './display-fees-details';
+import { processMarkupsFeesDetails } from './markup-fees-details';
+import { processMeterFeesDetails } from './meter-fees-details';
+import { processNetworkOperatingFeesDetails } from './network-fees-details';
+import { processOtherFeesDetails } from './other-fees-details';
 
-export const processExternalFeesTable = (
+export const processExternalFeesDetails = (
   item: PriceItem | CompositePriceItem,
   externalFeesMetadata: ExternalFeesMetadata,
   currency: Currency,
@@ -23,13 +23,13 @@ export const processExternalFeesTable = (
   const taxRate = tax?.rate;
   const formattedUnit = formatPriceUnit(unit, true);
 
-  const result: Partial<ExternalFeesTable> = {
+  const result: Partial<ExternalFeesDetails> = {
     unit_price_period: i18n.t(`table_order.recurrences.billing_period.${unitPricePeriod}`),
     unit: formattedUnit,
     tax_behavior: taxRate ? i18n.t('table_order.incl_vat').replace('!!amount!!', taxRate.toString() + '%') : undefined,
   };
 
-  processMarkupsFeesTable(
+  processMarkupsFeesDetails(
     result,
     item,
     externalFeesMetadata,
@@ -40,7 +40,7 @@ export const processExternalFeesTable = (
     formattedUnit,
   );
 
-  processNetworkOperatingFeesTable(
+  processNetworkOperatingFeesDetails(
     result,
     externalFeesMetadata,
     currency,
@@ -51,7 +51,7 @@ export const processExternalFeesTable = (
     formattedUnit,
   );
 
-  processMeterFeesTable(
+  processMeterFeesDetails(
     result,
     externalFeesMetadata,
     currency,
@@ -62,7 +62,7 @@ export const processExternalFeesTable = (
     formattedUnit,
   );
 
-  processOtherFeesTable(
+  processOtherFeesDetails(
     result,
     externalFeesMetadata,
     currency,
@@ -73,7 +73,7 @@ export const processExternalFeesTable = (
     formattedUnit,
   );
 
-  processExternalDisplayFeesTable(result as ExternalFeesTable);
+  processExternalDisplayFeesDetails(result as ExternalFeesDetails);
 
   return result;
 };

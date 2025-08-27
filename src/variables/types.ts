@@ -13,7 +13,7 @@ export type PriceItemWithParent =
 
 export type PriceDisplayType = 'show_as_on_request' | 'show_as_starting_price';
 
-type StaticFee = BaseFee;
+export type StaticFee = BaseFee;
 
 export type GetTieredUnitAmountOptions = {
   isUnitAmountApproved: boolean;
@@ -22,6 +22,11 @@ export type GetTieredUnitAmountOptions = {
 
 export type ExternalFeesMetadata = {
   billing_period: string;
+  inputs: {
+    consumptionHT?: number;
+    consumptionNT?: number;
+    type?: 'power' | 'gas';
+  };
   breakdown: {
     static: {
       [key: string]: StaticFee;
@@ -66,7 +71,7 @@ type BaseFee = {
   label: string;
 };
 
-type VariableFee = BaseFee & {
+export type VariableFee = BaseFee & {
   /** Per unit amounts */
   unit_amount?: number | string;
   unit_amount_decimal?: string;
@@ -115,3 +120,21 @@ export type OrderTableData = Omit<Order, 'products'> & {
     ['yearly']?: RecurrenceAmount;
   };
 };
+
+export interface ExternalFeesDetailsFee extends StaticFee, VariableFee {}
+
+export interface ExternalFeesDetailsGroup {
+  fees: Record<string, ExternalFeesDetailsFee>;
+  label: string;
+  display_fees_unit_price: string;
+  display_fees_yearly: string;
+}
+
+export interface ExternalFeesDetails {
+  unit_price_period: string;
+  tax_behavior?: string;
+  unit?: string;
+  groups: Record<string, ExternalFeesDetailsGroup>;
+  display_fees_unit_price: string;
+  display_fees_yearly: string;
+}

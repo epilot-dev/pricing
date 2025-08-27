@@ -1,5 +1,4 @@
 import { formatAmount, formatAmountFromString, formatPriceUnit } from '../money/formatters';
-import { toDinero } from '../money/to-dinero';
 import { PricingModel } from '../prices/constants';
 import { isCompositePrice } from '../prices/utils';
 import { isTruthy } from '../shared/is-truthy';
@@ -18,10 +17,10 @@ import type {
   Coupon,
 } from '../shared/types';
 import { getDisplayTierByQuantity, getTierDescription } from '../tiers/utils';
-import { normalizeTimeFrequency, normalizeValueToFrequencyUnit } from '../time-frequency/normalizers';
+import { normalizeTimeFrequency } from '../time-frequency/normalizers';
 import type { TimeFrequency } from '../time-frequency/types';
 import { RECURRENCE_ORDERING } from './constants';
-import type { ExternalFeesMetadata, GetTieredUnitAmountOptions, PriceDisplayType, PriceItemWithParent } from './types';
+import type { GetTieredUnitAmountOptions, PriceDisplayType, PriceItemWithParent } from './types';
 
 export const EMPTY_VALUE_PLACEHOLDER = '---';
 const TEMPORARY_TAX_MAPPER = {
@@ -393,7 +392,12 @@ export const processTaxRecurrences = (
   return taxes;
 };
 
-export const getTaxRate = (source: any, i18n: any, index = 0) => {
+export const getTaxRate = (
+  source: any,
+  i18n: any,
+  index = 0,
+  emptyTaxPlaceholder = i18n.t('table_order.no_tax', '(no tax)'),
+) => {
   const tax = source.taxes?.[index]?.tax;
 
   if (tax !== undefined) {
@@ -401,7 +405,7 @@ export const getTaxRate = (source: any, i18n: any, index = 0) => {
     const description = tax.description;
 
     if (rate === null) {
-      return description || i18n.t('table_order.no_tax', '(no tax)');
+      return description || emptyTaxPlaceholder;
     }
 
     const mappedRate = TEMPORARY_TAX_MAPPER[rate as TaxRateName];
@@ -409,10 +413,10 @@ export const getTaxRate = (source: any, i18n: any, index = 0) => {
       return mappedRate;
     }
 
-    return rate ? `${rate}%` : i18n.t('table_order.no_tax', '(no tax)');
+    return rate ? `${rate}%` : emptyTaxPlaceholder;
   }
 
-  return i18n.t('table_order.no_tax', '(no tax)');
+  return emptyTaxPlaceholder;
 };
 
 export const getFormattedTieredDetails = (
@@ -508,35 +512,6 @@ export const getDisplayUnit = (item: PriceItem) => {
   return unit ? `/${unit}` : '';
 };
 
-export const processExternalFeesMetadata = (
-  externalFeesMetadata: ExternalFeesMetadata,
-  currency: Currency,
-  i18n: I18n,
-  variableUnit?: string,
-) => {
-  const billingPeriod = externalFeesMetadata.billing_period;
-
-  const result = {
-    ...externalFeesMetadata,
-    billing_period: i18n.t('table_order.recurrences.billing_period.' + billingPeriod),
-    is_tax_inclusive: false,
-    tax_behavior_display: i18n.t('table_order.external_fees.tax_behavior'),
-  };
-
-  // Process static breakdowns
-  processStaticBreakdown(externalFeesMetadata, result, currency, i18n, billingPeriod);
-
-  // Process variable breakdowns
-  processVariableBreakdown('variable', externalFeesMetadata, result, currency, i18n, billingPeriod, variableUnit);
-  processVariableBreakdown('variable_ht', externalFeesMetadata, result, currency, i18n, billingPeriod, variableUnit);
-  processVariableBreakdown('variable_nt', externalFeesMetadata, result, currency, i18n, billingPeriod, variableUnit);
-
-  // Add aggregated breakdowns
-  processAggregatedDisplayBreakdown(result);
-
-  return result;
-};
-
 const getPriceDisplayType = (price?: Price | CompositePrice): PriceDisplayType | undefined =>
   price?.price_display_in_journeys;
 
@@ -550,152 +525,6 @@ const findHiddenComponentDisplayInJourney = (item: CompositePriceItem): PriceDis
   const hiddenComponent = findHiddenComponent(item);
 
   return hiddenComponent ? getPriceDisplayType(hiddenComponent._price) : undefined;
-};
-
-const processVariableBreakdown = (
-  variableName: keyof Pick<ExternalFeesMetadata['breakdown'], 'variable' | 'variable_nt' | 'variable_ht'>,
-  externalFeesMetadata: ExternalFeesMetadata,
-  result: ExternalFeesMetadata,
-  currency: Currency,
-  i18n: I18n,
-  billingPeriod: string,
-  variableUnit?: string,
-) => {
-  const breakdown = externalFeesMetadata.breakdown[variableName];
-  const resultBreakdown = result.breakdown[variableName];
-  if (!breakdown || !resultBreakdown) return;
-
-  for (const key in breakdown) {
-    const fee = breakdown[key];
-    if (!fee) continue;
-
-    resultBreakdown[key] = {
-      ...fee,
-      label: i18n.t('table_order.external_fees.get_ag.' + key),
-      amount: safeFormatAmount({
-        amount: fee.amount || 0,
-        currency,
-        locale: i18n.language,
-      }),
-      unit_amount: `${safeFormatAmount({
-        amount: fee.unit_amount_decimal || 0,
-        currency,
-        locale: i18n.language,
-        enableSubunitDisplay: true,
-      })}${variableUnit ? ` / ${formatPriceUnit(variableUnit, true)}` : ''}`,
-      ...normalizeToYearlyAmounts(fee.amount_decimal, billingPeriod as TimeFrequency, currency, i18n),
-    };
-  }
-};
-
-const processStaticBreakdown = (
-  externalFeesMetadata: ExternalFeesMetadata,
-  result: ExternalFeesMetadata,
-  currency: Currency,
-  i18n: I18n,
-  billingPeriod: string,
-) => {
-  if (result.breakdown.static) {
-    for (const key in externalFeesMetadata.breakdown.static) {
-      if (externalFeesMetadata.breakdown.static[key]) {
-        const label = i18n.t('table_order.external_fees.get_ag.' + key);
-        result.breakdown.static[key].label = label;
-        result.breakdown.static[key].amount = safeFormatAmount({
-          amount: externalFeesMetadata.breakdown.static[key].amount || 0,
-          currency,
-          locale: i18n.language,
-        });
-
-        const yearlyAmounts = normalizeToYearlyAmounts(
-          externalFeesMetadata.breakdown.static[key].amount_decimal,
-          billingPeriod as TimeFrequency,
-          currency,
-          i18n,
-        );
-
-        result.breakdown.static[key] = {
-          ...result.breakdown.static[key],
-          ...yearlyAmounts,
-        };
-      }
-    }
-  }
-};
-
-const processAggregatedDisplayBreakdown = (result: ExternalFeesMetadata) => {
-  // static
-  if (result.breakdown.static) {
-    result.breakdown.display_static = Object.values(result.breakdown.static)
-      .map((fee) => `${fee.label} - ${fee.amount}`)
-      .join(', ');
-  }
-
-  // variable
-  if (result.breakdown.variable) {
-    result.breakdown.display_variable = Object.values(result.breakdown.variable)
-      .map((fee) => `${fee.label} - ${fee.amount}`)
-      .join(', ');
-    result.breakdown.display_variable_per_unit = Object.values(result.breakdown.variable)
-      .map((fee) => `${fee.label} - ${fee.unit_amount}`)
-      .join(', ');
-    result.breakdown.display_static_yearly = Object.values(result.breakdown.static)
-      .map((fee) => `${fee.label} - ${fee.amount_yearly}`)
-      .join(', ');
-    result.breakdown.display_variable_yearly = Object.values(result.breakdown.variable)
-      .map((fee) => `${fee.label} - ${fee.amount_yearly}`)
-      .join(', ');
-  }
-
-  // variable_ht
-  if (result.breakdown.variable_ht) {
-    result.breakdown.display_variable_ht = Object.values(result.breakdown.variable_ht)
-      .map((fee) => `${fee.label} - ${fee.amount}`)
-      .join(', ');
-    result.breakdown.display_variable_ht_per_unit = Object.values(result.breakdown.variable_ht)
-      .map((fee) => `${fee.label} - ${fee.unit_amount}`)
-      .join(', ');
-    result.breakdown.display_variable_ht_yearly = Object.values(result.breakdown.variable_ht)
-      .map((fee) => `${fee.label} - ${fee.amount_yearly}`)
-      .join(', ');
-  }
-
-  // variable_nt
-  if (result.breakdown.variable_nt) {
-    result.breakdown.display_variable_nt = Object.values(result.breakdown.variable_nt)
-      .map((fee) => `${fee.label} - ${fee.amount}`)
-      .join(', ');
-    result.breakdown.display_variable_nt_per_unit = Object.values(result.breakdown.variable_nt)
-      .map((fee) => `${fee.label} - ${fee.unit_amount}`)
-      .join(', ');
-    result.breakdown.display_variable_nt_yearly = Object.values(result.breakdown.variable_nt)
-      .map((fee) => `${fee.label} - ${fee.amount_yearly}`)
-      .join(', ');
-  }
-};
-
-const normalizeToYearlyAmounts = (
-  amount: number | string | undefined,
-  billingPeriod: TimeFrequency,
-  currency: Currency,
-  i18n: I18n,
-) => {
-  const yearlyDecimalAmountNormalized = normalizeValueToFrequencyUnit(
-    amount || 0,
-    billingPeriod as TimeFrequency,
-    'yearly',
-  );
-
-  const normalizedAmountDecimal = yearlyDecimalAmountNormalized.toString();
-  const normalizedAmount = toDinero(normalizedAmountDecimal).convertPrecision(2).getAmount();
-
-  return {
-    amount_yearly: `${safeFormatAmount({
-      amount: normalizedAmount,
-      currency,
-      locale: i18n.language,
-    })}`,
-    amount_yearly_decimal: normalizedAmountDecimal,
-  };
 };
 
 export const getCouponItems = (item: PriceItem): (PriceItem & { coupon: Coupon })[] => {

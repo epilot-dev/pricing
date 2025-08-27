@@ -1,6 +1,6 @@
 {
   "name": "@epilot/pricing",
-  "version": "5.2.0",
+  "version": "5.2.1",
   "description": "Pricing Library",
   "main": "./dist/cjs/index.cjs",
   "module": "./dist/esm/index.mjs",

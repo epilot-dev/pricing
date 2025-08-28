@@ -134,6 +134,10 @@ export interface ExternalFeesDetails {
   unit_price_period: string;
   tax_behavior?: string;
   unit?: string;
+  headers?: {
+    unit_price: string;
+    yearly_price: string;
+  };
   groups: Record<string, ExternalFeesDetailsGroup>;
   display_fees_unit_price: string;
   display_fees_yearly: string;

@@ -27,6 +27,10 @@ export const processExternalFeesDetails = (
     unit_price_period: i18n.t(`table_order.recurrences.billing_period.${unitPricePeriod}`),
     unit: formattedUnit,
     tax_behavior: taxRate ? i18n.t('table_order.incl_vat').replace('!!amount!!', taxRate.toString() + '%') : undefined,
+    headers: {
+      unit_price: i18n.t('table_order.getag_details_table.price_unit'),
+      yearly_price: i18n.t('table_order.getag_details_table.price_yearly'),
+    },
   };
 
   processMarkupsFeesDetails(

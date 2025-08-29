@@ -177,30 +177,6 @@ describe('getDetailsFee', () => {
         label: 'Test Fee',
       });
     });
-
-    it('should handle missing amount but present unit amount', () => {
-      const feeWithoutAmount: VariableFee = {
-        amount: 0,
-        amount_decimal: '',
-        unit_amount: 50,
-        unit_amount_decimal: '0.50',
-        label: 'Variable Fee No Amount',
-      };
-
-      const result = getDetailsFee({
-        ...defaultParams,
-        fee: feeWithoutAmount,
-        variableUnit: 'kWh',
-      });
-
-      expect(result).toEqual({
-        amount: '50.00 cents/kWh',
-        amount_decimal: '0',
-        amount_yearly_decimal: '0',
-        amount_yearly: '-',
-        label: 'Test Fee',
-      });
-    });
   });
 });
 

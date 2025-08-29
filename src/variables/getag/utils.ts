@@ -85,12 +85,14 @@ const getDetailsFee = ({
   }
 
   if (isVariableFee(fee)) {
-    const unitAmountDecimal = isValidAmount(fee, true)
+    const isValid = isValidAmount(fee);
+
+    const unitAmountDecimal = isValid
       ? tax?.rate
         ? getAmountWithTax(fee.unit_amount_decimal, tax?.rate / 100)
         : fee.unit_amount_decimal
       : undefined;
-    const amountDecimal = isValidAmount(fee)
+    const amountDecimal = isValid
       ? tax?.rate
         ? getAmountWithTax(fee.amount_decimal, tax?.rate / 100)
         : fee.amount_decimal
@@ -296,12 +298,8 @@ const getMarkupDetailsFee = ({
   return undefined;
 };
 
-const isValidAmount = (fee: StaticFee | VariableFee | undefined, isUnit = false): boolean => {
+const isValidAmount = (fee: StaticFee | VariableFee | undefined): boolean => {
   if (!fee) return false;
-
-  if (isUnit && isVariableFee(fee)) {
-    return Boolean(fee.unit_amount && fee.unit_amount_decimal);
-  }
 
   return Boolean(fee.amount && fee.amount_decimal);
 };

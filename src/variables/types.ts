@@ -1,6 +1,7 @@
 import type {
   CompositePriceItem,
   Order,
+  PriceGetAg,
   PriceItem,
   Product,
   RecurrenceAmount,
@@ -142,3 +143,5 @@ export interface ExternalFeesDetails {
   display_fees_unit_price: string;
   display_fees_yearly: string;
 }
+
+export type AdditionalMarkup = NonNullable<PriceGetAg['additional_markups']>[string];

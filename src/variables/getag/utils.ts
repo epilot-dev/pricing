@@ -111,11 +111,19 @@ const getDetailsFee = ({
   }
 
   if (isVariableFee(fee)) {
-    const unitAmountDecimal = tax?.rate
-      ? getAmountWithTax(fee.unit_amount_decimal, tax?.rate / 100)
-      : fee.unit_amount_decimal;
-    const amountDecimal = tax?.rate ? getAmountWithTax(fee.amount_decimal, tax?.rate / 100) : fee.amount_decimal;
-    const yearlyAmountDecimal = getYearlyDecimalAmount(amountDecimal, billingPeriod);
+    const unitAmountDecimal =
+      fee.unit_amount && fee.unit_amount_decimal
+        ? tax?.rate
+          ? getAmountWithTax(fee.unit_amount_decimal, tax?.rate / 100)
+          : fee.unit_amount_decimal
+        : undefined;
+    const amountDecimal =
+      fee.amount && fee.amount_decimal
+        ? tax?.rate
+          ? getAmountWithTax(fee.amount_decimal, tax?.rate / 100)
+          : fee.amount_decimal
+        : undefined;
+    const yearlyAmountDecimal = amountDecimal ? getYearlyDecimalAmount(amountDecimal, billingPeriod) : undefined;
 
     return {
       amount: unitAmountDecimal
@@ -127,7 +135,7 @@ const getDetailsFee = ({
           }) + `/${variableUnit}`
         : '-',
       amount_decimal: amountDecimal || '0',
-      amount_yearly_decimal: yearlyAmountDecimal,
+      amount_yearly_decimal: yearlyAmountDecimal || '0',
       amount_yearly: yearlyAmountDecimal
         ? formatFeeAmountFromString({
             decimalAmount: yearlyAmountDecimal,
@@ -138,8 +146,13 @@ const getDetailsFee = ({
       label,
     };
   } else {
-    const amountDecimal = tax?.rate ? getAmountWithTax(fee.amount_decimal, tax?.rate / 100) : fee.amount_decimal;
-    const yearlyAmountDecimal = getYearlyDecimalAmount(amountDecimal, billingPeriod);
+    const amountDecimal =
+      fee.amount && fee.amount_decimal
+        ? tax?.rate
+          ? getAmountWithTax(fee.amount_decimal, tax?.rate / 100)
+          : fee.amount_decimal
+        : undefined;
+    const yearlyAmountDecimal = amountDecimal ? getYearlyDecimalAmount(amountDecimal, billingPeriod) : undefined;
 
     return {
       amount: amountDecimal
@@ -151,7 +164,7 @@ const getDetailsFee = ({
           }) + ` ${i18n.t(`table_order.recurrences.billing_period.${unitPricePeriod}`)}`
         : '-',
       amount_decimal: amountDecimal || '0',
-      amount_yearly_decimal: yearlyAmountDecimal,
+      amount_yearly_decimal: yearlyAmountDecimal || '0',
       amount_yearly: yearlyAmountDecimal
         ? formatFeeAmountFromString({
             decimalAmount: yearlyAmountDecimal,
@@ -206,26 +219,30 @@ const getMarkupDetailsFee = ({
       return undefined;
     }
 
-    const yearlyAmountDecimal = getConsumptionBasedAmounts(
-      procurementMarkup?.amount_gross_decimal,
-      options.tariffType === 'HT'
-        ? externalFeesMetadata.inputs.consumptionHT
-        : externalFeesMetadata.inputs.consumptionNT,
-      billingPeriod,
-    ).yearlyAmountDecimal;
+    const yearlyAmountDecimal =
+      procurementMarkup?.amount && procurementMarkup?.amount_gross_decimal
+        ? getConsumptionBasedAmounts(
+            procurementMarkup?.amount_gross_decimal,
+            options.tariffType === 'HT'
+              ? externalFeesMetadata.inputs.consumptionHT
+              : externalFeesMetadata.inputs.consumptionNT,
+            billingPeriod,
+          ).yearlyAmountDecimal
+        : undefined;
 
     return {
       label: i18n.t(`table_order.getag_details_table.groups.sales_and_procurement_costs.fees.markup_procurement`),
-      amount: procurementMarkup?.amount_gross_decimal
-        ? formatFeeAmountFromString({
-            decimalAmount: procurementMarkup?.amount_gross_decimal,
-            currency,
-            locale: i18n.language,
-            enableSubunitDisplay: true,
-          }) + `/${variableUnit}`
-        : '-',
+      amount:
+        procurementMarkup?.amount && procurementMarkup?.amount_gross_decimal
+          ? formatFeeAmountFromString({
+              decimalAmount: procurementMarkup?.amount_gross_decimal,
+              currency,
+              locale: i18n.language,
+              enableSubunitDisplay: true,
+            }) + `/${variableUnit}`
+          : '-',
       amount_decimal: procurementMarkup?.amount_gross_decimal || '0',
-      amount_yearly_decimal: yearlyAmountDecimal,
+      amount_yearly_decimal: yearlyAmountDecimal || '0',
       amount_yearly: yearlyAmountDecimal
         ? formatFeeAmountFromString({
             decimalAmount: yearlyAmountDecimal,
@@ -237,25 +254,27 @@ const getMarkupDetailsFee = ({
   }
 
   if (options.type === 'base_price') {
-    const yearlyAmountDecimal = priceGetAgConfig?.markup_amount_gross_decimal
-      ? getYearlyDecimalAmount(priceGetAgConfig?.markup_amount_gross_decimal, billingPeriod)
-      : undefined;
+    const yearlyAmountDecimal =
+      priceGetAgConfig?.markup_amount && priceGetAgConfig?.markup_amount_gross_decimal
+        ? getYearlyDecimalAmount(priceGetAgConfig?.markup_amount_gross_decimal, billingPeriod)
+        : undefined;
 
     return {
-      amount: priceGetAgConfig?.markup_amount_gross_decimal
-        ? formatFeeAmountFromString({
-            decimalAmount: getNormalizedAmountDecimal(
-              priceGetAgConfig?.markup_amount_gross_decimal,
-              billingPeriod,
-              unitPricePeriod,
-            ),
-            currency,
-            locale: i18n.language,
-            enableSubunitDisplay: true,
-          }) + ` ${i18n.t(`table_order.recurrences.billing_period.${unitPricePeriod}`)}`
-        : '-',
+      amount:
+        priceGetAgConfig?.markup_amount && priceGetAgConfig?.markup_amount_gross_decimal
+          ? formatFeeAmountFromString({
+              decimalAmount: getNormalizedAmountDecimal(
+                priceGetAgConfig?.markup_amount_gross_decimal,
+                billingPeriod,
+                unitPricePeriod,
+              ),
+              currency,
+              locale: i18n.language,
+              enableSubunitDisplay: true,
+            }) + ` ${i18n.t(`table_order.recurrences.billing_period.${unitPricePeriod}`)}`
+          : '-',
       amount_decimal: priceGetAgConfig?.markup_amount_gross_decimal || '0',
-      amount_yearly_decimal: yearlyAmountDecimal,
+      amount_yearly_decimal: yearlyAmountDecimal || '0',
       amount_yearly: yearlyAmountDecimal
         ? formatFeeAmountFromString({
             decimalAmount: yearlyAmountDecimal,
@@ -268,26 +287,30 @@ const getMarkupDetailsFee = ({
   }
 
   if (options.type === 'work_price') {
-    const yearlyAmountDecimal = getConsumptionBasedAmounts(
-      priceGetAgConfig?.markup_amount_gross_decimal,
-      options.tariffType === 'HT'
-        ? externalFeesMetadata.inputs.consumptionHT
-        : externalFeesMetadata.inputs.consumptionNT,
-      billingPeriod,
-      currency,
-    ).yearlyAmountDecimal;
+    const yearlyAmountDecimal =
+      priceGetAgConfig?.markup_amount && priceGetAgConfig?.markup_amount_gross_decimal
+        ? getConsumptionBasedAmounts(
+            priceGetAgConfig?.markup_amount_gross_decimal,
+            options.tariffType === 'HT'
+              ? externalFeesMetadata.inputs.consumptionHT
+              : externalFeesMetadata.inputs.consumptionNT,
+            billingPeriod,
+            currency,
+          ).yearlyAmountDecimal
+        : undefined;
 
     return {
-      amount: priceGetAgConfig?.markup_amount_gross_decimal
-        ? formatFeeAmountFromString({
-            decimalAmount: priceGetAgConfig?.markup_amount_gross_decimal,
-            currency,
-            locale: i18n.language,
-            enableSubunitDisplay: true,
-          }) + `/${variableUnit}`
-        : '-',
+      amount:
+        priceGetAgConfig?.markup_amount && priceGetAgConfig?.markup_amount_gross_decimal
+          ? formatFeeAmountFromString({
+              decimalAmount: priceGetAgConfig?.markup_amount_gross_decimal,
+              currency,
+              locale: i18n.language,
+              enableSubunitDisplay: true,
+            }) + `/${variableUnit}`
+          : '-',
       amount_decimal: priceGetAgConfig?.markup_amount_gross_decimal || '0',
-      amount_yearly_decimal: yearlyAmountDecimal,
+      amount_yearly_decimal: yearlyAmountDecimal || '0',
       amount_yearly: yearlyAmountDecimal
         ? formatFeeAmountFromString({
             decimalAmount: yearlyAmountDecimal,

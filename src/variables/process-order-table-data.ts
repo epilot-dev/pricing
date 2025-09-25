@@ -573,7 +573,7 @@ const getFormattedCouponDescription = (
           locale: i18n.language,
         });
 
-  const redeemedPromoString = redeemedPromo?.code ? `(${redeemedPromo})` : null;
+  const redeemedPromoString = redeemedPromo?.code ? `(${redeemedPromo.code})` : null;
 
   if (category === 'cashback') {
     const cashbackPeriodLabel = `(${i18n.t(`table_order.cashback_period.${cashback_period ?? '0'}`, 'immediately')})`;

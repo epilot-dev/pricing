@@ -16,8 +16,8 @@ importers:
         specifier: ^3.0.5
         version: 3.0.5(eslint@9.28.0)(typescript@5.8.3)
       '@epilot/pricing-client':
-        specifier: ^3.48.8
-        version: 3.48.8(axios@1.9.0)(js-yaml@4.1.0)
+        specifier: ^3.51.0
+        version: 3.51.0(axios@1.9.0)(js-yaml@4.1.0)
       '@types/dinero.js':
         specifier: ^1.9.4
         version: 1.9.4
@@ -105,10 +105,10 @@ packages:
       eslint: '>= 9.0.0'
       typescript: '>= 5.0.0'
 
-  '@epilot/pricing-client@3.48.8':
-    resolution: {integrity: sha512-8D+BqTyayKeiXhZ4fqF47XGyCrLKWXZwYSM84RHqRaj/sj/I3D8ngQg5HptI1XlS6I8cciJ9EDCwbeDHglQBAg==}
+  '@epilot/pricing-client@3.51.0':
+    resolution: {integrity: sha512-49biU5yVVQbOWNGK2m7/foms+KzVxw4NHY55cJEwEB5xszFVHB9zKJN5HCdvcYKiYTJC5AOcxne78GeFROPZHQ==}
     peerDependencies:
-      axios: ^1.8.1
+      axios: ^1.0.0 || >=0.25.0 <1.0.0
 
   '@esbuild/aix-ppc64@0.21.5':
     resolution: {integrity: sha512-1SDgH6ZSPTlggy1yI6+Dbkiz8xzpHJEVAlF/AM1tHPLsf5STom9rwtjE4hKAF20FfXXNTFqEYXyJNWh1GiZedQ==}
@@ -1691,8 +1691,8 @@ packages:
     resolution: {integrity: sha512-1FlR+gjXK7X+AsAHso35MnyN5KqGwJRi/31ft6x0M194ht7S+rWAvd7PHss9xSKMzE0asv1pyIHaJYq+BbacAQ==}
     engines: {node: '>=12'}
 
-  openapi-client-axios@7.6.0:
-    resolution: {integrity: sha512-WfOjOtGaYDKCtf7mbLD4AH1HcJRo6VRFdHNNZClgihloYGkNyD/E/34l1LH0Vx2XHLGqP9phIid2rUFmVfbG7A==}
+  openapi-client-axios@7.8.0:
+    resolution: {integrity: sha512-EeMbETGAEUn2XB2tduIwaW8/fBc05ZJPiTGe0dXj4fUmNFKVLAh4rIX6xlIzfKTBdBW+UQEtHO8l3VBQ6DH+XQ==}
     peerDependencies:
       axios: '>=0.25.0'
       js-yaml: ^4.1.0
@@ -2332,13 +2332,13 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  '@epilot/pricing-client@3.48.8(axios@1.9.0)(js-yaml@4.1.0)':
+  '@epilot/pricing-client@3.51.0(axios@1.9.0)(js-yaml@4.1.0)':
     dependencies:
       '@dazn/lambda-powertools-correlation-ids': 1.28.1
       axios: 1.9.0
       buffer: 6.0.3
       https-browserify: 1.0.0
-      openapi-client-axios: 7.6.0(axios@1.9.0)(js-yaml@4.1.0)
+      openapi-client-axios: 7.8.0(axios@1.9.0)(js-yaml@4.1.0)
       stream-http: 3.2.0
       url: 0.11.4
       util: 0.12.5
@@ -3974,7 +3974,7 @@ snapshots:
     dependencies:
       mimic-fn: 4.0.0
 
-  openapi-client-axios@7.6.0(axios@1.9.0)(js-yaml@4.1.0):
+  openapi-client-axios@7.8.0(axios@1.9.0)(js-yaml@4.1.0):
     dependencies:
       axios: 1.9.0
       bath-es5: 3.0.3

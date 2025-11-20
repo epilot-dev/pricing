@@ -160,7 +160,6 @@ export const firstTimeComputedCompositePrice: CompositePriceItem & { [key: strin
         unit_amount_currency: 'EUR',
         unit_amount_decimal: '10.69',
       },
-      _product: {},
       amount_subtotal: 9718181818182,
       type: 'recurring',
       amount_total: 10690000000000,
@@ -229,7 +228,6 @@ export const firstTimeComputedCompositePrice: CompositePriceItem & { [key: strin
         unit_amount_decimal: '0.45',
         variable_price: true,
       },
-      _product: {},
       amount_subtotal: 424528301887,
       amount_tax: 25471698113,
       amount_total: 450000000000,
@@ -293,7 +291,6 @@ export const firstTimeComputedCompositePrice: CompositePriceItem & { [key: strin
         unit_amount_currency: 'EUR',
         unit_amount_decimal: '500.00',
       },
-      _product: {},
       amount_subtotal: 420168067226891,
       unit_amount_gross: 500000000000000,
       amount_tax: 79831932773109,
@@ -1324,7 +1321,6 @@ export const severalItemsPerRecurrenceTotals = {
             is_tax_inclusive: true,
             pricing_model: 'per_unit',
           },
-          _product: {},
           taxes: [
             {
               tax: {
@@ -1394,7 +1390,6 @@ export const severalItemsPerRecurrenceTotals = {
             variable_price: true,
             pricing_model: 'per_unit',
           },
-          _product: {},
           taxes: [
             {
               tax: {
@@ -1463,7 +1458,6 @@ export const severalItemsPerRecurrenceTotals = {
             renewal_duration_unit: 'months',
             description: 'Wallbox 11 kW',
           },
-          _product: {},
           taxes: [
             {
               tax: {
@@ -2442,7 +2436,6 @@ export const compositePriceWithDisplayOnRequest = {
             is_tax_inclusive: true,
             pricing_model: 'per_unit',
           },
-          _product: {},
           taxes: [
             {
               tax: {
@@ -2510,7 +2503,6 @@ export const compositePriceWithDisplayOnRequest = {
             is_tax_inclusive: true,
             pricing_model: 'per_unit',
           },
-          _product: {},
           taxes: [
             {
               tax: {
@@ -3141,7 +3133,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
             pricing_model: 'per_unit',
             is_tax_inclusive: true,
           },
-          _product: {},
           taxes: [
             {
               tax: {
@@ -3211,7 +3202,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
             pricing_model: 'per_unit',
             is_tax_inclusive: true,
           },
-          _product: {},
           taxes: [
             {
               tax: {
@@ -3280,7 +3270,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
             description: 'Wallbox 11 kW',
             is_tax_inclusive: true,
           },
-          _product: {},
           taxes: [
             {
               tax: {
@@ -3437,7 +3426,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
             is_tax_inclusive: true,
             pricing_model: 'per_unit',
           },
-          _product: {},
           taxes: [
             {
               tax: {
@@ -3505,7 +3493,6 @@ export const compositePriceWithDisplayOnRequestAndOthers = {
             is_tax_inclusive: true,
             pricing_model: 'per_unit',
           },
-          _product: {},
           taxes: [
             {
               tax: {
@@ -3847,7 +3834,6 @@ export const resultCompositePriceQuantity2 = {
             unit_amount_currency: 'EUR',
             unit_amount_decimal: '10.69',
           },
-          _product: {},
           amount_subtotal: 1944,
           amount_subtotal_decimal: '19.436363636364',
           amount_total_decimal: '21.38',
@@ -3921,7 +3907,6 @@ export const resultCompositePriceQuantity2 = {
             unit_amount_decimal: '0.45',
             variable_price: true,
           },
-          _product: {},
           amount_subtotal: 85,
           amount_tax: 5,
           amount_total: 90,
@@ -3990,7 +3975,6 @@ export const resultCompositePriceQuantity2 = {
             unit_amount_currency: 'EUR',
             unit_amount_decimal: '500.00',
           },
-          _product: {},
           amount_subtotal: 84034,
           amount_tax: 15966,
           amount_total: 100000,

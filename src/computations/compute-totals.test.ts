@@ -431,7 +431,7 @@ describe('computeAggregatedAndPriceTotals', () => {
       );
     });
 
-    it.only('should return the right result when there is one composite price with quantity 2', () => {
+    it('should return the right result when there is one composite price with quantity 2', () => {
       const priceItems = [samples.compositePriceQuantity2];
 
       const result = computeAggregatedAndPriceTotals(priceItems);

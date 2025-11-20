@@ -394,13 +394,13 @@ export const processTaxRecurrences = (
 
 export const getTaxRate = (
   source: any,
-  i18n: any,
+  i18n: I18n,
   index = 0,
   emptyTaxPlaceholder = i18n.t('table_order.no_tax', '(no tax)'),
 ) => {
   const tax = source.taxes?.[index]?.tax;
 
-  if (tax !== undefined) {
+  if (typeof tax === 'object' && tax !== null) {
     const rate = tax.rate;
     const description = tax.description;
 

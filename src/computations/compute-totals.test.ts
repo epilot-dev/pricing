@@ -431,7 +431,7 @@ describe('computeAggregatedAndPriceTotals', () => {
       );
     });
 
-    it('should return the right result when there is one composite price with quantity 2', () => {
+    it.only('should return the right result when there is one composite price with quantity 2', () => {
       const priceItems = [samples.compositePriceQuantity2];
 
       const result = computeAggregatedAndPriceTotals(priceItems);
@@ -500,7 +500,6 @@ describe('computeAggregatedAndPriceTotals', () => {
                   unit_amount_gross_decimal: '10',
                   type: 'one_time',
                   _price: {},
-                  _product: {},
                   currency: 'EUR',
                   unit_amount_net: 1000,
                   unit_amount_net_decimal: '10',

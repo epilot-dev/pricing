@@ -124,7 +124,7 @@ export const computeCompositePrice = (
       price_id: existingItemComponent?.price_id || component._id,
       product_id: existingItemComponent?.product_id || priceItem.product_id,
       _price: mapToPriceSnapshot(existingItemComponent?._price || existingPrice),
-      _product: mapToProductSnapshot(existingItemComponent?._product || priceItem._product),
+      // _product: mapToProductSnapshot(existingItemComponent?._product || priceItem._product),
       taxes: existingItemComponent?.taxes || [
         {
           ...itemTaxRate,

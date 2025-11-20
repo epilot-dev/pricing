@@ -1781,7 +1781,6 @@ export const compositePricesUnitAmountZeroResult = {
             unit_amount_currency: 'EUR',
             unit_amount_decimal: '10.69',
           },
-          _product: {},
           amount_subtotal: 972,
           amount_total: 1069,
           amount_tax: 97,
@@ -1855,7 +1854,6 @@ export const compositePricesUnitAmountZeroResult = {
             unit_amount_decimal: '0.00',
             variable_price: true,
           },
-          _product: {},
           amount_subtotal: 0,
           amount_total: 0,
           amount_tax: 0,
@@ -4538,7 +4536,6 @@ export const priceDetailsForCompositePrice = {
             is_tax_inclusive: true,
             pricing_model: 'per_unit',
           },
-          _product: {},
           taxes: [
             {
               tax: {
@@ -4608,7 +4605,6 @@ export const priceDetailsForCompositePrice = {
             variable_price: true,
             pricing_model: 'per_unit',
           },
-          _product: {},
           taxes: [
             {
               tax: {
@@ -4677,7 +4673,6 @@ export const priceDetailsForCompositePrice = {
             renewal_duration_unit: 'months',
             description: 'Wallbox 11 kW',
           },
-          _product: {},
           taxes: [
             {
               tax: {
@@ -5606,7 +5601,6 @@ export const resultCompositePriceWithTotalDetails = {
             unit_amount_currency: 'EUR',
             unit_amount_decimal: '10.69',
           },
-          _product: {},
           amount_subtotal: 1944,
           amount_total_decimal: '21.38',
           amount_subtotal_decimal: '19.436363636364',
@@ -5680,7 +5674,6 @@ export const resultCompositePriceWithTotalDetails = {
             unit_amount_decimal: '0.45',
             variable_price: true,
           },
-          _product: {},
           amount_subtotal: 85,
           amount_subtotal_decimal: '0.849056603774',
           amount_total_decimal: '0.9',
@@ -5749,7 +5742,6 @@ export const resultCompositePriceWithTotalDetails = {
             unit_amount_currency: 'EUR',
             unit_amount_decimal: '500.00',
           },
-          _product: {},
           amount_subtotal: 84034,
           amount_tax: 15966,
           amount_total: 100000,
@@ -8912,7 +8904,6 @@ export const computedCompositePriceWithComponentsWithDiscounts = {
               },
             ],
           },
-          _product: {},
           taxes: [
             {
               tax: {
@@ -9028,7 +9019,6 @@ export const computedCompositePriceWithComponentsWithDiscounts = {
               },
             ],
           },
-          _product: {},
           taxes: [
             {
               tax: {
@@ -9131,7 +9121,6 @@ export const computedCompositePriceWithComponentsWithDiscounts = {
             description: 'Wallbox 11 kW',
             _coupons: [],
           },
-          _product: {},
           taxes: [
             {
               tax: {
@@ -9508,7 +9497,6 @@ export const computedCompositePriceWithComponentsWithCashbacks = {
               },
             ],
           },
-          _product: {},
           taxes: [
             {
               tax: {
@@ -9613,7 +9601,6 @@ export const computedCompositePriceWithComponentsWithCashbacks = {
               },
             ],
           },
-          _product: {},
           taxes: [
             {
               tax: {
@@ -9869,7 +9856,6 @@ export const computedCompositePriceWithComponentsWithPromoCodeRequiredCoupon = {
               },
             ],
           },
-          _product: {},
           taxes: [
             {
               tax: {

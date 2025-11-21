@@ -193,7 +193,9 @@ export const getUnitAmount = (
   } else if (isCashbackCoupon) {
     return undefined;
   } else if (isItemContainingDiscountCoupon) {
-    amount = useUnitAmountNet ? item.before_discount_unit_amount_net : item.before_discount_unit_amount;
+    amount = useUnitAmountNet
+      ? (item.before_discount_unit_amount_net ?? item.before_discount_unit_amount)
+      : item.before_discount_unit_amount;
   } else {
     amount = useUnitAmountNet ? item.unit_amount_net : item.unit_amount_decimal || item._price?.unit_amount_decimal;
   }

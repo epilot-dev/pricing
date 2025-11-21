@@ -197,7 +197,9 @@ export const getUnitAmount = (
      * @todo Seems we're missing before_discount_unit_amount_net
      * on pricing lib computations, should return it
      */
-    amount = useUnitAmountNet ? item.before_discount_unit_amount : item.before_discount_unit_amount;
+    amount = useUnitAmountNet
+      ? (item.before_discount_unit_amount_net ?? item.before_discount_unit_amount)
+      : item.before_discount_unit_amount;
   } else {
     amount = useUnitAmountNet ? item.unit_amount_net : item.unit_amount_decimal || item._price?.unit_amount_decimal;
   }

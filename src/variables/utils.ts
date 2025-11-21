@@ -193,10 +193,6 @@ export const getUnitAmount = (
   } else if (isCashbackCoupon) {
     return undefined;
   } else if (isItemContainingDiscountCoupon) {
-    /**
-     * @todo Seems we're missing before_discount_unit_amount_net
-     * on pricing lib computations, should return it
-     */
     amount = useUnitAmountNet
       ? (item.before_discount_unit_amount_net ?? item.before_discount_unit_amount)
       : item.before_discount_unit_amount;

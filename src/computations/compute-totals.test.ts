@@ -500,7 +500,6 @@ describe('computeAggregatedAndPriceTotals', () => {
                   unit_amount_gross_decimal: '10',
                   type: 'one_time',
                   _price: {},
-                  _product: {},
                   currency: 'EUR',
                   unit_amount_net: 1000,
                   unit_amount_net_decimal: '10',

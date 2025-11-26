@@ -282,9 +282,13 @@ const recomputeDetailTotals = (
       typeof recurrence.discount_amount !== 'undefined' ? toDineroFromInteger(recurrence.discount_amount) : undefined;
 
     if (priceBeforeDiscountAmountTotal || existingRecurrenceBeforeDiscountAmountTotal) {
+      // If recurrence doesn't have before_discount_amount_total yet, initialize it with current total (before adding this item)
+      const initializedExistingTotal =
+        existingRecurrenceBeforeDiscountAmountTotal ??
+        toDineroFromInteger(recurrence.amount_total).subtract(priceTotal);
+
       const baseAmount = priceBeforeDiscountAmountTotal || priceTotal;
-      const recurrenceBeforeDiscountAmountTotal =
-        existingRecurrenceBeforeDiscountAmountTotal?.add(baseAmount) ?? baseAmount;
+      const recurrenceBeforeDiscountAmountTotal = initializedExistingTotal.add(baseAmount);
       recurrence.before_discount_amount_total = recurrenceBeforeDiscountAmountTotal.getAmount();
       recurrence.before_discount_amount_total_decimal = recurrenceBeforeDiscountAmountTotal.toUnit().toString();
     }

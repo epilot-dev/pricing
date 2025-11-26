@@ -816,6 +816,17 @@ describe('computeAggregatedAndPriceTotals', () => {
       );
       expect(result).toEqual(results.computedCompositePriceWithComponentsWithPromoCodeRequiredCoupon);
     });
+    it('should compute the pricing total breakdown details with discounts correctly independently of the order of the items', () => {
+      const result = computeAggregatedAndPriceTotals(samples.unorderedPriceItemsOneTimeRecurrencesWithDiscount, {
+        redeemedPromos: [],
+      });
+      expect(result.total_details?.breakdown?.recurrences?.[0]?.amount_total_decimal).toEqual('109000');
+      expect(result.total_details?.breakdown?.recurrences?.[0]?.amount_total).toEqual(10900000);
+      expect(result.total_details?.breakdown?.recurrences?.[0]?.before_discount_amount_total_decimal).toEqual('111000');
+      expect(result.total_details?.breakdown?.recurrences?.[0]?.before_discount_amount_total).toEqual(11100000);
+      expect(result.total_details?.breakdown?.recurrences?.[0]?.discount_amount_decimal).toEqual('2000');
+      expect(result.total_details?.breakdown?.recurrences?.[0]?.discount_amount).toEqual(200000);
+    });
   });
 
   it('computes the pricing details for a simple price', () => {

@@ -409,7 +409,7 @@ export const getTaxRate = (
       return mappedRate;
     }
 
-    return rate ? `${rate}%` : emptyTaxPlaceholder;
+    return rate !== undefined ? `${rate}%` : emptyTaxPlaceholder;
   }
 
   return emptyTaxPlaceholder;

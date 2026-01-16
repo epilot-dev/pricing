@@ -4,6 +4,7 @@ export {
   formatAmountFromString,
   formatPriceUnit,
   parseDecimalValue,
+  removeTrailingDecimalZeros,
   toIntegerAmount,
   addSeparatorToDineroString,
 } from './money/formatters';

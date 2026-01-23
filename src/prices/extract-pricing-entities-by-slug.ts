@@ -28,7 +28,7 @@ type PricingEntitiesExtractResult = {
 /**
  * Extracts all coupon entities ids from a price item and its components (if composite).
  */
-export const extractCouponsFromItem = (item: PriceItem | CompositePriceItem) => {
+const extractCouponsFromItem = (item: PriceItem | CompositePriceItem) => {
   const coupons = item._coupons ?? [];
 
   if (isCompositePriceItem(item) && Array.isArray(item.item_components)) {

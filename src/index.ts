@@ -17,7 +17,7 @@ export type { TimeFrequency } from './time-frequency/types';
 export { getRecurrencesWithEstimatedPrices } from './prices/get-recurrences-with-estimated-prices';
 export { isPriceItemApproved, isRequiringApproval } from './prices/approval';
 export { computeQuantities } from './computations/compute-price-item';
-export { extractPricingEntitiesBySlug, extractCouponsFromItem } from './prices/extract-pricing-entities-by-slug';
+export { extractPricingEntitiesBySlug } from './prices/extract-pricing-entities-by-slug';
 export { computeAggregatedAndPriceTotals } from './computations/compute-totals';
 export { PricingModel } from './prices/constants';
 export { getDisplayTierByQuantity, getDisplayTiersByQuantity, getTierDescription } from './tiers/utils';

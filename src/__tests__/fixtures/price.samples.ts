@@ -3744,28 +3744,3 @@ export const unorderedPriceItemsOneTimeRecurrencesWithDiscount = [
     quantity: 1,
   },
 ] as PriceItemDto[];
-
-export const compositePriceItemWithCoupons = {
-  ...compositePriceWithCustomItem,
-  _coupons: [fixedCashbackCoupon],
-  item_components: [
-    {
-      ...compositePriceWithCustomItem.item_components?.[0],
-      _coupons: [fixedCashbackCoupon],
-      _price: {
-        ...compositePriceWithCustomItem.item_components?.[0]?._price,
-        _coupons: [],
-      },
-    },
-    {
-      ...compositePriceWithCustomItem.item_components?.[1],
-      _coupons: [percentageCashbackCoupon],
-    },
-    {
-      ...compositePriceWithCustomItem.item_components?.[2],
-    },
-    {
-      ...compositePriceWithCustomItem.item_components?.[3],
-    },
-  ],
-};

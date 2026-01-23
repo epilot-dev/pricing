@@ -78,18 +78,21 @@ export const extractPricingEntitiesBySlug = (
       priceLookup[item.price_id] = true;
     }
 
-    for (const coupon of extractCouponsFromItem(item)) {
-      if (couponLookup[coupon._id]) {
-        continue;
+    const coupons = extractCouponsFromItem(item);
+    if (coupons.length) {
+      for (const coupon of coupons) {
+        if (couponLookup[coupon._id]) {
+          continue;
+        }
+
+        couponRelations.push({
+          entity_id: coupon._id,
+          _schema: 'coupon',
+          _tags: [],
+        });
+
+        couponLookup[coupon._id] = true;
       }
-
-      couponRelations.push({
-        entity_id: coupon._id,
-        _schema: 'coupon',
-        _tags: [],
-      });
-
-      couponLookup[coupon._id] = true;
     }
   });
 

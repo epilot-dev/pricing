@@ -12,7 +12,7 @@ describe('extractPricingEntitiesBySlug', () => {
       samples.priceItem4,
       samples.priceItem5,
       samples.compositePrice,
-    ];
+    ] as (PriceItem | CompositePriceItem)[];
 
     const result = extractPricingEntitiesBySlug(priceItems);
 

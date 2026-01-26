@@ -3553,6 +3553,21 @@ export const compositePriceCashbackCombinedWithComponentCashbacks: CompositePric
   },
 };
 
+export const compositePriceWithCoupons = {
+  ...compositePriceWithComponentsWithCoupons,
+  _coupons: [fixedCashbackCoupon],
+  item_components: [
+    {
+      ...compositePriceWithComponentsWithCoupons.item_components?.[0],
+      _coupons: [percentageDiscountCoupon],
+    },
+    {
+      ...compositePriceWithComponentsWithCoupons.item_components?.[1],
+      _coupons: [percentageDiscountCoupon],
+    },
+  ],
+};
+
 export const unorderedPriceItemsOneTimeRecurrencesWithDiscount = [
   {
     description: 'Price 1 One time - no discount',

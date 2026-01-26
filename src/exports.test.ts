@@ -22,7 +22,6 @@ const expectedNamedExports = [
   'computeAggregatedAndPriceTotals',
   'computeQuantities',
   'extractPricingEntitiesBySlug',
-  'extractCouponsFromItem',
   'isPriceItemApproved',
   'isRequiringApproval',
   'getRecurrencesWithEstimatedPrices',

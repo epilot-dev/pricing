@@ -4,7 +4,6 @@ export const percentageDiscountCoupon: Coupon = {
   _id: 'coupon#1',
   _schema: 'coupon',
   _org: 'org#1',
-  category: 'discount',
   _created_at: '2022-06-15T09:17:06.510Z',
   _updated_at: '2022-06-17T11:48:20.104Z',
   _title: 'Winter Sale',
@@ -23,24 +22,6 @@ export const promoCodeRequiredPercentageDiscountCoupon: Coupon = {
   requires_promo_code: true,
 };
 
-export const promoCodeRequiredCouponWithCodes: Coupon = {
-  _id: 'coupon#5',
-  _schema: 'coupon',
-  _org: 'org#1',
-  _created_at: '2022-06-15T09:17:06.510Z',
-  _updated_at: '2022-06-17T11:48:20.104Z',
-  _title: 'Promo Code Discount',
-  name: 'Promo Code Discount',
-  type: 'percentage',
-  category: 'discount',
-  percentage_value: '15',
-  requires_promo_code: true,
-  promo_codes: [
-    { id: 'promo#1', code: 'SUMMER2024' },
-    { id: 'promo#2', code: 'WINTER2024' },
-  ],
-};
-
 export const percentage10DiscountCoupon: Coupon = {
   ...percentageDiscountCoupon,
   percentage_value: '10',
@@ -49,7 +30,6 @@ export const percentage10DiscountCoupon: Coupon = {
 export const fixedDiscountCoupon: Coupon = {
   _id: 'coupon#2',
   _schema: 'coupon',
-  category: 'discount',
   _org: 'org#1',
   _created_at: '2022-06-15T09:17:06.510Z',
   _updated_at: '2022-06-17T11:48:20.104Z',

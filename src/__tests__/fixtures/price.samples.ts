@@ -6,6 +6,7 @@ import {
   percentage10DiscountCoupon,
   percentageCashbackCoupon,
   percentageDiscountCoupon,
+  promoCodeRequiredCouponWithCodes,
   promoCodeRequiredPercentageDiscountCoupon,
 } from '../../coupons/__tests__/coupon.fixtures';
 import type {
@@ -3302,6 +3303,11 @@ export const priceItemWithMultiplePercentageDiscounts: PriceItemDto = {
 export const priceItemWithPromoCodeRequiredCoupon: PriceItemDto = {
   ...baseForPriceItemWithDiscount,
   _coupons: [promoCodeRequiredPercentageDiscountCoupon],
+};
+
+export const priceItemWithPromoCodeRequiredCouponWithCodes: PriceItemDto = {
+  ...baseForPriceItemWithDiscount,
+  _coupons: [promoCodeRequiredCouponWithCodes],
 };
 
 export const priceItemWithPercentageDiscountAndHighQuantity: PriceItemDto = {

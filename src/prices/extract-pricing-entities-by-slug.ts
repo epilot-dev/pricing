@@ -1,8 +1,9 @@
+import type { PromoCode } from '@epilot/pricing-client';
 import type { PriceItem, CompositePriceItem } from '../shared/types';
 import { isCompositePriceItem } from './utils';
 
 type RelationAttributeValue = {
-  $relation: { entity_id: string; _schema: string; _tags: string[] }[];
+  $relation: { entity_id: string; _schema: string; _tags: string[]; [name: string]: unknown }[];
 };
 
 type PricingEntitiesExtractResult = {
@@ -28,7 +29,7 @@ type PricingEntitiesExtractResult = {
 /**
  * Extracts all coupon entities ids from a price item and its components (if composite).
  */
-const extractCouponsFromItem = (item: PriceItem | CompositePriceItem) => {
+export const extractCouponsFromItem = (item: PriceItem | CompositePriceItem) => {
   const coupons = item._coupons ?? [];
 
   if (isCompositePriceItem(item) && Array.isArray(item.item_components)) {
@@ -85,9 +86,12 @@ export const extractPricingEntitiesBySlug = (
           continue;
         }
 
+        const promoCodes = (coupon.requires_promo_code ? (coupon['promo_codes'] ?? []) : []) as PromoCode[];
+
         couponRelations.push({
           entity_id: coupon._id,
           _schema: 'coupon',
+          ...(promoCodes.length ? { redeemed_promo_codes: promoCodes.map((code) => code.code) } : {}),
           _tags: [],
         });
 

@@ -31,6 +31,7 @@ describe('extractPricingEntitiesBySlug', () => {
           { _schema: 'product', _tags: [], entity_id: 'prod-id#1234' },
         ],
       },
+      coupon: { $relation: [] },
       _tags: ['product-tag-1', 'product-tag-2', 'price-tag-1', 'price-tag-2', 'composite'],
     });
   });
@@ -77,6 +78,7 @@ describe('extractPricingEntitiesBySlug', () => {
     expect(extractPricingEntitiesBySlug([])).toStrictEqual({
       price: { $relation: [] },
       product: { $relation: [] },
+      coupon: { $relation: [] },
       _tags: [],
     });
   });

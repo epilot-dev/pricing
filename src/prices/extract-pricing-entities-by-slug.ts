@@ -99,7 +99,7 @@ export const extractPricingEntitiesBySlug = (
   return {
     product: { $relation: productRelations },
     price: { $relation: priceRelations },
-    ...(couponRelations.length > 0 ? { coupon: { $relation: couponRelations } } : {}),
+    coupon: { $relation: couponRelations },
     _tags: [...new Set(pricingTags)],
   };
 };

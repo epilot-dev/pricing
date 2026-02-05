@@ -6,6 +6,7 @@ import {
   formatAmountFromString,
   formatPriceUnit,
   parseDecimalValue,
+  removeTrailingDecimalZeros,
   toIntegerAmount,
   unitDisplayLabels,
 } from './formatters';
@@ -306,5 +307,127 @@ describe('parseDecimalValue', () => {
     ${'1,000,000,50.20'} | ${'100000050.20'}
   `('should parse $value into $expected', ({ value, expected }) => {
     expect(parseDecimalValue(value)).toEqual(expected);
+  });
+});
+
+describe('removeTrailingDoubleDecimalZeros', () => {
+  describe('with dot decimal separator', () => {
+    it.each`
+      input         | expected
+      ${'10.00'}    | ${'10'}
+      ${'10.50'}    | ${'10.50'}
+      ${'10.0000'}  | ${'10'}
+      ${'10.1000'}  | ${'10.10'}
+      ${'10.1200'}  | ${'10.12'}
+      ${'10.0500'}  | ${'10.05'}
+      ${'0.500'}    | ${'0.50'}
+      ${'0.00'}     | ${'0'}
+      ${'123.4500'} | ${'123.45'}
+      ${'999.9900'} | ${'999.99'}
+      ${'1.000000'} | ${'1'}
+    `('should remove trailing double zeros from $input to get $expected', ({ input, expected }) => {
+      expect(removeTrailingDecimalZeros(input)).toBe(expected);
+    });
+  });
+
+  describe('with comma decimal separator', () => {
+    it.each`
+      input         | expected
+      ${'10,00'}    | ${'10'}
+      ${'10,50'}    | ${'10,50'}
+      ${'10,0000'}  | ${'10'}
+      ${'10,1000'}  | ${'10,10'}
+      ${'10,1200'}  | ${'10,12'}
+      ${'10,0500'}  | ${'10,05'}
+      ${'0,500'}    | ${'0,50'}
+      ${'0,00'}     | ${'0'}
+      ${'123,4500'} | ${'123,45'}
+      ${'999,9900'} | ${'999,99'}
+      ${'1,000000'} | ${'1'}
+    `('should remove trailing double zeros from $input to get $expected', ({ input, expected }) => {
+      expect(removeTrailingDecimalZeros(input)).toBe(expected);
+    });
+  });
+
+  describe('with currency symbols and units', () => {
+    it.each`
+      input                   | expected
+      ${'10.00 €'}            | ${'10 €'}
+      ${'10.00 €/Stück'}      | ${'10 €/Stück'}
+      ${'10.1200 USD'}        | ${'10.12 USD'}
+      ${'0.00 €/kWh'}         | ${'0 €/kWh'}
+      ${'123.4500 CHF/month'} | ${'123.45 CHF/month'}
+      ${'10,00 €'}            | ${'10 €'}
+      ${'10,00€/Stück'}       | ${'10€/Stück'}
+      ${'10,1200 USD'}        | ${'10,12 USD'}
+      ${'0,00 €/kWh'}         | ${'0 €/kWh'}
+      ${'123,4500 CHF/month'} | ${'123,45 CHF/month'}
+    `('should remove trailing double zeros from $input with suffix to get $expected', ({ input, expected }) => {
+      expect(removeTrailingDecimalZeros(input)).toBe(expected);
+    });
+  });
+
+  describe('with complex suffixes', () => {
+    it.each`
+      input                        | expected
+      ${'10.00 €/Stück pro Monat'} | ${'10 €/Stück pro Monat'}
+      ${'15.0000/unit'}            | ${'15/unit'}
+      ${'25.1200 per item'}        | ${'25.12 per item'}
+      ${'100.00€'}                 | ${'100€'}
+      ${'50.0000$'}                | ${'50$'}
+      ${'10,00 €/Stück pro Monat'} | ${'10 €/Stück pro Monat'}
+      ${'15,0000/unit'}            | ${'15/unit'}
+      ${'25,1200 per item'}        | ${'25,12 per item'}
+      ${'100,00€'}                 | ${'100€'}
+      ${'50,0000$'}                | ${'50$'}
+    `('should handle complex suffixes correctly for $input', ({ input, expected }) => {
+      expect(removeTrailingDecimalZeros(input)).toBe(expected);
+    });
+  });
+
+  describe('edge cases', () => {
+    it.each`
+      input             | expected      | description
+      ${'10.01'}        | ${'10.01'}    | ${'should not modify numbers without trailing double zeros'}
+      ${'10.10'}        | ${'10.10'}    | ${'should not modify single trailing zero'}
+      ${'10'}           | ${'10'}       | ${'should not modify integers without decimals'}
+      ${'10.'}          | ${'10.'}      | ${'should not modify numbers ending with decimal separator only'}
+      ${'10.0'}         | ${'10'}       | ${'should not modify single decimal zero'}
+      ${'abc'}          | ${'abc'}      | ${'should not modify non-numeric strings'}
+      ${'10.00.00'}     | ${'10.00.00'} | ${'should not modify invalid number formats'}
+      ${''}             | ${''}         | ${'should handle empty strings'}
+      ${'10.000000000'} | ${'10'}       | ${'should remove multiple consecutive double zeros'}
+      ${'10,01'}        | ${'10,01'}    | ${'should not modify numbers without trailing double zeros (comma)'}
+      ${'10,10'}        | ${'10,10'}    | ${'should not modify single trailing zero (comma)'}
+      ${'10,0'}         | ${'10'}       | ${'should not modify single decimal zero (comma)'}
+    `('$description: $input -> $expected', ({ input, expected }) => {
+      expect(removeTrailingDecimalZeros(input)).toBe(expected);
+    });
+  });
+
+  describe('preserves whitespace and formatting', () => {
+    it.each`
+      input              | expected
+      ${'10.00  €'}      | ${'10  €'}
+      ${'10.00\t€'}      | ${'10\t€'}
+      ${'10.00\n€/unit'} | ${'10\n€/unit'}
+      ${'10,00  €'}      | ${'10  €'}
+      ${'10,00\t€'}      | ${'10\t€'}
+      ${'10,00\n€/unit'} | ${'10\n€/unit'}
+    `('should preserve whitespace in $input', ({ input, expected }) => {
+      expect(removeTrailingDecimalZeros(input)).toBe(expected);
+    });
+  });
+
+  describe('with minDecimals', () => {
+    it.each`
+      input        | expected     | minDecimals
+      ${'10.1000'} | ${'10.1'}    | ${0}
+      ${'10.1000'} | ${'10.10'}   | ${2}
+      ${'10.1000'} | ${'10.100'}  | ${3}
+      ${'10.1000'} | ${'10.1000'} | ${4}
+    `('should remove trailing double zeros from $input to get $expected', ({ input, expected, minDecimals }) => {
+      expect(removeTrailingDecimalZeros(input, minDecimals)).toBe(expected);
+    });
   });
 });

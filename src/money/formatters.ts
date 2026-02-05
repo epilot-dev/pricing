@@ -283,6 +283,52 @@ export const unitDisplayLabels = {
 } as const;
 
 /**
+ * Removes trailing double-zero groups from the decimal part of a formatted decimal amount string.
+ *
+ * - Always preserves any suffixes after the number (whitespace, newlines, currency symbols, unit names, etc.).
+ * - Removes the entire decimal part if all digits after the separator are zeros.
+ * - Keeps at least `minDecimals` decimal digits when a fractional part remains after trimming.
+ * - Handles both dot `.` and comma `,` as decimal separators.
+ *
+ * @param decimalAmount - The decimal amount to remove trailing zeros from.
+ * @param minDecimals - The minimum number of decimal digits to keep.
+ * @returns The decimal amount with trailing zeros removed.
+ */
+export const removeTrailingDecimalZeros = (decimalAmount: string, minDecimals = 2): string => {
+  if (decimalAmount.split(/[.,]/).length > 2) return decimalAmount;
+
+  const match = decimalAmount.match(/^(-?\d+)([.,])(\d+)(.*)$/s);
+  if (!match) return decimalAmount;
+
+  const [, intPart, sep, decimals, suffix] = match;
+
+  // Remove trailing double-zero pairs
+  let trimmed = decimals.replace(/(00)+$/, '');
+  const removedDoubleZeros = decimals !== trimmed;
+
+  // If nothing remains, or all remaining decimals are zeros, remove decimal entirely
+  if (trimmed === '' || /^0+$/.test(trimmed)) {
+    return intPart + suffix; // preserve suffix (spaces, newlines, currency)
+  }
+
+  // If minDecimals is 0, we can remove trailing single zeros as well
+  if (minDecimals === 0) {
+    trimmed = trimmed.replace(/0+$/, '');
+    // If all decimals were removed, don't include the decimal separator
+    if (trimmed === '') {
+      return intPart + suffix;
+    }
+  }
+
+  // Pad to minDecimals only if we removed double zeros and minDecimals > 0
+  if (removedDoubleZeros && minDecimals > 0 && trimmed.length < minDecimals) {
+    trimmed = trimmed.padEnd(minDecimals, '0');
+  }
+
+  return `${intPart}${sep}${trimmed}${suffix}`; // always append suffix
+};
+
+/**
  * Formats built-in price units into a displayable representation. Eg. kw -> kW
  *
  * @returns {string} the formatted unit

@@ -35,6 +35,7 @@ const expectedNamedExports = [
   'extractGetAgConfig',
   'getAmountWithTax',
   'getTaxValue',
+  'removeTrailingDecimalZeros',
 ];
 
 /**

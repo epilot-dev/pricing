@@ -1,6 +1,16 @@
+import type { CashbackAmount, PriceGetAg, TaxAmount, TaxAmountBreakdown } from '@epilot/pricing-client';
 import { toDineroFromInteger } from '../money/to-dinero';
 import { PricingModel } from '../prices/constants';
-import type { CompositePriceItem, Price, PriceItem, PriceItemDto, PricingDetails } from '../shared/types';
+import type {
+  CompositePriceItem,
+  Price,
+  PriceItem,
+  PriceItemDto,
+  PricingDetails,
+  RecurrenceAmount,
+  RecurrenceAmountWithTax,
+  TierDetails,
+} from '../shared/types';
 
 export const convertPriceComponentsPrecision = (items: PriceItem[], precision = 2): PriceItem[] =>
   items.map((component) => convertPriceItemPrecision(component, precision));
@@ -73,6 +83,14 @@ export const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): 
       .toUnit()
       .toString(),
   }),
+  ...(typeof priceItem.before_discount_amount_subtotal === 'number' && {
+    before_discount_amount_subtotal: toDineroFromInteger(priceItem.before_discount_amount_subtotal)
+      .convertPrecision(precision)
+      .getAmount(),
+    before_discount_amount_subtotal_decimal: toDineroFromInteger(priceItem.before_discount_amount_subtotal)
+      .toUnit()
+      .toString(),
+  }),
   ...(typeof priceItem.cashback_amount === 'number' && {
     cashback_amount: toDineroFromInteger(priceItem.cashback_amount).convertPrecision(precision).getAmount(),
     cashback_amount_decimal: toDineroFromInteger(priceItem.cashback_amount).toUnit().toString(),
@@ -100,14 +118,14 @@ export const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): 
       .getAmount(),
     before_discount_tax_amount_decimal: toDineroFromInteger(priceItem.before_discount_tax_amount).toUnit().toString(),
   }),
-  taxes: priceItem.taxes!.map((tax) => ({
+  taxes: priceItem.taxes!.map((tax: TaxAmount) => ({
     ...tax,
     amount: toDineroFromInteger(tax.amount || 0)
       .convertPrecision(precision)
       .getAmount(),
   })),
   ...(priceItem.tiers_details && {
-    tiers_details: priceItem.tiers_details.map((tier) => {
+    tiers_details: priceItem.tiers_details.map((tier: TierDetails) => {
       /**
        * @todo Also output the decimal values
        */
@@ -142,7 +160,9 @@ export const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): 
         markup_amount_gross_decimal: toDineroFromInteger(priceItem.get_ag.markup_amount_gross!).toUnit().toString(),
         ...(priceItem.get_ag.additional_markups_enabled &&
           priceItem.get_ag.additional_markups && {
-            additional_markups: Object.entries(priceItem.get_ag.additional_markups).reduce(
+            additional_markups: Object.entries(
+              priceItem.get_ag.additional_markups as NonNullable<PriceGetAg['additional_markups']>,
+            ).reduce(
               (acc, [key, value]) => ({
                 ...acc,
                 [key]: {
@@ -232,11 +252,11 @@ const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem,
       amount_tax: toDineroFromInteger(details.total_details?.amount_tax!).convertPrecision(precision).getAmount(),
       breakdown: {
         ...details.total_details?.breakdown,
-        taxes: details.total_details?.breakdown?.taxes!.map((tax) => ({
+        taxes: details.total_details?.breakdown?.taxes!.map((tax: TaxAmountBreakdown) => ({
           ...tax,
           amount: toDineroFromInteger(tax.amount!).convertPrecision(precision).getAmount(),
         })),
-        recurrences: details.total_details?.breakdown?.recurrences!.map((recurrence) => {
+        recurrences: details.total_details?.breakdown?.recurrences!.map((recurrence: RecurrenceAmount) => {
           return {
             ...recurrence,
             unit_amount_gross: toDineroFromInteger(recurrence.unit_amount_gross!)
@@ -256,6 +276,11 @@ const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem,
                 .convertPrecision(precision)
                 .getAmount(),
             }),
+            ...(Number.isInteger(recurrence.before_discount_amount_subtotal) && {
+              before_discount_amount_subtotal: toDineroFromInteger(recurrence.before_discount_amount_subtotal!)
+                .convertPrecision(precision)
+                .getAmount(),
+            }),
             ...(typeof recurrence.after_cashback_amount_total === 'number' &&
               Number.isInteger(recurrence.after_cashback_amount_total) && {
                 after_cashback_amount_total: toDineroFromInteger(recurrence.after_cashback_amount_total)
@@ -264,19 +289,21 @@ const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem,
               }),
           };
         }),
-        recurrencesByTax: details.total_details?.breakdown?.recurrencesByTax!.map((recurrence) => {
-          return {
-            ...recurrence,
-            amount_total: toDineroFromInteger(recurrence.amount_total).convertPrecision(precision).getAmount(),
-            amount_subtotal: toDineroFromInteger(recurrence.amount_subtotal).convertPrecision(precision).getAmount(),
-            amount_tax: toDineroFromInteger(recurrence.amount_tax!).convertPrecision(precision).getAmount(),
-            tax: {
-              ...recurrence.tax,
-              amount: toDineroFromInteger(recurrence.tax?.amount!).convertPrecision(precision).getAmount(),
-            },
-          };
-        }),
-        cashbacks: details.total_details?.breakdown?.cashbacks?.map((cashback) => ({
+        recurrencesByTax: details.total_details?.breakdown?.recurrencesByTax!.map(
+          (recurrence: RecurrenceAmountWithTax) => {
+            return {
+              ...recurrence,
+              amount_total: toDineroFromInteger(recurrence.amount_total).convertPrecision(precision).getAmount(),
+              amount_subtotal: toDineroFromInteger(recurrence.amount_subtotal).convertPrecision(precision).getAmount(),
+              amount_tax: toDineroFromInteger(recurrence.amount_tax!).convertPrecision(precision).getAmount(),
+              tax: {
+                ...recurrence.tax,
+                amount: toDineroFromInteger(recurrence.tax?.amount!).convertPrecision(precision).getAmount(),
+              },
+            };
+          },
+        ),
+        cashbacks: details.total_details?.breakdown?.cashbacks?.map((cashback: CashbackAmount) => ({
           ...cashback,
           amount_total: toDineroFromInteger(cashback.amount_total!).convertPrecision(precision).getAmount(),
         })),
@@ -292,7 +319,7 @@ const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem,
  */
 export const convertPricingPrecision = (details: PricingDetails, precision: number): PricingDetails => ({
   ...details,
-  items: details.items!.map((item) => {
+  items: details.items!.map((item: PriceItem | CompositePriceItem) => {
     if ((item as CompositePriceItem).total_details) {
       return {
         ...item,
@@ -311,6 +338,8 @@ export const convertPricingPrecision = (details: PricingDetails, precision: numb
 export const convertPriceItemWithCouponAppliedToPriceItemDto = ({
   before_discount_amount_total,
   before_discount_amount_total_decimal,
+  before_discount_amount_subtotal,
+  before_discount_amount_subtotal_decimal,
   before_discount_unit_amount,
   before_discount_unit_amount_decimal,
   before_discount_unit_amount_gross,

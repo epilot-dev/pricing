@@ -202,6 +202,12 @@ const recomputeDetailTotals = (
     typeof priceItemToAppend.before_discount_amount_total !== 'undefined'
       ? toDineroFromInteger(priceItemToAppend.before_discount_amount_total!)
       : undefined;
+
+  const priceBeforeDiscountAmountSubtotal =
+    typeof priceItemToAppend.before_discount_amount_subtotal !== 'undefined'
+      ? toDineroFromInteger(priceItemToAppend.before_discount_amount_subtotal)
+      : undefined;
+
   const priceTax = toDineroFromInteger(priceItemToAppend.taxes?.[0]?.amount || priceItemToAppend.amount_tax || 0);
 
   /**
@@ -252,6 +258,10 @@ const recomputeDetailTotals = (
         before_discount_amount_total: priceBeforeDiscountAmountTotal.getAmount(),
         before_discount_amount_total_decimal: priceBeforeDiscountAmountTotal.toUnit().toString(),
       }),
+      ...(priceBeforeDiscountAmountSubtotal && {
+        before_discount_amount_subtotal: priceBeforeDiscountAmountSubtotal.getAmount(),
+        before_discount_amount_subtotal_decimal: priceBeforeDiscountAmountSubtotal.toUnit().toString(),
+      }),
       ...(priceDiscountAmount && {
         discount_amount: priceDiscountAmount.getAmount(),
         discount_amount_decimal: priceDiscountAmount.toUnit().toString(),
@@ -278,6 +288,10 @@ const recomputeDetailTotals = (
       typeof recurrence.before_discount_amount_total !== 'undefined'
         ? toDineroFromInteger(recurrence.before_discount_amount_total)
         : undefined;
+    const existingRecurrenceBeforeDiscountAmountSubtotal =
+      typeof recurrence.before_discount_amount_subtotal !== 'undefined'
+        ? toDineroFromInteger(recurrence.before_discount_amount_subtotal)
+        : undefined;
     const discountAmount =
       typeof recurrence.discount_amount !== 'undefined' ? toDineroFromInteger(recurrence.discount_amount) : undefined;
 
@@ -291,6 +305,17 @@ const recomputeDetailTotals = (
       const recurrenceBeforeDiscountAmountTotal = initializedExistingTotal.add(baseAmount);
       recurrence.before_discount_amount_total = recurrenceBeforeDiscountAmountTotal.getAmount();
       recurrence.before_discount_amount_total_decimal = recurrenceBeforeDiscountAmountTotal.toUnit().toString();
+    }
+    if (priceBeforeDiscountAmountSubtotal || existingRecurrenceBeforeDiscountAmountSubtotal) {
+      // if recurrence doesn't have before_discount_amount_subtotal yet, initialize it with current subtotal (before adding this item)
+      const initializedExistingSubtotal =
+        existingRecurrenceBeforeDiscountAmountSubtotal ??
+        toDineroFromInteger(recurrence.amount_subtotal).subtract(priceSubtotal);
+
+      const baseAmount = priceBeforeDiscountAmountSubtotal || priceSubtotal;
+      const recurrenceBeforeDiscountAmountSubtotal = initializedExistingSubtotal.add(baseAmount);
+      recurrence.before_discount_amount_subtotal = recurrenceBeforeDiscountAmountSubtotal.getAmount();
+      recurrence.before_discount_amount_subtotal_decimal = recurrenceBeforeDiscountAmountSubtotal.toUnit().toString();
     }
     if (priceDiscountAmount) {
       const recurrenceDiscountAmount = discountAmount?.add(priceDiscountAmount) ?? priceDiscountAmount;

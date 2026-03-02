@@ -26,6 +26,7 @@ const convertAmountsToDinero = <Item extends PriceItem | CompositePriceItem>(ite
         discount_amount: toDinero(item.discount_amount_decimal || '0').getAmount(),
         discount_amount_net: toDinero(item.discount_amount_net_decimal || '0').getAmount(),
         before_discount_amount_total: toDinero(item.before_discount_amount_total_decimal || '0').getAmount(),
+        before_discount_amount_subtotal: toDinero(item.before_discount_amount_subtotal_decimal || '0').getAmount(),
         before_discount_tax_amount: toDinero(item.before_discount_tax_amount_decimal || '0').getAmount(),
         before_discount_unit_amount: toDinero(item.before_discount_unit_amount_decimal || '0').getAmount(),
         before_discount_unit_amount_gross: toDinero(item.before_discount_unit_amount_gross_decimal || '0').getAmount(),

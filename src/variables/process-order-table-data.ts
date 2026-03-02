@@ -245,7 +245,7 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
         !isCoupon && Boolean(item._coupons?.filter((coupon: Coupon) => coupon?.category === 'discount').length);
 
       const redeemedPromoCode: RedeemedPromo | undefined = data?.redeemed_promos?.find((promo: RedeemedPromo) =>
-        promo.coupons.some((c) => c._id === couponId),
+        promo.coupons.some((c: Coupon) => c._id === couponId),
       );
 
       /**
@@ -277,7 +277,17 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
       let unitAmountNetFormatted = originalUnitAmountNetFormatted;
       let unitAmountFormatted = originalUnitAmountFormatted;
 
-      const unitAmountSubtotal = isCoupon ? undefined : item.amount_subtotal || 0;
+      let unitAmountSubtotal;
+
+      if (isItemContainingDiscountCoupon) {
+        unitAmountSubtotal = (item as PriceItem).before_discount_amount_subtotal ?? 0;
+      } else if (isDiscountCoupon) {
+        unitAmountSubtotal = -((item as PriceItem).discount_amount_net ?? 0);
+      } else if (isCashbackCoupon) {
+        unitAmountSubtotal = 0;
+      } else {
+        unitAmountSubtotal = (item as PriceItem).amount_subtotal ?? 0;
+      }
 
       let amountTax;
 

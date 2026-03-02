@@ -2,7 +2,7 @@ import type { Currency } from 'dinero.js';
 import { describe, expect, it } from 'vitest';
 import { priceItem1 } from '../__tests__/fixtures/price.samples';
 import { compositePriceItemWithTieredGraduatedComponent } from '../__tests__/fixtures/price.samples';
-import { tax19percent } from '../__tests__/fixtures/tax.samples';
+import { tax10percent, tax19percent } from '../__tests__/fixtures/tax.samples';
 import {
   fixedCashbackCoupon,
   fixedDiscountCoupon,
@@ -49,6 +49,8 @@ describe('applyDiscounts', () => {
       expect(result.amount_tax).toBe(94536176470571); // 789.46 * 0.75 - ((789.46 * 0.75) / 1.19)
       expect(result.discount_amount).toBe(197365000000000); // 789.46 * 0.25
       expect(result.discount_percentage).toBe(25);
+      expect(result.before_discount_amount_total).toBe(789460000000000); // original gross
+      expect(result.before_discount_amount_subtotal).toBe(663411764705900); // original net
     });
 
     it('should apply 50% discount correctly', () => {
@@ -75,6 +77,8 @@ describe('applyDiscounts', () => {
       expect(result.amount_tax).toBe(63024117647041); // 789.46 * 0.5 - ((789.46 * 0.5) / 1.19)
       expect(result.discount_amount).toBe(394730000000000); // 789.46 * 0.5
       expect(result.discount_percentage).toBe(50);
+      expect(result.before_discount_amount_total).toBe(789460000000000); // original gross
+      expect(result.before_discount_amount_subtotal).toBe(663411764705900); // original net
     });
   });
 
@@ -102,6 +106,8 @@ describe('applyDiscounts', () => {
       expect(result.amount_total).toBe(784460000000000); // 789.46 - 5.00
       expect(result.amount_tax).toBe(125249915966369); // (789.46 - 5.00) - ((789.46 - 5.00) / 1.19)
       expect(result.discount_amount).toBe(5000000000000); // 5.00
+      expect(result.before_discount_amount_total).toBe(789460000000000); // original gross
+      expect(result.before_discount_amount_subtotal).toBe(663411764705900); // original net
     });
 
     it('should not apply discount larger than the price', () => {
@@ -123,6 +129,8 @@ describe('applyDiscounts', () => {
       expect(result.unit_amount).toBe(0);
       expect(result.amount_total).toBe(0);
       expect(result.unit_discount_amount).toBe(789460000000000);
+      expect(result.before_discount_amount_total).toBe(789460000000000); // original gross
+      expect(result.before_discount_amount_subtotal).toBe(663411764705900); // original net
     });
   });
 
@@ -248,6 +256,192 @@ describe('applyDiscounts', () => {
       expect(result.amount_total).toBe(35325000000000000); // Weighted average of discounted tiers
       expect(result.amount_tax).toBe(5640126050420300); // Weighted average of discounted tiers
       expect(result.discount_percentage).toBe(10);
+      expect(result.before_discount_amount_total).toBe(39250000000000000); // sum of tier gross * qty
+      expect(result.before_discount_amount_subtotal).toBe(32983193277310650); // sum of tier net * qty
+    });
+  });
+
+  describe('tax-exclusive percentage discounts', () => {
+    const taxExclusiveParams = {
+      ...baseParams,
+      isTaxInclusive: false,
+      priceItem: {
+        ...priceItem1,
+        is_tax_inclusive: false,
+        _price: { ...priceItem1._price!, is_tax_inclusive: false },
+      },
+    };
+
+    // Tax-exclusive: net=100, gross=119 (19% tax), qty=1
+    const taxExclusiveValues = {
+      unit_amount: 100000000000000, // 100.00 (net is the base in tax-exclusive)
+      unit_amount_net: 100000000000000, // 100.00
+      unit_amount_gross: 119000000000000, // 119.00
+      amount_subtotal: 100000000000000, // 100.00
+      amount_total: 119000000000000, // 119.00
+      amount_tax: 19000000000000, // 19.00
+    };
+
+    it('should apply 25% percentage discount correctly (tax-exclusive)', () => {
+      const result = applyDiscounts(taxExclusiveValues, {
+        ...taxExclusiveParams,
+        coupon: percentageDiscountCoupon,
+      });
+
+      // Tax-exclusive: discount is applied to net first
+      // unitDiscountAmountNet = 100 * 25/100 = 25
+      // unitDiscountAmount = 25 * 1.19 = 29.75
+      // afterDiscountNet = 100 - 25 = 75
+      // afterDiscountGross = 75 * 1.19 = 89.25
+      expect(result.unit_amount).toBe(75000000000000); // net after discount
+      expect(result.unit_amount_net).toBe(75000000000000); // 75.00
+      expect(result.unit_amount_gross).toBe(89250000000000); // 89.25
+      expect(result.amount_subtotal).toBe(75000000000000);
+      expect(result.amount_total).toBe(89250000000000);
+      expect(result.discount_percentage).toBe(25);
+      expect(result.before_discount_amount_total).toBe(119000000000000); // original gross
+      expect(result.before_discount_amount_subtotal).toBe(100000000000000); // original net
+    });
+
+    it('should apply fixed 5 EUR discount correctly (tax-exclusive)', () => {
+      const result = applyDiscounts(taxExclusiveValues, {
+        ...taxExclusiveParams,
+        coupon: fixedDiscountCoupon,
+      });
+
+      // Tax-exclusive: fixed discount applied to net
+      // unitDiscountAmountNet = min(5, 100) = 5
+      // unitDiscountAmount = 5 * 1.19 = 5.95
+      // afterDiscountNet = 100 - 5 = 95
+      // afterDiscountGross = 95 * 1.19 = 113.05
+      expect(result.unit_amount).toBe(95000000000000); // net after discount
+      expect(result.unit_amount_net).toBe(95000000000000); // 95.00
+      expect(result.unit_amount_gross).toBe(113050000000000); // 113.05
+      expect(result.amount_subtotal).toBe(95000000000000);
+      expect(result.amount_total).toBe(113050000000000);
+      expect(result.before_discount_amount_total).toBe(119000000000000); // original gross
+      expect(result.before_discount_amount_subtotal).toBe(100000000000000); // original net
+    });
+  });
+
+  describe('tax-exclusive with multiplier', () => {
+    const taxExclusiveParams = {
+      ...baseParams,
+      isTaxInclusive: false,
+      unitAmountMultiplier: 3,
+      priceItem: {
+        ...priceItem1,
+        is_tax_inclusive: false,
+        _price: { ...priceItem1._price!, is_tax_inclusive: false },
+      },
+    };
+
+    // Tax-exclusive: net=100, gross=119 (19% tax)
+    const taxExclusiveValues = {
+      unit_amount: 100000000000000,
+      unit_amount_net: 100000000000000,
+      unit_amount_gross: 119000000000000,
+      amount_subtotal: 300000000000000, // 100 * 3
+      amount_total: 357000000000000, // 119 * 3
+      amount_tax: 57000000000000, // 19 * 3
+    };
+
+    it('should apply 25% discount with multiplier=3 (tax-exclusive)', () => {
+      const result = applyDiscounts(taxExclusiveValues, {
+        ...taxExclusiveParams,
+        coupon: percentageDiscountCoupon,
+      });
+
+      // unitDiscountAmountNet = 100 * 25/100 = 25
+      // afterDiscountNet = 75, afterDiscountGross = 89.25
+      // amounts multiplied by 3
+      expect(result.unit_amount_net).toBe(75000000000000); // 75.00
+      expect(result.unit_amount_gross).toBe(89250000000000); // 89.25
+      expect(result.amount_subtotal).toBe(225000000000000); // 75 * 3
+      expect(result.amount_total).toBe(267750000000000); // 89.25 * 3
+      expect(result.before_discount_amount_total).toBe(357000000000000); // 119 * 3
+      expect(result.before_discount_amount_subtotal).toBe(300000000000000); // 100 * 3
+    });
+  });
+
+  describe('tax-inclusive with multiplier', () => {
+    it('should apply 25% discount with multiplier=3 (tax-inclusive)', () => {
+      const result = applyDiscounts(
+        {
+          unit_amount: 789460000000000,
+          unit_amount_net: 663411764705900,
+          unit_amount_gross: 789460000000000,
+          amount_subtotal: 1990235294117700, // 663.41 * 3
+          amount_total: 2368380000000000, // 789.46 * 3
+          amount_tax: 378144705882300, // 126.05 * 3
+        },
+        {
+          ...baseParams,
+          unitAmountMultiplier: 3,
+          coupon: percentageDiscountCoupon,
+        },
+      );
+
+      expect(result.amount_subtotal).toBe(1492676470588287); // (789.46 * 0.75 / 1.19) * 3
+      expect(result.amount_total).toBe(1776285000000000); // 789.46 * 0.75 * 3
+      expect(result.before_discount_amount_total).toBe(2368380000000000); // 789.46 * 3
+      expect(result.before_discount_amount_subtotal).toBe(1990235294117700); // 663.41 * 3
+    });
+  });
+
+  describe('tax-exclusive graduated tiered prices', () => {
+    it('should apply percentage discount to graduated tiered prices (tax-exclusive)', () => {
+      const result = applyDiscounts(
+        {
+          tiers_details: [
+            {
+              quantity: 100,
+              unit_amount: 5000,
+              unit_amount_decimal: '050',
+              unit_amount_net: 50000000000000, // 50.00 (net is base in tax-exclusive)
+              unit_amount_gross: 55000000000000, // 55.00 (10% tax)
+              amount_subtotal: 5000000000000000, // 50 * 100
+              amount_total: 5500000000000000, // 55 * 100
+              amount_tax: 500000000000000, // 5 * 100
+            },
+            {
+              quantity: 200,
+              unit_amount: 4000,
+              unit_amount_decimal: '040',
+              unit_amount_net: 40000000000000, // 40.00
+              unit_amount_gross: 44000000000000, // 44.00
+              amount_subtotal: 8000000000000000, // 40 * 200
+              amount_total: 8800000000000000, // 44 * 200
+              amount_tax: 800000000000000, // 4 * 200
+            },
+          ],
+          unit_amount_gross: 99000000000000,
+          unit_amount_net: 90000000000000,
+          amount_subtotal: 13000000000000000, // 5000 + 8000
+          amount_total: 14300000000000000, // 5500 + 8800
+          amount_tax: 1300000000000000,
+        },
+        {
+          ...baseParams,
+          tax: tax10percent,
+          isTaxInclusive: false,
+          coupon: percentage10DiscountCoupon,
+          priceItem: compositePriceItemWithTieredGraduatedComponent.item_components?.[0]!,
+          unitAmountMultiplier: 300,
+        },
+      );
+
+      if (!result.tiers_details) {
+        throw new Error('Expected tiers_details to be defined');
+      }
+
+      // 10% discount on net: tier1 net=45*100=4500, tier2 net=36*200=7200 => subtotal=11700
+      expect(result.amount_subtotal).toBe(11700000000000000);
+      // gross = net * 1.10: tier1=49.5*100=4950, tier2=39.6*200=7920 => total=12870
+      expect(result.amount_total).toBe(12870000000000000);
+      expect(result.discount_percentage).toBe(10);
+      expect(result.before_discount_amount_total).toBe(14300000000000000); // original gross total
+      expect(result.before_discount_amount_subtotal).toBe(13000000000000000); // original net total
     });
   });
 });

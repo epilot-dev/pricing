@@ -3,7 +3,7 @@ import { toDineroFromInteger, toDinero } from '../money/to-dinero';
 import { PricingModel } from '../prices/constants';
 import type { PriceItemsTotals } from '../prices/types';
 import { clamp } from '../shared/clamp';
-import type { Currency, Dinero, PriceItemDto, Tax, Coupon, BillingPeriod } from '../shared/types';
+import type { Currency, Dinero, PriceItemDto, Tax, Coupon, BillingPeriod, TierDetails } from '../shared/types';
 import { getTaxValue } from '../taxes/get-tax-value';
 import { normalizeTimeFrequencyFromDineroInputValue } from '../time-frequency/normalizers';
 
@@ -64,7 +64,7 @@ export const applyDiscounts = (
   // Handle graduated tiered prices
   if (priceItem._price?.pricing_model === PricingModel.tieredGraduated && itemValues.tiers_details) {
     // Apply discount to each tier and sum up the results
-    const discountedTiers = itemValues.tiers_details.map((tier) => {
+    const discountedTiers = itemValues.tiers_details.map((tier: TierDetails) => {
       const tierUnitAmountNet = toDineroFromInteger(tier.unit_amount_net!, currency);
       const tierUnitAmountGross = toDineroFromInteger(tier.unit_amount_gross!, currency);
 
@@ -126,12 +126,13 @@ export const applyDiscounts = (
         discount_amount: unitDiscountAmount.multiply(tier.quantity).getAmount(),
         discount_amount_net: unitDiscountAmountNet.multiply(tier.quantity).getAmount(),
         before_discount_amount_total: tierUnitAmountGross.multiply(tier.quantity).getAmount(),
+        before_discount_amount_subtotal: tierUnitAmountNet.multiply(tier.quantity).getAmount(),
       };
     });
 
     // Sum up all the discounted tier values
     const totals = discountedTiers.reduce(
-      (acc, tier) => ({
+      (acc: PriceItemsTotals, tier: PriceItemsTotals) => ({
         unit_amount_gross: toDineroFromInteger(acc.unit_amount_gross!)
           .add(toDineroFromInteger(tier.unit_amount_gross!))
           .getAmount(),
@@ -144,34 +145,37 @@ export const applyDiscounts = (
         amount_total: toDineroFromInteger(acc.amount_total).add(toDineroFromInteger(tier.amount_total)).getAmount(),
         amount_tax: toDineroFromInteger(acc.amount_tax).add(toDineroFromInteger(tier.amount_tax)).getAmount(),
         unit_discount_amount: toDineroFromInteger(acc.unit_discount_amount || 0)
-          .add(toDineroFromInteger(tier.unit_discount_amount))
+          .add(toDineroFromInteger(tier.unit_discount_amount!))
           .getAmount(),
         before_discount_unit_amount: toDineroFromInteger(acc.before_discount_unit_amount || 0)
-          .add(toDineroFromInteger(tier.before_discount_unit_amount))
+          .add(toDineroFromInteger(tier.before_discount_unit_amount!))
           .getAmount(),
         before_discount_unit_amount_gross: toDineroFromInteger(acc.before_discount_unit_amount_gross || 0)
-          .add(toDineroFromInteger(tier.before_discount_unit_amount_gross))
+          .add(toDineroFromInteger(tier.before_discount_unit_amount_gross!))
           .getAmount(),
         before_discount_unit_amount_net: toDineroFromInteger(acc.before_discount_unit_amount_net || 0)
-          .add(toDineroFromInteger(tier.before_discount_unit_amount_net))
+          .add(toDineroFromInteger(tier.before_discount_unit_amount_net!))
           .getAmount(),
         unit_discount_amount_net: toDineroFromInteger(acc.unit_discount_amount_net || 0)
-          .add(toDineroFromInteger(tier.unit_discount_amount_net))
+          .add(toDineroFromInteger(tier.unit_discount_amount_net!))
           .getAmount(),
         tax_discount_amount: toDineroFromInteger(acc.tax_discount_amount || 0)
-          .add(toDineroFromInteger(tier.tax_discount_amount))
+          .add(toDineroFromInteger(tier.tax_discount_amount!))
           .getAmount(),
         before_discount_tax_amount: toDineroFromInteger(acc.before_discount_tax_amount || 0)
-          .add(toDineroFromInteger(tier.before_discount_tax_amount))
+          .add(toDineroFromInteger(tier.before_discount_tax_amount!))
           .getAmount(),
         discount_amount: toDineroFromInteger(acc.discount_amount || 0)
-          .add(toDineroFromInteger(tier.discount_amount))
+          .add(toDineroFromInteger(tier.discount_amount!))
           .getAmount(),
         discount_amount_net: toDineroFromInteger(acc.discount_amount_net || 0)
-          .add(toDineroFromInteger(tier.discount_amount_net))
+          .add(toDineroFromInteger(tier.discount_amount_net!))
           .getAmount(),
         before_discount_amount_total: toDineroFromInteger(acc.before_discount_amount_total || 0)
-          .add(toDineroFromInteger(tier.before_discount_amount_total))
+          .add(toDineroFromInteger(tier.before_discount_amount_total!))
+          .getAmount(),
+        before_discount_amount_subtotal: toDineroFromInteger(acc.before_discount_amount_subtotal || 0)
+          .add(toDineroFromInteger(tier.before_discount_amount_subtotal!))
           .getAmount(),
       }),
       {
@@ -190,6 +194,7 @@ export const applyDiscounts = (
         discount_amount: 0,
         discount_amount_net: 0,
         before_discount_amount_total: 0,
+        before_discount_amount_subtotal: 0,
       } as PriceItemsTotals,
     );
 
@@ -257,5 +262,6 @@ export const applyDiscounts = (
     discount_amount_net: unitDiscountAmountNet.multiply(unitAmountMultiplier).getAmount(),
     ...(typeof discountPercentage === 'number' && { discount_percentage: discountPercentage }),
     before_discount_amount_total: unitAmountGross.multiply(unitAmountMultiplier).getAmount(),
+    before_discount_amount_subtotal: unitAmountNet.multiply(unitAmountMultiplier).getAmount(),
   };
 };

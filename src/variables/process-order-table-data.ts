@@ -277,16 +277,16 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
       let unitAmountNetFormatted = originalUnitAmountNetFormatted;
       let unitAmountFormatted = originalUnitAmountFormatted;
 
-      let unitAmountSubtotal;
+      let amountSubtotal;
 
       if (isItemContainingDiscountCoupon) {
-        unitAmountSubtotal = (item as PriceItem).before_discount_amount_subtotal ?? 0;
+        amountSubtotal = (item as PriceItem).before_discount_amount_subtotal ?? 0;
       } else if (isDiscountCoupon) {
-        unitAmountSubtotal = -((item as PriceItem).discount_amount_net ?? 0);
+        amountSubtotal = -((item as PriceItem).discount_amount_net ?? 0);
       } else if (isCashbackCoupon) {
-        unitAmountSubtotal = 0;
+        amountSubtotal = 0;
       } else {
-        unitAmountSubtotal = (item as PriceItem).amount_subtotal ?? 0;
+        amountSubtotal = (item as PriceItem).amount_subtotal ?? 0;
       }
 
       let amountTax;
@@ -322,8 +322,8 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
         amountTotal = (item as PriceItem).amount_total ?? 0;
       }
 
-      let unitAmountSubtotalFormatted = safeFormatAmount({
-        amount: unitAmountSubtotal,
+      let amountSubtotalFormatted = safeFormatAmount({
+        amount: amountSubtotal,
         currency: item.currency,
         locale: i18n.language,
       });
@@ -385,7 +385,7 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
 
           unitAmountNetFormatted = '';
           unitAmountFormatted = '';
-          unitAmountSubtotalFormatted = '';
+          amountSubtotalFormatted = '';
           amountTaxFormatted = '';
         }
       } else {
@@ -396,7 +396,7 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
 
         unitAmountNetFormatted = getHiddenAmountString(i18n.t, displayInJourneys, unitAmountNetFormatted);
         unitAmountFormatted = getHiddenAmountString(i18n.t, displayInJourneys, unitAmountFormatted);
-        unitAmountSubtotalFormatted = getHiddenAmountString(i18n.t, displayInJourneys, unitAmountSubtotalFormatted);
+        amountSubtotalFormatted = getHiddenAmountString(i18n.t, displayInJourneys, amountSubtotalFormatted);
         amountTaxFormatted = getHiddenAmountString(i18n.t, displayInJourneys, amountTaxFormatted);
         amountTotalFormatted = getHiddenAmountString(i18n.t, displayInJourneys, amountTotalFormatted);
       }
@@ -407,7 +407,7 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
 
       item.unit_amount_net = unitAmountNetFormatted;
       item.unit_amount = unitAmountFormatted;
-      item.amount_subtotal = unitAmountSubtotalFormatted;
+      item.amount_subtotal = amountSubtotalFormatted;
       item.amount_tax = amountTaxFormatted;
       item.amount_total = amountTotalFormatted;
 

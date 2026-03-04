@@ -11,6 +11,9 @@
       "require": "./dist/cjs/index.cjs"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "types": "./dist/index.d.ts",
   "repository": {
     "type": "git",

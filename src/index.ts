@@ -20,6 +20,7 @@ export { computeQuantities } from './computations/compute-price-item';
 export { extractPricingEntitiesBySlug, extractCouponsFromItem } from './prices/extract-pricing-entities-by-slug';
 export { computeAggregatedAndPriceTotals } from './computations/compute-totals';
 export { PricingModel } from './prices/constants';
+export { isVariablePrice, isVariablePriceItem } from './prices/is-variable-price';
 export { getDisplayTierByQuantity, getDisplayTiersByQuantity, getTierDescription } from './tiers/utils';
 export { computeCumulativeValue } from './tiers/compute-cumulative-value';
 export type {

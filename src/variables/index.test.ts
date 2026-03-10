@@ -140,6 +140,7 @@ describe('getQuantity', () => {
   const baseVariableItem = {
     price_id: 'price_id',
     _price: {
+      pricing_model: 'per_unit',
       variable_price: true,
     },
   };
@@ -147,6 +148,7 @@ describe('getQuantity', () => {
   const baseNotVariableItem = {
     price_id: 'price_id',
     _price: {
+      pricing_model: 'per_unit',
       variable_price: false,
     },
   };

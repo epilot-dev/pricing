@@ -1,5 +1,6 @@
 import { formatAmount, formatAmountFromString, formatPriceUnit } from '../money/formatters';
 import { PricingModel } from '../prices/constants';
+import { isVariablePriceItem } from '../prices/is-variable-price';
 import { isCompositePrice } from '../prices/utils';
 import { isTruthy } from '../shared/is-truthy';
 import type {
@@ -469,7 +470,7 @@ export const getFormattedTieredDetails = (
 };
 
 export const getQuantity = (item: PriceItem, parentItem?: PriceItem) => {
-  if (!parentItem && item._price?.variable_price) {
+  if (!parentItem && isVariablePriceItem(item)) {
     const itemPriceMapping = item.price_mappings?.find((mapping) => mapping.price_id === item.price_id);
     const quantity =
       typeof itemPriceMapping?.value === 'number'
@@ -478,10 +479,10 @@ export const getQuantity = (item: PriceItem, parentItem?: PriceItem) => {
 
     return item.quantity == 1 ? quantity : `${item.quantity} x ${quantity}`;
   }
-  if (parentItem && !item._price?.variable_price) {
+  if (parentItem && !isVariablePriceItem(item)) {
     return parentItem.quantity == 1 ? `${item.quantity}` : `${parentItem.quantity} x ${item.quantity}`;
   }
-  if (parentItem && item._price?.variable_price) {
+  if (parentItem && isVariablePriceItem(item)) {
     const itemPriceMapping = parentItem.price_mappings?.find((mapping) => mapping.price_id === item.price_id);
 
     const quantity =

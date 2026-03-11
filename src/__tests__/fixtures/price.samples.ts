@@ -2416,6 +2416,7 @@ export const compositePriceWithTaxExclusiveComponent: CompositePriceItemDto = {
         _updated_at: '2023-02-08T11:01:50.179Z',
         variable_price: true,
         unit: 'kwh',
+        pricing_model: 'per_unit',
         tax: [
           [
             {
@@ -3205,6 +3206,7 @@ export const compositePriceWithNumberInputEqualsToZero: CompositePriceItemDto = 
         _updated_at: '2023-02-08T11:01:50.179Z',
         variable_price: true,
         unit: 'kwh',
+        pricing_model: 'per_unit',
         tax: [
           [
             {

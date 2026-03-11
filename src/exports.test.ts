@@ -35,6 +35,8 @@ const expectedNamedExports = [
   'extractGetAgConfig',
   'getAmountWithTax',
   'getTaxValue',
+  'isVariablePrice',
+  'isVariablePriceItem',
 ];
 
 /**

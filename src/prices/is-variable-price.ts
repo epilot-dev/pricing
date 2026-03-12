@@ -10,21 +10,24 @@ const isTieredPrice = (price: Price): boolean => {
 };
 
 export const isVariablePrice = (price: Price | CompositePrice): boolean => {
-  if (price.is_composite_price) {
-    return false;
-  }
+  if (price.is_composite_price || Array.isArray(price.price_components)) return false;
 
   const p = price as Price;
+  const { pricing_model, get_ag, variable_price } = p;
 
-  if (isTieredPrice(p)) return true;
-  if (p.pricing_model === PricingModel.dynamicTariff) return true;
-  if (p.pricing_model === PricingModel.externalGetAG) {
-    if (p.get_ag?.type === TypeGetAg.workPrice) return true;
-    if (p.get_ag?.type === TypeGetAg.basePrice && p.get_ag?.markup_pricing_model === MarkupPricingModel.tieredFlatFee) {
-      return true;
-    }
+  if (isTieredPrice(p) || pricing_model === PricingModel.dynamicTariff) return true;
+
+  if (pricing_model === PricingModel.externalGetAG) {
+    return (
+      get_ag?.type === TypeGetAg.workPrice ||
+      (get_ag?.type === TypeGetAg.basePrice && get_ag?.markup_pricing_model === MarkupPricingModel.tieredFlatFee)
+    );
   }
-  if (p.pricing_model === PricingModel.perUnit && p.variable_price) return true;
+
+  // We treat undefined or null pricing_model as perUnit
+  if (pricing_model === PricingModel.perUnit || !pricing_model) {
+    return Boolean(variable_price);
+  }
 
   return false;
 };

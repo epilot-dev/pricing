@@ -54,7 +54,28 @@ describe('isVariablePrice', () => {
     expect(isVariablePrice(makePrice({ pricing_model: 'external_getag' }))).toBe(false);
   });
 
-  it('returns false for CompositePrice', () => {
+  it('returns true for undefined pricing_model with variable_price true', () => {
+    expect(isVariablePrice({ variable_price: true } as Price)).toBe(true);
+  });
+
+  it('returns false for undefined pricing_model with variable_price false', () => {
+    expect(isVariablePrice({ variable_price: false } as Price)).toBe(false);
+  });
+
+  it('returns true for null pricing_model with variable_price true', () => {
+    expect(isVariablePrice({ pricing_model: null, variable_price: true } as unknown as Price)).toBe(true);
+  });
+  it('returns false for null pricing_model with variable_price false', () => {
+    expect(isVariablePrice({ pricing_model: null, variable_price: false } as unknown as Price)).toBe(false);
+  });
+
+  it('returns false for CompositePrice with is_composite_price', () => {
+    const composite = { is_composite_price: true, price_components: [] } as unknown as CompositePrice;
+
+    expect(isVariablePrice(composite)).toBe(false);
+  });
+
+  it('returns false for CompositePrice with price_components array', () => {
     const composite = { price_components: [makePrice()] } as unknown as CompositePrice;
 
     expect(isVariablePrice(composite)).toBe(false);

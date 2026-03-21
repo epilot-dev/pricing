@@ -146,10 +146,10 @@ export function OverviewDemo({ onNavigate }: OverviewDemoProps) {
         ))}
       </div>
 
-      {/* Feature Grid */}
-      <h2 className="text-xl font-bold text-gray-900 mb-4">Explore Capabilities</h2>
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-        {features.map((f) => (
+      {/* Use Cases */}
+      <h2 className="text-xl font-bold text-gray-900 mb-4">Energy & Utility Use Cases</h2>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {useCases.map((f) => (
           <button
             key={f.id}
             onClick={() => onNavigate(f.id)}
@@ -164,10 +164,10 @@ export function OverviewDemo({ onNavigate }: OverviewDemoProps) {
         ))}
       </div>
 
-      {/* Use Cases */}
-      <h2 className="text-xl font-bold text-gray-900 mb-4 mt-10">Energy & Utility Use Cases</h2>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {useCases.map((f) => (
+      {/* Capabilities */}
+      <h2 className="text-xl font-bold text-gray-900 mb-4 mt-10">Capabilities</h2>
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+        {features.map((f) => (
           <button
             key={f.id}
             onClick={() => onNavigate(f.id)}

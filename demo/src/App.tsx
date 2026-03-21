@@ -45,17 +45,22 @@ const sections: Section[] = [
       { id: 'non-commodity', label: 'Non-Commodity', icon: '\uD83D\uDCCB', component: NonCommodityDemo },
     ],
   },
-  { id: 'per-unit', label: 'Per Unit', icon: '\uD83D\uDCE6', component: PerUnitDemo },
-  { id: 'tiered-volume', label: 'Tiered Volume', icon: '\uD83D\uDCCA', component: TieredVolumeDemo },
-  { id: 'tiered-graduated', label: 'Tiered Graduated', icon: '\uD83D\uDCC8', component: TieredGraduatedDemo },
-  { id: 'tiered-flatfee', label: 'Tiered Flat Fee', icon: '\uD83C\uDFF7\uFE0F', component: TieredFlatFeeDemo },
-  { id: 'tax', label: 'Tax Handling', icon: '\uD83E\uDDFE', component: TaxDemo },
-  { id: 'discounts', label: 'Discounts & Coupons', icon: '\uD83C\uDF9F\uFE0F', component: DiscountDemo },
-  { id: 'composite', label: 'Composite Pricing', icon: '\uD83E\uDDE9', component: CompositePriceDemo },
-  { id: 'recurring', label: 'Recurring Billing', icon: '\uD83D\uDD04', component: RecurringBillingDemo },
-  { id: 'currency', label: 'Currency & Formatting', icon: '\uD83D\uDCB1', component: CurrencyDemo },
-  { id: 'dynamic-tariff', label: 'Dynamic Tariff', icon: '\u26A1', component: DynamicTariffDemo },
-  { id: 'getag', label: 'GetAG Energy', icon: '\uD83D\uDD0C', component: GetAGDemo },
+  {
+    group: 'Capabilities',
+    items: [
+      { id: 'per-unit', label: 'Per Unit', icon: '\uD83D\uDCE6', component: PerUnitDemo },
+      { id: 'tiered-volume', label: 'Tiered Volume', icon: '\uD83D\uDCCA', component: TieredVolumeDemo },
+      { id: 'tiered-graduated', label: 'Tiered Graduated', icon: '\uD83D\uDCC8', component: TieredGraduatedDemo },
+      { id: 'tiered-flatfee', label: 'Tiered Flat Fee', icon: '\uD83C\uDFF7\uFE0F', component: TieredFlatFeeDemo },
+      { id: 'tax', label: 'Tax Handling', icon: '\uD83E\uDDFE', component: TaxDemo },
+      { id: 'discounts', label: 'Discounts & Coupons', icon: '\uD83C\uDF9F\uFE0F', component: DiscountDemo },
+      { id: 'composite', label: 'Composite Pricing', icon: '\uD83E\uDDE9', component: CompositePriceDemo },
+      { id: 'recurring', label: 'Recurring Billing', icon: '\uD83D\uDD04', component: RecurringBillingDemo },
+      { id: 'currency', label: 'Currency & Formatting', icon: '\uD83D\uDCB1', component: CurrencyDemo },
+      { id: 'dynamic-tariff', label: 'Dynamic Tariff', icon: '\u26A1', component: DynamicTariffDemo },
+      { id: 'getag', label: 'GetAG Energy', icon: '\uD83D\uDD0C', component: GetAGDemo },
+    ],
+  },
 ];
 
 function getAllSections(): SectionItem[] {

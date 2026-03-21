@@ -139,7 +139,8 @@ export default function App() {
           })}
         </nav>
         <div className="p-4 border-t border-gray-200 text-xs text-gray-400">
-          @epilot/pricing v5.4.0
+          <p>@epilot/pricing v5.4.0</p>
+          <p className="mt-1">Made with love by <a href="https://github.com/jpinho" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">@jpinho</a></p>
         </div>
       </aside>
 

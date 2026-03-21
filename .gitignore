@@ -7,3 +7,4 @@ coverage
 .yalc
 yalc.lock
 .epilot-docs
+node-compile-cache

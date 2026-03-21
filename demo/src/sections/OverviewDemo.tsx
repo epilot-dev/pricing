@@ -1,3 +1,5 @@
+import { CodeBlock } from '../components/CodeBlock';
+
 interface OverviewDemoProps {
   onNavigate: (id: string) => void;
 }
@@ -119,10 +121,11 @@ export function OverviewDemo({ onNavigate }: OverviewDemoProps) {
       {/* Hero */}
       <div className="mb-10">
         <h1 className="text-4xl font-extrabold text-gray-900 mb-3">
-          @epilot/pricing
+          epilot Pricing Playground
         </h1>
         <p className="text-lg text-gray-500 max-w-2xl">
-          A comprehensive pricing calculation engine supporting 6 pricing models, tax handling,
+          Interactive playground for <code className="text-sm bg-gray-100 px-1.5 py-0.5 rounded font-mono">@epilot/pricing</code> — a comprehensive
+          pricing calculation engine supporting 6 pricing models, tax handling,
           discounts, composite pricing, recurring billing, multi-currency formatting, and
           energy-market integrations. Explore each capability below.
         </p>
@@ -177,6 +180,36 @@ export function OverviewDemo({ onNavigate }: OverviewDemoProps) {
             <p className="text-sm text-gray-500 mt-1">{f.desc}</p>
           </button>
         ))}
+      </div>
+
+      {/* Quick Start */}
+      <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <CodeBlock
+          title="Install"
+          language="bash"
+          code={`npm install @epilot/pricing`}
+        />
+        <CodeBlock
+          title="Quick Start"
+          code={`import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+
+const priceItem = {
+  quantity: 5,
+  pricing_model: 'per_unit',
+  is_tax_inclusive: true,
+  _price: {
+    unit_amount_decimal: '49.99',
+    unit_amount_currency: 'EUR',
+    pricing_model: 'per_unit',
+    is_tax_inclusive: true,
+    tax: [{ rate: 19, type: 'VAT' }],
+  },
+  taxes: [{ tax: { rate: 19 } }],
+};
+
+const result = computeAggregatedAndPriceTotals([priceItem]);
+// result.amount_total → 24995 (€249.95)`}
+        />
       </div>
 
       {/* Architecture */}

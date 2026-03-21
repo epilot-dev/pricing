@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
 import { ResultCard } from '../components/ResultCard';
+import { CodeBlock } from '../components/CodeBlock';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 interface ConnectionItem {
@@ -254,6 +255,47 @@ export function HouseConnectionDemo() {
             )}
           </div>
         </div>
+      </div>
+
+      {/* Usage */}
+      <div className="mt-6">
+        <CodeBlock
+          title="Usage"
+          code={`import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+
+// House connection: mix of one-time and recurring items
+const items = [
+${items.filter((i) => i.quantity > 0).map((i) => `  {
+    quantity: ${i.quantity},
+    _price: {
+      unit_amount_decimal: '${i.unitAmountDecimal}',
+      unit_amount_currency: 'EUR',
+      pricing_model: 'per_unit',
+      is_tax_inclusive: false,
+      type: '${i.type}',${i.billingPeriod ? `\n      billing_period: '${i.billingPeriod}',` : ''}
+      tax: [{ rate: ${taxRate}, type: 'VAT' }],
+      description: '${i.name}',
+    },
+    taxes: [{ tax: { rate: ${taxRate} } }],
+  },`).join('\n')}
+  {
+    quantity: 1,
+    _price: {
+      unit_amount_decimal: '${trenchCost.toFixed(2)}',
+      unit_amount_currency: 'EUR',
+      pricing_model: 'per_unit',
+      is_tax_inclusive: false,
+      type: 'one_time',
+      tax: [{ rate: ${taxRate}, type: 'VAT' }],
+      description: 'Trench Work (${distance}m x EUR ${parseFloat(perMeterRate).toFixed(2)}/m)',
+    },
+    taxes: [{ tax: { rate: ${taxRate} } }],
+  },
+];
+
+const result = computeAggregatedAndPriceTotals(items);
+// result.amount_total = ${fmtCents(result.amount_total)}`}
+        />
       </div>
     </div>
   );

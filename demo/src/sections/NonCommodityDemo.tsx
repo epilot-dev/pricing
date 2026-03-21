@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
 import { ResultCard } from '../components/ResultCard';
+import { CodeBlock } from '../components/CodeBlock';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 interface Product {
@@ -330,6 +331,35 @@ export function NonCommodityDemo() {
             )}
           </div>
         </div>
+      </div>
+
+      {/* Usage */}
+      <div className="mt-6">
+        <CodeBlock
+          title="Usage"
+          code={`import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+
+// Non-commodity bundle: hardware + services + maintenance
+const items = [
+${enabledProducts.slice(0, 4).map((p) => `  {
+    quantity: ${p.quantity},
+    _price: {
+      unit_amount_decimal: '${p.price}',
+      unit_amount_currency: 'EUR',
+      pricing_model: 'per_unit',
+      is_tax_inclusive: false,
+      type: '${p.type}',${p.billingPeriod ? `\n      billing_period: '${p.billingPeriod}',` : ''}
+      tax: [{ rate: ${taxRate}, type: 'VAT' }],
+      description: '${p.name}',
+    },
+    taxes: [{ tax: { rate: ${taxRate} } }],
+  },`).join('\n')}${enabledProducts.length > 4 ? `\n  // ... ${enabledProducts.length - 4} more items` : ''}
+];
+
+const result = computeAggregatedAndPriceTotals(items);
+// result.amount_total = ${fmtCents(result.amount_total)}
+// Recurrence breakdown available via result.total_details.breakdown.recurrences`}
+        />
       </div>
     </div>
   );

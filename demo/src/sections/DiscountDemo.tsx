@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
 import { ResultCard } from '../components/ResultCard';
+import { CodeBlock } from '../components/CodeBlock';
 import { buildPriceItemDto, fmtCents, makeCoupon } from '../helpers';
 
 type CouponConfig = {
@@ -252,6 +253,43 @@ export function DiscountDemo() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Usage */}
+      <div className="mt-6">
+        <CodeBlock
+          title="Usage"
+          code={`import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+
+const priceItem = {
+  quantity: ${quantity},
+  pricing_model: 'per_unit',
+  is_tax_inclusive: ${isTaxInclusive},
+  _price: {
+    unit_amount_decimal: '${unitPrice}',
+    unit_amount_currency: 'EUR',
+    pricing_model: 'per_unit',
+    is_tax_inclusive: ${isTaxInclusive},
+    tax: [{ rate: ${taxRate}, type: 'VAT' }],
+  },
+  taxes: [{ tax: { rate: ${taxRate} } }],
+  // Attach coupons to the price item
+  _coupons: [
+    {
+      type: '${couponConfig.type}',
+      category: '${couponConfig.category}',${couponConfig.type === 'percentage' ? `
+      percentage_value: '${couponConfig.value}',` : `
+      fixed_value: ${Math.round(parseFloat(couponConfig.value) * 100)},
+      fixed_value_decimal: '${couponConfig.value}',
+      fixed_value_currency: 'EUR',`}
+    },
+  ],
+};
+
+const result = computeAggregatedAndPriceTotals([priceItem]);
+// result.amount_total = ${fmtCents(discountResult.amount_total)}
+// savings = ${fmtCents(savings)}`}
+        />
       </div>
     </div>
   );

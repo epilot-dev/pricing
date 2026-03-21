@@ -87,7 +87,7 @@ export default function App() {
       >
         <div className="p-4 border-b border-gray-200">
           <h1 className="text-lg font-bold text-gray-900">epilot Pricing</h1>
-          <p className="text-xs text-gray-500 mt-0.5">Interactive Demo</p>
+          <p className="text-xs text-gray-500 mt-0.5">Pricing Playground</p>
         </div>
         <nav className="flex-1 overflow-y-auto py-2">
           {sections.map((section) => {

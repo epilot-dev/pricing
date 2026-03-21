@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
 import { ResultCard } from '../components/ResultCard';
+import { CodeBlock } from '../components/CodeBlock';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 export function GasDemo() {
@@ -263,6 +264,50 @@ export function GasDemo() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Usage */}
+      <div className="mt-6">
+        <CodeBlock
+          title="Usage"
+          code={`import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+
+// Gas tariff: Grundpreis + Arbeitspreis (incl. levies)
+const items = [
+  {
+    quantity: 1,
+    _price: {
+      unit_amount_decimal: '${basePrice}',
+      unit_amount_currency: 'EUR',
+      pricing_model: 'per_unit',
+      is_tax_inclusive: false,
+      type: 'recurring',
+      billing_period: 'yearly',
+      tax: [{ rate: ${taxRate}, type: 'VAT' }],
+      description: 'Grundpreis (Base Price)',
+    },
+    taxes: [{ tax: { rate: ${taxRate} } }],
+  },
+  {
+    quantity: ${consumption},  // kWh consumption
+    _price: {
+      // Work price + markup + CO2 levy + gas storage levy
+      unit_amount_decimal: '${(parseFloat(workPrice) + parseFloat(markup) + parseFloat(co2Levy) + parseFloat(gasStorageLevy)).toFixed(4)}',
+      unit_amount_currency: 'EUR',
+      pricing_model: 'per_unit',
+      is_tax_inclusive: false,
+      type: 'recurring',
+      billing_period: 'yearly',
+      tax: [{ rate: ${taxRate}, type: 'VAT' }],
+      description: 'Arbeitspreis (Work Price)',
+    },
+    taxes: [{ tax: { rate: ${taxRate} } }],
+  },
+];
+
+const result = computeAggregatedAndPriceTotals(items);
+// result.amount_total = ${fmtCents(result.amount_total)} (annual gross)`}
+        />
       </div>
     </div>
   );

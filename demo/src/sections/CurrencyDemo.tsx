@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { formatAmount, formatAmountFromString, getCurrencySymbol, toIntegerAmount } from '@epilot/pricing';
 import { ResultCard } from '../components/ResultCard';
+import { CodeBlock } from '../components/CodeBlock';
 
 const currencies = [
   { code: 'EUR', name: 'Euro', locale: 'de-DE' },
@@ -178,6 +179,35 @@ export function CurrencyDemo() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Usage */}
+      <div className="mt-6">
+        <CodeBlock
+          title="Usage"
+          code={`import {
+  formatAmount,
+  formatAmountFromString,
+  getCurrencySymbol,
+  toIntegerAmount,
+} from '@epilot/pricing';
+
+// Format from integer (cents) amount
+formatAmount({ amount: ${intAmount}, currency: '${selectedCurrency}', locale: '${locale}' });
+// => '${formattedAmount}'
+
+// Format from decimal string
+formatAmountFromString({ decimalAmount: '${amount}', currency: '${selectedCurrency}', locale: '${locale}' });
+// => '${formattedFromString}'
+
+// Get currency symbol
+getCurrencySymbol('${selectedCurrency}', '${locale}');
+// => '${symbol}'
+
+// Convert decimal string to integer (cents)
+toIntegerAmount('${amount}');
+// => ${integerAmount}`}
+        />
       </div>
     </div>
   );

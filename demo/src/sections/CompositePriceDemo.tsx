@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
 import { ResultCard } from '../components/ResultCard';
+import { CodeBlock } from '../components/CodeBlock';
 import { fmtCents, makeTax } from '../helpers';
 
 interface Component {
@@ -280,6 +281,45 @@ export function CompositePriceDemo() {
             )}
           </div>
         </div>
+      </div>
+
+      {/* Usage */}
+      <div className="mt-6">
+        <CodeBlock
+          title="Usage"
+          code={`import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+
+const compositeItem = {
+  quantity: ${parentQty},
+  pricing_model: 'per_unit',
+  is_tax_inclusive: true,
+  _price: {
+    is_composite_price: true,
+    pricing_model: 'per_unit',
+    is_tax_inclusive: true,
+    unit_amount: 0,
+    unit_amount_decimal: '0',
+    unit_amount_currency: 'EUR',
+    tax: [{ rate: ${taxRate}, type: 'VAT' }],
+    price_components: [
+${components.map((c) => `      {
+        unit_amount_decimal: '${c.unitAmountDecimal}',
+        pricing_model: 'per_unit',
+        is_tax_inclusive: true,
+        type: '${c.type}',${c.billingPeriod ? `\n        billing_period: '${c.billingPeriod}',` : ''}
+        description: '${c.name}',
+      },`).join('\n')}
+    ],
+  },
+  price_components: [
+${components.map((c) => `    { quantity: ${c.quantity}, unit_amount_decimal: '${c.unitAmountDecimal}', type: '${c.type}'${c.billingPeriod ? `, billing_period: '${c.billingPeriod}'` : ''} },`).join('\n')}
+  ],
+  taxes: [{ tax: { rate: ${taxRate} } }],
+};
+
+const result = computeAggregatedAndPriceTotals([compositeItem]);
+// result.amount_total = ${fmtCents(result.amount_total)}`}
+        />
       </div>
     </div>
   );

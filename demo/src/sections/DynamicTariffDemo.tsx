@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
 import { ResultCard } from '../components/ResultCard';
+import { CodeBlock } from '../components/CodeBlock';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 export function DynamicTariffDemo() {
@@ -182,6 +183,39 @@ export function DynamicTariffDemo() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Usage */}
+      <div className="mt-6">
+        <CodeBlock
+          title="Usage"
+          code={`import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+
+const priceItem = {
+  quantity: ${quantity},
+  pricing_model: 'per_unit',
+  is_tax_inclusive: ${isTaxInclusive},
+  _price: {
+    unit_amount_decimal: '${totalPerUnit.toFixed(2)}',
+    unit_amount_currency: 'EUR',
+    pricing_model: 'per_unit',
+    is_tax_inclusive: ${isTaxInclusive},
+    type: 'recurring',
+    billing_period: 'monthly',
+    tax: [{ rate: ${taxRate}, type: 'VAT' }],
+    // Dynamic tariff configuration
+    dynamic_tariff: {
+      mode: 'manual',  // or 'day_ahead_market'
+      average_market_price_decimal: '${marketPrice}',
+      markup_amount_decimal: '${markup}',
+    },
+  },
+  taxes: [{ tax: { rate: ${taxRate} } }],
+};
+
+const result = computeAggregatedAndPriceTotals([priceItem]);
+// result.amount_total = ${fmtCents(result.amount_total)}`}
+        />
       </div>
     </div>
   );

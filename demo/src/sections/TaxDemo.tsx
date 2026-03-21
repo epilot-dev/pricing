@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
 import { ResultCard } from '../components/ResultCard';
+import { CodeBlock } from '../components/CodeBlock';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 export function TaxDemo() {
@@ -177,6 +178,41 @@ export function TaxDemo() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Usage */}
+      <div className="mt-6">
+        <CodeBlock
+          title="Usage"
+          code={`import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+
+// Tax-inclusive: price already contains tax
+const inclusiveItem = {
+  quantity: ${quantity},
+  pricing_model: 'per_unit',
+  is_tax_inclusive: true,
+  _price: {
+    unit_amount_decimal: '${unitPrice}',
+    unit_amount_currency: 'EUR',
+    pricing_model: 'per_unit',
+    is_tax_inclusive: true,
+    tax: [{ rate: ${taxRate}, type: 'VAT' }],
+  },
+  taxes: [{ tax: { rate: ${taxRate} } }],
+};
+
+// Tax-exclusive: tax is added on top
+const exclusiveItem = {
+  ...inclusiveItem,
+  is_tax_inclusive: false,
+  _price: { ...inclusiveItem._price, is_tax_inclusive: false },
+};
+
+const inclusiveResult = computeAggregatedAndPriceTotals([inclusiveItem]);
+const exclusiveResult = computeAggregatedAndPriceTotals([exclusiveItem]);
+// Inclusive total: ${fmtCents(inclusiveResult.amount_total)}
+// Exclusive total: ${fmtCents(exclusiveResult.amount_total)}`}
+        />
       </div>
     </div>
   );

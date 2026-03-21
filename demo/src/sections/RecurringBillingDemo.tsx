@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals, normalizeValueToFrequencyUnit } from '@epilot/pricing';
 import { ResultCard } from '../components/ResultCard';
+import { CodeBlock } from '../components/CodeBlock';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 const periods = [
@@ -250,6 +251,42 @@ export function RecurringBillingDemo() {
             )}
           </div>
         )}
+      </div>
+
+      {/* Usage */}
+      <div className="mt-6">
+        <CodeBlock
+          title="Usage"
+          code={`import { computeAggregatedAndPriceTotals, normalizeValueToFrequencyUnit } from '@epilot/pricing';
+
+// Recurring price item
+const priceItem = {
+  quantity: ${quantity},
+  pricing_model: 'per_unit',
+  is_tax_inclusive: ${isTaxInclusive},
+  _price: {
+    unit_amount_decimal: '${unitPrice}',
+    unit_amount_currency: 'EUR',
+    pricing_model: 'per_unit',
+    is_tax_inclusive: ${isTaxInclusive},
+    type: 'recurring',
+    billing_period: '${basePeriod}',
+    tax: [{ rate: ${taxRate}, type: 'VAT' }],
+  },
+  taxes: [{ tax: { rate: ${taxRate} } }],
+};
+
+const result = computeAggregatedAndPriceTotals([priceItem]);
+// result.amount_total = ${fmtCents(result.amount_total)}
+
+// Normalize price across billing periods
+const yearlyPrice = normalizeValueToFrequencyUnit(
+  '${unitPrice}',  // amount
+  '${basePeriod}',  // from
+  'yearly',         // to
+);
+// yearlyPrice = ${normalizedPrices.find((p) => p.periodValue === 'yearly')?.amount.toFixed(2) ?? 'N/A'}`}
+        />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
 import { ResultCard } from '../components/ResultCard';
+import { CodeBlock } from '../components/CodeBlock';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 export function ElectricityDemo() {
@@ -340,6 +341,63 @@ export function ElectricityDemo() {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Usage */}
+      <div className="mt-6">
+        <CodeBlock
+          title="Usage"
+          code={`import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+
+// Electricity tariff: Grundpreis + Arbeitspreis
+const items = [
+  {
+    quantity: 1,
+    _price: {
+      unit_amount_decimal: '${basePrice}',
+      unit_amount_currency: 'EUR',
+      pricing_model: 'per_unit',
+      is_tax_inclusive: false,
+      type: 'recurring',
+      billing_period: 'yearly',
+      tax: [{ rate: ${taxRate}, type: 'VAT' }],
+      description: 'Grundpreis (Base Price)',
+    },
+    taxes: [{ tax: { rate: ${taxRate} } }],
+  },
+  {
+    quantity: ${tariffType === 'dual' ? consumptionHT : totalConsumption},  // ${tariffType === 'dual' ? 'HT' : 'total'} kWh
+    _price: {
+      unit_amount_decimal: '${htRate.toFixed(4)}',
+      unit_amount_currency: 'EUR',
+      pricing_model: 'per_unit',
+      is_tax_inclusive: false,
+      type: 'recurring',
+      billing_period: 'yearly',
+      tax: [{ rate: ${taxRate}, type: 'VAT' }],
+      description: '${tariffType === 'dual' ? 'Arbeitspreis HT (Peak)' : 'Arbeitspreis (Work Price)'}',
+    },
+    taxes: [{ tax: { rate: ${taxRate} } }],
+  },${tariffType === 'dual' ? `
+  {
+    quantity: ${consumptionNT},  // NT kWh
+    _price: {
+      unit_amount_decimal: '${ntRate.toFixed(4)}',
+      unit_amount_currency: 'EUR',
+      pricing_model: 'per_unit',
+      is_tax_inclusive: false,
+      type: 'recurring',
+      billing_period: 'yearly',
+      tax: [{ rate: ${taxRate}, type: 'VAT' }],
+      description: 'Arbeitspreis NT (Off-Peak)',
+    },
+    taxes: [{ tax: { rate: ${taxRate} } }],
+  },` : ''}
+];
+
+const result = computeAggregatedAndPriceTotals(items);
+// result.amount_total = ${fmtCents(result.amount_total)} (annual gross)`}
+        />
       </div>
     </div>
   );

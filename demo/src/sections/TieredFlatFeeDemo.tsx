@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
 import { ResultCard } from '../components/ResultCard';
+import { CodeBlock } from '../components/CodeBlock';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 const defaultTiers = [
@@ -162,6 +163,34 @@ export function TieredFlatFeeDemo() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Usage */}
+      <div className="mt-6">
+        <CodeBlock
+          title="Usage"
+          code={`import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+
+const priceItem = {
+  quantity: ${quantity},
+  pricing_model: 'tiered_flatfee',
+  is_tax_inclusive: ${isTaxInclusive},
+  _price: {
+    unit_amount_decimal: '0',
+    unit_amount_currency: 'EUR',
+    pricing_model: 'tiered_flatfee',
+    is_tax_inclusive: ${isTaxInclusive},
+    tax: [{ rate: ${taxRate}, type: 'VAT' }],
+    tiers: [
+${tiers.map((t) => `      { up_to: ${t.up_to === null ? 'null' : t.up_to}, unit_amount_decimal: '0', flat_fee_amount_decimal: '${t.flat_fee_amount_decimal}' },`).join('\n')}
+    ],
+  },
+  taxes: [{ tax: { rate: ${taxRate} } }],
+};
+
+const result = computeAggregatedAndPriceTotals([priceItem]);
+// result.amount_total = ${result.amount_total}  (${fmtCents(result.amount_total)})`}
+        />
       </div>
     </div>
   );

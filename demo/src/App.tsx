@@ -36,6 +36,15 @@ function isGroup(s: Section): s is SectionGroup {
 
 const sections: Section[] = [
   { id: 'overview', label: 'Overview', icon: '\uD83C\uDFE0', component: OverviewDemo },
+  {
+    group: 'Energy & Utility Use Cases',
+    items: [
+      { id: 'electricity', label: 'Electricity', icon: '\u26A1', component: ElectricityDemo },
+      { id: 'gas', label: 'Gas', icon: '\uD83D\uDD25', component: GasDemo },
+      { id: 'house-connection', label: 'House Connection', icon: '\uD83C\uDFE1', component: HouseConnectionDemo },
+      { id: 'non-commodity', label: 'Non-Commodity', icon: '\uD83D\uDCCB', component: NonCommodityDemo },
+    ],
+  },
   { id: 'per-unit', label: 'Per Unit', icon: '\uD83D\uDCE6', component: PerUnitDemo },
   { id: 'tiered-volume', label: 'Tiered Volume', icon: '\uD83D\uDCCA', component: TieredVolumeDemo },
   { id: 'tiered-graduated', label: 'Tiered Graduated', icon: '\uD83D\uDCC8', component: TieredGraduatedDemo },
@@ -47,15 +56,6 @@ const sections: Section[] = [
   { id: 'currency', label: 'Currency & Formatting', icon: '\uD83D\uDCB1', component: CurrencyDemo },
   { id: 'dynamic-tariff', label: 'Dynamic Tariff', icon: '\u26A1', component: DynamicTariffDemo },
   { id: 'getag', label: 'GetAG Energy', icon: '\uD83D\uDD0C', component: GetAGDemo },
-  {
-    group: 'Use Cases',
-    items: [
-      { id: 'electricity', label: 'Electricity', icon: '\u26A1', component: ElectricityDemo },
-      { id: 'gas', label: 'Gas', icon: '\uD83D\uDD25', component: GasDemo },
-      { id: 'house-connection', label: 'House Connection', icon: '\uD83C\uDFE1', component: HouseConnectionDemo },
-      { id: 'non-commodity', label: 'Non-Commodity', icon: '\uD83D\uDCCB', component: NonCommodityDemo },
-    ],
-  },
 ];
 
 function getAllSections(): SectionItem[] {

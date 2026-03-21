@@ -168,13 +168,17 @@ export function TaxDemo() {
             </div>
             <div className="text-sm">
               <p className="font-medium text-gray-700 mb-2">Tax Breakdown:</p>
-              {multiTaxResult.total_details?.breakdown?.taxes?.map((t: any, i: number) => (
-                <div key={i} className="flex items-center gap-3 py-1.5 border-b border-gray-100">
-                  <span className="badge-amber">{t.tax?.rate ?? t.rateValue}%</span>
-                  <span className="text-gray-600 flex-1">{t.tax?._title || `Tax ${t.rateValue}%`}</span>
-                  <span className="font-medium">{fmtCents(t.amount)}</span>
-                </div>
-              ))}
+              {multiTaxResult.total_details?.breakdown?.taxes?.map((t: any, i: number) => {
+                const rate = t.tax?.rate ?? t.rateValue ?? 0;
+                const type = t.tax?.type || 'VAT';
+                return (
+                  <div key={i} className="flex items-center gap-3 py-1.5 border-b border-gray-100">
+                    <span className="badge-amber">{rate}%</span>
+                    <span className="text-gray-600 flex-1">{type} {rate}%</span>
+                    <span className="font-medium">{fmtCents(t.amount)}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}

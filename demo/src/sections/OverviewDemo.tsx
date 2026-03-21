@@ -82,6 +82,37 @@ const features = [
   },
 ];
 
+const useCases = [
+  {
+    id: 'electricity',
+    title: 'Electricity',
+    desc: 'Single & dual-tariff (HT/NT) electricity pricing with Grundpreis and Arbeitspreis',
+    icon: '⚡',
+    color: 'bg-yellow-50 border-yellow-200',
+  },
+  {
+    id: 'gas',
+    title: 'Gas',
+    desc: 'Gas supply tariffs with CO2 levy, gas storage levy, and per-kWh work price',
+    icon: '🔥',
+    color: 'bg-orange-50 border-orange-200',
+  },
+  {
+    id: 'house-connection',
+    title: 'House Connection',
+    desc: 'Hausanschluss fees with distance-based trench work and connection services',
+    icon: '🏡',
+    color: 'bg-emerald-50 border-emerald-200',
+  },
+  {
+    id: 'non-commodity',
+    title: 'Non-Commodity',
+    desc: 'Network fees, metering charges, government levies, and energy taxes',
+    icon: '📋',
+    color: 'bg-purple-50 border-purple-200',
+  },
+];
+
 export function OverviewDemo({ onNavigate }: OverviewDemoProps) {
   return (
     <div>
@@ -116,6 +147,24 @@ export function OverviewDemo({ onNavigate }: OverviewDemoProps) {
       <h2 className="text-xl font-bold text-gray-900 mb-4">Explore Capabilities</h2>
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         {features.map((f) => (
+          <button
+            key={f.id}
+            onClick={() => onNavigate(f.id)}
+            className={`text-left p-5 rounded-xl border ${f.color} hover:shadow-md transition-shadow group`}
+          >
+            <span className="text-2xl">{f.icon}</span>
+            <h3 className="font-semibold text-gray-900 mt-2 group-hover:text-primary-600 transition-colors">
+              {f.title}
+            </h3>
+            <p className="text-sm text-gray-500 mt-1">{f.desc}</p>
+          </button>
+        ))}
+      </div>
+
+      {/* Use Cases */}
+      <h2 className="text-xl font-bold text-gray-900 mb-4 mt-10">Energy & Utility Use Cases</h2>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {useCases.map((f) => (
           <button
             key={f.id}
             onClick={() => onNavigate(f.id)}

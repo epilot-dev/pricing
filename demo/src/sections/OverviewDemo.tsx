@@ -107,7 +107,7 @@ const useCases = [
   {
     id: 'non-commodity',
     title: 'Non-Commodity',
-    desc: 'Network fees, metering charges, government levies, and energy taxes',
+    desc: 'Solar panels, wallboxes, heat pumps, and smart home products with service contracts',
     icon: '📋',
     color: 'bg-purple-50 border-purple-200',
   },

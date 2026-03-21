@@ -3,313 +3,305 @@ import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
 import { ResultCard } from '../components/ResultCard';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
-type EnergyType = 'power' | 'gas';
-
-interface FeeItem {
+interface Product {
   name: string;
   category: string;
-  rateCtPerKwh: string;
+  price: string;
+  quantity: number;
+  type: 'one_time' | 'recurring';
+  billingPeriod?: string;
   enabled: boolean;
 }
 
-const powerFees: FeeItem[] = [
-  { name: 'Network Fee (Netzentgelt)', category: 'network', rateCtPerKwh: '8.12', enabled: true },
-  { name: 'Metering (Messentgelt)', category: 'meter', rateCtPerKwh: '0.42', enabled: true },
-  { name: 'Meter Operation (Messstellenbetrieb)', category: 'meter', rateCtPerKwh: '0.33', enabled: true },
-  { name: 'Concession Levy (Konzessionsabgabe)', category: 'levy', rateCtPerKwh: '1.66', enabled: true },
-  { name: 'CHP Levy (KWK-Aufschlag)', category: 'levy', rateCtPerKwh: '0.275', enabled: true },
-  { name: 'Offshore Levy', category: 'levy', rateCtPerKwh: '0.591', enabled: true },
-  { name: 'Electricity Tax (Stromsteuer)', category: 'tax', rateCtPerKwh: '2.05', enabled: true },
+const defaultProducts: Product[] = [
+  // Solar
+  { name: 'Solar Panel System (10 kWp)', category: 'solar', price: '12500.00', quantity: 1, type: 'one_time', enabled: true },
+  { name: 'Battery Storage (10 kWh)', category: 'solar', price: '6800.00', quantity: 1, type: 'one_time', enabled: true },
+  { name: 'Solar Installation', category: 'solar', price: '3200.00', quantity: 1, type: 'one_time', enabled: true },
+  { name: 'Solar Maintenance Contract', category: 'solar', price: '29.90', quantity: 1, type: 'recurring', billingPeriod: 'monthly', enabled: true },
+  // E-Mobility
+  { name: 'Wallbox (11 kW)', category: 'emobility', price: '899.00', quantity: 1, type: 'one_time', enabled: false },
+  { name: 'Wallbox Installation', category: 'emobility', price: '450.00', quantity: 1, type: 'one_time', enabled: false },
+  { name: 'Charging Flat Rate', category: 'emobility', price: '59.00', quantity: 1, type: 'recurring', billingPeriod: 'monthly', enabled: false },
+  // Heating
+  { name: 'Heat Pump System', category: 'heating', price: '15800.00', quantity: 1, type: 'one_time', enabled: false },
+  { name: 'Heat Pump Installation', category: 'heating', price: '4500.00', quantity: 1, type: 'one_time', enabled: false },
+  { name: 'Heating Maintenance', category: 'heating', price: '39.90', quantity: 1, type: 'recurring', billingPeriod: 'monthly', enabled: false },
+  // Smart Home
+  { name: 'Smart Thermostat', category: 'smarthome', price: '249.00', quantity: 1, type: 'one_time', enabled: false },
+  { name: 'Energy Manager', category: 'smarthome', price: '499.00', quantity: 1, type: 'one_time', enabled: false },
 ];
 
-const gasFees: FeeItem[] = [
-  { name: 'Network Fee (Netzentgelt)', category: 'network', rateCtPerKwh: '1.62', enabled: true },
-  { name: 'Metering (Messentgelt)', category: 'meter', rateCtPerKwh: '0.28', enabled: true },
-  { name: 'Meter Operation (Messstellenbetrieb)', category: 'meter', rateCtPerKwh: '0.18', enabled: true },
-  { name: 'Concession Levy (Konzessionsabgabe)', category: 'levy', rateCtPerKwh: '0.03', enabled: true },
-  { name: 'Gas Storage Levy (Gasspeicherumlage)', category: 'levy', rateCtPerKwh: '0.059', enabled: true },
-  { name: 'CO2 Levy', category: 'levy', rateCtPerKwh: '0.546', enabled: true },
-  { name: 'Gas Tax (Erdgassteuer)', category: 'tax', rateCtPerKwh: '0.55', enabled: true },
-];
-
-const categoryColors: Record<string, { bg: string; text: string; bar: string; label: string }> = {
-  network: { bg: 'bg-blue-50', text: 'text-blue-700', bar: 'bg-blue-400', label: 'Network' },
-  meter: { bg: 'bg-teal-50', text: 'text-teal-700', bar: 'bg-teal-400', label: 'Metering' },
-  levy: { bg: 'bg-purple-50', text: 'text-purple-700', bar: 'bg-purple-400', label: 'Levies' },
-  tax: { bg: 'bg-red-50', text: 'text-red-700', bar: 'bg-red-400', label: 'Taxes' },
+const categoryMeta: Record<string, { label: string; color: string; bg: string; text: string; icon: string }> = {
+  solar: { label: 'Solar & Storage', color: 'bg-yellow-400', bg: 'bg-yellow-50', text: 'text-yellow-700', icon: '\u2600\uFE0F' },
+  emobility: { label: 'E-Mobility', color: 'bg-blue-400', bg: 'bg-blue-50', text: 'text-blue-700', icon: '\uD83D\uDE97' },
+  heating: { label: 'Heating', color: 'bg-red-400', bg: 'bg-red-50', text: 'text-red-700', icon: '\uD83C\uDF21\uFE0F' },
+  smarthome: { label: 'Smart Home', color: 'bg-green-400', bg: 'bg-green-50', text: 'text-green-700', icon: '\uD83C\uDFE0' },
 };
 
 export function NonCommodityDemo() {
-  const [energyType, setEnergyType] = useState<EnergyType>('power');
-  const [fees, setFees] = useState<FeeItem[]>(powerFees);
-  const [consumption, setConsumption] = useState(3500);
-  const [baseNetworkFee, setBaseNetworkFee] = useState('48.00');
-  const [vatRate, setVatRate] = useState(19);
+  const [products, setProducts] = useState<Product[]>(defaultProducts);
+  const [taxRate, setTaxRate] = useState(19);
 
-  const switchEnergyType = (type: EnergyType) => {
-    setEnergyType(type);
-    setFees(type === 'power' ? powerFees : gasFees);
-    setConsumption(type === 'power' ? 3500 : 15000);
+  const toggleProduct = (idx: number) => {
+    setProducts((prev) => prev.map((p, i) => (i === idx ? { ...p, enabled: !p.enabled } : p)));
   };
 
-  const toggleFee = (idx: number) => {
-    setFees((prev) => prev.map((f, i) => (i === idx ? { ...f, enabled: !f.enabled } : f)));
+  const updateProduct = (idx: number, field: keyof Product, value: any) => {
+    setProducts((prev) => prev.map((p, i) => (i === idx ? { ...p, [field]: value } : p)));
   };
 
-  const updateFeeRate = (idx: number, value: string) => {
-    setFees((prev) => prev.map((f, i) => (i === idx ? { ...f, rateCtPerKwh: value } : f)));
+  const toggleCategory = (category: string) => {
+    setProducts((prev) => {
+      const catProducts = prev.filter((p) => p.category === category);
+      const allEnabled = catProducts.every((p) => p.enabled);
+      return prev.map((p) => (p.category === category ? { ...p, enabled: !allEnabled } : p));
+    });
   };
 
   const result = useMemo(() => {
-    const items: any[] = [];
+    const items = products
+      .filter((p) => p.enabled)
+      .map((p) =>
+        buildPriceItemDto({
+          unitAmountDecimal: p.price,
+          quantity: p.quantity,
+          type: p.type,
+          billingPeriod: p.billingPeriod,
+          taxRate,
+          isTaxInclusive: false,
+          description: p.name,
+        }),
+      );
 
-    // Fixed base network fee (annual)
-    items.push(
-      buildPriceItemDto({
-        unitAmountDecimal: baseNetworkFee,
-        quantity: 1,
-        type: 'recurring',
-        billingPeriod: 'yearly',
-        taxRate: vatRate,
-        isTaxInclusive: false,
-        description: 'Base Network Fee (Grundpreis Netz)',
-      }),
-    );
-
-    // Each enabled fee as a per-kWh charge
-    fees
-      .filter((f) => f.enabled)
-      .forEach((fee) => {
-        items.push(
-          buildPriceItemDto({
-            unitAmountDecimal: (parseFloat(fee.rateCtPerKwh)).toFixed(4),
-            quantity: consumption,
-            type: 'recurring',
-            billingPeriod: 'yearly',
-            taxRate: vatRate,
-            isTaxInclusive: false,
-            description: fee.name,
-          }),
-        );
-      });
+    if (items.length === 0) {
+      return { amount_subtotal: 0, amount_tax: 0, amount_total: 0, items: [], total_details: { breakdown: { recurrences: [] } } };
+    }
 
     return computeAggregatedAndPriceTotals(items);
-  }, [fees, consumption, baseNetworkFee, vatRate]);
+  }, [products, taxRate]);
 
-  // Category totals
-  const categoryTotals = ['network', 'meter', 'levy', 'tax'].map((cat) => ({
-    category: cat,
-    ...categoryColors[cat],
-    total: fees
-      .filter((f) => f.category === cat && f.enabled)
-      .reduce((sum, f) => sum + parseFloat(f.rateCtPerKwh) * consumption, 0),
-  }));
-  const baseCost = parseFloat(baseNetworkFee);
-  const allFeesTotal = categoryTotals.reduce((s, c) => s + c.total, 0);
-  const grandTotalNet = baseCost + allFeesTotal;
+  const enabledProducts = products.filter((p) => p.enabled);
+  const oneTimeCosts = enabledProducts
+    .filter((p) => p.type === 'one_time')
+    .reduce((sum, p) => sum + parseFloat(p.price) * p.quantity, 0);
+  const monthlyCosts = enabledProducts
+    .filter((p) => p.type === 'recurring')
+    .reduce((sum, p) => sum + parseFloat(p.price) * p.quantity, 0);
+
+  const categories = ['solar', 'emobility', 'heating', 'smarthome'];
+  const categoryTotals = categories.map((cat) => {
+    const catProducts = enabledProducts.filter((p) => p.category === cat);
+    return {
+      category: cat,
+      ...categoryMeta[cat],
+      oneTime: catProducts.filter((p) => p.type === 'one_time').reduce((s, p) => s + parseFloat(p.price) * p.quantity, 0),
+      recurring: catProducts.filter((p) => p.type === 'recurring').reduce((s, p) => s + parseFloat(p.price) * p.quantity, 0),
+      count: catProducts.length,
+    };
+  }).filter((c) => c.count > 0);
 
   return (
     <div>
-      <h1 className="section-title">Non-Commodity Fees</h1>
+      <h1 className="section-title">Non-Commodity Products</h1>
       <p className="section-desc">
-        Non-commodity costs include network fees, metering charges, government levies, and energy taxes.
-        These are separate from the commodity (energy) price and typically regulated or set by the grid operator.
+        Products and services beyond the energy supply itself — solar panels, battery storage,
+        wallboxes, heat pumps, and smart home devices. Combines one-time hardware and installation
+        costs with recurring service and maintenance contracts.
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-4">
-          {/* Energy type toggle */}
+          {/* Category toggles */}
           <div className="card">
-            <h3 className="font-semibold text-gray-900 mb-3">Energy Type</h3>
-            <div className="flex gap-2">
-              {([
-                { type: 'power' as const, label: 'Electricity', icon: '\u26A1' },
-                { type: 'gas' as const, label: 'Gas', icon: '\uD83D\uDD25' },
-              ]).map((opt) => (
-                <button
-                  key={opt.type}
-                  onClick={() => switchEnergyType(opt.type)}
-                  className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
-                    energyType === opt.type
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                  }`}
-                >
-                  {opt.icon} {opt.label}
-                </button>
-              ))}
+            <h3 className="font-semibold text-gray-900 mb-3">Product Categories</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {categories.map((cat) => {
+                const meta = categoryMeta[cat];
+                const catProducts = products.filter((p) => p.category === cat);
+                const enabledCount = catProducts.filter((p) => p.enabled).length;
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => toggleCategory(cat)}
+                    className={`p-3 rounded-lg border text-left transition-colors ${
+                      enabledCount > 0
+                        ? `${meta.bg} border-current ${meta.text}`
+                        : 'bg-gray-50 border-gray-200 text-gray-400'
+                    }`}
+                  >
+                    <span className="text-lg">{meta.icon}</span>
+                    <p className="text-sm font-medium mt-1">{meta.label}</p>
+                    <p className="text-[10px] opacity-70">
+                      {enabledCount}/{catProducts.length} selected
+                    </p>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* Base fee */}
+          {/* Product list */}
           <div className="card">
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <h4 className="text-sm font-medium text-gray-700 mb-2">Base Network Fee (fixed annual)</h4>
-              <input
-                type="number"
-                step="0.01"
-                value={baseNetworkFee}
-                onChange={(e) => setBaseNetworkFee(e.target.value)}
-                className="input-field"
-              />
-            </div>
-          </div>
-
-          {/* Fee items */}
-          <div className="card">
-            <h3 className="font-semibold text-gray-900 mb-3">Fee Components (ct/kWh)</h3>
-            <div className="space-y-2">
-              {fees.map((fee, idx) => {
-                const colors = categoryColors[fee.category];
+            <h3 className="font-semibold text-gray-900 mb-3">Products & Services</h3>
+            <div className="space-y-2 max-h-[400px] overflow-y-auto">
+              {products.map((product, idx) => {
+                const meta = categoryMeta[product.category];
                 return (
                   <div
                     key={idx}
-                    className={`flex items-center gap-3 p-2 rounded-lg border transition-colors ${
-                      fee.enabled ? `${colors.bg} border-transparent` : 'bg-gray-50 border-gray-100 opacity-50'
+                    className={`flex items-center gap-3 p-2.5 rounded-lg border transition-colors ${
+                      product.enabled ? `${meta.bg} border-transparent` : 'bg-gray-50 border-gray-100 opacity-50'
                     }`}
                   >
                     <button
-                      onClick={() => toggleFee(idx)}
-                      className={`w-4 h-4 rounded border-2 flex items-center justify-center text-[10px] ${
-                        fee.enabled
+                      onClick={() => toggleProduct(idx)}
+                      className={`w-4 h-4 rounded border-2 flex-shrink-0 flex items-center justify-center text-[10px] ${
+                        product.enabled
                           ? 'bg-primary-600 border-primary-600 text-white'
                           : 'border-gray-300'
                       }`}
                     >
-                      {fee.enabled ? '\u2713' : ''}
+                      {product.enabled ? '\u2713' : ''}
                     </button>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-gray-700 truncate">{fee.name}</p>
-                      <span className={`text-[10px] ${colors.text}`}>{colors.label}</span>
+                      <p className="text-xs font-medium text-gray-700 truncate">{product.name}</p>
+                      <div className="flex items-center gap-2">
+                        <span className={`text-[10px] ${meta.text}`}>{meta.label}</span>
+                        <span
+                          className={`text-[10px] px-1 py-0.5 rounded ${
+                            product.type === 'one_time'
+                              ? 'bg-blue-100 text-blue-600'
+                              : 'bg-green-100 text-green-600'
+                          }`}
+                        >
+                          {product.type === 'one_time' ? 'One-time' : product.billingPeriod}
+                        </span>
+                      </div>
                     </div>
-                    <input
-                      type="number"
-                      step="0.001"
-                      value={fee.rateCtPerKwh}
-                      onChange={(e) => updateFeeRate(idx, e.target.value)}
-                      className="input-field w-20 text-xs text-right"
-                      disabled={!fee.enabled}
-                    />
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        min="1"
+                        value={product.quantity}
+                        onChange={(e) => updateProduct(idx, 'quantity', Math.max(1, Number(e.target.value)))}
+                        className="input-field w-12 text-xs text-center"
+                        disabled={!product.enabled}
+                      />
+                      <input
+                        type="number"
+                        step="0.01"
+                        value={product.price}
+                        onChange={(e) => updateProduct(idx, 'price', e.target.value)}
+                        className="input-field w-24 text-xs text-right"
+                        disabled={!product.enabled}
+                      />
+                    </div>
                   </div>
                 );
               })}
             </div>
           </div>
 
-          {/* Consumption */}
           <div className="card">
-            <label className="text-sm font-medium text-gray-700">
-              Annual Consumption:{' '}
-              <span className="text-primary-600 font-bold">{consumption.toLocaleString()} kWh</span>
-            </label>
-            <input
-              type="range"
-              min={energyType === 'power' ? 1000 : 5000}
-              max={energyType === 'power' ? 10000 : 50000}
-              step={energyType === 'power' ? 100 : 500}
-              value={consumption}
-              onChange={(e) => setConsumption(Number(e.target.value))}
-              className="w-full mt-2 accent-primary-600"
-            />
+            <label className="text-sm font-medium text-gray-700">Tax Rate</label>
+            <select
+              value={taxRate}
+              onChange={(e) => setTaxRate(Number(e.target.value))}
+              className="select-field mt-1"
+            >
+              <option value={0}>0% (Solar tax exemption)</option>
+              <option value={7}>7%</option>
+              <option value={19}>19%</option>
+            </select>
           </div>
         </div>
 
         <div className="space-y-4">
-          {/* Category breakdown bar */}
+          {/* Category cost breakdown */}
           <div className="card">
-            <h3 className="font-semibold text-gray-900 mb-3">Annual Non-Commodity Costs</h3>
+            <h3 className="font-semibold text-gray-900 mb-3">Cost by Category</h3>
 
-            <div className="h-10 flex rounded-lg overflow-hidden mb-4">
-              <div
-                className="bg-gray-400 flex items-center justify-center text-white text-xs font-medium"
-                style={{ width: `${Math.max((baseCost / grandTotalNet) * 100, 1)}%` }}
-                title={`Base: EUR ${baseCost.toFixed(2)}`}
-              >
-                {(baseCost / grandTotalNet) * 100 > 8 ? 'Base' : ''}
-              </div>
-              {categoryTotals
-                .filter((c) => c.total > 0)
-                .map((cat) => (
-                  <div
-                    key={cat.category}
-                    className={`${cat.bar} flex items-center justify-center text-white text-xs font-medium transition-all duration-300`}
-                    style={{ width: `${Math.max((cat.total / grandTotalNet) * 100, 1)}%` }}
-                    title={`${cat.label}: EUR ${cat.total.toFixed(2)}`}
-                  >
-                    {(cat.total / grandTotalNet) * 100 > 8 ? cat.label : ''}
-                  </div>
-                ))}
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center gap-3 p-2 bg-gray-50 rounded">
-                <div className="w-3 h-3 rounded-sm bg-gray-400" />
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-700">Base Network Fee</p>
-                  <p className="text-xs text-gray-400">Fixed annual</p>
-                </div>
-                <span className="font-bold text-sm">EUR {baseCost.toFixed(2)}</span>
-              </div>
-              {categoryTotals
-                .filter((c) => c.total > 0)
-                .map((cat) => (
-                  <div key={cat.category} className="flex items-center gap-3 p-2 bg-gray-50 rounded">
-                    <div className={`w-3 h-3 rounded-sm ${cat.bar}`} />
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-700">{cat.label}</p>
-                      <p className="text-xs text-gray-400">
-                        {fees
-                          .filter((f) => f.category === cat.category && f.enabled)
-                          .length}{' '}
-                        component(s)
-                      </p>
+            {categoryTotals.length === 0 ? (
+              <p className="text-sm text-gray-400 text-center py-4">No products selected</p>
+            ) : (
+              <>
+                {/* Stacked bar for one-time costs */}
+                {oneTimeCosts > 0 && (
+                  <div className="mb-4">
+                    <p className="text-xs text-gray-500 mb-1">One-time costs</p>
+                    <div className="h-8 flex rounded-lg overflow-hidden">
+                      {categoryTotals
+                        .filter((c) => c.oneTime > 0)
+                        .map((cat) => (
+                          <div
+                            key={cat.category}
+                            className={`${cat.color} flex items-center justify-center text-white text-xs font-medium transition-all duration-300`}
+                            style={{ width: `${(cat.oneTime / oneTimeCosts) * 100}%` }}
+                            title={`${cat.label}: EUR ${cat.oneTime.toFixed(2)}`}
+                          >
+                            {(cat.oneTime / oneTimeCosts) * 100 > 15 ? cat.icon : ''}
+                          </div>
+                        ))}
                     </div>
-                    <span className="font-bold text-sm">EUR {cat.total.toFixed(2)}</span>
                   </div>
-                ))}
-              <div className="border-t border-gray-200 pt-2 mt-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-gray-700">Total Non-Commodity (net)</span>
-                  <span className="text-lg font-bold text-gray-900">EUR {grandTotalNet.toFixed(2)}</span>
+                )}
+
+                <div className="space-y-2">
+                  {categoryTotals.map((cat) => (
+                    <div key={cat.category} className="flex items-center gap-3 p-2 bg-gray-50 rounded">
+                      <div className={`w-3 h-3 rounded-sm ${cat.color}`} />
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-700">{cat.icon} {cat.label}</p>
+                        <p className="text-xs text-gray-400">{cat.count} item(s)</p>
+                      </div>
+                      <div className="text-right">
+                        {cat.oneTime > 0 && (
+                          <p className="text-sm font-bold">EUR {cat.oneTime.toFixed(2)}</p>
+                        )}
+                        {cat.recurring > 0 && (
+                          <p className="text-xs text-green-600">+ EUR {cat.recurring.toFixed(2)}/mo</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className="border-t border-gray-200 pt-2 mt-2 space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">One-time total (net)</span>
+                      <span className="font-bold text-gray-900">EUR {oneTimeCosts.toFixed(2)}</span>
+                    </div>
+                    {monthlyCosts > 0 && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600">Monthly total (net)</span>
+                        <span className="font-bold text-green-600">EUR {monthlyCosts.toFixed(2)}/mo</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </div>
+              </>
+            )}
           </div>
 
-          {/* Per-kWh summary */}
+          {/* Bundle summary */}
           <div className="card">
-            <h3 className="font-semibold text-gray-900 mb-3">Per-kWh Breakdown</h3>
+            <h3 className="font-semibold text-gray-900 mb-3">Selected Bundle</h3>
             <div className="space-y-1.5">
-              {fees
-                .filter((f) => f.enabled)
-                .map((fee, idx) => {
-                  const totalRate = fees
-                    .filter((f) => f.enabled)
-                    .reduce((s, f) => s + parseFloat(f.rateCtPerKwh), 0);
-                  const pct = (parseFloat(fee.rateCtPerKwh) / totalRate) * 100;
-                  const colors = categoryColors[fee.category];
-                  return (
-                    <div key={idx} className="flex items-center gap-2">
-                      <span className="text-[10px] text-gray-500 w-32 truncate" title={fee.name}>
-                        {fee.name.split('(')[0].trim()}
-                      </span>
-                      <div className="flex-1 bg-gray-100 rounded-full h-3 overflow-hidden">
-                        <div className={`${colors.bar} h-full rounded-full`} style={{ width: `${pct}%` }} />
-                      </div>
-                      <span className="text-[10px] font-medium w-14 text-right">{fee.rateCtPerKwh} ct</span>
-                    </div>
-                  );
-                })}
-              <div className="border-t border-gray-200 pt-2 text-right">
-                <span className="text-sm font-bold text-gray-900">
-                  Total:{' '}
-                  {fees
-                    .filter((f) => f.enabled)
-                    .reduce((s, f) => s + parseFloat(f.rateCtPerKwh), 0)
-                    .toFixed(3)}{' '}
-                  ct/kWh
-                </span>
-              </div>
+              {enabledProducts.map((p, idx) => (
+                <div key={idx} className="flex items-center justify-between text-sm py-1 border-b border-gray-50">
+                  <span className="text-gray-600 truncate flex-1 mr-2">
+                    {categoryMeta[p.category].icon} {p.name}
+                    {p.quantity > 1 && <span className="text-gray-400"> x{p.quantity}</span>}
+                  </span>
+                  <span className="font-medium whitespace-nowrap">
+                    EUR {(parseFloat(p.price) * p.quantity).toFixed(2)}
+                    {p.type === 'recurring' && <span className="text-green-600 text-xs">/mo</span>}
+                  </span>
+                </div>
+              ))}
+              {enabledProducts.length === 0 && (
+                <p className="text-sm text-gray-400 text-center py-2">No products selected</p>
+              )}
             </div>
           </div>
 
@@ -317,15 +309,25 @@ export function NonCommodityDemo() {
           <div className="card">
             <h3 className="font-semibold text-gray-900 mb-3">Computed via Library</h3>
             <div className="grid grid-cols-2 gap-3">
-              <ResultCard label="Annual Net" value={fmtCents(result.amount_subtotal)} />
-              <ResultCard label={`VAT (${vatRate}%)`} value={fmtCents(result.amount_tax)} color="amber" />
-              <ResultCard label="Annual Gross" value={fmtCents(result.amount_total)} highlight color="green" />
-              <ResultCard
-                label="Monthly Gross"
-                value={fmtCents(Math.round((result.amount_total ?? 0) / 12))}
-                color="blue"
-              />
+              <ResultCard label="Total Net" value={fmtCents(result.amount_subtotal)} />
+              <ResultCard label={`Tax (${taxRate}%)`} value={fmtCents(result.amount_tax)} color="amber" />
+              <ResultCard label="Total Gross" value={fmtCents(result.amount_total)} highlight color="green" />
+              <ResultCard label="Items" value={enabledProducts.length} />
             </div>
+
+            {(result.total_details?.breakdown?.recurrences?.length ?? 0) > 0 && (
+              <div className="mt-4">
+                <p className="text-sm font-medium text-gray-700 mb-2">By Recurrence:</p>
+                {result.total_details?.breakdown?.recurrences?.map((r: any, i: number) => (
+                  <div key={i} className="flex items-center justify-between py-1.5 border-b border-gray-100 text-sm">
+                    <span className={r.type === 'one_time' ? 'badge-blue' : 'badge-green'}>
+                      {r.type === 'one_time' ? 'One-time' : r.billing_period}
+                    </span>
+                    <span className="font-medium">{fmtCents(r.amount_total)}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

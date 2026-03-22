@@ -37,16 +37,16 @@ function isGroup(s: Section): s is SectionGroup {
 const sections: Section[] = [
   { id: 'overview', label: 'Overview', icon: '\uD83C\uDFE0', component: OverviewDemo },
   {
-    group: 'Energy & Utility Use Cases',
+    group: 'Energy Products',
     items: [
       { id: 'electricity', label: 'Electricity', icon: '\u26A1', component: ElectricityDemo },
       { id: 'gas', label: 'Gas', icon: '\uD83D\uDD25', component: GasDemo },
       { id: 'house-connection', label: 'House Connection', icon: '\uD83C\uDFE1', component: HouseConnectionDemo },
-      { id: 'non-commodity', label: 'Non-Commodity', icon: '\uD83D\uDCCB', component: NonCommodityDemo },
+      { id: 'non-commodity', label: 'Products & Add-ons', icon: '\u2600\uFE0F', component: NonCommodityDemo },
     ],
   },
   {
-    group: 'Capabilities',
+    group: 'Pricing Models',
     items: [
       { id: 'per-unit', label: 'Per Unit', icon: '\uD83D\uDCE6', component: PerUnitDemo },
       { id: 'tiered-volume', label: 'Tiered Volume', icon: '\uD83D\uDCCA', component: TieredVolumeDemo },
@@ -85,39 +85,51 @@ export default function App() {
   const activeItem = allSections.find((s) => s.id === activeSection);
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden bg-gray-50">
       {/* Sidebar */}
       <aside
-        className={`${sidebarOpen ? 'w-64' : 'w-0 overflow-hidden'} flex-shrink-0 bg-white border-r border-gray-200 flex flex-col transition-all duration-200`}
+        className={`${sidebarOpen ? 'w-72' : 'w-0 overflow-hidden'} flex-shrink-0 bg-white border-r border-gray-100 flex flex-col transition-all duration-300`}
       >
-        <div className="p-4 border-b border-gray-200">
-          <h1 className="text-lg font-bold text-gray-900">epilot Pricing</h1>
-          <p className="text-xs text-gray-500 mt-0.5">Pricing Playground</p>
+        {/* Brand */}
+        <div className="p-5 border-b border-gray-100">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-base font-extrabold text-gray-900 tracking-tight">epilot Pricing</h1>
+              <p className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Interactive Playground</p>
+            </div>
+          </div>
         </div>
-        <nav className="flex-1 overflow-y-auto py-2">
+
+        {/* Nav */}
+        <nav className="flex-1 overflow-y-auto py-3 px-3">
           {sections.map((section) => {
             if (isGroup(section)) {
               return (
-                <div key={section.group}>
-                  <div className="px-4 pt-4 pb-1">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
-                      {section.group}
-                    </p>
+                <div key={section.group} className="mt-5 first:mt-0">
+                  <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-widest text-gray-300">
+                    {section.group}
+                  </p>
+                  <div className="space-y-0.5">
+                    {section.items.map((item) => (
+                      <button
+                        key={item.id}
+                        onClick={() => setActiveSection(item.id)}
+                        className={`w-full text-left px-3 py-2.5 rounded-xl text-sm flex items-center gap-3 transition-all duration-200 ${
+                          activeSection === item.id
+                            ? 'bg-primary-50 text-primary-700 font-semibold shadow-sm'
+                            : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'
+                        }`}
+                      >
+                        <span className="text-base w-6 text-center">{item.icon}</span>
+                        <span>{item.label}</span>
+                      </button>
+                    ))}
                   </div>
-                  {section.items.map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => setActiveSection(item.id)}
-                      className={`w-full text-left px-4 pl-6 py-2.5 text-sm flex items-center gap-3 transition-colors ${
-                        activeSection === item.id
-                          ? 'bg-primary-50 text-primary-700 font-medium border-r-2 border-primary-600'
-                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                      }`}
-                    >
-                      <span className="text-base">{item.icon}</span>
-                      {item.label}
-                    </button>
-                  ))}
                 </div>
               );
             }
@@ -126,40 +138,51 @@ export default function App() {
               <button
                 key={section.id}
                 onClick={() => setActiveSection(section.id)}
-                className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 transition-colors ${
+                className={`w-full text-left px-3 py-2.5 rounded-xl text-sm flex items-center gap-3 transition-all duration-200 ${
                   activeSection === section.id
-                    ? 'bg-primary-50 text-primary-700 font-medium border-r-2 border-primary-600'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    ? 'bg-primary-50 text-primary-700 font-semibold shadow-sm'
+                    : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'
                 }`}
               >
-                <span className="text-base">{section.icon}</span>
-                {section.label}
+                <span className="text-base w-6 text-center">{section.icon}</span>
+                <span>{section.label}</span>
               </button>
             );
           })}
         </nav>
-        <div className="p-4 border-t border-gray-200 text-xs text-gray-400">
-          <p>@epilot/pricing v5.4.0</p>
-          <p className="mt-1">Made with love by <a href="https://github.com/jpinho" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">@jpinho</a></p>
+
+        {/* Footer */}
+        <div className="p-4 border-t border-gray-100">
+          <div className="flex items-center gap-2 text-xs text-gray-400">
+            <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
+            <span className="font-mono">v5.4.0</span>
+          </div>
+          <p className="text-[10px] text-gray-300 mt-1.5">
+            Made with care by{' '}
+            <a href="https://github.com/jpinho" target="_blank" rel="noopener noreferrer" className="text-primary-500 hover:text-primary-600 font-medium">
+              @jpinho
+            </a>
+          </p>
         </div>
       </aside>
 
       {/* Main content */}
       <main className="flex-1 overflow-y-auto">
-        <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-sm border-b border-gray-200 px-6 py-3 flex items-center gap-3">
+        <div className="sticky top-0 z-10 bg-white/70 backdrop-blur-xl border-b border-gray-100 px-6 py-3 flex items-center gap-4">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500"
+            className="p-2 rounded-xl hover:bg-gray-100 text-gray-400 transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <h2 className="text-sm font-semibold text-gray-700">
-            {activeItem?.icon} {activeItem?.label}
-          </h2>
+          <div className="flex items-center gap-2">
+            <span className="text-lg">{activeItem?.icon}</span>
+            <h2 className="text-sm font-bold text-gray-700">{activeItem?.label}</h2>
+          </div>
         </div>
-        <div className="p-6 max-w-6xl mx-auto">
+        <div className="p-8 max-w-7xl mx-auto">
           <ActiveComponent onNavigate={setActiveSection} />
         </div>
       </main>

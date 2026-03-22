@@ -1,189 +1,247 @@
+import { SolarIllustration, WallboxIllustration, HeatPumpIllustration, SmartHomeIllustration } from '../components/ProductShowcase';
 import { CodeBlock } from '../components/CodeBlock';
 
 interface OverviewDemoProps {
   onNavigate: (id: string) => void;
 }
 
-const features = [
-  {
-    id: 'per-unit',
-    title: 'Per Unit Pricing',
-    desc: 'Simple price x quantity calculations with tax support',
-    icon: '📦',
-    color: 'bg-blue-50 border-blue-200',
-  },
-  {
-    id: 'tiered-volume',
-    title: 'Tiered Volume',
-    desc: 'Single tier selected based on total quantity',
-    icon: '📊',
-    color: 'bg-indigo-50 border-indigo-200',
-  },
-  {
-    id: 'tiered-graduated',
-    title: 'Tiered Graduated',
-    desc: 'Different rates apply to different quantity ranges',
-    icon: '📈',
-    color: 'bg-purple-50 border-purple-200',
-  },
-  {
-    id: 'tiered-flatfee',
-    title: 'Tiered Flat Fee',
-    desc: 'Fixed fee based on quantity range',
-    icon: '🏷️',
-    color: 'bg-pink-50 border-pink-200',
-  },
-  {
-    id: 'tax',
-    title: 'Tax Handling',
-    desc: 'Inclusive/exclusive tax with multi-rate breakdown',
-    icon: '🧾',
-    color: 'bg-green-50 border-green-200',
-  },
-  {
-    id: 'discounts',
-    title: 'Discounts & Coupons',
-    desc: 'Fixed, percentage, and cashback coupon types',
-    icon: '🎟️',
-    color: 'bg-amber-50 border-amber-200',
-  },
-  {
-    id: 'composite',
-    title: 'Composite Pricing',
-    desc: 'Multi-component bundled price items',
-    icon: '🧩',
-    color: 'bg-cyan-50 border-cyan-200',
-  },
-  {
-    id: 'recurring',
-    title: 'Recurring Billing',
-    desc: 'Billing periods and frequency normalization',
-    icon: '🔄',
-    color: 'bg-teal-50 border-teal-200',
-  },
-  {
-    id: 'currency',
-    title: 'Currency & Formatting',
-    desc: 'Multi-currency support with locale-aware formatting',
-    icon: '💱',
-    color: 'bg-emerald-50 border-emerald-200',
-  },
-  {
-    id: 'dynamic-tariff',
-    title: 'Dynamic Tariff',
-    desc: 'Market-based pricing with configurable markup',
-    icon: '⚡',
-    color: 'bg-yellow-50 border-yellow-200',
-  },
-  {
-    id: 'getag',
-    title: 'GetAG Energy Pricing',
-    desc: 'German energy operator integration with tiered markups',
-    icon: '🔌',
-    color: 'bg-orange-50 border-orange-200',
-  },
-];
-
-const useCases = [
+const energyProducts = [
   {
     id: 'electricity',
-    title: 'Electricity',
-    desc: 'Single & dual-tariff (HT/NT) electricity pricing with Grundpreis and Arbeitspreis',
-    icon: '⚡',
-    color: 'bg-yellow-50 border-yellow-200',
+    title: 'Electricity Tariffs',
+    desc: 'Single & dual-tariff pricing with Grundpreis, Arbeitspreis, and smart meter support',
+    icon: '\u26A1',
+    gradient: 'gradient-electricity',
+    price: 'from 28.5 ct/kWh',
   },
   {
     id: 'gas',
-    title: 'Gas',
-    desc: 'Gas supply tariffs with CO2 levy, gas storage levy, and per-kWh work price',
-    icon: '🔥',
-    color: 'bg-orange-50 border-orange-200',
+    title: 'Gas Supply',
+    desc: 'Gas tariffs with CO2 levy, storage levy, and per-kWh work price breakdowns',
+    icon: '\uD83D\uDD25',
+    gradient: 'gradient-gas',
+    price: 'from 8.9 ct/kWh',
   },
   {
     id: 'house-connection',
     title: 'House Connection',
-    desc: 'Hausanschluss fees with distance-based trench work and connection services',
-    icon: '🏡',
-    color: 'bg-emerald-50 border-emerald-200',
+    desc: 'Hausanschluss fees with distance-based trench work and multi-utility connections',
+    icon: '\uD83C\uDFE1',
+    gradient: 'gradient-house',
+    price: 'from EUR 1,850',
   },
   {
     id: 'non-commodity',
-    title: 'Non-Commodity',
-    desc: 'Solar panels, wallboxes, heat pumps, and smart home products with service contracts',
-    icon: '📋',
-    color: 'bg-purple-50 border-purple-200',
+    title: 'Products & Add-ons',
+    desc: 'Solar, wallboxes, heat pumps, and smart home bundles with service contracts',
+    icon: '\u2600\uFE0F',
+    gradient: 'gradient-solar',
+    price: 'Bundles from EUR 899',
   },
+];
+
+const addOnShowcase = [
+  {
+    title: 'Solar & Battery',
+    desc: 'Complete PV systems with battery storage and installation',
+    illustration: SolarIllustration,
+    price: 'EUR 12,500',
+    sub: '+ EUR 29.90/mo maintenance',
+    features: ['10 kWp solar system', '10 kWh battery storage', 'Professional installation', 'Maintenance contract'],
+  },
+  {
+    title: 'E-Mobility',
+    desc: 'Wallbox charging solutions for home and fleet',
+    illustration: WallboxIllustration,
+    price: 'EUR 899',
+    sub: '+ EUR 59/mo charging flat rate',
+    features: ['11 kW wallbox', 'Professional installation', 'Smart charging', 'Monthly flat rate'],
+  },
+  {
+    title: 'Heat Pumps',
+    desc: 'Modern heating solutions with smart controls',
+    illustration: HeatPumpIllustration,
+    price: 'EUR 15,800',
+    sub: '+ EUR 39.90/mo service',
+    features: ['Air-to-water system', 'Installation included', 'Smart thermostat', 'Service contract'],
+  },
+  {
+    title: 'Smart Home',
+    desc: 'Intelligent energy management and automation',
+    illustration: SmartHomeIllustration,
+    price: 'EUR 249',
+    sub: 'Energy manager from EUR 499',
+    features: ['Smart thermostat', 'Energy monitoring', 'App control', 'Consumption insights'],
+  },
+];
+
+const capabilities = [
+  { id: 'per-unit', title: 'Per Unit', icon: '\uD83D\uDCE6' },
+  { id: 'tiered-volume', title: 'Tiered Volume', icon: '\uD83D\uDCCA' },
+  { id: 'tiered-graduated', title: 'Graduated', icon: '\uD83D\uDCC8' },
+  { id: 'tiered-flatfee', title: 'Flat Fee', icon: '\uD83C\uDFF7\uFE0F' },
+  { id: 'tax', title: 'Tax', icon: '\uD83E\uDDFE' },
+  { id: 'discounts', title: 'Discounts', icon: '\uD83C\uDF9F\uFE0F' },
+  { id: 'composite', title: 'Composite', icon: '\uD83E\uDDE9' },
+  { id: 'recurring', title: 'Recurring', icon: '\uD83D\uDD04' },
+  { id: 'currency', title: 'Currency', icon: '\uD83D\uDCB1' },
+  { id: 'dynamic-tariff', title: 'Dynamic', icon: '\u26A1' },
+  { id: 'getag', title: 'GetAG', icon: '\uD83D\uDD0C' },
 ];
 
 export function OverviewDemo({ onNavigate }: OverviewDemoProps) {
   return (
     <div>
       {/* Hero */}
-      <div className="mb-10">
-        <h1 className="text-4xl font-extrabold text-gray-900 mb-3">
-          epilot Pricing Playground
+      <div className="mb-12">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-50 text-primary-700 text-xs font-semibold mb-4">
+          <div className="w-1.5 h-1.5 rounded-full bg-primary-500"></div>
+          Interactive Playground
+        </div>
+        <h1 className="text-5xl font-extrabold text-gray-900 mb-4 tracking-tight leading-tight">
+          Energy Pricing,<br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-blue-400">
+            Made Simple.
+          </span>
         </h1>
-        <p className="text-lg text-gray-500 max-w-2xl">
-          Interactive playground for <code className="text-sm bg-gray-100 px-1.5 py-0.5 rounded font-mono">@epilot/pricing</code> — a comprehensive
-          pricing calculation engine supporting 6 pricing models, tax handling,
-          discounts, composite pricing, recurring billing, multi-currency formatting, and
-          energy-market integrations. Explore each capability below.
+        <p className="text-lg text-gray-500 max-w-xl leading-relaxed">
+          Configure tariffs, bundle products, and compute prices in real-time.
+          From electricity and gas to solar panels and wallboxes — everything your sales team needs.
         </p>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-4 gap-4 mb-10">
+      {/* Stats row */}
+      <div className="flex gap-3 mb-12 flex-wrap">
         {[
-          { label: 'Pricing Models', value: '6' },
-          { label: 'Exported Functions', value: '40+' },
-          { label: 'Billing Periods', value: '6' },
-          { label: 'Decimal Precision', value: '12 digits' },
+          { label: 'Pricing Models', value: '6', color: 'bg-blue-50 text-blue-700' },
+          { label: 'Billing Periods', value: '6', color: 'bg-emerald-50 text-emerald-700' },
+          { label: 'Functions', value: '40+', color: 'bg-amber-50 text-amber-700' },
+          { label: 'Decimal Precision', value: '12 digits', color: 'bg-purple-50 text-purple-700' },
         ].map((stat) => (
-          <div key={stat.label} className="card text-center">
-            <p className="text-2xl font-bold text-primary-600">{stat.value}</p>
-            <p className="text-xs text-gray-500 mt-1">{stat.label}</p>
+          <div key={stat.label} className={`stat-pill ${stat.color}`}>
+            <span className="font-extrabold">{stat.value}</span>
+            <span className="opacity-70">{stat.label}</span>
           </div>
         ))}
       </div>
 
-      {/* Use Cases */}
-      <h2 className="text-xl font-bold text-gray-900 mb-4">Energy & Utility Use Cases</h2>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {useCases.map((f) => (
+      {/* Energy Products — tariff card grid */}
+      <h2 className="text-2xl font-extrabold text-gray-900 mb-1 tracking-tight">Energy Products</h2>
+      <p className="text-sm text-gray-400 mb-6">Click any card to explore the interactive tariff configurator</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-14">
+        {energyProducts.map((p) => (
           <button
-            key={f.id}
-            onClick={() => onNavigate(f.id)}
-            className={`text-left p-5 rounded-xl border ${f.color} hover:shadow-md transition-shadow group`}
+            key={p.id}
+            onClick={() => onNavigate(p.id)}
+            className="text-left group"
           >
-            <span className="text-2xl">{f.icon}</span>
-            <h3 className="font-semibold text-gray-900 mt-2 group-hover:text-primary-600 transition-colors">
-              {f.title}
-            </h3>
-            <p className="text-sm text-gray-500 mt-1">{f.desc}</p>
+            <div className="tariff-card hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <div className={`${p.gradient} px-5 py-4 text-white`}>
+                <span className="text-2xl">{p.icon}</span>
+                <h3 className="font-bold mt-2 text-base">{p.title}</h3>
+              </div>
+              <div className="p-5">
+                <p className="text-sm text-gray-500 mb-3 leading-relaxed">{p.desc}</p>
+                <p className="text-sm font-extrabold text-gray-900">{p.price}</p>
+                <p className="text-xs text-primary-600 font-semibold mt-2 group-hover:text-primary-700 transition-colors">
+                  Explore tariff &rarr;
+                </p>
+              </div>
+            </div>
           </button>
         ))}
       </div>
 
-      {/* Capabilities */}
-      <h2 className="text-xl font-bold text-gray-900 mb-4 mt-10">Capabilities</h2>
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-        {features.map((f) => (
+      {/* Add-on Showcase with illustrations */}
+      <h2 className="text-2xl font-extrabold text-gray-900 mb-1 tracking-tight">Products & Add-ons</h2>
+      <p className="text-sm text-gray-400 mb-6">Complete product bundles your customers can visualize and configure</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-14">
+        {addOnShowcase.map((product) => {
+          const Illustration = product.illustration;
+          return (
+            <button
+              key={product.title}
+              onClick={() => onNavigate('non-commodity')}
+              className="text-left group"
+            >
+              <div className="showcase-card">
+                <div className="h-40 overflow-hidden">
+                  <Illustration />
+                </div>
+                <div className="p-5">
+                  <h3 className="font-bold text-gray-900 mb-1">{product.title}</h3>
+                  <p className="text-xs text-gray-400 mb-3">{product.desc}</p>
+                  <p className="text-xl font-extrabold text-gray-900">{product.price}</p>
+                  <p className="text-xs text-emerald-600 font-medium mt-0.5">{product.sub}</p>
+                  <div className="mt-3 space-y-1">
+                    {product.features.slice(0, 3).map((f, i) => (
+                      <div key={i} className="flex items-center gap-1.5 text-[11px] text-gray-500">
+                        <svg className="w-3 h-3 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                        {f}
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-xs text-primary-600 font-semibold mt-3 group-hover:text-primary-700">
+                    Configure bundle &rarr;
+                  </p>
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Capabilities strip */}
+      <h2 className="text-2xl font-extrabold text-gray-900 mb-1 tracking-tight">Pricing Capabilities</h2>
+      <p className="text-sm text-gray-400 mb-6">Explore individual pricing models and features</p>
+      <div className="flex flex-wrap gap-2 mb-14">
+        {capabilities.map((c) => (
           <button
-            key={f.id}
-            onClick={() => onNavigate(f.id)}
-            className={`text-left p-5 rounded-xl border ${f.color} hover:shadow-md transition-shadow group`}
+            key={c.id}
+            onClick={() => onNavigate(c.id)}
+            className="flex items-center gap-2 px-4 py-2.5 bg-white rounded-xl border border-gray-100 text-sm font-medium text-gray-600 hover:text-primary-700 hover:border-primary-200 hover:bg-primary-50 transition-all shadow-sm hover:shadow-md"
           >
-            <span className="text-2xl">{f.icon}</span>
-            <h3 className="font-semibold text-gray-900 mt-2 group-hover:text-primary-600 transition-colors">
-              {f.title}
-            </h3>
-            <p className="text-sm text-gray-500 mt-1">{f.desc}</p>
+            <span>{c.icon}</span>
+            {c.title}
           </button>
         ))}
+      </div>
+
+      {/* Customer journey visualization */}
+      <div className="card mb-10">
+        <h2 className="text-xl font-extrabold text-gray-900 mb-6 tracking-tight">Customer Journey</h2>
+        <div className="flex items-stretch gap-0 overflow-x-auto pb-2">
+          {[
+            { step: '1', label: 'Browse Products', desc: 'Customer selects tariff or product bundle', icon: '\uD83D\uDED2', color: 'bg-blue-50 text-blue-700' },
+            { step: '2', label: 'Configure', desc: 'Adjust consumption, select add-ons, set preferences', icon: '\u2699\uFE0F', color: 'bg-amber-50 text-amber-700' },
+            { step: '3', label: 'Price Calculation', desc: 'Real-time pricing with tax, discounts, recurrences', icon: '\uD83D\uDCB0', color: 'bg-emerald-50 text-emerald-700' },
+            { step: '4', label: 'Order Summary', desc: 'Clear breakdown for customer and sales team', icon: '\u2705', color: 'bg-purple-50 text-purple-700' },
+          ].map((s, i) => (
+            <div key={s.step} className="flex items-stretch">
+              {i > 0 && (
+                <div className="flex items-center px-2">
+                  <svg className="w-6 h-6 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              )}
+              <div className={`${s.color} rounded-2xl p-5 min-w-[200px] flex-1`}>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-xl">{s.icon}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest opacity-50">Step {s.step}</span>
+                </div>
+                <p className="font-bold text-sm">{s.label}</p>
+                <p className="text-xs opacity-70 mt-1">{s.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Quick Start */}
-      <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <CodeBlock
           title="Install"
           language="bash"
@@ -208,35 +266,8 @@ const priceItem = {
 };
 
 const result = computeAggregatedAndPriceTotals([priceItem]);
-// result.amount_total → 24995 (€249.95)`}
+// result.amount_total → 24995 (EUR 249.95)`}
         />
-      </div>
-
-      {/* Architecture */}
-      <div className="mt-10 card">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">How It Works</h2>
-        <div className="flex items-center gap-4 text-sm overflow-x-auto pb-2">
-          {[
-            { step: '1', label: 'Price Items', desc: 'Define price, quantity, tax, coupons' },
-            { step: '2', label: 'Compute', desc: 'computeAggregatedAndPriceTotals()' },
-            { step: '3', label: 'Results', desc: 'Subtotals, tax, discounts, recurrences' },
-          ].map((s, i) => (
-            <div key={s.step} className="flex items-center gap-4">
-              {i > 0 && (
-                <svg className="w-6 h-6 text-gray-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              )}
-              <div className="bg-gray-50 rounded-lg p-4 min-w-[180px]">
-                <div className="w-7 h-7 rounded-full bg-primary-100 text-primary-700 text-xs font-bold flex items-center justify-center mb-2">
-                  {s.step}
-                </div>
-                <p className="font-semibold text-gray-900">{s.label}</p>
-                <p className="text-xs text-gray-500 mt-0.5">{s.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );

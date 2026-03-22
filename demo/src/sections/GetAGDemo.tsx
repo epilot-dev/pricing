@@ -205,7 +205,7 @@ export function GetAGDemo() {
             <h3 className="font-semibold text-gray-900 mb-3">Computed via Library</h3>
             <div className="grid grid-cols-2 gap-3">
               <ResultCard label="Annual Net" value={fmtCents(result.amount_subtotal)} />
-              <ResultCard label="Tax ({taxRate}%)" value={fmtCents(result.amount_tax)} color="amber" />
+              <ResultCard label={`Tax (${taxRate}%)`} value={fmtCents(result.amount_tax)} color="amber" />
               <ResultCard label="Annual Gross" value={fmtCents(result.amount_total)} highlight color="green" />
               <ResultCard
                 label="Monthly Gross"

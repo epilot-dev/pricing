@@ -19,7 +19,7 @@ const defaultItems: ConnectionItem[] = [
   { name: 'Gas Connection', unitAmountDecimal: '1450.00', quantity: 1, type: 'one_time', icon: '\uD83D\uDD25' },
   { name: 'Water Connection', unitAmountDecimal: '2200.00', quantity: 1, type: 'one_time', icon: '\uD83D\uDCA7' },
   { name: 'Construction Power Supply', unitAmountDecimal: '350.00', quantity: 1, type: 'one_time', icon: '\uD83D\uDEA7' },
-  { name: 'Meter Installation Fee', unitAmountDecimal: '12.50', quantity: 1, type: 'recurring', billingPeriod: 'monthly', icon: '\uD83D\uDCDF' },
+  { name: 'Meter Installation Fee', unitAmountDecimal: '12.50', quantity: 1, type: 'recurring', billingPeriod: 'monthly', icon: '\uD83D\uDCCB' },
 ];
 
 export function HouseConnectionDemo() {
@@ -204,7 +204,7 @@ export function HouseConnectionDemo() {
 
             <div className="cost-line">
               <div className="flex items-center gap-2">
-                <span className="text-sm">\u26CF\uFE0F</span>
+                <span className="text-sm">{'\u{1F6E0}\uFE0F'}</span>
                 <div>
                   <span className="cost-line-label">Trench Work</span>
                   <p className="text-[10px] text-gray-400">{distance}m x EUR {parseFloat(perMeterRate).toFixed(2)}/m</p>

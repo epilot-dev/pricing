@@ -62,7 +62,7 @@ export function ElectricityDemo() {
     return computeAggregatedAndPriceTotals(items);
   }, [tariffType, basePrice, workPriceHT, workPriceNT, markupHT, markupNT, consumptionHT, consumptionNT, taxRate]);
 
-  const totalConsumption = tariffType === 'dual' ? consumptionHT + consumptionNT : consumptionHT + consumptionNT;
+  const totalConsumption = consumptionHT + consumptionNT;
   const baseCost = parseFloat(basePrice);
   const htRate = parseFloat(workPriceHT) + parseFloat(markupHT);
   const ntRate = parseFloat(workPriceNT) + parseFloat(markupNT);

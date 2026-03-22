@@ -9,7 +9,7 @@ const energyProducts = [
   {
     id: 'electricity',
     title: 'Electricity Tariffs',
-    desc: 'Single & dual-tariff pricing with Grundpreis, Arbeitspreis, and smart meter support',
+    desc: 'Single & dual-tariff pricing with Grundpreis, Arbeitspreis, and smart meter support.',
     icon: '\u26A1',
     gradient: 'gradient-electricity',
     price: 'from 28.5 ct/kWh',
@@ -135,17 +135,19 @@ export function OverviewDemo({ onNavigate }: OverviewDemoProps) {
             onClick={() => onNavigate(p.id)}
             className="text-left group"
           >
-            <div className="tariff-card hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div className="tariff-card hover:shadow-xl transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
               <div className={`${p.gradient} px-5 py-4 text-white`}>
                 <span className="text-2xl">{p.icon}</span>
                 <h3 className="font-bold mt-2 text-base">{p.title}</h3>
               </div>
-              <div className="p-5">
-                <p className="text-sm text-gray-500 mb-3 leading-relaxed">{p.desc}</p>
-                <p className="text-sm font-extrabold text-gray-900">{p.price}</p>
-                <p className="text-xs text-primary-600 font-semibold mt-2 group-hover:text-primary-700 transition-colors">
-                  Explore tariff &rarr;
-                </p>
+              <div className="p-5 flex-1 flex flex-col">
+                <p className="text-sm text-gray-500 mb-3 leading-relaxed line-clamp-2 min-h-[2.5rem]">{p.desc}</p>
+                <div className="mt-auto">
+                  <p className="text-sm font-extrabold text-gray-900">{p.price}</p>
+                  <p className="text-xs text-primary-600 font-semibold mt-2 group-hover:text-primary-700 transition-colors">
+                    Explore tariff &rarr;
+                  </p>
+                </div>
               </div>
             </div>
           </button>
@@ -164,13 +166,13 @@ export function OverviewDemo({ onNavigate }: OverviewDemoProps) {
               onClick={() => onNavigate('non-commodity')}
               className="text-left group"
             >
-              <div className="showcase-card">
+              <div className="showcase-card h-full flex flex-col">
                 <div className="h-40 overflow-hidden">
                   <Illustration />
                 </div>
-                <div className="p-5">
+                <div className="p-5 flex-1 flex flex-col">
                   <h3 className="font-bold text-gray-900 mb-1">{product.title}</h3>
-                  <p className="text-xs text-gray-400 mb-3">{product.desc}</p>
+                  <p className="text-xs text-gray-400 mb-3 line-clamp-2 min-h-[2rem]">{product.desc}</p>
                   <p className="text-xl font-extrabold text-gray-900">{product.price}</p>
                   <p className="text-xs text-emerald-600 font-medium mt-0.5">{product.sub}</p>
                   <div className="mt-3 space-y-1">

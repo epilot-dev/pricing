@@ -157,10 +157,23 @@
   /* ── Slider styling ── */
   input[type="range"] {
     @apply h-2 rounded-full appearance-none cursor-pointer;
-    background: linear-gradient(to right, #e5e7eb, #e5e7eb);
+    background: #e5e7eb;
   }
   input[type="range"]::-webkit-slider-thumb {
     @apply w-5 h-5 rounded-full appearance-none cursor-pointer shadow-md border-2 border-white;
+    background: #2563eb;
+  }
+  input[type="range"]::-moz-range-thumb {
+    @apply w-5 h-5 rounded-full cursor-pointer shadow-md border-2 border-white;
+    background: #2563eb;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    @apply h-2 rounded-full;
+    background: #e5e7eb;
+  }
+  input[type="range"]::-moz-range-track {
+    @apply h-2 rounded-full;
+    background: #e5e7eb;
   }
 
   /* ── Stat pill ── */

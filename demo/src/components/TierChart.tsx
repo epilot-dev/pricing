@@ -25,16 +25,12 @@ export function TierChart({ bars, title, valueFormatter = (v) => v.toFixed(2) }:
               <span className="text-xs font-medium text-gray-600">{valueFormatter(bar.value)}</span>
               <div
                 className={`w-full rounded-t-md transition-all duration-300 ${
-                  bar.active
-                    ? 'bg-primary-500 shadow-md shadow-primary-200'
-                    : 'bg-gray-200'
+                  bar.active ? 'bg-primary-500 shadow-md shadow-primary-200' : 'bg-gray-200'
                 }`}
                 style={{ height: `${height}%` }}
               />
               <span className="text-xs text-gray-500 text-center leading-tight">{bar.label}</span>
-              {bar.sublabel && (
-                <span className="text-[10px] text-gray-400 text-center">{bar.sublabel}</span>
-              )}
+              {bar.sublabel && <span className="text-[10px] text-gray-400 text-center">{bar.sublabel}</span>}
             </div>
           );
         })}

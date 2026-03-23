@@ -164,7 +164,7 @@ export function OverviewDemo({ onNavigate }: OverviewDemoProps) {
           const Illustration = product.illustration;
           return (
             <button key={product.title} onClick={() => onNavigate('non-commodity')} className="text-left group">
-              <div className="showcase-card h-full flex flex-col">
+              <div className="showcase-card h-full flex flex-col pt-3">
                 <div className="h-40 overflow-hidden">
                   <Illustration />
                 </div>

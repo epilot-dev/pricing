@@ -9,4 +9,3 @@ yalc.lock
 .epilot-docs
 node-compile-cache
 demo/screenshots/capture.mjs
-demo/test-results/

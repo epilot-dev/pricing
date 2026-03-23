@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { CompositePriceDemo } from './sections/CompositePriceDemo';
 import { CurrencyDemo } from './sections/CurrencyDemo';
 import { DiscountDemo } from './sections/DiscountDemo';
@@ -77,9 +77,25 @@ function getAllSections(): SectionItem[] {
 
 const allSections = getAllSections();
 
+const isMobile = () => window.matchMedia('(max-width: 767px)').matches;
+
 export default function App() {
   const [activeSection, setActiveSection] = useState('overview');
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(() => !isMobile());
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    const handler = (e: MediaQueryListEvent) => {
+      if (e.matches) setSidebarOpen(false);
+    };
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
+  const navigate = useCallback((id: string) => {
+    setActiveSection(id);
+    if (isMobile()) setSidebarOpen(false);
+  }, []);
 
   const ActiveComponent = allSections.find((s) => s.id === activeSection)?.component ?? OverviewDemo;
   const activeItem = allSections.find((s) => s.id === activeSection);
@@ -118,7 +134,7 @@ export default function App() {
                     {section.items.map((item) => (
                       <button
                         key={item.id}
-                        onClick={() => setActiveSection(item.id)}
+                        onClick={() => navigate(item.id)}
                         className={`w-full text-left px-3 py-2.5 rounded-xl text-sm flex items-center gap-3 transition-all duration-200 ${
                           activeSection === item.id
                             ? 'bg-primary-50 text-primary-700 font-semibold shadow-sm'
@@ -137,7 +153,7 @@ export default function App() {
             return (
               <button
                 key={section.id}
-                onClick={() => setActiveSection(section.id)}
+                onClick={() => navigate(section.id)}
                 className={`w-full text-left px-3 py-2.5 rounded-xl text-sm flex items-center gap-3 transition-all duration-200 ${
                   activeSection === section.id
                     ? 'bg-primary-50 text-primary-700 font-semibold shadow-sm'
@@ -188,7 +204,7 @@ export default function App() {
           </div>
         </div>
         <div className="p-8 max-w-7xl mx-auto">
-          <ActiveComponent onNavigate={setActiveSection} />
+          <ActiveComponent onNavigate={navigate} />
         </div>
       </main>
     </div>

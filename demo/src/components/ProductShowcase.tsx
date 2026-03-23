@@ -76,7 +76,13 @@ export function WallboxIllustration() {
       <circle cx="145" cy="58" r="3" fill="#60A5FA" />
       <circle cx="145" cy="58" r="1.5" fill="#93C5FD" />
       {/* Charging cable */}
-      <path d="M145 70 C145 78 140 82 130 85 C120 88 100 88 90 85" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+      <path
+        d="M145 70 C145 78 140 82 130 85 C120 88 100 88 90 85"
+        stroke="#374151"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        fill="none"
+      />
       {/* Car */}
       <rect x="30" y="72" width="70" height="22" rx="4" fill="#3B82F6" />
       <rect x="38" y="64" width="48" height="12" rx="3" fill="#60A5FA" />
@@ -166,11 +172,15 @@ export function SmartHomeIllustration() {
       {/* Thermostat icon */}
       <circle cx="30" cy="55" r="12" fill="white" stroke="#10B981" strokeWidth="1.5" />
       <path d="M30 48 L30 55 L35 55" stroke="#10B981" strokeWidth="1.5" strokeLinecap="round" />
-      <text x="25" y="66" fontSize="5" fill="#6B7280">22°</text>
+      <text x="25" y="66" fontSize="5" fill="#6B7280">
+        22°
+      </text>
       {/* Energy meter */}
       <rect x="160" y="45" width="24" height="30" rx="3" fill="white" stroke="#10B981" strokeWidth="1" />
       <rect x="163" y="48" width="18" height="8" rx="1" fill="#D1FAE5" />
-      <text x="165" y="55" fontSize="5" fill="#059669" fontFamily="monospace">3.2kW</text>
+      <text x="165" y="55" fontSize="5" fill="#059669" fontFamily="monospace">
+        3.2kW
+      </text>
       {/* Connection lines */}
       <path d="M42 55 L60 55" stroke="#10B981" strokeWidth="0.8" strokeDasharray="3 2" opacity="0.5" />
       <path d="M140 60 L160 60" stroke="#10B981" strokeWidth="0.8" strokeDasharray="3 2" opacity="0.5" />
@@ -216,14 +226,20 @@ export function ProductShowcase({
       <div className="showcase-card-image relative">
         <Illustration />
         {tag && (
-          <span className={`absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${tagColor}`}>
+          <span
+            className={`absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${tagColor}`}
+          >
             {tag}
           </span>
         )}
         {selected !== undefined && (
-          <div className={`absolute top-3 left-3 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
-            selected ? 'bg-primary-600 text-white' : 'bg-white/80 backdrop-blur-sm text-gray-400 border border-gray-200'
-          }`}>
+          <div
+            className={`absolute top-3 left-3 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
+              selected
+                ? 'bg-primary-600 text-white'
+                : 'bg-white/80 backdrop-blur-sm text-gray-400 border border-gray-200'
+            }`}
+          >
             {selected ? '✓' : ''}
           </div>
         )}
@@ -242,7 +258,11 @@ export function ProductShowcase({
           {features.map((f, i) => (
             <div key={i} className="flex items-center gap-2 text-xs text-gray-600">
               <svg className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                <path
+                  fillRule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clipRule="evenodd"
+                />
               </svg>
               {f}
             </div>

@@ -21,16 +21,16 @@ export function ResultCard({ label, value, sublabel, highlight, color = 'default
   return (
     <div
       className={`rounded-xl p-4 border transition-all ${
-        highlight
-          ? `${colors.bg} ${colors.border} shadow-sm`
-          : `bg-gray-50/50 border-gray-100`
+        highlight ? `${colors.bg} ${colors.border} shadow-sm` : `bg-gray-50/50 border-gray-100`
       }`}
     >
       <div className="flex items-center gap-2">
         {icon && <span className="text-sm">{icon}</span>}
         <p className="result-label">{label}</p>
       </div>
-      <p className={`${large ? 'text-3xl' : 'text-xl'} font-extrabold mt-1.5 tracking-tight tabular-nums ${highlight ? colors.text : 'text-gray-900'}`}>
+      <p
+        className={`${large ? 'text-3xl' : 'text-xl'} font-extrabold mt-1.5 tracking-tight tabular-nums ${highlight ? colors.text : 'text-gray-900'}`}
+      >
         {value}
       </p>
       {sublabel && <p className="text-xs text-gray-400 mt-1">{sublabel}</p>}

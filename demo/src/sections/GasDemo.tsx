@@ -1,7 +1,8 @@
-import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
-import { ResultCard } from '../components/ResultCard';
+import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
+import { ResultCard } from '../components/ResultCard';
+import { TariffCard } from '../components/TariffCard';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 export function GasDemo() {
@@ -11,12 +12,11 @@ export function GasDemo() {
   const [consumption, setConsumption] = useState(15000);
   const [co2Levy, setCo2Levy] = useState('0.546');
   const [gasStorageLevy, setGasStorageLevy] = useState('0.059');
-  const [taxRate, setTaxRate] = useState(19);
+  const [taxRate] = useState(19);
 
   const result = useMemo(() => {
     const items: any[] = [];
 
-    // Base price
     items.push(
       buildPriceItemDto({
         unitAmountDecimal: basePrice,
@@ -29,9 +29,7 @@ export function GasDemo() {
       }),
     );
 
-    // Work price + markup + levies per kWh
-    const totalPerKwh =
-      parseFloat(workPrice) + parseFloat(markup) + parseFloat(co2Levy) + parseFloat(gasStorageLevy);
+    const totalPerKwh = parseFloat(workPrice) + parseFloat(markup) + parseFloat(co2Levy) + parseFloat(gasStorageLevy);
     items.push(
       buildPriceItemDto({
         unitAmountDecimal: totalPerKwh.toFixed(4),
@@ -53,41 +51,43 @@ export function GasDemo() {
   const workCost = workRate * consumption;
   const levyCost = levyRate * consumption;
   const totalNet = baseCost + workCost + levyCost;
+  const totalGross = totalNet * (1 + taxRate / 100);
+  const monthlyGross = totalGross / 12;
+  const totalKwhRate = workRate + levyRate;
 
   return (
     <div>
       <h1 className="section-title">Gas Tariff</h1>
       <p className="section-desc">
-        German gas supply pricing with Grundpreis, Arbeitspreis, and gas-specific levies
-        including CO2 tax and gas storage levy. Typical household consumption: 10,000 - 25,000 kWh/year.
+        Configure a German gas supply tariff with Grundpreis, Arbeitspreis, and gas-specific levies including CO2 tax
+        and gas storage levy.
       </p>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left column — Controls */}
+        <div className="lg:col-span-1 space-y-4">
           {/* Base price */}
           <div className="card">
-            <div className="p-3 bg-blue-50 rounded-lg">
-              <h4 className="text-sm font-medium text-blue-800 mb-2">Grundpreis (Base Price)</h4>
-              <div>
-                <label className="text-xs text-blue-600">Annual base fee (EUR/year)</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={basePrice}
-                  onChange={(e) => setBasePrice(e.target.value)}
-                  className="input-field mt-1"
-                />
-              </div>
+            <div className="p-4 bg-blue-50 rounded-xl">
+              <p className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-2">Grundpreis</p>
+              <label className="text-xs text-blue-600 font-medium">Annual base fee (EUR/year)</label>
+              <input
+                type="number"
+                step="0.01"
+                value={basePrice}
+                onChange={(e) => setBasePrice(e.target.value)}
+                className="input-field mt-1"
+              />
             </div>
           </div>
 
           {/* Work price */}
-          <div className="card">
-            <div className="p-3 bg-orange-50 rounded-lg mb-3">
-              <h4 className="text-sm font-medium text-orange-800 mb-2">Arbeitspreis (Work Price)</h4>
+          <div className="card space-y-3">
+            <div className="p-4 bg-orange-50 rounded-xl">
+              <p className="text-xs font-bold text-orange-400 uppercase tracking-widest mb-2">Arbeitspreis</p>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-orange-600">Base price (ct/kWh)</label>
+                  <label className="text-xs text-orange-600 font-medium">Base (ct/kWh)</label>
                   <input
                     type="number"
                     step="0.01"
@@ -97,7 +97,7 @@ export function GasDemo() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-orange-600">Markup (ct/kWh)</label>
+                  <label className="text-xs text-orange-600 font-medium">Markup (ct/kWh)</label>
                   <input
                     type="number"
                     step="0.01"
@@ -109,12 +109,11 @@ export function GasDemo() {
               </div>
             </div>
 
-            {/* Gas-specific levies */}
-            <div className="p-3 bg-red-50 rounded-lg">
-              <h4 className="text-sm font-medium text-red-800 mb-2">Gas Levies</h4>
+            <div className="p-4 bg-red-50 rounded-xl">
+              <p className="text-xs font-bold text-red-400 uppercase tracking-widest mb-2">Gas Levies</p>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-red-600">CO2 levy (ct/kWh)</label>
+                  <label className="text-xs text-red-600 font-medium">CO2 (ct/kWh)</label>
                   <input
                     type="number"
                     step="0.001"
@@ -124,7 +123,7 @@ export function GasDemo() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-red-600">Gas storage levy (ct/kWh)</label>
+                  <label className="text-xs text-red-600 font-medium">Storage (ct/kWh)</label>
                   <input
                     type="number"
                     step="0.001"
@@ -139,9 +138,10 @@ export function GasDemo() {
 
           {/* Consumption */}
           <div className="card">
-            <label className="text-sm font-medium text-gray-700">
-              Annual Consumption: <span className="text-primary-600 font-bold">{consumption.toLocaleString()} kWh</span>
-            </label>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Annual Consumption</label>
+              <span className="text-sm font-extrabold text-primary-600">{consumption.toLocaleString()} kWh</span>
+            </div>
             <input
               type="range"
               min="5000"
@@ -149,125 +149,140 @@ export function GasDemo() {
               step="500"
               value={consumption}
               onChange={(e) => setConsumption(Number(e.target.value))}
-              className="w-full mt-2 accent-primary-600"
+              className="w-full accent-primary-600"
             />
-            <div className="flex justify-between text-xs text-gray-400">
+            <div className="flex justify-between text-[10px] text-gray-300 mt-1">
               <span>5,000 kWh</span>
               <span>50,000 kWh</span>
             </div>
           </div>
         </div>
 
-        <div className="space-y-4">
-          {/* Cost breakdown */}
-          <div className="card">
-            <h3 className="font-semibold text-gray-900 mb-3">Annual Cost Breakdown</h3>
-            <div className="h-10 flex rounded-lg overflow-hidden mb-4">
-              {[
-                { value: baseCost, color: 'bg-blue-400', label: 'Base' },
-                { value: workCost, color: 'bg-orange-400', label: 'Work' },
-                { value: levyCost, color: 'bg-red-400', label: 'Levies' },
-              ].map((seg) => (
-                <div
-                  key={seg.label}
-                  className={`${seg.color} flex items-center justify-center text-white text-xs font-medium transition-all duration-300`}
-                  style={{ width: `${Math.max((seg.value / totalNet) * 100, 1)}%` }}
-                  title={`${seg.label}: EUR ${seg.value.toFixed(2)}`}
-                >
-                  {(seg.value / totalNet) * 100 > 10 ? seg.label : ''}
-                </div>
-              ))}
+        {/* Right column — Tariff card + results */}
+        <div className="lg:col-span-2 space-y-5">
+          {/* Main tariff card */}
+          <TariffCard
+            gradient="gradient-gas"
+            icon={<span>🔥</span>}
+            title="Erdgas Tarif"
+            subtitle={`${consumption.toLocaleString()} kWh/year`}
+            badge="GAS"
+            price={`EUR ${monthlyGross.toFixed(2)}`}
+            priceUnit="/month"
+            priceLabel="Estimated monthly cost (gross)"
+            footer={
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-500">Annual total (gross)</span>
+                <span className="font-extrabold text-gray-900 text-lg">EUR {totalGross.toFixed(2)}</span>
+              </div>
+            }
+          >
+            {/* Stacked bar */}
+            <div className="h-3 flex rounded-full overflow-hidden mb-4">
+              <div
+                className="bg-blue-400 transition-all duration-300"
+                style={{ width: `${(baseCost / totalNet) * 100}%` }}
+              />
+              <div
+                className="bg-orange-400 transition-all duration-300"
+                style={{ width: `${(workCost / totalNet) * 100}%` }}
+              />
+              <div
+                className="bg-red-400 transition-all duration-300"
+                style={{ width: `${(levyCost / totalNet) * 100}%` }}
+              />
             </div>
 
-            <div className="space-y-2">
-              <div className="flex items-center gap-3 p-2 bg-gray-50 rounded">
-                <div className="w-3 h-3 rounded-sm bg-blue-400" />
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-700">Grundpreis</p>
-                  <p className="text-xs text-gray-400">EUR {parseFloat(basePrice).toFixed(2)}/year</p>
+            <div className="cost-line">
+              <div className="flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-blue-400" />
+                <div>
+                  <span className="cost-line-label">Grundpreis</span>
+                  <p className="text-[10px] text-gray-400">EUR {parseFloat(basePrice).toFixed(2)}/year</p>
                 </div>
-                <span className="font-bold text-sm">EUR {baseCost.toFixed(2)}</span>
               </div>
-              <div className="flex items-center gap-3 p-2 bg-gray-50 rounded">
-                <div className="w-3 h-3 rounded-sm bg-orange-400" />
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-700">Arbeitspreis + Markup</p>
-                  <p className="text-xs text-gray-400">
+              <span className="cost-line-value">EUR {baseCost.toFixed(2)}</span>
+            </div>
+
+            <div className="cost-line">
+              <div className="flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-orange-400" />
+                <div>
+                  <span className="cost-line-label">Arbeitspreis + Markup</span>
+                  <p className="text-[10px] text-gray-400">
                     {workRate.toFixed(2)} ct/kWh x {consumption.toLocaleString()} kWh
                   </p>
                 </div>
-                <span className="font-bold text-sm">EUR {workCost.toFixed(2)}</span>
               </div>
-              <div className="flex items-center gap-3 p-2 bg-gray-50 rounded">
-                <div className="w-3 h-3 rounded-sm bg-red-400" />
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-700">Gas Levies</p>
-                  <p className="text-xs text-gray-400">
-                    {levyRate.toFixed(3)} ct/kWh x {consumption.toLocaleString()} kWh (CO2 + storage)
-                  </p>
+              <span className="cost-line-value">EUR {workCost.toFixed(2)}</span>
+            </div>
+
+            <div className="cost-line">
+              <div className="flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                <div>
+                  <span className="cost-line-label">Gas Levies</span>
+                  <p className="text-[10px] text-gray-400">{levyRate.toFixed(3)} ct/kWh (CO2 + storage)</p>
                 </div>
-                <span className="font-bold text-sm">EUR {levyCost.toFixed(2)}</span>
               </div>
-              <div className="border-t border-gray-200 pt-2 mt-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-gray-700">Net Total (annual)</span>
-                  <span className="text-lg font-bold text-gray-900">EUR {totalNet.toFixed(2)}</span>
+              <span className="cost-line-value">EUR {levyCost.toFixed(2)}</span>
+            </div>
+
+            <div className="flex items-center justify-between pt-3 mt-1 border-t border-gray-200">
+              <span className="text-sm font-bold text-gray-600">Net Total (annual)</span>
+              <span className="text-lg font-extrabold text-gray-900">EUR {totalNet.toFixed(2)}</span>
+            </div>
+          </TariffCard>
+
+          {/* Per-kWh composition */}
+          <div className="card">
+            <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-4">Price per kWh Composition</p>
+            <div className="space-y-2.5">
+              {[
+                { label: 'Work Price', value: parseFloat(workPrice), color: 'bg-orange-200', bar: 'bg-orange-400' },
+                { label: 'Markup', value: parseFloat(markup), color: 'bg-orange-100', bar: 'bg-orange-300' },
+                { label: 'CO2 Levy', value: parseFloat(co2Levy), color: 'bg-red-100', bar: 'bg-red-400' },
+                { label: 'Gas Storage', value: parseFloat(gasStorageLevy), color: 'bg-red-50', bar: 'bg-red-300' },
+              ].map((item) => (
+                <div key={item.label} className="flex items-center gap-3">
+                  <span className="text-xs text-gray-500 w-24 font-medium">{item.label}</span>
+                  <div className="flex-1 bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                    <div
+                      className={`${item.bar} h-full rounded-full transition-all duration-300`}
+                      style={{ width: `${(item.value / totalKwhRate) * 100}%` }}
+                    />
+                  </div>
+                  <span className="text-xs font-bold w-16 text-right tabular-nums">{item.value.toFixed(3)} ct</span>
                 </div>
+              ))}
+              <div className="border-t border-gray-100 pt-2 text-right">
+                <span className="text-sm font-extrabold text-gray-900">Total: {totalKwhRate.toFixed(3)} ct/kWh</span>
               </div>
             </div>
           </div>
 
           {/* Computed results */}
           <div className="card">
-            <h3 className="font-semibold text-gray-900 mb-3">Computed via Library</h3>
-            <div className="grid grid-cols-2 gap-3">
+            <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-4">
+              Computed via @epilot/pricing
+            </p>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               <ResultCard label="Annual Net" value={fmtCents(result.amount_subtotal)} />
-              <ResultCard label={`Tax (${taxRate}%)`} value={fmtCents(result.amount_tax)} color="amber" />
+              <ResultCard label={`Tax (${taxRate}%)`} value={fmtCents(result.amount_tax)} color="amber" highlight />
               <ResultCard label="Annual Gross" value={fmtCents(result.amount_total)} highlight color="green" />
               <ResultCard
                 label="Monthly Gross"
                 value={fmtCents(Math.round((result.amount_total ?? 0) / 12))}
                 color="blue"
+                highlight
               />
-            </div>
-          </div>
-
-          {/* Per-kWh breakdown */}
-          <div className="card">
-            <h3 className="font-semibold text-gray-900 mb-3">Per-kWh Price Composition</h3>
-            <div className="space-y-2">
-              {[
-                { label: 'Work Price', value: parseFloat(workPrice), color: 'bg-orange-200' },
-                { label: 'Markup', value: parseFloat(markup), color: 'bg-orange-400' },
-                { label: 'CO2 Levy', value: parseFloat(co2Levy), color: 'bg-red-300' },
-                { label: 'Gas Storage', value: parseFloat(gasStorageLevy), color: 'bg-red-200' },
-              ].map((item) => {
-                const totalKwh = parseFloat(workPrice) + parseFloat(markup) + parseFloat(co2Levy) + parseFloat(gasStorageLevy);
-                return (
-                  <div key={item.label} className="flex items-center gap-2">
-                    <span className="text-xs text-gray-500 w-24">{item.label}</span>
-                    <div className="flex-1 bg-gray-100 rounded-full h-4 overflow-hidden">
-                      <div
-                        className={`${item.color} h-full rounded-full`}
-                        style={{ width: `${(item.value / totalKwh) * 100}%` }}
-                      />
-                    </div>
-                    <span className="text-xs font-medium w-16 text-right">{item.value.toFixed(3)} ct</span>
-                  </div>
-                );
-              })}
-              <div className="border-t border-gray-200 pt-2 text-right">
-                <span className="text-sm font-bold text-gray-900">
-                  Total: {(parseFloat(workPrice) + parseFloat(markup) + parseFloat(co2Levy) + parseFloat(gasStorageLevy)).toFixed(3)} ct/kWh
-                </span>
-              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Usage */}
-      <div className="mt-6">
+      {/* Code block */}
+      <div className="mt-8">
         <CodeBlock
           title="Usage"
           code={`import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
@@ -289,17 +304,15 @@ const items = [
     taxes: [{ tax: { rate: ${taxRate} } }],
   },
   {
-    quantity: ${consumption},  // kWh consumption
+    quantity: ${consumption},
     _price: {
-      // Work price + markup + CO2 levy + gas storage levy
-      unit_amount_decimal: '${(parseFloat(workPrice) + parseFloat(markup) + parseFloat(co2Levy) + parseFloat(gasStorageLevy)).toFixed(4)}',
+      unit_amount_decimal: '${totalKwhRate.toFixed(4)}',
       unit_amount_currency: 'EUR',
       pricing_model: 'per_unit',
       is_tax_inclusive: false,
       type: 'recurring',
       billing_period: 'yearly',
       tax: [{ rate: ${taxRate}, type: 'VAT' }],
-      description: 'Arbeitspreis (Work Price)',
     },
     taxes: [{ tax: { rate: ${taxRate} } }],
   },

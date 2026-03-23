@@ -1,6 +1,5 @@
-import { useState, useMemo } from 'react';
 import { formatAmount, formatAmountFromString, getCurrencySymbol, toIntegerAmount } from '@epilot/pricing';
-import { ResultCard } from '../components/ResultCard';
+import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 
 const currencies = [
@@ -78,8 +77,8 @@ export function CurrencyDemo() {
     <div>
       <h1 className="section-title">Currency & Formatting</h1>
       <p className="section-desc">
-        Multi-currency support with locale-aware formatting. Uses Dinero.js for precise decimal arithmetic
-        and provides utilities for converting between string/integer representations.
+        Multi-currency support with locale-aware formatting. Uses Dinero.js for precise decimal arithmetic and provides
+        utilities for converting between string/integer representations.
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -109,7 +108,9 @@ export function CurrencyDemo() {
                   className="select-field mt-1"
                 >
                   {currencies.map((c) => (
-                    <option key={c.code} value={c.code}>{c.code} - {c.name}</option>
+                    <option key={c.code} value={c.code}>
+                      {c.code} - {c.name}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -130,20 +131,29 @@ export function CurrencyDemo() {
             <h3 className="font-semibold text-gray-900 mb-3">Function Results</h3>
             <div className="space-y-3">
               <div className="p-3 bg-gray-50 rounded-lg">
-                <p className="text-xs text-gray-500 font-mono">formatAmount({'{'} amount: {intAmount}, currency: '{selectedCurrency}', locale: '{locale}' {'}'})</p>
+                <p className="text-xs text-gray-500 font-mono">
+                  formatAmount({'{'} amount: {intAmount}, currency: '{selectedCurrency}', locale: '{locale}' {'}'})
+                </p>
                 <p className="text-lg font-bold text-gray-900 mt-1">{formattedAmount}</p>
               </div>
               <div className="p-3 bg-gray-50 rounded-lg">
-                <p className="text-xs text-gray-500 font-mono">formatAmountFromString({'{'} decimalAmount: '{amount}', currency: '{selectedCurrency}', locale: '{locale}' {'}'})</p>
+                <p className="text-xs text-gray-500 font-mono">
+                  formatAmountFromString({'{'} decimalAmount: '{amount}', currency: '{selectedCurrency}', locale: '
+                  {locale}' {'}'})
+                </p>
                 <p className="text-lg font-bold text-gray-900 mt-1">{formattedFromString}</p>
               </div>
               <div className="p-3 bg-gray-50 rounded-lg">
-                <p className="text-xs text-gray-500 font-mono">getCurrencySymbol('{selectedCurrency}', '{locale}')</p>
+                <p className="text-xs text-gray-500 font-mono">
+                  getCurrencySymbol('{selectedCurrency}', '{locale}')
+                </p>
                 <p className="text-lg font-bold text-gray-900 mt-1">{symbol}</p>
               </div>
               <div className="p-3 bg-gray-50 rounded-lg">
                 <p className="text-xs text-gray-500 font-mono">toIntegerAmount('{amount}')</p>
-                <p className="text-lg font-bold text-gray-900 mt-1">{integerAmount} <span className="text-sm text-gray-400">(cents)</span></p>
+                <p className="text-lg font-bold text-gray-900 mt-1">
+                  {integerAmount} <span className="text-sm text-gray-400">(cents)</span>
+                </p>
               </div>
             </div>
           </div>
@@ -159,9 +169,7 @@ export function CurrencyDemo() {
                 <div
                   key={c.code}
                   className={`flex items-center justify-between p-3 rounded-lg transition-colors ${
-                    c.code === selectedCurrency
-                      ? 'bg-primary-50 border border-primary-200'
-                      : 'bg-gray-50'
+                    c.code === selectedCurrency ? 'bg-primary-50 border border-primary-200' : 'bg-gray-50'
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -170,7 +178,9 @@ export function CurrencyDemo() {
                     </span>
                     <div>
                       <p className="text-sm font-medium text-gray-700">{c.name}</p>
-                      <p className="text-xs text-gray-400">{c.code} ({c.locale})</p>
+                      <p className="text-xs text-gray-400">
+                        {c.code} ({c.locale})
+                      </p>
                     </div>
                   </div>
                   <span className="text-lg font-bold text-gray-900">{c.formatted}</span>

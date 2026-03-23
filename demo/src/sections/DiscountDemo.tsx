@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
-import { ResultCard } from '../components/ResultCard';
+import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
+import { ResultCard } from '../components/ResultCard';
 import { buildPriceItemDto, fmtCents, makeCoupon } from '../helpers';
 
 type CouponConfig = {
@@ -13,7 +13,7 @@ type CouponConfig = {
 export function DiscountDemo() {
   const [unitPrice, setUnitPrice] = useState('100.00');
   const [quantity, setQuantity] = useState(5);
-  const [taxRate, setTaxRate] = useState(19);
+  const [taxRate] = useState(19);
   const [isTaxInclusive, setIsTaxInclusive] = useState(true);
   const [couponConfig, setCouponConfig] = useState<CouponConfig>({
     type: 'percentage',
@@ -32,22 +32,23 @@ export function DiscountDemo() {
   }, [unitPrice, quantity, taxRate, isTaxInclusive]);
 
   const discountResult = useMemo(() => {
-    const coupon = couponConfig.type === 'percentage'
-      ? makeCoupon({
-          type: 'percentage',
-          category: couponConfig.category,
-          percentageValue: couponConfig.value,
-          name: `${couponConfig.value}% ${couponConfig.category}`,
-          ...(couponConfig.category === 'cashback' && { cashbackPeriod: 12 }),
-        })
-      : makeCoupon({
-          type: 'fixed',
-          category: couponConfig.category,
-          fixedValueDecimal: couponConfig.value,
-          fixedValue: Math.round(parseFloat(couponConfig.value) * 100),
-          name: `€${couponConfig.value} ${couponConfig.category}`,
-          ...(couponConfig.category === 'cashback' && { cashbackPeriod: 12 }),
-        });
+    const coupon =
+      couponConfig.type === 'percentage'
+        ? makeCoupon({
+            type: 'percentage',
+            category: couponConfig.category,
+            percentageValue: couponConfig.value,
+            name: `${couponConfig.value}% ${couponConfig.category}`,
+            ...(couponConfig.category === 'cashback' && { cashbackPeriod: 12 }),
+          })
+        : makeCoupon({
+            type: 'fixed',
+            category: couponConfig.category,
+            fixedValueDecimal: couponConfig.value,
+            fixedValue: Math.round(parseFloat(couponConfig.value) * 100),
+            name: `€${couponConfig.value} ${couponConfig.category}`,
+            ...(couponConfig.category === 'cashback' && { cashbackPeriod: 12 }),
+          });
 
     const item = buildPriceItemDto({
       unitAmountDecimal: unitPrice,
@@ -74,8 +75,8 @@ export function DiscountDemo() {
     <div>
       <h1 className="section-title">Discounts & Coupons</h1>
       <p className="section-desc">
-        Apply fixed-value, percentage discounts, and cashback coupons. Coupons are prioritized:
-        cashback &gt; discounts, percentage &gt; fixed, highest value first.
+        Apply fixed-value, percentage discounts, and cashback coupons. Coupons are prioritized: cashback &gt; discounts,
+        percentage &gt; fixed, highest value first.
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -142,9 +143,7 @@ export function DiscountDemo() {
                 <label className="text-sm font-medium text-gray-700">Type</label>
                 <select
                   value={couponConfig.type}
-                  onChange={(e) =>
-                    setCouponConfig((c) => ({ ...c, type: e.target.value as 'fixed' | 'percentage' }))
-                  }
+                  onChange={(e) => setCouponConfig((c) => ({ ...c, type: e.target.value as 'fixed' | 'percentage' }))}
                   className="select-field mt-1"
                 >
                   <option value="percentage">Percentage</option>
@@ -188,18 +187,19 @@ export function DiscountDemo() {
             <div className="flex items-center gap-4 mb-4">
               <div className="flex-1 text-center p-4 bg-gray-50 rounded-lg">
                 <p className="text-xs text-gray-500 uppercase font-medium">Before</p>
-                <p className="text-xl font-bold text-gray-400 line-through mt-1">
-                  {fmtCents(baseResult.amount_total)}
-                </p>
+                <p className="text-xl font-bold text-gray-400 line-through mt-1">{fmtCents(baseResult.amount_total)}</p>
               </div>
-              <svg className="w-6 h-6 text-gray-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-6 h-6 text-gray-300 flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
               <div className="flex-1 text-center p-4 bg-green-50 rounded-lg border border-green-200">
                 <p className="text-xs text-green-600 uppercase font-medium">After</p>
-                <p className="text-xl font-bold text-green-600 mt-1">
-                  {fmtCents(discountResult.amount_total)}
-                </p>
+                <p className="text-xl font-bold text-green-600 mt-1">{fmtCents(discountResult.amount_total)}</p>
               </div>
             </div>
 
@@ -207,9 +207,7 @@ export function DiscountDemo() {
               <div className="text-center p-3 bg-red-50 rounded-lg">
                 <span className="text-sm font-semibold text-red-600">
                   You save {fmtCents(savings)}
-                  {discountItem?.discount_percentage
-                    ? ` (${discountItem.discount_percentage}%)`
-                    : ''}
+                  {discountItem?.discount_percentage ? ` (${discountItem.discount_percentage}%)` : ''}
                 </span>
               </div>
             )}
@@ -223,32 +221,12 @@ export function DiscountDemo() {
                 label="Before Discount (Total)"
                 value={fmtCents(discountItem?.before_discount_amount_total)}
               />
-              <ResultCard
-                label="Discount Amount"
-                value={fmtCents(discountItem?.discount_amount)}
-                color="red"
-              />
-              <ResultCard
-                label="Amount Subtotal"
-                value={fmtCents(discountResult.amount_subtotal)}
-              />
-              <ResultCard
-                label="Amount Tax"
-                value={fmtCents(discountResult.amount_tax)}
-                color="amber"
-              />
-              <ResultCard
-                label="Final Total"
-                value={fmtCents(discountResult.amount_total)}
-                highlight
-                color="green"
-              />
+              <ResultCard label="Discount Amount" value={fmtCents(discountItem?.discount_amount)} color="red" />
+              <ResultCard label="Amount Subtotal" value={fmtCents(discountResult.amount_subtotal)} />
+              <ResultCard label="Amount Tax" value={fmtCents(discountResult.amount_tax)} color="amber" />
+              <ResultCard label="Final Total" value={fmtCents(discountResult.amount_total)} highlight color="green" />
               {couponConfig.category === 'cashback' && (
-                <ResultCard
-                  label="Cashback Amount"
-                  value={fmtCents(discountItem?.cashback_amount)}
-                  color="blue"
-                />
+                <ResultCard label="Cashback Amount" value={fmtCents(discountItem?.cashback_amount)} color="blue" />
               )}
             </div>
           </div>
@@ -277,11 +255,15 @@ const priceItem = {
   _coupons: [
     {
       type: '${couponConfig.type}',
-      category: '${couponConfig.category}',${couponConfig.type === 'percentage' ? `
-      percentage_value: '${couponConfig.value}',` : `
+      category: '${couponConfig.category}',${
+        couponConfig.type === 'percentage'
+          ? `
+      percentage_value: '${couponConfig.value}',`
+          : `
       fixed_value: ${Math.round(parseFloat(couponConfig.value) * 100)},
       fixed_value_decimal: '${couponConfig.value}',
-      fixed_value_currency: 'EUR',`}
+      fixed_value_currency: 'EUR',`
+      }
     },
   ],
 };

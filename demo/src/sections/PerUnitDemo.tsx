@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
-import { ResultCard } from '../components/ResultCard';
+import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
+import { ResultCard } from '../components/ResultCard';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 export function PerUnitDemo() {
@@ -84,11 +84,7 @@ export function PerUnitDemo() {
             </div>
             <div>
               <label className="text-sm font-medium text-gray-700">Currency</label>
-              <select
-                value={currency}
-                onChange={(e) => setCurrency(e.target.value)}
-                className="select-field mt-1"
-              >
+              <select value={currency} onChange={(e) => setCurrency(e.target.value)} className="select-field mt-1">
                 <option value="EUR">EUR</option>
                 <option value="USD">USD</option>
                 <option value="GBP">GBP</option>
@@ -123,38 +119,18 @@ export function PerUnitDemo() {
           <div className="card">
             <h3 className="font-semibold text-gray-900 mb-4">Computed Result</h3>
             <div className="grid grid-cols-2 gap-3">
-              <ResultCard
-                label="Unit Amount (Net)"
-                value={fmtCents(lineItem?.unit_amount, currency)}
-              />
-              <ResultCard
-                label="Unit Amount (Gross)"
-                value={fmtCents(lineItem?.unit_amount_gross, currency)}
-              />
-              <ResultCard
-                label="Subtotal (Net)"
-                value={fmtCents(lineItem?.amount_subtotal, currency)}
-              />
-              <ResultCard
-                label="Total (Gross)"
-                value={fmtCents(lineItem?.amount_total, currency)}
-                highlight
-              />
+              <ResultCard label="Unit Amount (Net)" value={fmtCents(lineItem?.unit_amount, currency)} />
+              <ResultCard label="Unit Amount (Gross)" value={fmtCents(lineItem?.unit_amount_gross, currency)} />
+              <ResultCard label="Subtotal (Net)" value={fmtCents(lineItem?.amount_subtotal, currency)} />
+              <ResultCard label="Total (Gross)" value={fmtCents(lineItem?.amount_total, currency)} highlight />
             </div>
           </div>
 
           <div className="card">
             <h3 className="font-semibold text-gray-900 mb-4">Aggregated Totals</h3>
             <div className="grid grid-cols-3 gap-3">
-              <ResultCard
-                label="Amount Subtotal"
-                value={fmtCents(result.amount_subtotal, currency)}
-              />
-              <ResultCard
-                label="Amount Tax"
-                value={fmtCents(result.amount_tax, currency)}
-                color="amber"
-              />
+              <ResultCard label="Amount Subtotal" value={fmtCents(result.amount_subtotal, currency)} />
+              <ResultCard label="Amount Tax" value={fmtCents(result.amount_tax, currency)} color="amber" />
               <ResultCard
                 label="Amount Total"
                 value={fmtCents(result.amount_total, currency)}

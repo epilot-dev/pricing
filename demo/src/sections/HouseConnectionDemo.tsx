@@ -1,7 +1,8 @@
-import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
-import { ResultCard } from '../components/ResultCard';
+import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
+import { ResultCard } from '../components/ResultCard';
+import { TariffCard } from '../components/TariffCard';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 interface ConnectionItem {
@@ -10,23 +11,30 @@ interface ConnectionItem {
   quantity: number;
   type: 'one_time' | 'recurring';
   billingPeriod?: string;
+  icon: string;
 }
 
 const defaultItems: ConnectionItem[] = [
-  { name: 'Electricity Connection', unitAmountDecimal: '1850.00', quantity: 1, type: 'one_time' },
-  { name: 'Gas Connection', unitAmountDecimal: '1450.00', quantity: 1, type: 'one_time' },
-  { name: 'Water Connection', unitAmountDecimal: '2200.00', quantity: 1, type: 'one_time' },
-  { name: 'Construction Power Supply', unitAmountDecimal: '350.00', quantity: 1, type: 'one_time' },
-  { name: 'Meter Installation Fee', unitAmountDecimal: '12.50', quantity: 1, type: 'recurring', billingPeriod: 'monthly' },
+  { name: 'Electricity Connection', unitAmountDecimal: '1850.00', quantity: 1, type: 'one_time', icon: '⚡' },
+  { name: 'Gas Connection', unitAmountDecimal: '1450.00', quantity: 1, type: 'one_time', icon: '🔥' },
+  { name: 'Water Connection', unitAmountDecimal: '2200.00', quantity: 1, type: 'one_time', icon: '💧' },
+  { name: 'Construction Power Supply', unitAmountDecimal: '350.00', quantity: 1, type: 'one_time', icon: '🚧' },
+  {
+    name: 'Meter Installation Fee',
+    unitAmountDecimal: '12.50',
+    quantity: 1,
+    type: 'recurring',
+    billingPeriod: 'monthly',
+    icon: '📋',
+  },
 ];
 
 export function HouseConnectionDemo() {
   const [items, setItems] = useState<ConnectionItem[]>(defaultItems);
-  const [taxRate, setTaxRate] = useState(19);
+  const [taxRate] = useState(19);
   const [distance, setDistance] = useState(15);
   const [perMeterRate, setPerMeterRate] = useState('85.00');
 
-  // Trench cost based on distance
   const trenchCost = distance * parseFloat(perMeterRate);
 
   const result = useMemo(() => {
@@ -42,7 +50,6 @@ export function HouseConnectionDemo() {
       }),
     );
 
-    // Add trench/distance-based cost
     priceItems.push(
       buildPriceItemDto({
         unitAmountDecimal: trenchCost.toFixed(2),
@@ -62,9 +69,7 @@ export function HouseConnectionDemo() {
   };
 
   const toggleItem = (idx: number) => {
-    setItems((prev) =>
-      prev.map((item, i) => (i === idx ? { ...item, quantity: item.quantity > 0 ? 0 : 1 } : item)),
-    );
+    setItems((prev) => prev.map((item, i) => (i === idx ? { ...item, quantity: item.quantity > 0 ? 0 : 1 } : item)));
   };
 
   const oneTimeCosts = items
@@ -79,58 +84,54 @@ export function HouseConnectionDemo() {
     <div>
       <h1 className="section-title">House Connection</h1>
       <p className="section-desc">
-        Hausanschluss (house connection) pricing for new builds and renovations.
-        Combines one-time connection fees, distance-based trench work, and recurring meter costs.
+        Configure Hausanschluss (house connection) pricing for new builds. Combines connection fees, distance-based
+        trench work, and recurring meter costs.
       </p>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left column — Controls */}
+        <div className="lg:col-span-1 space-y-4">
           {/* Connection items */}
           <div className="card">
-            <h3 className="font-semibold text-gray-900 mb-3">Connection Services</h3>
-            <div className="space-y-2">
+            <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-3">Connection Services</p>
+            <div className="space-y-1.5">
               {items.map((item, idx) => (
                 <div
                   key={idx}
-                  className={`p-3 rounded-lg border transition-colors ${
+                  className={`p-3 rounded-xl transition-all ${
                     item.quantity > 0
-                      ? 'bg-white border-primary-200'
-                      : 'bg-gray-50 border-gray-100 opacity-60'
+                      ? 'bg-white border border-primary-100 shadow-sm'
+                      : 'bg-gray-50 border border-transparent opacity-50'
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => toggleItem(idx)}
-                      className={`w-5 h-5 rounded border-2 flex items-center justify-center text-xs transition-colors ${
-                        item.quantity > 0
-                          ? 'bg-primary-600 border-primary-600 text-white'
-                          : 'border-gray-300'
+                      className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center text-[10px] transition-colors ${
+                        item.quantity > 0 ? 'bg-primary-600 border-primary-600 text-white' : 'border-gray-300 bg-white'
                       }`}
                     >
-                      {item.quantity > 0 ? '\u2713' : ''}
+                      {item.quantity > 0 ? '✓' : ''}
                     </button>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-700">{item.name}</p>
+                    <span className="text-base">{item.icon}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold text-gray-700">{item.name}</p>
                       <span
-                        className={`text-[10px] px-1.5 py-0.5 rounded ${
-                          item.type === 'one_time'
-                            ? 'bg-blue-100 text-blue-700'
-                            : 'bg-green-100 text-green-700'
+                        className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold ${
+                          item.type === 'one_time' ? 'bg-blue-100 text-blue-600' : 'bg-emerald-100 text-emerald-600'
                         }`}
                       >
                         {item.type === 'one_time' ? 'One-time' : `${item.billingPeriod}`}
                       </span>
                     </div>
-                    <div className="w-28">
-                      <input
-                        type="number"
-                        step="0.01"
-                        value={item.unitAmountDecimal}
-                        onChange={(e) => updateItem(idx, 'unitAmountDecimal', e.target.value)}
-                        className="input-field text-xs text-right"
-                        disabled={item.quantity === 0}
-                      />
-                    </div>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={item.unitAmountDecimal}
+                      onChange={(e) => updateItem(idx, 'unitAmountDecimal', e.target.value)}
+                      className="input-field w-24 text-xs text-right"
+                      disabled={item.quantity === 0}
+                    />
                   </div>
                 </div>
               ))}
@@ -139,12 +140,13 @@ export function HouseConnectionDemo() {
 
           {/* Distance-based pricing */}
           <div className="card">
-            <div className="p-3 bg-amber-50 rounded-lg">
-              <h4 className="text-sm font-medium text-amber-800 mb-2">Trench Work (Tiefbau)</h4>
-              <div>
-                <label className="text-sm font-medium text-gray-700">
-                  Distance to grid: <span className="text-amber-600 font-bold">{distance} m</span>
-                </label>
+            <div className="p-4 bg-amber-50 rounded-xl">
+              <p className="text-xs font-bold text-amber-500 uppercase tracking-widest mb-3">Trench Work (Tiefbau)</p>
+              <div className="mb-3">
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Distance to Grid</label>
+                  <span className="text-sm font-extrabold text-amber-600">{distance} m</span>
+                </div>
                 <input
                   type="range"
                   min="5"
@@ -152,16 +154,16 @@ export function HouseConnectionDemo() {
                   step="1"
                   value={distance}
                   onChange={(e) => setDistance(Number(e.target.value))}
-                  className="w-full mt-1 accent-amber-500"
+                  className="w-full accent-amber-500"
                 />
-                <div className="flex justify-between text-xs text-gray-400">
+                <div className="flex justify-between text-[10px] text-gray-300 mt-1">
                   <span>5 m</span>
                   <span>100 m</span>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-3 mt-3">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-amber-600">Rate per meter (EUR/m)</label>
+                  <label className="text-xs text-amber-600 font-medium">EUR/m rate</label>
                   <input
                     type="number"
                     step="0.01"
@@ -171,9 +173,9 @@ export function HouseConnectionDemo() {
                   />
                 </div>
                 <div className="flex items-end">
-                  <div className="p-2 bg-amber-100 rounded text-center w-full">
-                    <p className="text-xs text-amber-600">Total Trench Cost</p>
-                    <p className="font-bold text-amber-800">EUR {trenchCost.toFixed(2)}</p>
+                  <div className="p-3 bg-amber-100 rounded-xl text-center w-full">
+                    <p className="text-[10px] text-amber-600 font-bold uppercase tracking-wider">Total</p>
+                    <p className="font-extrabold text-amber-800">EUR {trenchCost.toFixed(2)}</p>
                   </div>
                 </div>
               </div>
@@ -181,91 +183,116 @@ export function HouseConnectionDemo() {
           </div>
         </div>
 
-        <div className="space-y-4">
-          {/* Visual overview */}
-          <div className="card">
-            <h3 className="font-semibold text-gray-900 mb-3">Cost Overview</h3>
-
-            {/* Connection type breakdown */}
-            <div className="space-y-3 mb-4">
-              {items
-                .filter((i) => i.quantity > 0 && i.type === 'one_time')
-                .map((item, idx) => {
-                  const cost = parseFloat(item.unitAmountDecimal) * item.quantity;
-                  return (
-                    <div key={idx} className="flex items-center justify-between p-2 bg-blue-50 rounded">
-                      <span className="text-sm text-gray-700">{item.name}</span>
-                      <span className="font-semibold text-sm">EUR {cost.toFixed(2)}</span>
-                    </div>
-                  );
-                })}
-              <div className="flex items-center justify-between p-2 bg-amber-50 rounded">
-                <span className="text-sm text-gray-700">Trench Work ({distance}m x EUR {parseFloat(perMeterRate).toFixed(2)})</span>
-                <span className="font-semibold text-sm">EUR {trenchCost.toFixed(2)}</span>
-              </div>
-              {items
-                .filter((i) => i.quantity > 0 && i.type === 'recurring')
-                .map((item, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-2 bg-green-50 rounded">
-                    <div>
-                      <span className="text-sm text-gray-700">{item.name}</span>
-                      <span className="text-xs text-green-600 ml-2">/{item.billingPeriod}</span>
-                    </div>
-                    <span className="font-semibold text-sm">EUR {parseFloat(item.unitAmountDecimal).toFixed(2)}</span>
-                  </div>
-                ))}
-            </div>
-
-            <div className="border-t border-gray-200 pt-3 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">One-time costs (net)</span>
-                <span className="font-bold text-gray-900">EUR {totalOneTime.toFixed(2)}</span>
-              </div>
-              {recurringCosts > 0 && (
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Recurring costs (net)</span>
-                  <span className="font-bold text-gray-900">EUR {recurringCosts.toFixed(2)}/month</span>
+        {/* Right column — Tariff card + results */}
+        <div className="lg:col-span-2 space-y-5">
+          <TariffCard
+            gradient="gradient-house"
+            icon={<span>🏡</span>}
+            title="Hausanschluss"
+            subtitle="New build connection package"
+            badge="CONNECTION"
+            price={`EUR ${totalOneTime.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+            priceUnit=""
+            priceLabel="Total one-time costs (net)"
+            footer={
+              recurringCosts > 0 ? (
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-500">Recurring costs</span>
+                  <span className="font-extrabold text-emerald-600">EUR {recurringCosts.toFixed(2)}/month</span>
                 </div>
-              )}
+              ) : undefined
+            }
+          >
+            {/* Line items */}
+            {items
+              .filter((i) => i.quantity > 0 && i.type === 'one_time')
+              .map((item, idx) => {
+                const cost = parseFloat(item.unitAmountDecimal) * item.quantity;
+                return (
+                  <div key={idx} className="cost-line">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm">{item.icon}</span>
+                      <span className="cost-line-label">{item.name}</span>
+                    </div>
+                    <span className="cost-line-value">EUR {cost.toFixed(2)}</span>
+                  </div>
+                );
+              })}
+
+            <div className="cost-line">
+              <div className="flex items-center gap-2">
+                <span className="text-sm">🛠️</span>
+                <div>
+                  <span className="cost-line-label">Trench Work</span>
+                  <p className="text-[10px] text-gray-400">
+                    {distance}m x EUR {parseFloat(perMeterRate).toFixed(2)}/m
+                  </p>
+                </div>
+              </div>
+              <span className="cost-line-value">EUR {trenchCost.toFixed(2)}</span>
             </div>
-          </div>
+
+            {items
+              .filter((i) => i.quantity > 0 && i.type === 'recurring')
+              .map((item, idx) => (
+                <div key={idx} className="cost-line">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">{item.icon}</span>
+                    <div>
+                      <span className="cost-line-label">{item.name}</span>
+                      <p className="text-[10px] text-emerald-500 font-medium">/{item.billingPeriod}</p>
+                    </div>
+                  </div>
+                  <span className="cost-line-value text-emerald-600">
+                    EUR {parseFloat(item.unitAmountDecimal).toFixed(2)}
+                  </span>
+                </div>
+              ))}
+          </TariffCard>
 
           {/* Computed results */}
           <div className="card">
-            <h3 className="font-semibold text-gray-900 mb-3">Computed via Library</h3>
-            <div className="grid grid-cols-2 gap-3">
+            <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-4">
+              Computed via @epilot/pricing
+            </p>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               <ResultCard label="Total Net" value={fmtCents(result.amount_subtotal)} />
-              <ResultCard label={`Tax (${taxRate}%)`} value={fmtCents(result.amount_tax)} color="amber" />
+              <ResultCard label={`Tax (${taxRate}%)`} value={fmtCents(result.amount_tax)} color="amber" highlight />
               <ResultCard label="Total Gross" value={fmtCents(result.amount_total)} highlight color="green" />
-              <ResultCard label="Items" value={result.items?.length ?? 0} />
+              <ResultCard label="Items" value={result.items?.length ?? 0} color="blue" highlight />
             </div>
 
             {(result.total_details?.breakdown?.recurrences?.length ?? 0) > 0 && (
-              <div className="mt-4">
-                <p className="text-sm font-medium text-gray-700 mb-2">By Recurrence:</p>
-                {result.total_details?.breakdown?.recurrences?.map((r: any, i: number) => (
-                  <div key={i} className="flex items-center justify-between py-1.5 border-b border-gray-100 text-sm">
-                    <span className={r.type === 'one_time' ? 'badge-blue' : 'badge-green'}>
-                      {r.type === 'one_time' ? 'One-time' : r.billing_period}
-                    </span>
-                    <span className="font-medium">{fmtCents(r.amount_total)}</span>
-                  </div>
-                ))}
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-3">By Recurrence</p>
+                <div className="space-y-2">
+                  {result.total_details?.breakdown?.recurrences?.map((r: any, i: number) => (
+                    <div key={i} className="flex items-center justify-between py-2">
+                      <span className={r.type === 'one_time' ? 'badge-blue' : 'badge-green'}>
+                        {r.type === 'one_time' ? 'One-time' : r.billing_period}
+                      </span>
+                      <span className="font-extrabold text-sm tabular-nums">{fmtCents(r.amount_total)}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
         </div>
       </div>
 
-      {/* Usage */}
-      <div className="mt-6">
+      {/* Code block */}
+      <div className="mt-8">
         <CodeBlock
           title="Usage"
           code={`import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
 
 // House connection: mix of one-time and recurring items
 const items = [
-${items.filter((i) => i.quantity > 0).map((i) => `  {
+${items
+  .filter((i) => i.quantity > 0)
+  .map(
+    (i) => `  {
     quantity: ${i.quantity},
     _price: {
       unit_amount_decimal: '${i.unitAmountDecimal}',
@@ -277,7 +304,9 @@ ${items.filter((i) => i.quantity > 0).map((i) => `  {
       description: '${i.name}',
     },
     taxes: [{ tax: { rate: ${taxRate} } }],
-  },`).join('\n')}
+  },`,
+  )
+  .join('\n')}
   {
     quantity: 1,
     _price: {
@@ -287,7 +316,7 @@ ${items.filter((i) => i.quantity > 0).map((i) => `  {
       is_tax_inclusive: false,
       type: 'one_time',
       tax: [{ rate: ${taxRate}, type: 'VAT' }],
-      description: 'Trench Work (${distance}m x EUR ${parseFloat(perMeterRate).toFixed(2)}/m)',
+      description: 'Trench Work (${distance}m)',
     },
     taxes: [{ tax: { rate: ${taxRate} } }],
   },

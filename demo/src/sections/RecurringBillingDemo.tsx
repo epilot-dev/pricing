@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals, normalizeValueToFrequencyUnit } from '@epilot/pricing';
-import { ResultCard } from '../components/ResultCard';
+import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
+import { ResultCard } from '../components/ResultCard';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 const periods = [
@@ -23,8 +23,8 @@ const normFactors: Record<string, Record<string, number>> = {
 export function RecurringBillingDemo() {
   const [unitPrice, setUnitPrice] = useState('29.99');
   const [basePeriod, setBasePeriod] = useState('monthly');
-  const [quantity, setQuantity] = useState(1);
-  const [taxRate, setTaxRate] = useState(19);
+  const [quantity] = useState(1);
+  const [taxRate] = useState(19);
   const [isTaxInclusive, setIsTaxInclusive] = useState(true);
 
   const result = useMemo(() => {
@@ -48,11 +48,7 @@ export function RecurringBillingDemo() {
 
     return periods.map((p) => {
       try {
-        const normalized = normalizeValueToFrequencyUnit(
-          unitPrice,
-          basePeriod as any,
-          p.value as any,
-        );
+        const normalized = normalizeValueToFrequencyUnit(unitPrice, basePeriod as any, p.value as any);
         return {
           period: p.label,
           periodValue: p.value,
@@ -109,8 +105,8 @@ export function RecurringBillingDemo() {
     <div>
       <h1 className="section-title">Recurring Billing</h1>
       <p className="section-desc">
-        Support for one-time and recurring prices with frequency normalization.
-        Convert prices between billing periods automatically.
+        Support for one-time and recurring prices with frequency normalization. Convert prices between billing periods
+        automatically.
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -136,7 +132,9 @@ export function RecurringBillingDemo() {
                   className="select-field mt-1"
                 >
                   {periods.map((p) => (
-                    <option key={p.value} value={p.value}>{p.label}</option>
+                    <option key={p.value} value={p.value}>
+                      {p.label}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -180,9 +178,7 @@ export function RecurringBillingDemo() {
                 <div
                   key={np.period}
                   className={`flex items-center justify-between p-3 rounded-lg ${
-                    np.isBase
-                      ? 'bg-primary-50 border border-primary-200'
-                      : 'bg-gray-50'
+                    np.isBase ? 'bg-primary-50 border border-primary-200' : 'bg-gray-50'
                   }`}
                 >
                   <span className="text-sm font-medium text-gray-700">
@@ -210,8 +206,8 @@ export function RecurringBillingDemo() {
         {showMixed && (
           <div>
             <p className="text-sm text-gray-500 mb-4">
-              Three items: a one-time setup fee, a monthly subscription, and an annual license.
-              The library groups totals by recurrence type.
+              Three items: a one-time setup fee, a monthly subscription, and an annual license. The library groups
+              totals by recurrence type.
             </p>
 
             <div className="grid grid-cols-3 gap-4 mb-4">
@@ -219,9 +215,7 @@ export function RecurringBillingDemo() {
                 (label, i) => (
                   <div key={i} className="p-3 bg-gray-50 rounded-lg text-center">
                     <p className="text-xs text-gray-500">{label}</p>
-                    <p className="font-bold mt-1">
-                      {fmtCents(mixedResult.items?.[i]?.amount_total)}
-                    </p>
+                    <p className="font-bold mt-1">{fmtCents(mixedResult.items?.[i]?.amount_total)}</p>
                   </div>
                 ),
               )}

@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
-import { ResultCard } from '../components/ResultCard';
+import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
+import { ResultCard } from '../components/ResultCard';
 import { fmtCents, makeTax } from '../helpers';
 
 interface Component {
@@ -106,7 +106,8 @@ export function CompositePriceDemo() {
     if (components.length > 1) setComponents((prev) => prev.filter((_, i) => i !== idx));
   };
 
-  const oneTimeItems = result.items?.filter((item: any) => item._price?.type === 'one_time' || !item._price?.billing_period) ?? [];
+  const oneTimeItems =
+    result.items?.filter((item: any) => item._price?.type === 'one_time' || !item._price?.billing_period) ?? [];
   const recurringItems = result.items?.filter((item: any) => item._price?.type === 'recurring') ?? [];
 
   return (
@@ -122,7 +123,9 @@ export function CompositePriceDemo() {
           <div className="card">
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-semibold text-gray-900">Price Components</h3>
-              <button onClick={addComponent} className="btn-primary text-xs">+ Add</button>
+              <button onClick={addComponent} className="btn-primary text-xs">
+                + Add
+              </button>
             </div>
             <div className="space-y-3">
               {components.map((comp, idx) => (
@@ -231,9 +234,7 @@ export function CompositePriceDemo() {
                 return (
                   <div key={idx} className="flex items-center gap-3 p-2 rounded bg-gray-50">
                     <div
-                      className={`w-2 h-8 rounded-full ${
-                        comp.type === 'one_time' ? 'bg-blue-400' : 'bg-green-400'
-                      }`}
+                      className={`w-2 h-8 rounded-full ${comp.type === 'one_time' ? 'bg-blue-400' : 'bg-green-400'}`}
                     />
                     <div className="flex-1">
                       <p className="text-sm font-medium text-gray-700">{comp.name}</p>
@@ -302,13 +303,17 @@ const compositeItem = {
     unit_amount_currency: 'EUR',
     tax: [{ rate: ${taxRate}, type: 'VAT' }],
     price_components: [
-${components.map((c) => `      {
+${components
+  .map(
+    (c) => `      {
         unit_amount_decimal: '${c.unitAmountDecimal}',
         pricing_model: 'per_unit',
         is_tax_inclusive: true,
         type: '${c.type}',${c.billingPeriod ? `\n        billing_period: '${c.billingPeriod}',` : ''}
         description: '${c.name}',
-      },`).join('\n')}
+      },`,
+  )
+  .join('\n')}
     ],
   },
   price_components: [

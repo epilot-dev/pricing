@@ -12,16 +12,63 @@ interface Token {
 }
 
 const JS_KEYWORDS = new Set([
-  'import', 'from', 'export', 'default', 'const', 'let', 'var', 'function',
-  'return', 'if', 'else', 'for', 'while', 'do', 'switch', 'case', 'break',
-  'continue', 'new', 'this', 'class', 'extends', 'async', 'await', 'try',
-  'catch', 'throw', 'typeof', 'instanceof', 'in', 'of', 'true', 'false',
-  'null', 'undefined', 'void', 'type', 'interface', 'enum', 'as',
+  'import',
+  'from',
+  'export',
+  'default',
+  'const',
+  'let',
+  'var',
+  'function',
+  'return',
+  'if',
+  'else',
+  'for',
+  'while',
+  'do',
+  'switch',
+  'case',
+  'break',
+  'continue',
+  'new',
+  'this',
+  'class',
+  'extends',
+  'async',
+  'await',
+  'try',
+  'catch',
+  'throw',
+  'typeof',
+  'instanceof',
+  'in',
+  'of',
+  'true',
+  'false',
+  'null',
+  'undefined',
+  'void',
+  'type',
+  'interface',
+  'enum',
+  'as',
 ]);
 
 const BUILTIN = new Set([
-  'console', 'Math', 'JSON', 'Array', 'Object', 'String', 'Number',
-  'Boolean', 'Promise', 'Map', 'Set', 'Date', 'Error', 'RegExp',
+  'console',
+  'Math',
+  'JSON',
+  'Array',
+  'Object',
+  'String',
+  'Number',
+  'Boolean',
+  'Promise',
+  'Map',
+  'Set',
+  'Date',
+  'Error',
+  'RegExp',
 ]);
 
 function tokenize(code: string): Token[] {
@@ -137,7 +184,11 @@ export function CodeBlock({ code, title, language = 'typescript' }: CodeBlockPro
       // Simple bash highlighting: just color comments and strings
       return code.split('\n').map((line, i) => {
         if (line.trimStart().startsWith('#')) {
-          return <div key={i}><span className="text-gray-500 italic">{line}</span></div>;
+          return (
+            <div key={i}>
+              <span className="text-gray-500 italic">{line}</span>
+            </div>
+          );
         }
         return <div key={i}>{line}</div>;
       });
@@ -145,7 +196,9 @@ export function CodeBlock({ code, title, language = 'typescript' }: CodeBlockPro
 
     const tokens = tokenize(code);
     return tokens.map((token, i) => (
-      <span key={i} className={tokenColors[token.type]}>{token.value}</span>
+      <span key={i} className={tokenColors[token.type]}>
+        {token.value}
+      </span>
     ));
   }, [code, language]);
 

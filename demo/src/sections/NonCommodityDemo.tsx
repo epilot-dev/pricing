@@ -36,7 +36,7 @@ const categoryMeta: Record<string, { label: string; gradient: string; bg: string
     gradient: 'gradient-solar',
     bg: 'bg-amber-50',
     text: 'text-amber-700',
-    icon: '\u2600\uFE0F',
+    icon: '☀️',
     illustration: SolarIllustration,
     features: ['10 kWp PV system', 'Battery storage', 'Professional installation', 'Maintenance included'],
   },
@@ -45,7 +45,7 @@ const categoryMeta: Record<string, { label: string; gradient: string; bg: string
     gradient: 'gradient-emobility',
     bg: 'bg-blue-50',
     text: 'text-blue-700',
-    icon: '\uD83D\uDE97',
+    icon: '🚗',
     illustration: WallboxIllustration,
     features: ['11 kW wallbox', 'Installation included', 'Smart charging', 'Monthly flat rate'],
   },
@@ -54,7 +54,7 @@ const categoryMeta: Record<string, { label: string; gradient: string; bg: string
     gradient: 'gradient-heating',
     bg: 'bg-red-50',
     text: 'text-red-700',
-    icon: '\uD83C\uDF21\uFE0F',
+    icon: '🌡️',
     illustration: HeatPumpIllustration,
     features: ['Air-to-water system', 'Full installation', 'Smart controls', 'Service contract'],
   },
@@ -63,7 +63,7 @@ const categoryMeta: Record<string, { label: string; gradient: string; bg: string
     gradient: 'gradient-smarthome',
     bg: 'bg-emerald-50',
     text: 'text-emerald-700',
-    icon: '\uD83C\uDFE0',
+    icon: '🏠',
     illustration: SmartHomeIllustration,
     features: ['Smart thermostat', 'Energy monitoring', 'App control', 'Consumption insights'],
   },
@@ -191,7 +191,7 @@ export function NonCommodityDemo() {
                           : 'border-gray-300 bg-white'
                       }`}
                     >
-                      {product.enabled ? '\u2713' : ''}
+                      {product.enabled ? '✓' : ''}
                     </button>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-semibold text-gray-700 truncate">{product.name}</p>

@@ -10,7 +10,7 @@ const energyProducts = [
     id: 'electricity',
     title: 'Electricity Tariffs',
     desc: 'Single & dual-tariff pricing with Grundpreis, Arbeitspreis, and smart meter support.',
-    icon: '\u26A1',
+    icon: '⚡',
     gradient: 'gradient-electricity',
     price: 'from 28.5 ct/kWh',
   },
@@ -18,7 +18,7 @@ const energyProducts = [
     id: 'gas',
     title: 'Gas Supply',
     desc: 'Gas tariffs with CO2 levy, storage levy, and per-kWh work price breakdowns',
-    icon: '\uD83D\uDD25',
+    icon: '🔥',
     gradient: 'gradient-gas',
     price: 'from 8.9 ct/kWh',
   },
@@ -26,7 +26,7 @@ const energyProducts = [
     id: 'house-connection',
     title: 'House Connection',
     desc: 'Hausanschluss fees with distance-based trench work and multi-utility connections',
-    icon: '\uD83C\uDFE1',
+    icon: '🏡',
     gradient: 'gradient-house',
     price: 'from EUR 1,850',
   },
@@ -34,7 +34,7 @@ const energyProducts = [
     id: 'non-commodity',
     title: 'Products & Add-ons',
     desc: 'Solar, wallboxes, heat pumps, and smart home bundles with service contracts',
-    icon: '\u2600\uFE0F',
+    icon: '☀️',
     gradient: 'gradient-solar',
     price: 'Bundles from EUR 899',
   },
@@ -76,17 +76,17 @@ const addOnShowcase = [
 ];
 
 const capabilities = [
-  { id: 'per-unit', title: 'Per Unit', icon: '\uD83D\uDCE6' },
-  { id: 'tiered-volume', title: 'Tiered Volume', icon: '\uD83D\uDCCA' },
-  { id: 'tiered-graduated', title: 'Graduated', icon: '\uD83D\uDCC8' },
-  { id: 'tiered-flatfee', title: 'Flat Fee', icon: '\uD83C\uDFF7\uFE0F' },
-  { id: 'tax', title: 'Tax', icon: '\uD83E\uDDFE' },
-  { id: 'discounts', title: 'Discounts', icon: '\uD83C\uDF9F\uFE0F' },
-  { id: 'composite', title: 'Composite', icon: '\uD83E\uDDE9' },
-  { id: 'recurring', title: 'Recurring', icon: '\uD83D\uDD04' },
-  { id: 'currency', title: 'Currency', icon: '\uD83D\uDCB1' },
-  { id: 'dynamic-tariff', title: 'Dynamic', icon: '\u26A1' },
-  { id: 'getag', title: 'GetAG', icon: '\uD83D\uDD0C' },
+  { id: 'per-unit', title: 'Per Unit', icon: '📦' },
+  { id: 'tiered-volume', title: 'Tiered Volume', icon: '📊' },
+  { id: 'tiered-graduated', title: 'Graduated', icon: '📈' },
+  { id: 'tiered-flatfee', title: 'Flat Fee', icon: '🏷️' },
+  { id: 'tax', title: 'Tax', icon: '🧾' },
+  { id: 'discounts', title: 'Discounts', icon: '🎟️' },
+  { id: 'composite', title: 'Composite', icon: '🧩' },
+  { id: 'recurring', title: 'Recurring', icon: '🔄' },
+  { id: 'currency', title: 'Currency', icon: '💱' },
+  { id: 'dynamic-tariff', title: 'Dynamic', icon: '⚡' },
+  { id: 'getag', title: 'GetAG', icon: '🔌' },
 ];
 
 export function OverviewDemo({ onNavigate }: OverviewDemoProps) {
@@ -216,10 +216,10 @@ export function OverviewDemo({ onNavigate }: OverviewDemoProps) {
         <h2 className="text-xl font-extrabold text-gray-900 mb-6 tracking-tight">Customer Journey</h2>
         <div className="flex items-stretch gap-0 overflow-x-auto pb-2">
           {[
-            { step: '1', label: 'Browse Products', desc: 'Customer selects tariff or product bundle', icon: '\uD83D\uDED2', color: 'bg-blue-50 text-blue-700' },
-            { step: '2', label: 'Configure', desc: 'Adjust consumption, select add-ons, set preferences', icon: '\u2699\uFE0F', color: 'bg-amber-50 text-amber-700' },
-            { step: '3', label: 'Price Calculation', desc: 'Real-time pricing with tax, discounts, recurrences', icon: '\uD83D\uDCB0', color: 'bg-emerald-50 text-emerald-700' },
-            { step: '4', label: 'Order Summary', desc: 'Clear breakdown for customer and sales team', icon: '\u2705', color: 'bg-purple-50 text-purple-700' },
+            { step: '1', label: 'Browse Products', desc: 'Customer selects tariff or product bundle', icon: '🛒', color: 'bg-blue-50 text-blue-700' },
+            { step: '2', label: 'Configure', desc: 'Adjust consumption, select add-ons, set preferences', icon: '⚙️', color: 'bg-amber-50 text-amber-700' },
+            { step: '3', label: 'Price Calculation', desc: 'Real-time pricing with tax, discounts, recurrences', icon: '💰', color: 'bg-emerald-50 text-emerald-700' },
+            { step: '4', label: 'Order Summary', desc: 'Clear breakdown for customer and sales team', icon: '✅', color: 'bg-purple-50 text-purple-700' },
           ].map((s, i) => (
             <div key={s.step} className="flex items-stretch">
               {i > 0 && (

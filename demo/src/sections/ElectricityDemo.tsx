@@ -200,7 +200,7 @@ export function ElectricityDemo() {
           {/* Main tariff card */}
           <TariffCard
             gradient="gradient-electricity"
-            icon={<span>\u26A1</span>}
+            icon={<span>⚡</span>}
             title={tariffType === 'dual' ? 'Doppeltarif (HT/NT)' : 'Einfachtarif (ET)'}
             subtitle={`${totalConsumption.toLocaleString()} kWh/year`}
             badge={tariffType === 'dual' ? 'HT/NT' : 'SINGLE'}

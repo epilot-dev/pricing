@@ -224,7 +224,7 @@ export function ProductShowcase({
           <div className={`absolute top-3 left-3 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
             selected ? 'bg-primary-600 text-white' : 'bg-white/80 backdrop-blur-sm text-gray-400 border border-gray-200'
           }`}>
-            {selected ? '\u2713' : ''}
+            {selected ? '✓' : ''}
           </div>
         )}
       </div>

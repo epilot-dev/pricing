@@ -15,11 +15,11 @@ interface ConnectionItem {
 }
 
 const defaultItems: ConnectionItem[] = [
-  { name: 'Electricity Connection', unitAmountDecimal: '1850.00', quantity: 1, type: 'one_time', icon: '\u26A1' },
-  { name: 'Gas Connection', unitAmountDecimal: '1450.00', quantity: 1, type: 'one_time', icon: '\uD83D\uDD25' },
-  { name: 'Water Connection', unitAmountDecimal: '2200.00', quantity: 1, type: 'one_time', icon: '\uD83D\uDCA7' },
-  { name: 'Construction Power Supply', unitAmountDecimal: '350.00', quantity: 1, type: 'one_time', icon: '\uD83D\uDEA7' },
-  { name: 'Meter Installation Fee', unitAmountDecimal: '12.50', quantity: 1, type: 'recurring', billingPeriod: 'monthly', icon: '\uD83D\uDCCB' },
+  { name: 'Electricity Connection', unitAmountDecimal: '1850.00', quantity: 1, type: 'one_time', icon: '⚡' },
+  { name: 'Gas Connection', unitAmountDecimal: '1450.00', quantity: 1, type: 'one_time', icon: '🔥' },
+  { name: 'Water Connection', unitAmountDecimal: '2200.00', quantity: 1, type: 'one_time', icon: '💧' },
+  { name: 'Construction Power Supply', unitAmountDecimal: '350.00', quantity: 1, type: 'one_time', icon: '🚧' },
+  { name: 'Meter Installation Fee', unitAmountDecimal: '12.50', quantity: 1, type: 'recurring', billingPeriod: 'monthly', icon: '📋' },
 ];
 
 export function HouseConnectionDemo() {
@@ -108,7 +108,7 @@ export function HouseConnectionDemo() {
                           : 'border-gray-300 bg-white'
                       }`}
                     >
-                      {item.quantity > 0 ? '\u2713' : ''}
+                      {item.quantity > 0 ? '✓' : ''}
                     </button>
                     <span className="text-base">{item.icon}</span>
                     <div className="flex-1 min-w-0">
@@ -170,7 +170,7 @@ export function HouseConnectionDemo() {
         <div className="lg:col-span-2 space-y-5">
           <TariffCard
             gradient="gradient-house"
-            icon={<span>\uD83C\uDFE1</span>}
+            icon={<span>🏡</span>}
             title="Hausanschluss"
             subtitle="New build connection package"
             badge="CONNECTION"
@@ -204,7 +204,7 @@ export function HouseConnectionDemo() {
 
             <div className="cost-line">
               <div className="flex items-center gap-2">
-                <span className="text-sm">{'\u{1F6E0}\uFE0F'}</span>
+                <span className="text-sm">🛠️</span>
                 <div>
                   <span className="cost-line-label">Trench Work</span>
                   <p className="text-[10px] text-gray-400">{distance}m x EUR {parseFloat(perMeterRate).toFixed(2)}/m</p>

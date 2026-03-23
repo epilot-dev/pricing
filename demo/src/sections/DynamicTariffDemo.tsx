@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
-import { ResultCard } from '../components/ResultCard';
+import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
+import { ResultCard } from '../components/ResultCard';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 export function DynamicTariffDemo() {
@@ -40,7 +40,7 @@ export function DynamicTariffDemo() {
     const base = parseFloat(marketPrice);
     return Array.from({ length: 24 }, (_, i) => ({
       hour: `${String(i).padStart(2, '0')}:00`,
-      price: Math.max(0, base + (Math.sin(i / 4) * 3) + (Math.random() - 0.5) * 2),
+      price: Math.max(0, base + Math.sin(i / 4) * 3 + (Math.random() - 0.5) * 2),
     }));
   }, [marketPrice]);
 
@@ -51,8 +51,8 @@ export function DynamicTariffDemo() {
     <div>
       <h1 className="section-title">Dynamic Tariff</h1>
       <p className="section-desc">
-        Market-based pricing for energy products. Combines a day-ahead market price with a configurable markup.
-        Supports both automatic (day_ahead_market) and manual modes.
+        Market-based pricing for energy products. Combines a day-ahead market price with a configurable markup. Supports
+        both automatic (day_ahead_market) and manual modes.
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -162,24 +162,12 @@ export function DynamicTariffDemo() {
           <div className="card">
             <h3 className="font-semibold text-gray-900 mb-3">Computed Result</h3>
             <div className="grid grid-cols-2 gap-3">
-              <ResultCard
-                label="Unit Price"
-                value={`${totalPerUnit.toFixed(2)} ct/kWh`}
-              />
+              <ResultCard label="Unit Price" value={`${totalPerUnit.toFixed(2)} ct/kWh`} />
               <ResultCard label="Consumption" value={`${quantity} kWh`} />
               <ResultCard label="Subtotal (Net)" value={fmtCents(result.amount_subtotal)} />
               <ResultCard label="Tax" value={fmtCents(result.amount_tax)} color="amber" />
-              <ResultCard
-                label="Monthly Total"
-                value={fmtCents(result.amount_total)}
-                highlight
-                color="green"
-              />
-              <ResultCard
-                label="Annual Estimate"
-                value={fmtCents((result.amount_total ?? 0) * 12)}
-                color="blue"
-              />
+              <ResultCard label="Monthly Total" value={fmtCents(result.amount_total)} highlight color="green" />
+              <ResultCard label="Annual Estimate" value={fmtCents((result.amount_total ?? 0) * 12)} color="blue" />
             </div>
           </div>
         </div>

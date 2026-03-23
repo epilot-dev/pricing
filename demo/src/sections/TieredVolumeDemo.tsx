@@ -1,8 +1,8 @@
-import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+import { useState, useMemo } from 'react';
+import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
 import { TierChart } from '../components/TierChart';
-import { CodeBlock } from '../components/CodeBlock';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 const defaultTiers = [
@@ -15,7 +15,7 @@ const defaultTiers = [
 export function TieredVolumeDemo() {
   const [quantity, setQuantity] = useState(25);
   const [tiers, setTiers] = useState(defaultTiers);
-  const [taxRate, setTaxRate] = useState(19);
+  const [taxRate] = useState(19);
   const [isTaxInclusive, setIsTaxInclusive] = useState(true);
 
   const result = useMemo(() => {
@@ -65,7 +65,8 @@ export function TieredVolumeDemo() {
     <div>
       <h1 className="section-title">Tiered Volume Pricing</h1>
       <p className="section-desc">
-        A single tier is selected based on total quantity. The selected tier's unit price applies to <strong>all</strong> units.
+        A single tier is selected based on total quantity. The selected tier's unit price applies to{' '}
+        <strong>all</strong> units.
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -104,9 +105,7 @@ export function TieredVolumeDemo() {
                         className="input-field w-24"
                       />
                     </td>
-                    <td className="py-2">
-                      {idx === activeTierIdx && <span className="badge-blue">Active</span>}
-                    </td>
+                    <td className="py-2">{idx === activeTierIdx && <span className="badge-blue">Active</span>}</td>
                   </tr>
                 ))}
               </tbody>
@@ -158,17 +157,14 @@ export function TieredVolumeDemo() {
           <div className="card">
             <h3 className="font-semibold text-gray-900 mb-3">Computed Result</h3>
             <div className="grid grid-cols-2 gap-3">
-              <ResultCard
-                label="Unit Price (selected tier)"
-                value={fmtCents(lineItem?.unit_amount)}
-              />
+              <ResultCard label="Unit Price (selected tier)" value={fmtCents(lineItem?.unit_amount)} />
               <ResultCard label="Quantity" value={quantity} />
               <ResultCard label="Subtotal (Net)" value={fmtCents(result.amount_subtotal)} />
               <ResultCard label="Total (Gross)" value={fmtCents(result.amount_total)} highlight color="green" />
             </div>
             <div className="mt-3 p-3 bg-gray-50 rounded-lg text-xs text-gray-500">
-              <strong>How it works:</strong> With quantity {quantity}, tier {activeTierIdx + 1} is selected
-              ({tiers[activeTierIdx]?.unit_amount_decimal}/unit). All {quantity} units use this price.
+              <strong>How it works:</strong> With quantity {quantity}, tier {activeTierIdx + 1} is selected (
+              {tiers[activeTierIdx]?.unit_amount_decimal}/unit). All {quantity} units use this price.
             </div>
           </div>
         </div>

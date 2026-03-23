@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
-import { ResultCard } from '../components/ResultCard';
+import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
+import { ResultCard } from '../components/ResultCard';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 export function TaxDemo() {
@@ -57,8 +57,8 @@ export function TaxDemo() {
     <div>
       <h1 className="section-title">Tax Handling</h1>
       <p className="section-desc">
-        Compare tax-inclusive vs tax-exclusive pricing side by side. The library handles tax calculations
-        precisely using Dinero.js for decimal arithmetic.
+        Compare tax-inclusive vs tax-exclusive pricing side by side. The library handles tax calculations precisely
+        using Dinero.js for decimal arithmetic.
       </p>
 
       {/* Controls */}
@@ -89,11 +89,7 @@ export function TaxDemo() {
           </div>
           <div>
             <label className="text-sm font-medium text-gray-700">Tax Rate (%)</label>
-            <select
-              value={taxRate}
-              onChange={(e) => setTaxRate(Number(e.target.value))}
-              className="select-field mt-1"
-            >
+            <select value={taxRate} onChange={(e) => setTaxRate(Number(e.target.value))} className="select-field mt-1">
               <option value={0}>0%</option>
               <option value={6}>6%</option>
               <option value={7}>7%</option>
@@ -118,11 +114,16 @@ export function TaxDemo() {
             <ResultCard label="Net per unit (excluding tax)" value={fmtCents(incItem?.unit_amount)} />
             <ResultCard label="Line Subtotal (Net)" value={fmtCents(inclusiveResult.amount_subtotal)} />
             <ResultCard label="Tax Amount" value={fmtCents(inclusiveResult.amount_tax)} color="amber" />
-            <ResultCard label="Line Total (Gross)" value={fmtCents(inclusiveResult.amount_total)} highlight color="green" />
+            <ResultCard
+              label="Line Total (Gross)"
+              value={fmtCents(inclusiveResult.amount_total)}
+              highlight
+              color="green"
+            />
           </div>
           <div className="mt-3 p-3 bg-blue-50 rounded text-xs text-blue-700">
-            The €{unitPrice} price already contains {taxRate}% tax.
-            Net = €{unitPrice} / 1.{String(taxRate).padStart(2, '0')} per unit.
+            The €{unitPrice} price already contains {taxRate}% tax. Net = €{unitPrice} / 1.
+            {String(taxRate).padStart(2, '0')} per unit.
           </div>
         </div>
 
@@ -137,11 +138,16 @@ export function TaxDemo() {
             <ResultCard label="Gross per unit (including tax)" value={fmtCents(excItem?.unit_amount_gross)} />
             <ResultCard label="Line Subtotal (Net)" value={fmtCents(exclusiveResult.amount_subtotal)} />
             <ResultCard label="Tax Amount" value={fmtCents(exclusiveResult.amount_tax)} color="amber" />
-            <ResultCard label="Line Total (Gross)" value={fmtCents(exclusiveResult.amount_total)} highlight color="green" />
+            <ResultCard
+              label="Line Total (Gross)"
+              value={fmtCents(exclusiveResult.amount_total)}
+              highlight
+              color="green"
+            />
           </div>
           <div className="mt-3 p-3 bg-amber-50 rounded text-xs text-amber-700">
-            €{unitPrice} is the net price. {taxRate}% tax is added on top.
-            Gross = €{unitPrice} * 1.{String(taxRate).padStart(2, '0')} per unit.
+            €{unitPrice} is the net price. {taxRate}% tax is added on top. Gross = €{unitPrice} * 1.
+            {String(taxRate).padStart(2, '0')} per unit.
           </div>
         </div>
       </div>
@@ -157,8 +163,7 @@ export function TaxDemo() {
         {showMultiTax && (
           <div>
             <p className="text-sm text-gray-500 mb-4">
-              Two items with different tax rates (19% standard, 7% reduced). The library tracks
-              tax breakdown by rate.
+              Two items with different tax rates (19% standard, 7% reduced). The library tracks tax breakdown by rate.
             </p>
             <div className="grid grid-cols-4 gap-3 mb-4">
               <ResultCard label="Subtotal" value={fmtCents(multiTaxResult.amount_subtotal)} />
@@ -174,7 +179,9 @@ export function TaxDemo() {
                 return (
                   <div key={i} className="flex items-center gap-3 py-1.5 border-b border-gray-100">
                     <span className="badge-amber">{rate}%</span>
-                    <span className="text-gray-600 flex-1">{type} {rate}%</span>
+                    <span className="text-gray-600 flex-1">
+                      {type} {rate}%
+                    </span>
                     <span className="font-medium">{fmtCents(t.amount)}</span>
                   </div>
                 );

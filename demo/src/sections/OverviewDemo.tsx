@@ -1,5 +1,10 @@
-import { SolarIllustration, WallboxIllustration, HeatPumpIllustration, SmartHomeIllustration } from '../components/ProductShowcase';
 import { CodeBlock } from '../components/CodeBlock';
+import {
+  SolarIllustration,
+  WallboxIllustration,
+  HeatPumpIllustration,
+  SmartHomeIllustration,
+} from '../components/ProductShowcase';
 
 interface OverviewDemoProps {
   onNavigate: (id: string) => void;
@@ -99,14 +104,15 @@ export function OverviewDemo({ onNavigate }: OverviewDemoProps) {
           Interactive Playground
         </div>
         <h1 className="text-5xl font-extrabold text-gray-900 mb-4 tracking-tight leading-tight">
-          Energy Pricing,<br />
+          Energy Pricing,
+          <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-blue-400">
             Made Simple.
           </span>
         </h1>
         <p className="text-lg text-gray-500 max-w-xl leading-relaxed">
-          Configure tariffs, bundle products, and compute prices in real-time.
-          From electricity and gas to solar panels and wallboxes — everything your sales team needs.
+          Configure tariffs, bundle products, and compute prices in real-time. From electricity and gas to solar panels
+          and wallboxes — everything your sales team needs.
         </p>
       </div>
 
@@ -130,11 +136,7 @@ export function OverviewDemo({ onNavigate }: OverviewDemoProps) {
       <p className="text-sm text-gray-400 mb-6">Click any card to explore the interactive tariff configurator</p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-14">
         {energyProducts.map((p) => (
-          <button
-            key={p.id}
-            onClick={() => onNavigate(p.id)}
-            className="text-left group"
-          >
+          <button key={p.id} onClick={() => onNavigate(p.id)} className="text-left group">
             <div className="tariff-card hover:shadow-xl transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
               <div className={`${p.gradient} px-5 py-4 text-white`}>
                 <span className="text-2xl">{p.icon}</span>
@@ -161,11 +163,7 @@ export function OverviewDemo({ onNavigate }: OverviewDemoProps) {
         {addOnShowcase.map((product) => {
           const Illustration = product.illustration;
           return (
-            <button
-              key={product.title}
-              onClick={() => onNavigate('non-commodity')}
-              className="text-left group"
-            >
+            <button key={product.title} onClick={() => onNavigate('non-commodity')} className="text-left group">
               <div className="showcase-card h-full flex flex-col">
                 <div className="h-40 overflow-hidden">
                   <Illustration />
@@ -179,7 +177,11 @@ export function OverviewDemo({ onNavigate }: OverviewDemoProps) {
                     {product.features.slice(0, 3).map((f, i) => (
                       <div key={i} className="flex items-center gap-1.5 text-[11px] text-gray-500">
                         <svg className="w-3 h-3 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
                         </svg>
                         {f}
                       </div>
@@ -216,10 +218,34 @@ export function OverviewDemo({ onNavigate }: OverviewDemoProps) {
         <h2 className="text-xl font-extrabold text-gray-900 mb-6 tracking-tight">Customer Journey</h2>
         <div className="flex items-stretch gap-0 overflow-x-auto pb-2">
           {[
-            { step: '1', label: 'Browse Products', desc: 'Customer selects tariff or product bundle', icon: '\uD83D\uDED2', color: 'bg-blue-50 text-blue-700' },
-            { step: '2', label: 'Configure', desc: 'Adjust consumption, select add-ons, set preferences', icon: '\u2699\uFE0F', color: 'bg-amber-50 text-amber-700' },
-            { step: '3', label: 'Price Calculation', desc: 'Real-time pricing with tax, discounts, recurrences', icon: '\uD83D\uDCB0', color: 'bg-emerald-50 text-emerald-700' },
-            { step: '4', label: 'Order Summary', desc: 'Clear breakdown for customer and sales team', icon: '\u2705', color: 'bg-purple-50 text-purple-700' },
+            {
+              step: '1',
+              label: 'Browse Products',
+              desc: 'Customer selects tariff or product bundle',
+              icon: '\uD83D\uDED2',
+              color: 'bg-blue-50 text-blue-700',
+            },
+            {
+              step: '2',
+              label: 'Configure',
+              desc: 'Adjust consumption, select add-ons, set preferences',
+              icon: '\u2699\uFE0F',
+              color: 'bg-amber-50 text-amber-700',
+            },
+            {
+              step: '3',
+              label: 'Price Calculation',
+              desc: 'Real-time pricing with tax, discounts, recurrences',
+              icon: '\uD83D\uDCB0',
+              color: 'bg-emerald-50 text-emerald-700',
+            },
+            {
+              step: '4',
+              label: 'Order Summary',
+              desc: 'Clear breakdown for customer and sales team',
+              icon: '\u2705',
+              color: 'bg-purple-50 text-purple-700',
+            },
           ].map((s, i) => (
             <div key={s.step} className="flex items-stretch">
               {i > 0 && (
@@ -244,11 +270,7 @@ export function OverviewDemo({ onNavigate }: OverviewDemoProps) {
 
       {/* Quick Start */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <CodeBlock
-          title="Install"
-          language="bash"
-          code={`npm install @epilot/pricing`}
-        />
+        <CodeBlock title="Install" language="bash" code={`npm install @epilot/pricing`} />
         <CodeBlock
           title="Quick Start"
           code={`import { computeAggregatedAndPriceTotals } from '@epilot/pricing';

@@ -1,8 +1,8 @@
-import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+import { useState, useMemo } from 'react';
+import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
 import { TariffCard } from '../components/TariffCard';
-import { CodeBlock } from '../components/CodeBlock';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 interface ConnectionItem {
@@ -18,13 +18,26 @@ const defaultItems: ConnectionItem[] = [
   { name: 'Electricity Connection', unitAmountDecimal: '1850.00', quantity: 1, type: 'one_time', icon: '\u26A1' },
   { name: 'Gas Connection', unitAmountDecimal: '1450.00', quantity: 1, type: 'one_time', icon: '\uD83D\uDD25' },
   { name: 'Water Connection', unitAmountDecimal: '2200.00', quantity: 1, type: 'one_time', icon: '\uD83D\uDCA7' },
-  { name: 'Construction Power Supply', unitAmountDecimal: '350.00', quantity: 1, type: 'one_time', icon: '\uD83D\uDEA7' },
-  { name: 'Meter Installation Fee', unitAmountDecimal: '12.50', quantity: 1, type: 'recurring', billingPeriod: 'monthly', icon: '\uD83D\uDCCB' },
+  {
+    name: 'Construction Power Supply',
+    unitAmountDecimal: '350.00',
+    quantity: 1,
+    type: 'one_time',
+    icon: '\uD83D\uDEA7',
+  },
+  {
+    name: 'Meter Installation Fee',
+    unitAmountDecimal: '12.50',
+    quantity: 1,
+    type: 'recurring',
+    billingPeriod: 'monthly',
+    icon: '\uD83D\uDCCB',
+  },
 ];
 
 export function HouseConnectionDemo() {
   const [items, setItems] = useState<ConnectionItem[]>(defaultItems);
-  const [taxRate, setTaxRate] = useState(19);
+  const [taxRate] = useState(19);
   const [distance, setDistance] = useState(15);
   const [perMeterRate, setPerMeterRate] = useState('85.00');
 
@@ -62,9 +75,7 @@ export function HouseConnectionDemo() {
   };
 
   const toggleItem = (idx: number) => {
-    setItems((prev) =>
-      prev.map((item, i) => (i === idx ? { ...item, quantity: item.quantity > 0 ? 0 : 1 } : item)),
-    );
+    setItems((prev) => prev.map((item, i) => (i === idx ? { ...item, quantity: item.quantity > 0 ? 0 : 1 } : item)));
   };
 
   const oneTimeCosts = items
@@ -79,8 +90,8 @@ export function HouseConnectionDemo() {
     <div>
       <h1 className="section-title">House Connection</h1>
       <p className="section-desc">
-        Configure Hausanschluss (house connection) pricing for new builds.
-        Combines connection fees, distance-based trench work, and recurring meter costs.
+        Configure Hausanschluss (house connection) pricing for new builds. Combines connection fees, distance-based
+        trench work, and recurring meter costs.
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -103,9 +114,7 @@ export function HouseConnectionDemo() {
                     <button
                       onClick={() => toggleItem(idx)}
                       className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center text-[10px] transition-colors ${
-                        item.quantity > 0
-                          ? 'bg-primary-600 border-primary-600 text-white'
-                          : 'border-gray-300 bg-white'
+                        item.quantity > 0 ? 'bg-primary-600 border-primary-600 text-white' : 'border-gray-300 bg-white'
                       }`}
                     >
                       {item.quantity > 0 ? '\u2713' : ''}
@@ -113,11 +122,11 @@ export function HouseConnectionDemo() {
                     <span className="text-base">{item.icon}</span>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-semibold text-gray-700">{item.name}</p>
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold ${
-                        item.type === 'one_time'
-                          ? 'bg-blue-100 text-blue-600'
-                          : 'bg-emerald-100 text-emerald-600'
-                      }`}>
+                      <span
+                        className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold ${
+                          item.type === 'one_time' ? 'bg-blue-100 text-blue-600' : 'bg-emerald-100 text-emerald-600'
+                        }`}
+                      >
                         {item.type === 'one_time' ? 'One-time' : `${item.billingPeriod}`}
                       </span>
                     </div>
@@ -144,7 +153,15 @@ export function HouseConnectionDemo() {
                   <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Distance to Grid</label>
                   <span className="text-sm font-extrabold text-amber-600">{distance} m</span>
                 </div>
-                <input type="range" min="5" max="100" step="1" value={distance} onChange={(e) => setDistance(Number(e.target.value))} className="w-full accent-amber-500" />
+                <input
+                  type="range"
+                  min="5"
+                  max="100"
+                  step="1"
+                  value={distance}
+                  onChange={(e) => setDistance(Number(e.target.value))}
+                  className="w-full accent-amber-500"
+                />
                 <div className="flex justify-between text-[10px] text-gray-300 mt-1">
                   <span>5 m</span>
                   <span>100 m</span>
@@ -153,7 +170,13 @@ export function HouseConnectionDemo() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs text-amber-600 font-medium">EUR/m rate</label>
-                  <input type="number" step="0.01" value={perMeterRate} onChange={(e) => setPerMeterRate(e.target.value)} className="input-field mt-1" />
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={perMeterRate}
+                    onChange={(e) => setPerMeterRate(e.target.value)}
+                    className="input-field mt-1"
+                  />
                 </div>
                 <div className="flex items-end">
                   <div className="p-3 bg-amber-100 rounded-xl text-center w-full">
@@ -207,7 +230,9 @@ export function HouseConnectionDemo() {
                 <span className="text-sm">{'\u{1F6E0}\uFE0F'}</span>
                 <div>
                   <span className="cost-line-label">Trench Work</span>
-                  <p className="text-[10px] text-gray-400">{distance}m x EUR {parseFloat(perMeterRate).toFixed(2)}/m</p>
+                  <p className="text-[10px] text-gray-400">
+                    {distance}m x EUR {parseFloat(perMeterRate).toFixed(2)}/m
+                  </p>
                 </div>
               </div>
               <span className="cost-line-value">EUR {trenchCost.toFixed(2)}</span>
@@ -224,14 +249,18 @@ export function HouseConnectionDemo() {
                       <p className="text-[10px] text-emerald-500 font-medium">/{item.billingPeriod}</p>
                     </div>
                   </div>
-                  <span className="cost-line-value text-emerald-600">EUR {parseFloat(item.unitAmountDecimal).toFixed(2)}</span>
+                  <span className="cost-line-value text-emerald-600">
+                    EUR {parseFloat(item.unitAmountDecimal).toFixed(2)}
+                  </span>
                 </div>
               ))}
           </TariffCard>
 
           {/* Computed results */}
           <div className="card">
-            <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-4">Computed via @epilot/pricing</p>
+            <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-4">
+              Computed via @epilot/pricing
+            </p>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               <ResultCard label="Total Net" value={fmtCents(result.amount_subtotal)} />
               <ResultCard label={`Tax (${taxRate}%)`} value={fmtCents(result.amount_tax)} color="amber" highlight />
@@ -266,7 +295,10 @@ export function HouseConnectionDemo() {
 
 // House connection: mix of one-time and recurring items
 const items = [
-${items.filter((i) => i.quantity > 0).map((i) => `  {
+${items
+  .filter((i) => i.quantity > 0)
+  .map(
+    (i) => `  {
     quantity: ${i.quantity},
     _price: {
       unit_amount_decimal: '${i.unitAmountDecimal}',
@@ -278,7 +310,9 @@ ${items.filter((i) => i.quantity > 0).map((i) => `  {
       description: '${i.name}',
     },
     taxes: [{ tax: { rate: ${taxRate} } }],
-  },`).join('\n')}
+  },`,
+  )
+  .join('\n')}
   {
     quantity: 1,
     _price: {

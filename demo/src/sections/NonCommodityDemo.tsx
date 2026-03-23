@@ -1,8 +1,14 @@
-import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
-import { ResultCard } from '../components/ResultCard';
-import { ProductShowcase, SolarIllustration, WallboxIllustration, HeatPumpIllustration, SmartHomeIllustration } from '../components/ProductShowcase';
+import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
+import {
+  ProductShowcase,
+  SolarIllustration,
+  WallboxIllustration,
+  HeatPumpIllustration,
+  SmartHomeIllustration,
+} from '../components/ProductShowcase';
+import { ResultCard } from '../components/ResultCard';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 interface Product {
@@ -16,21 +22,84 @@ interface Product {
 }
 
 const defaultProducts: Product[] = [
-  { name: 'Solar Panel System (10 kWp)', category: 'solar', price: '12500.00', quantity: 1, type: 'one_time', enabled: true },
-  { name: 'Battery Storage (10 kWh)', category: 'solar', price: '6800.00', quantity: 1, type: 'one_time', enabled: true },
+  {
+    name: 'Solar Panel System (10 kWp)',
+    category: 'solar',
+    price: '12500.00',
+    quantity: 1,
+    type: 'one_time',
+    enabled: true,
+  },
+  {
+    name: 'Battery Storage (10 kWh)',
+    category: 'solar',
+    price: '6800.00',
+    quantity: 1,
+    type: 'one_time',
+    enabled: true,
+  },
   { name: 'Solar Installation', category: 'solar', price: '3200.00', quantity: 1, type: 'one_time', enabled: true },
-  { name: 'Solar Maintenance Contract', category: 'solar', price: '29.90', quantity: 1, type: 'recurring', billingPeriod: 'monthly', enabled: true },
+  {
+    name: 'Solar Maintenance Contract',
+    category: 'solar',
+    price: '29.90',
+    quantity: 1,
+    type: 'recurring',
+    billingPeriod: 'monthly',
+    enabled: true,
+  },
   { name: 'Wallbox (11 kW)', category: 'emobility', price: '899.00', quantity: 1, type: 'one_time', enabled: false },
-  { name: 'Wallbox Installation', category: 'emobility', price: '450.00', quantity: 1, type: 'one_time', enabled: false },
-  { name: 'Charging Flat Rate', category: 'emobility', price: '59.00', quantity: 1, type: 'recurring', billingPeriod: 'monthly', enabled: false },
+  {
+    name: 'Wallbox Installation',
+    category: 'emobility',
+    price: '450.00',
+    quantity: 1,
+    type: 'one_time',
+    enabled: false,
+  },
+  {
+    name: 'Charging Flat Rate',
+    category: 'emobility',
+    price: '59.00',
+    quantity: 1,
+    type: 'recurring',
+    billingPeriod: 'monthly',
+    enabled: false,
+  },
   { name: 'Heat Pump System', category: 'heating', price: '15800.00', quantity: 1, type: 'one_time', enabled: false },
-  { name: 'Heat Pump Installation', category: 'heating', price: '4500.00', quantity: 1, type: 'one_time', enabled: false },
-  { name: 'Heating Maintenance', category: 'heating', price: '39.90', quantity: 1, type: 'recurring', billingPeriod: 'monthly', enabled: false },
+  {
+    name: 'Heat Pump Installation',
+    category: 'heating',
+    price: '4500.00',
+    quantity: 1,
+    type: 'one_time',
+    enabled: false,
+  },
+  {
+    name: 'Heating Maintenance',
+    category: 'heating',
+    price: '39.90',
+    quantity: 1,
+    type: 'recurring',
+    billingPeriod: 'monthly',
+    enabled: false,
+  },
   { name: 'Smart Thermostat', category: 'smarthome', price: '249.00', quantity: 1, type: 'one_time', enabled: false },
   { name: 'Energy Manager', category: 'smarthome', price: '499.00', quantity: 1, type: 'one_time', enabled: false },
 ];
 
-const categoryMeta: Record<string, { label: string; gradient: string; bg: string; text: string; icon: string; illustration: React.ComponentType; features: string[] }> = {
+const categoryMeta: Record<
+  string,
+  {
+    label: string;
+    gradient: string;
+    bg: string;
+    text: string;
+    icon: string;
+    illustration: React.ComponentType;
+    features: string[];
+  }
+> = {
   solar: {
     label: 'Solar & Storage',
     gradient: 'gradient-solar',
@@ -103,7 +172,13 @@ export function NonCommodityDemo() {
       );
 
     if (items.length === 0) {
-      return { amount_subtotal: 0, amount_tax: 0, amount_total: 0, items: [], total_details: { breakdown: { recurrences: [] } } };
+      return {
+        amount_subtotal: 0,
+        amount_tax: 0,
+        amount_total: 0,
+        items: [],
+        total_details: { breakdown: { recurrences: [] } },
+      };
     }
 
     return computeAggregatedAndPriceTotals(items);
@@ -123,8 +198,12 @@ export function NonCommodityDemo() {
     return {
       category: cat,
       ...meta,
-      oneTime: catProducts.filter((p) => p.type === 'one_time').reduce((s, p) => s + parseFloat(p.price) * p.quantity, 0),
-      recurring: catProducts.filter((p) => p.type === 'recurring').reduce((s, p) => s + parseFloat(p.price) * p.quantity, 0),
+      oneTime: catProducts
+        .filter((p) => p.type === 'one_time')
+        .reduce((s, p) => s + parseFloat(p.price) * p.quantity, 0),
+      recurring: catProducts
+        .filter((p) => p.type === 'recurring')
+        .reduce((s, p) => s + parseFloat(p.price) * p.quantity, 0),
       count: catProducts.length,
     };
   });
@@ -135,8 +214,8 @@ export function NonCommodityDemo() {
     <div>
       <h1 className="section-title">Products & Add-ons</h1>
       <p className="section-desc">
-        Build product bundles for your customers — solar panels, wallboxes, heat pumps, and smart home devices.
-        Select categories to configure complete packages with one-time and recurring pricing.
+        Build product bundles for your customers — solar panels, wallboxes, heat pumps, and smart home devices. Select
+        categories to configure complete packages with one-time and recurring pricing.
       </p>
 
       {/* Product showcase grid — the "journey" visual */}
@@ -145,8 +224,12 @@ export function NonCommodityDemo() {
         {categories.map((cat) => {
           const meta = categoryMeta[cat];
           const catProducts = products.filter((p) => p.category === cat);
-          const catOneTime = catProducts.filter((p) => p.type === 'one_time').reduce((s, p) => s + parseFloat(p.price), 0);
-          const catRecurring = catProducts.filter((p) => p.type === 'recurring').reduce((s, p) => s + parseFloat(p.price), 0);
+          const catOneTime = catProducts
+            .filter((p) => p.type === 'one_time')
+            .reduce((s, p) => s + parseFloat(p.price), 0);
+          const catRecurring = catProducts
+            .filter((p) => p.type === 'recurring')
+            .reduce((s, p) => s + parseFloat(p.price), 0);
           const enabled = isCategoryEnabled(cat);
 
           return (
@@ -186,9 +269,7 @@ export function NonCommodityDemo() {
                     <button
                       onClick={() => updateProduct(idx, 'enabled', !product.enabled)}
                       className={`w-5 h-5 rounded-lg border-2 flex-shrink-0 flex items-center justify-center text-[10px] transition-colors ${
-                        product.enabled
-                          ? 'bg-primary-600 border-primary-600 text-white'
-                          : 'border-gray-300 bg-white'
+                        product.enabled ? 'bg-primary-600 border-primary-600 text-white' : 'border-gray-300 bg-white'
                       }`}
                     >
                       {product.enabled ? '\u2713' : ''}
@@ -197,11 +278,13 @@ export function NonCommodityDemo() {
                       <p className="text-xs font-semibold text-gray-700 truncate">{product.name}</p>
                       <div className="flex items-center gap-1.5 mt-0.5">
                         <span className={`text-[10px] font-medium ${meta.text}`}>{meta.icon}</span>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold ${
-                          product.type === 'one_time'
-                            ? 'bg-blue-100 text-blue-600'
-                            : 'bg-emerald-100 text-emerald-600'
-                        }`}>
+                        <span
+                          className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold ${
+                            product.type === 'one_time'
+                              ? 'bg-blue-100 text-blue-600'
+                              : 'bg-emerald-100 text-emerald-600'
+                          }`}
+                        >
                           {product.type === 'one_time' ? 'One-time' : product.billingPeriod}
                         </span>
                       </div>
@@ -239,7 +322,9 @@ export function NonCommodityDemo() {
                 <div>
                   <p className="tariff-card-label mb-1">Your Bundle</p>
                   <div className="flex items-baseline gap-1">
-                    <span className="tariff-card-price">EUR {oneTimeCosts.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <span className="tariff-card-price">
+                      EUR {oneTimeCosts.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
                   </div>
                   {monthlyCosts > 0 && (
                     <p className="text-sm opacity-80 mt-1">+ EUR {monthlyCosts.toFixed(2)}/month service</p>
@@ -255,7 +340,9 @@ export function NonCommodityDemo() {
               {/* Category cost stacked bar */}
               {oneTimeCosts > 0 && (
                 <div className="mb-5">
-                  <p className="text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-2">Cost Distribution</p>
+                  <p className="text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-2">
+                    Cost Distribution
+                  </p>
                   <div className="h-3 flex rounded-full overflow-hidden">
                     {categoryTotals
                       .filter((c) => c.oneTime > 0)
@@ -302,7 +389,9 @@ export function NonCommodityDemo() {
                               </span>
                               <span className="cost-line-value">
                                 EUR {(parseFloat(p.price) * p.quantity).toFixed(2)}
-                                {p.type === 'recurring' && <span className="text-emerald-600 text-xs font-semibold ml-1">/mo</span>}
+                                {p.type === 'recurring' && (
+                                  <span className="text-emerald-600 text-xs font-semibold ml-1">/mo</span>
+                                )}
                               </span>
                             </div>
                           ))}
@@ -329,7 +418,9 @@ export function NonCommodityDemo() {
 
           {/* Computed results */}
           <div className="card">
-            <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-4">Computed via @epilot/pricing</p>
+            <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-4">
+              Computed via @epilot/pricing
+            </p>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               <ResultCard label="Total Net" value={fmtCents(result.amount_subtotal)} />
               <ResultCard label={`Tax (${taxRate}%)`} value={fmtCents(result.amount_tax)} color="amber" highlight />
@@ -364,7 +455,10 @@ export function NonCommodityDemo() {
 
 // Non-commodity bundle: hardware + services + maintenance
 const items = [
-${enabledProducts.slice(0, 4).map((p) => `  {
+${enabledProducts
+  .slice(0, 4)
+  .map(
+    (p) => `  {
     quantity: ${p.quantity},
     _price: {
       unit_amount_decimal: '${p.price}',
@@ -376,7 +470,9 @@ ${enabledProducts.slice(0, 4).map((p) => `  {
       description: '${p.name}',
     },
     taxes: [{ tax: { rate: ${taxRate} } }],
-  },`).join('\n')}${enabledProducts.length > 4 ? `\n  // ... ${enabledProducts.length - 4} more items` : ''}
+  },`,
+  )
+  .join('\n')}${enabledProducts.length > 4 ? `\n  // ... ${enabledProducts.length - 4} more items` : ''}
 ];
 
 const result = computeAggregatedAndPriceTotals(items);

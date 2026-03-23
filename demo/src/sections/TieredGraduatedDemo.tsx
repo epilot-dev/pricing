@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
-import { ResultCard } from '../components/ResultCard';
+import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
+import { ResultCard } from '../components/ResultCard';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 const defaultTiers = [
@@ -76,8 +76,8 @@ export function TieredGraduatedDemo() {
     <div>
       <h1 className="section-title">Tiered Graduated Pricing</h1>
       <p className="section-desc">
-        Units are spread across tiers. Each tier charges its own rate for the units within its range.
-        This is the "graduated" model used by many SaaS platforms.
+        Units are spread across tiers. Each tier charges its own rate for the units within its range. This is the
+        "graduated" model used by many SaaS platforms.
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -184,19 +184,10 @@ export function TieredGraduatedDemo() {
             <div className="grid grid-cols-2 gap-3">
               <ResultCard label="Subtotal (Net)" value={fmtCents(result.amount_subtotal)} />
               <ResultCard label="Tax" value={fmtCents(result.amount_tax)} color="amber" />
-              <ResultCard
-                label="Total (Gross)"
-                value={fmtCents(result.amount_total)}
-                highlight
-                color="green"
-              />
+              <ResultCard label="Total (Gross)" value={fmtCents(result.amount_total)} highlight color="green" />
               <ResultCard
                 label="Avg Price/Unit"
-                value={
-                  quantity > 0
-                    ? fmtCents(Math.round((result.amount_total ?? 0) / quantity))
-                    : '-'
-                }
+                value={quantity > 0 ? fmtCents(Math.round((result.amount_total ?? 0) / quantity)) : '-'}
                 color="blue"
               />
             </div>

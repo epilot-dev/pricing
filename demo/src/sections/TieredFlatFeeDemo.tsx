@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
-import { ResultCard } from '../components/ResultCard';
+import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
+import { ResultCard } from '../components/ResultCard';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 const defaultTiers = [
@@ -14,7 +14,7 @@ const defaultTiers = [
 export function TieredFlatFeeDemo() {
   const [quantity, setQuantity] = useState(30);
   const [tiers, setTiers] = useState(defaultTiers);
-  const [taxRate, setTaxRate] = useState(19);
+  const [taxRate] = useState(19);
   const [isTaxInclusive, setIsTaxInclusive] = useState(true);
 
   const result = useMemo(() => {
@@ -46,8 +46,8 @@ export function TieredFlatFeeDemo() {
     <div>
       <h1 className="section-title">Tiered Flat Fee</h1>
       <p className="section-desc">
-        A single fixed fee is charged based on the quantity range. Unlike volume pricing,
-        the fee does <strong>not</strong> multiply by quantity.
+        A single fixed fee is charged based on the quantity range. Unlike volume pricing, the fee does{' '}
+        <strong>not</strong> multiply by quantity.
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -85,9 +85,7 @@ export function TieredFlatFeeDemo() {
                         className="input-field w-28"
                       />
                     </td>
-                    <td className="py-2">
-                      {idx === activeTierIdx && <span className="badge-green">Selected</span>}
-                    </td>
+                    <td className="py-2">{idx === activeTierIdx && <span className="badge-green">Selected</span>}</td>
                   </tr>
                 ))}
               </tbody>
@@ -140,9 +138,7 @@ export function TieredFlatFeeDemo() {
                     <span className={`text-lg font-bold ${isActive ? 'text-green-600' : 'text-gray-400'}`}>
                       €{tier.flat_fee_amount_decimal}
                     </span>
-                    {isActive && (
-                      <span className="ml-2 text-xs text-green-600 font-medium">← Your plan</span>
-                    )}
+                    {isActive && <span className="ml-2 text-xs text-green-600 font-medium">← Your plan</span>}
                   </div>
                 );
               })}

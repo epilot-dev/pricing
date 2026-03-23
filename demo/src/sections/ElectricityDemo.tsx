@@ -1,8 +1,8 @@
-import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+import { useState, useMemo } from 'react';
+import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
 import { TariffCard } from '../components/TariffCard';
-import { CodeBlock } from '../components/CodeBlock';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 export function ElectricityDemo() {
@@ -76,8 +76,8 @@ export function ElectricityDemo() {
     <div>
       <h1 className="section-title">Electricity Tariff</h1>
       <p className="section-desc">
-        Configure a German electricity tariff with Grundpreis and Arbeitspreis.
-        Toggle between single and dual-tariff meters to see real-time pricing.
+        Configure a German electricity tariff with Grundpreis and Arbeitspreis. Toggle between single and dual-tariff
+        meters to see real-time pricing.
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -109,7 +109,13 @@ export function ElectricityDemo() {
               <p className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-2">Grundpreis</p>
               <div>
                 <label className="text-xs text-blue-600 font-medium">Annual base fee (EUR/year)</label>
-                <input type="number" step="0.01" value={basePrice} onChange={(e) => setBasePrice(e.target.value)} className="input-field mt-1" />
+                <input
+                  type="number"
+                  step="0.01"
+                  value={basePrice}
+                  onChange={(e) => setBasePrice(e.target.value)}
+                  className="input-field mt-1"
+                />
               </div>
             </div>
           </div>
@@ -123,11 +129,23 @@ export function ElectricityDemo() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs text-amber-600 font-medium">Base (ct/kWh)</label>
-                  <input type="number" step="0.01" value={workPriceHT} onChange={(e) => setWorkPriceHT(e.target.value)} className="input-field mt-1" />
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={workPriceHT}
+                    onChange={(e) => setWorkPriceHT(e.target.value)}
+                    className="input-field mt-1"
+                  />
                 </div>
                 <div>
                   <label className="text-xs text-amber-600 font-medium">Markup (ct/kWh)</label>
-                  <input type="number" step="0.01" value={markupHT} onChange={(e) => setMarkupHT(e.target.value)} className="input-field mt-1" />
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={markupHT}
+                    onChange={(e) => setMarkupHT(e.target.value)}
+                    className="input-field mt-1"
+                  />
                 </div>
               </div>
             </div>
@@ -138,11 +156,23 @@ export function ElectricityDemo() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-xs text-indigo-600 font-medium">Base (ct/kWh)</label>
-                    <input type="number" step="0.01" value={workPriceNT} onChange={(e) => setWorkPriceNT(e.target.value)} className="input-field mt-1" />
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={workPriceNT}
+                      onChange={(e) => setWorkPriceNT(e.target.value)}
+                      className="input-field mt-1"
+                    />
                   </div>
                   <div>
                     <label className="text-xs text-indigo-600 font-medium">Markup (ct/kWh)</label>
-                    <input type="number" step="0.01" value={markupNT} onChange={(e) => setMarkupNT(e.target.value)} className="input-field mt-1" />
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={markupNT}
+                      onChange={(e) => setMarkupNT(e.target.value)}
+                      className="input-field mt-1"
+                    />
                   </div>
                 </div>
               </div>
@@ -158,32 +188,61 @@ export function ElectricityDemo() {
                     <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">HT Consumption</label>
                     <span className="text-sm font-extrabold text-amber-600">{consumptionHT.toLocaleString()} kWh</span>
                   </div>
-                  <input type="range" min="500" max="8000" step="100" value={consumptionHT} onChange={(e) => setConsumptionHT(Number(e.target.value))} className="w-full accent-amber-500" />
+                  <input
+                    type="range"
+                    min="500"
+                    max="8000"
+                    step="100"
+                    value={consumptionHT}
+                    onChange={(e) => setConsumptionHT(Number(e.target.value))}
+                    className="w-full accent-amber-500"
+                  />
                 </div>
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">NT Consumption</label>
                     <span className="text-sm font-extrabold text-indigo-600">{consumptionNT.toLocaleString()} kWh</span>
                   </div>
-                  <input type="range" min="200" max="5000" step="100" value={consumptionNT} onChange={(e) => setConsumptionNT(Number(e.target.value))} className="w-full accent-indigo-500" />
+                  <input
+                    type="range"
+                    min="200"
+                    max="5000"
+                    step="100"
+                    value={consumptionNT}
+                    onChange={(e) => setConsumptionNT(Number(e.target.value))}
+                    className="w-full accent-indigo-500"
+                  />
                 </div>
                 <div className="pt-2 border-t border-gray-100">
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-gray-400">Total consumption</span>
-                    <span className="text-sm font-bold text-gray-700">{totalConsumption.toLocaleString()} kWh/year</span>
+                    <span className="text-sm font-bold text-gray-700">
+                      {totalConsumption.toLocaleString()} kWh/year
+                    </span>
                   </div>
                 </div>
               </div>
             ) : (
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Annual Consumption</label>
-                  <span className="text-sm font-extrabold text-primary-600">{totalConsumption.toLocaleString()} kWh</span>
+                  <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                    Annual Consumption
+                  </label>
+                  <span className="text-sm font-extrabold text-primary-600">
+                    {totalConsumption.toLocaleString()} kWh
+                  </span>
                 </div>
                 <input
-                  type="range" min="1000" max="10000" step="100"
+                  type="range"
+                  min="1000"
+                  max="10000"
+                  step="100"
                   value={consumptionHT + consumptionNT}
-                  onChange={(e) => { const val = Number(e.target.value); setConsumptionHT(Math.round(val * 0.7)); setConsumptionNT(Math.round(val * 0.3)); }}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    setConsumptionHT(Math.round(val * 0.7));
+                    setConsumptionNT(Math.round(val * 0.3));
+                  }}
                   className="w-full accent-primary-600"
                 />
                 <div className="flex justify-between text-[10px] text-gray-300 mt-1">
@@ -218,10 +277,22 @@ export function ElectricityDemo() {
             <div className="space-y-0">
               {/* Stacked bar */}
               <div className="h-3 flex rounded-full overflow-hidden mb-4">
-                <div className="bg-blue-400 transition-all duration-300" style={{ width: `${(baseCost / totalNet) * 100}%` }} title="Grundpreis" />
-                <div className="bg-amber-400 transition-all duration-300" style={{ width: `${(htCost / totalNet) * 100}%` }} title="HT" />
+                <div
+                  className="bg-blue-400 transition-all duration-300"
+                  style={{ width: `${(baseCost / totalNet) * 100}%` }}
+                  title="Grundpreis"
+                />
+                <div
+                  className="bg-amber-400 transition-all duration-300"
+                  style={{ width: `${(htCost / totalNet) * 100}%` }}
+                  title="HT"
+                />
                 {tariffType === 'dual' && (
-                  <div className="bg-indigo-400 transition-all duration-300" style={{ width: `${(ntCost / totalNet) * 100}%` }} title="NT" />
+                  <div
+                    className="bg-indigo-400 transition-all duration-300"
+                    style={{ width: `${(ntCost / totalNet) * 100}%` }}
+                    title="NT"
+                  />
                 )}
               </div>
 
@@ -240,8 +311,13 @@ export function ElectricityDemo() {
                 <div className="flex items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
                   <div>
-                    <span className="cost-line-label">{tariffType === 'dual' ? 'Arbeitspreis HT' : 'Arbeitspreis'}</span>
-                    <p className="text-[10px] text-gray-400">{htRate.toFixed(2)} ct/kWh x {(tariffType === 'dual' ? consumptionHT : totalConsumption).toLocaleString()} kWh</p>
+                    <span className="cost-line-label">
+                      {tariffType === 'dual' ? 'Arbeitspreis HT' : 'Arbeitspreis'}
+                    </span>
+                    <p className="text-[10px] text-gray-400">
+                      {htRate.toFixed(2)} ct/kWh x{' '}
+                      {(tariffType === 'dual' ? consumptionHT : totalConsumption).toLocaleString()} kWh
+                    </p>
                   </div>
                 </div>
                 <span className="cost-line-value">EUR {htCost.toFixed(2)}</span>
@@ -253,7 +329,9 @@ export function ElectricityDemo() {
                     <div className="w-2.5 h-2.5 rounded-full bg-indigo-400" />
                     <div>
                       <span className="cost-line-label">Arbeitspreis NT</span>
-                      <p className="text-[10px] text-gray-400">{ntRate.toFixed(2)} ct/kWh x {consumptionNT.toLocaleString()} kWh</p>
+                      <p className="text-[10px] text-gray-400">
+                        {ntRate.toFixed(2)} ct/kWh x {consumptionNT.toLocaleString()} kWh
+                      </p>
                     </div>
                   </div>
                   <span className="cost-line-value">EUR {ntCost.toFixed(2)}</span>
@@ -287,12 +365,19 @@ export function ElectricityDemo() {
 
           {/* Computed results */}
           <div className="card">
-            <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-4">Computed via @epilot/pricing</p>
+            <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-4">
+              Computed via @epilot/pricing
+            </p>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               <ResultCard label="Annual Net" value={fmtCents(result.amount_subtotal)} />
               <ResultCard label={`Tax (${taxRate}%)`} value={fmtCents(result.amount_tax)} color="amber" highlight />
               <ResultCard label="Annual Gross" value={fmtCents(result.amount_total)} highlight color="green" />
-              <ResultCard label="Monthly Gross" value={fmtCents(Math.round((result.amount_total ?? 0) / 12))} color="blue" highlight />
+              <ResultCard
+                label="Monthly Gross"
+                value={fmtCents(Math.round((result.amount_total ?? 0) / 12))}
+                color="blue"
+                highlight
+              />
             </div>
           </div>
         </div>
@@ -332,7 +417,9 @@ const items = [
       tax: [{ rate: ${taxRate}, type: 'VAT' }],
     },
     taxes: [{ tax: { rate: ${taxRate} } }],
-  },${tariffType === 'dual' ? `
+  },${
+    tariffType === 'dual'
+      ? `
   {
     quantity: ${consumptionNT},  // NT kWh
     _price: {
@@ -345,7 +432,9 @@ const items = [
       tax: [{ rate: ${taxRate}, type: 'VAT' }],
     },
     taxes: [{ tax: { rate: ${taxRate} } }],
-  },` : ''}
+  },`
+      : ''
+  }
 ];
 
 const result = computeAggregatedAndPriceTotals(items);

@@ -1,20 +1,20 @@
 import { useState } from 'react';
-import { OverviewDemo } from './sections/OverviewDemo';
-import { PerUnitDemo } from './sections/PerUnitDemo';
-import { TieredVolumeDemo } from './sections/TieredVolumeDemo';
-import { TieredGraduatedDemo } from './sections/TieredGraduatedDemo';
-import { TieredFlatFeeDemo } from './sections/TieredFlatFeeDemo';
-import { TaxDemo } from './sections/TaxDemo';
-import { DiscountDemo } from './sections/DiscountDemo';
 import { CompositePriceDemo } from './sections/CompositePriceDemo';
-import { RecurringBillingDemo } from './sections/RecurringBillingDemo';
 import { CurrencyDemo } from './sections/CurrencyDemo';
+import { DiscountDemo } from './sections/DiscountDemo';
 import { DynamicTariffDemo } from './sections/DynamicTariffDemo';
-import { GetAGDemo } from './sections/GetAGDemo';
 import { ElectricityDemo } from './sections/ElectricityDemo';
 import { GasDemo } from './sections/GasDemo';
+import { GetAGDemo } from './sections/GetAGDemo';
 import { HouseConnectionDemo } from './sections/HouseConnectionDemo';
 import { NonCommodityDemo } from './sections/NonCommodityDemo';
+import { OverviewDemo } from './sections/OverviewDemo';
+import { PerUnitDemo } from './sections/PerUnitDemo';
+import { RecurringBillingDemo } from './sections/RecurringBillingDemo';
+import { TaxDemo } from './sections/TaxDemo';
+import { TieredFlatFeeDemo } from './sections/TieredFlatFeeDemo';
+import { TieredGraduatedDemo } from './sections/TieredGraduatedDemo';
+import { TieredVolumeDemo } from './sections/TieredVolumeDemo';
 
 type SectionItem = {
   id: string;
@@ -159,7 +159,12 @@ export default function App() {
           </div>
           <p className="text-[10px] text-gray-300 mt-1.5">
             Made with care by{' '}
-            <a href="https://github.com/jpinho" target="_blank" rel="noopener noreferrer" className="text-primary-500 hover:text-primary-600 font-medium">
+            <a
+              href="https://github.com/jpinho"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary-500 hover:text-primary-600 font-medium"
+            >
               @jpinho
             </a>
           </p>

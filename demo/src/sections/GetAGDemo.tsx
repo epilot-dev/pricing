@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
-import { ResultCard } from '../components/ResultCard';
+import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
+import { ResultCard } from '../components/ResultCard';
 import { buildPriceItemDto, fmtCents } from '../helpers';
 
 export function GetAGDemo() {
@@ -10,7 +10,7 @@ export function GetAGDemo() {
   const [consumption, setConsumption] = useState(3500);
   const [markupPerUnit, setMarkupPerUnit] = useState('1.50');
   const [additionalMarkup, setAdditionalMarkup] = useState('24.00');
-  const [taxRate, setTaxRate] = useState(19);
+  const [taxRate] = useState(19);
 
   // Compute a simplified GetAG-like calculation
   const result = useMemo(() => {
@@ -61,8 +61,8 @@ export function GetAGDemo() {
     <div>
       <h1 className="section-title">GetAG Energy Pricing</h1>
       <p className="section-desc">
-        German energy operator (GetAG) integration supporting base price + work price models
-        with tiered markups and additional fees. Used for electricity and gas tariffs.
+        German energy operator (GetAG) integration supporting base price + work price models with tiered markups and
+        additional fees. Used for electricity and gas tariffs.
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -173,14 +173,24 @@ export function GetAGDemo() {
 
             <div className="space-y-2">
               {[
-                { label: 'Grundpreis (Base)', value: baseCost, color: 'bg-blue-400', detail: `€${parseFloat(basePrice).toFixed(2)}/year` },
+                {
+                  label: 'Grundpreis (Base)',
+                  value: baseCost,
+                  color: 'bg-blue-400',
+                  detail: `€${parseFloat(basePrice).toFixed(2)}/year`,
+                },
                 {
                   label: 'Arbeitspreis (Work)',
                   value: workCost,
                   color: 'bg-green-400',
                   detail: `${(parseFloat(workPrice) + parseFloat(markupPerUnit)).toFixed(2)} ct/kWh x ${consumption.toLocaleString()} kWh`,
                 },
-                { label: 'Additional Markup', value: addCost, color: 'bg-amber-400', detail: `€${parseFloat(additionalMarkup).toFixed(2)}/year` },
+                {
+                  label: 'Additional Markup',
+                  value: addCost,
+                  color: 'bg-amber-400',
+                  detail: `€${parseFloat(additionalMarkup).toFixed(2)}/year`,
+                },
               ].map((item) => (
                 <div key={item.label} className="flex items-center gap-3 p-2 bg-gray-50 rounded">
                   <div className={`w-3 h-3 rounded-sm ${item.color}`} />

@@ -163,7 +163,7 @@ export function GasDemo() {
           {/* Main tariff card */}
           <TariffCard
             gradient="gradient-gas"
-            icon={<span>\uD83D\uDD25</span>}
+            icon={<span>🔥</span>}
             title="Erdgas Tarif"
             subtitle={`${consumption.toLocaleString()} kWh/year`}
             badge="GAS"

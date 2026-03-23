@@ -14,7 +14,7 @@ export function ElectricityDemo() {
   const [markupNT, setMarkupNT] = useState('2.10');
   const [consumptionHT, setConsumptionHT] = useState(2800);
   const [consumptionNT, setConsumptionNT] = useState(1200);
-  const [taxRate, setTaxRate] = useState(19);
+  const [taxRate] = useState(19);
 
   const result = useMemo(() => {
     const items: any[] = [];
@@ -259,7 +259,7 @@ export function ElectricityDemo() {
           {/* Main tariff card */}
           <TariffCard
             gradient="gradient-electricity"
-            icon={<span>\u26A1</span>}
+            icon={<span>⚡</span>}
             title={tariffType === 'dual' ? 'Doppeltarif (HT/NT)' : 'Einfachtarif (ET)'}
             subtitle={`${totalConsumption.toLocaleString()} kWh/year`}
             badge={tariffType === 'dual' ? 'HT/NT' : 'SINGLE'}

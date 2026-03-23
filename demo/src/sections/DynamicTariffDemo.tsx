@@ -8,7 +8,7 @@ export function DynamicTariffDemo() {
   const [marketPrice, setMarketPrice] = useState('8.50');
   const [markup, setMarkup] = useState('2.00');
   const [quantity, setQuantity] = useState(1000); // kWh
-  const [taxRate, setTaxRate] = useState(19);
+  const [taxRate] = useState(19);
   const [isTaxInclusive, setIsTaxInclusive] = useState(false);
 
   const result = useMemo(() => {

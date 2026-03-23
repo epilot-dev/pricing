@@ -13,7 +13,7 @@ type CouponConfig = {
 export function DiscountDemo() {
   const [unitPrice, setUnitPrice] = useState('100.00');
   const [quantity, setQuantity] = useState(5);
-  const [taxRate, setTaxRate] = useState(19);
+  const [taxRate] = useState(19);
   const [isTaxInclusive, setIsTaxInclusive] = useState(true);
   const [couponConfig, setCouponConfig] = useState<CouponConfig>({
     type: 'percentage',

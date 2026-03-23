@@ -35,30 +35,30 @@ function isGroup(s: Section): s is SectionGroup {
 }
 
 const sections: Section[] = [
-  { id: 'overview', label: 'Overview', icon: '\uD83C\uDFE0', component: OverviewDemo },
+  { id: 'overview', label: 'Overview', icon: '🏠', component: OverviewDemo },
   {
     group: 'Energy Products',
     items: [
-      { id: 'electricity', label: 'Electricity', icon: '\u26A1', component: ElectricityDemo },
-      { id: 'gas', label: 'Gas', icon: '\uD83D\uDD25', component: GasDemo },
-      { id: 'house-connection', label: 'House Connection', icon: '\uD83C\uDFE1', component: HouseConnectionDemo },
-      { id: 'non-commodity', label: 'Products & Add-ons', icon: '\u2600\uFE0F', component: NonCommodityDemo },
+      { id: 'electricity', label: 'Electricity', icon: '⚡', component: ElectricityDemo },
+      { id: 'gas', label: 'Gas', icon: '🔥', component: GasDemo },
+      { id: 'house-connection', label: 'House Connection', icon: '🏡', component: HouseConnectionDemo },
+      { id: 'non-commodity', label: 'Products & Add-ons', icon: '☀️', component: NonCommodityDemo },
     ],
   },
   {
     group: 'Pricing Models',
     items: [
-      { id: 'per-unit', label: 'Per Unit', icon: '\uD83D\uDCE6', component: PerUnitDemo },
-      { id: 'tiered-volume', label: 'Tiered Volume', icon: '\uD83D\uDCCA', component: TieredVolumeDemo },
-      { id: 'tiered-graduated', label: 'Tiered Graduated', icon: '\uD83D\uDCC8', component: TieredGraduatedDemo },
-      { id: 'tiered-flatfee', label: 'Tiered Flat Fee', icon: '\uD83C\uDFF7\uFE0F', component: TieredFlatFeeDemo },
-      { id: 'tax', label: 'Tax Handling', icon: '\uD83E\uDDFE', component: TaxDemo },
-      { id: 'discounts', label: 'Discounts & Coupons', icon: '\uD83C\uDF9F\uFE0F', component: DiscountDemo },
-      { id: 'composite', label: 'Composite Pricing', icon: '\uD83E\uDDE9', component: CompositePriceDemo },
-      { id: 'recurring', label: 'Recurring Billing', icon: '\uD83D\uDD04', component: RecurringBillingDemo },
-      { id: 'currency', label: 'Currency & Formatting', icon: '\uD83D\uDCB1', component: CurrencyDemo },
-      { id: 'dynamic-tariff', label: 'Dynamic Tariff', icon: '\u26A1', component: DynamicTariffDemo },
-      { id: 'getag', label: 'GetAG Energy', icon: '\uD83D\uDD0C', component: GetAGDemo },
+      { id: 'per-unit', label: 'Per Unit', icon: '📦', component: PerUnitDemo },
+      { id: 'tiered-volume', label: 'Tiered Volume', icon: '📊', component: TieredVolumeDemo },
+      { id: 'tiered-graduated', label: 'Tiered Graduated', icon: '📈', component: TieredGraduatedDemo },
+      { id: 'tiered-flatfee', label: 'Tiered Flat Fee', icon: '🏷️', component: TieredFlatFeeDemo },
+      { id: 'tax', label: 'Tax Handling', icon: '🧾', component: TaxDemo },
+      { id: 'discounts', label: 'Discounts & Coupons', icon: '🎟️', component: DiscountDemo },
+      { id: 'composite', label: 'Composite Pricing', icon: '🧩', component: CompositePriceDemo },
+      { id: 'recurring', label: 'Recurring Billing', icon: '🔄', component: RecurringBillingDemo },
+      { id: 'currency', label: 'Currency & Formatting', icon: '💱', component: CurrencyDemo },
+      { id: 'dynamic-tariff', label: 'Dynamic Tariff', icon: '⚡', component: DynamicTariffDemo },
+      { id: 'getag', label: 'GetAG Energy', icon: '🔌', component: GetAGDemo },
     ],
   },
 ];

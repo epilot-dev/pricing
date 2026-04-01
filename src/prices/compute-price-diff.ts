@@ -1,5 +1,4 @@
 import type { Currency as DineroCurrency } from 'dinero.js';
-
 import { DEFAULT_CURRENCY, DEFAULT_INTEGER_AMOUNT_PRECISION } from '../money/constants';
 import { formatAmount, parseDecimalValue } from '../money/formatters';
 import { toDinero } from '../money/to-dinero';

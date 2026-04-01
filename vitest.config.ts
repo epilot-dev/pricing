@@ -13,6 +13,7 @@ export default defineConfig({
         '*.config.js',
         'dist',
         'coverage',
+        'demo/**',
         /**
          * Don't count coverage for barrel file
          */

@@ -87,12 +87,14 @@ export const formatAmount = ({
   format,
   locale = DEFAULT_LOCALE,
   enableSubunitDisplay = false,
+  omitTrailingDoubleZeros = false,
 }: {
   amount: number | string;
   currency?: Currency;
   format?: string;
   locale?: string;
   enableSubunitDisplay?: boolean;
+  omitTrailingDoubleZeros?: boolean;
 }): string => {
   const integerAmount = parseUnknownAmount(amount);
 
@@ -115,7 +117,10 @@ export const formatAmount = ({
     );
   }
 
-  return dAmount.setLocale(locale).toFormat(format || DEFAULT_FORMAT);
+  const effectiveFormat =
+    omitTrailingDoubleZeros && !dAmount.hasSubUnits() ? DEFAULT_SUBUNIT_FORMAT : format || DEFAULT_FORMAT;
+
+  return dAmount.setLocale(locale).toFormat(effectiveFormat);
 };
 
 /**
@@ -185,6 +190,7 @@ export const formatAmountFromString = ({
   locale,
   useRealPrecision = false,
   enableSubunitDisplay = false,
+  omitTrailingDoubleZeros = false,
 }: {
   decimalAmount: string;
   precision?: number;
@@ -193,6 +199,7 @@ export const formatAmountFromString = ({
   locale?: string;
   useRealPrecision?: boolean;
   enableSubunitDisplay?: boolean;
+  omitTrailingDoubleZeros?: boolean;
 }): string => {
   /**
    * Decimal amounts can sometimes come in an invalid format, such as 1.000.000,00.
@@ -217,20 +224,20 @@ export const formatAmountFromString = ({
       subunitFromAmount,
     );
 
-    return formatWithSubunit(
-      dineroObjectFromAmount
-        .multiply(100)
-        .convertPrecision(precision ?? amountPrecision)
-        .setLocale(locale || DEFAULT_LOCALE)
-        .toFormat(format || amountFormat),
-      subunit,
-    );
+    const dSubunit = dineroObjectFromAmount.multiply(100).convertPrecision(precision ?? amountPrecision);
+    const subunitFormat =
+      omitTrailingDoubleZeros && !dSubunit.hasSubUnits() ? DEFAULT_SUBUNIT_FORMAT : format || amountFormat;
+
+    return formatWithSubunit(dSubunit.setLocale(locale || DEFAULT_LOCALE).toFormat(subunitFormat), subunit);
   }
+
+  const hasNoSubUnits = !dineroObjectFromAmount.convertPrecision(precision ?? amountPrecision).hasSubUnits();
+  const effectiveFormat = omitTrailingDoubleZeros && hasNoSubUnits ? DEFAULT_SUBUNIT_FORMAT : format || amountFormat;
 
   return dineroObjectFromAmount
     .setLocale(locale || DEFAULT_LOCALE)
     .convertPrecision(precision ?? amountPrecision)
-    .toFormat(format || amountFormat);
+    .toFormat(effectiveFormat);
 };
 
 /**

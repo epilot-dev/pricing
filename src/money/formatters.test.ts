@@ -112,6 +112,38 @@ describe('formatAmount', () => {
       formatAmount({ amount: 'invalid_amount' });
     }).not.toThrow();
   });
+
+  it.each`
+    amount    | locale     | expected
+    ${1000}   | ${'de'}    | ${'10\xa0€'}
+    ${1000}   | ${'en-GB'} | ${'€10'}
+    ${100023} | ${'de'}    | ${'1.000,23\xa0€'}
+    ${0}      | ${'de'}    | ${'0\xa0€'}
+  `(
+    'should omit trailing zeros when omitTrailingDoubleZeros is true',
+    ({ amount, locale, expected }: { amount: number; locale: string; expected: string }) => {
+      const formattedAmount = formatAmount({ amount, locale, omitTrailingDoubleZeros: true });
+
+      expect(formattedAmount).toEqual(expected);
+    },
+  );
+
+  it.each`
+    amount | expected
+    ${23}  | ${'23 Cent'}
+    ${-3}  | ${'-3 Cent'}
+  `(
+    'should handle omitTrailingDoubleZeros with enableSubunitDisplay',
+    ({ amount, expected }: { amount: number; expected: string }) => {
+      const formattedAmount = formatAmount({
+        amount,
+        enableSubunitDisplay: true,
+        omitTrailingDoubleZeros: true,
+      });
+
+      expect(formattedAmount).toEqual(expected);
+    },
+  );
 });
 
 describe('formatAmountFromString', () => {
@@ -241,6 +273,40 @@ describe('formatAmountFromString', () => {
 
     expect(formattedAmount).toEqual('1.000,23329\xa0€');
   });
+
+  it.each`
+    decimalAmount | locale     | expected
+    ${'10.00'}    | ${'de'}    | ${'10\xa0€'}
+    ${'10.00'}    | ${'en-GB'} | ${'€10'}
+    ${'10.50'}    | ${'de'}    | ${'10,50\xa0€'}
+    ${'0.00'}     | ${'de'}    | ${'0\xa0€'}
+  `(
+    'should omit trailing zeros when omitTrailingDoubleZeros is true',
+    ({ decimalAmount, locale, expected }: { decimalAmount: string; locale: string; expected: string }) => {
+      const formattedAmount = formatAmountFromString({ decimalAmount, locale, omitTrailingDoubleZeros: true });
+
+      expect(formattedAmount).toEqual(expected);
+    },
+  );
+
+  it.each`
+    decimalAmount | expected
+    ${'0.0100'}   | ${'1 Cent'}
+    ${'0.0200'}   | ${'2 Cent'}
+    ${'0.0250'}   | ${'2,50 Cent'}
+  `(
+    'should handle omitTrailingDoubleZeros with enableSubunitDisplay',
+    ({ decimalAmount, expected }: { decimalAmount: string; expected: string }) => {
+      const formattedAmount = formatAmountFromString({
+        decimalAmount,
+        locale: 'de',
+        enableSubunitDisplay: true,
+        omitTrailingDoubleZeros: true,
+      });
+
+      expect(formattedAmount).toEqual(expected);
+    },
+  );
 });
 
 describe('toDinero', () => {

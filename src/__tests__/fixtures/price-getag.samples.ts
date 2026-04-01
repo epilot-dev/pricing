@@ -214,6 +214,7 @@ export const compositePriceGetAG: PriceItemDto = {
         tax: [tax19percent],
         get_ag: {
           category: 'power',
+          type: 'work_price',
           markup_amount: 10,
           markup_amount_decimal: '0.10',
         },
@@ -390,6 +391,7 @@ export const compositePriceTieredFlatFeeGetAG: PriceItemDto = {
         tax: [tax19percent],
         get_ag: {
           category: 'power',
+          type: 'work_price',
           markup_amount: 10,
           markup_amount_decimal: '0.10',
         },
@@ -510,6 +512,7 @@ export const compositePriceGetAGWithZeroInputMapping: PriceItemDto = {
         tax: [tax19percent],
         get_ag: {
           category: 'power',
+          type: 'work_price',
           markup_amount: 10,
           markup_amount_decimal: '0.10',
         },

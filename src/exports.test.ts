@@ -22,6 +22,7 @@ const expectedNamedExports = [
   'computeAggregatedAndPriceTotals',
   'computeQuantities',
   'extractPricingEntitiesBySlug',
+  'extractCouponsFromItem',
   'isPriceItemApproved',
   'isRequiringApproval',
   'getRecurrencesWithEstimatedPrices',
@@ -35,6 +36,8 @@ const expectedNamedExports = [
   'getAmountWithTax',
   'getTaxValue',
   'computePriceDiff',
+  'isVariablePrice',
+  'isVariablePriceItem',
 ];
 
 /**

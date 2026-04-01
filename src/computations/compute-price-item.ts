@@ -14,6 +14,7 @@ import { DEFAULT_CURRENCY } from '../money/constants';
 import { PricingModel } from '../prices/constants';
 import { convertPriceItemWithCouponAppliedToPriceItemDto } from '../prices/convert-precision';
 import { getPriceTax } from '../prices/get-price-tax';
+import { isVariablePrice } from '../prices/is-variable-price';
 import { mapToProductSnapshot, mapToPriceSnapshot } from '../prices/map-to-snapshots';
 import { normalizePriceMappingInput } from '../prices/mapping';
 import type { PriceItemsTotals } from '../prices/types';
@@ -51,7 +52,7 @@ const computeExternalFee = (
 export const computeQuantities = (price: Price | undefined, quantity: number, priceMapping?: PriceInputMapping) => {
   const safeQuantity = getSafeQuantity(quantity);
 
-  if (!price?.variable_price) {
+  if (!price || !isVariablePrice(price)) {
     return {
       safeQuantity,
       unitAmountMultiplier: safeQuantity,

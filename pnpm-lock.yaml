@@ -16,8 +16,8 @@ importers:
         specifier: ^3.0.5
         version: 3.0.5(eslint@9.28.0)(typescript@5.8.3)
       '@epilot/pricing-client':
-        specifier: ^3.51.0
-        version: 3.51.0(axios@1.9.0)(js-yaml@4.1.0)
+        specifier: ^3.53.5
+        version: 3.53.5(axios@1.9.0)(js-yaml@4.1.0)
       '@types/dinero.js':
         specifier: ^1.9.4
         version: 1.9.4
@@ -105,8 +105,8 @@ packages:
       eslint: '>= 9.0.0'
       typescript: '>= 5.0.0'
 
-  '@epilot/pricing-client@3.51.0':
-    resolution: {integrity: sha512-49biU5yVVQbOWNGK2m7/foms+KzVxw4NHY55cJEwEB5xszFVHB9zKJN5HCdvcYKiYTJC5AOcxne78GeFROPZHQ==}
+  '@epilot/pricing-client@3.53.5':
+    resolution: {integrity: sha512-1FGVYx0s5NdOAQOI7tIFYfHlWdxvZC6B6+QgPGQgbZ0sXez5mLR36dERzgXl8gy8Rr7THX7QTw4DuWh2Y3VDcg==}
     peerDependencies:
       axios: ^1.0.0 || >=0.25.0 <1.0.0
 
@@ -2332,7 +2332,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  '@epilot/pricing-client@3.51.0(axios@1.9.0)(js-yaml@4.1.0)':
+  '@epilot/pricing-client@3.53.5(axios@1.9.0)(js-yaml@4.1.0)':
     dependencies:
       '@dazn/lambda-powertools-correlation-ids': 1.28.1
       axios: 1.9.0

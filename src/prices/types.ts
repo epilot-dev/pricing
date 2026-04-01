@@ -23,6 +23,7 @@ export type PriceItemsTotals = Pick<
   | 'discount_amount'
   | 'discount_percentage'
   | 'before_discount_amount_total'
+  | 'before_discount_amount_subtotal'
   | 'cashback_amount'
   | 'cashback_amount_decimal'
   | 'after_cashback_amount_total'

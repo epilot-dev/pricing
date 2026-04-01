@@ -39,3 +39,5 @@ export { formatFeeAmountFromString } from './getag/formatters';
 export { extractGetAgConfig } from './getag/extract-config';
 export { getTaxValue } from './taxes/get-tax-value';
 export { getAmountWithTax } from './taxes/get-amount-with-tax';
+export { computePriceDiff } from './prices/compute-price-diff';
+export type { PriceDiff, PriceDiffFormat, PriceDiffOptions } from './prices/compute-price-diff';

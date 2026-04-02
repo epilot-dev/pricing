@@ -217,14 +217,9 @@ export const formatAmountFromString = ({
       subunitFromAmount,
     );
 
-    return formatWithSubunit(
-      dineroObjectFromAmount
-        .multiply(100)
-        .convertPrecision(precision ?? amountPrecision)
-        .setLocale(locale || DEFAULT_LOCALE)
-        .toFormat(format || amountFormat),
-      subunit,
-    );
+    const dSubunit = dineroObjectFromAmount.multiply(100).convertPrecision(precision ?? amountPrecision);
+
+    return formatWithSubunit(dSubunit.setLocale(locale || DEFAULT_LOCALE).toFormat(format || amountFormat), subunit);
   }
 
   return dineroObjectFromAmount
@@ -351,6 +346,26 @@ function shouldDisplayAmountAsCents(amount: number, currency?: Currency) {
 
   return dAbsoluteAmount.hasSubUnits() && dAbsoluteAmount.lessThan(dAmountOfOneUnit);
 }
+
+/**
+ * Removes trailing decimal zeros (.00 or ,00) from a formatted price string.
+ * Handles prices with currency symbols, billing period suffixes, and tiered pricing unit suffixes (e.g. €10.00/Stück).
+ *
+ * @param price - The formatted price string
+ * @returns The price string without trailing decimal zeros
+ */
+export const omitTrailingDecimalZeros = (price: string): string => {
+  const trailingZerosWithDot = /(\.00)(\s.*)?$/;
+  const trailingZerosWithComma = /(,00)(\s.*)?$/;
+  const trailingZerosWithDotBeforeSlash = /(\.00)(\/[\w\W]*)$/;
+  const trailingZerosWithCommaBeforeSlash = /(,00)(\/[\w\W]*)$/;
+
+  return price
+    .replace(trailingZerosWithDot, '$2')
+    .replace(trailingZerosWithComma, '$2')
+    .replace(trailingZerosWithDotBeforeSlash, '$2')
+    .replace(trailingZerosWithCommaBeforeSlash, '$2');
+};
 
 /**
  * Converts a decimal string value into a valid decimal amount value, without any thousand separators, using dot as the decimal separator.

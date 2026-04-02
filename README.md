@@ -4,11 +4,9 @@
 
 A library that provides pricing utility operations for Pricing Entities within the epilot 360 Platform, such as calculation of price item totals and aggregated totals. The purpose of this library is to provide support for common pricing concerns to all our APIs, micro-frontends and epilot Journeys.
 
-## Interactive Playground
+## Interactive Playground - WIP
 
 Explore the library's capabilities live in your browser — configure tariffs, bundle products, and see real-time price calculations.
-
-[![epilot Pricing Playground](demo/screenshots/playground-overview.png)](https://docs.epilot.io/pricing-playground/index.html)
 
 [**Open Pricing Playground**](https://docs.epilot.io/pricing-playground/index.html)
 

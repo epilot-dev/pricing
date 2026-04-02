@@ -6,6 +6,7 @@ const expectedNamedExports = [
   'formatAmount',
   'formatAmountFromString',
   'formatPriceUnit',
+  'omitTrailingDecimalZeros',
   'parseDecimalValue',
   'toDinero',
   'toDineroFromInteger',

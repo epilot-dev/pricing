@@ -87,14 +87,12 @@ export const formatAmount = ({
   format,
   locale = DEFAULT_LOCALE,
   enableSubunitDisplay = false,
-  omitTrailingDoubleZeros = false,
 }: {
   amount: number | string;
   currency?: Currency;
   format?: string;
   locale?: string;
   enableSubunitDisplay?: boolean;
-  omitTrailingDoubleZeros?: boolean;
 }): string => {
   const integerAmount = parseUnknownAmount(amount);
 
@@ -117,10 +115,7 @@ export const formatAmount = ({
     );
   }
 
-  const effectiveFormat =
-    omitTrailingDoubleZeros && !dAmount.hasSubUnits() ? DEFAULT_SUBUNIT_FORMAT : format || DEFAULT_FORMAT;
-
-  return dAmount.setLocale(locale).toFormat(effectiveFormat);
+  return dAmount.setLocale(locale).toFormat(format || DEFAULT_FORMAT);
 };
 
 /**
@@ -190,7 +185,6 @@ export const formatAmountFromString = ({
   locale,
   useRealPrecision = false,
   enableSubunitDisplay = false,
-  omitTrailingDoubleZeros = false,
 }: {
   decimalAmount: string;
   precision?: number;
@@ -199,7 +193,6 @@ export const formatAmountFromString = ({
   locale?: string;
   useRealPrecision?: boolean;
   enableSubunitDisplay?: boolean;
-  omitTrailingDoubleZeros?: boolean;
 }): string => {
   /**
    * Decimal amounts can sometimes come in an invalid format, such as 1.000.000,00.
@@ -225,19 +218,14 @@ export const formatAmountFromString = ({
     );
 
     const dSubunit = dineroObjectFromAmount.multiply(100).convertPrecision(precision ?? amountPrecision);
-    const subunitFormat =
-      omitTrailingDoubleZeros && !dSubunit.hasSubUnits() ? DEFAULT_SUBUNIT_FORMAT : format || amountFormat;
 
-    return formatWithSubunit(dSubunit.setLocale(locale || DEFAULT_LOCALE).toFormat(subunitFormat), subunit);
+    return formatWithSubunit(dSubunit.setLocale(locale || DEFAULT_LOCALE).toFormat(format || amountFormat), subunit);
   }
-
-  const hasNoSubUnits = !dineroObjectFromAmount.convertPrecision(precision ?? amountPrecision).hasSubUnits();
-  const effectiveFormat = omitTrailingDoubleZeros && hasNoSubUnits ? DEFAULT_SUBUNIT_FORMAT : format || amountFormat;
 
   return dineroObjectFromAmount
     .setLocale(locale || DEFAULT_LOCALE)
     .convertPrecision(precision ?? amountPrecision)
-    .toFormat(effectiveFormat);
+    .toFormat(format || amountFormat);
 };
 
 /**
@@ -358,6 +346,26 @@ function shouldDisplayAmountAsCents(amount: number, currency?: Currency) {
 
   return dAbsoluteAmount.hasSubUnits() && dAbsoluteAmount.lessThan(dAmountOfOneUnit);
 }
+
+/**
+ * Removes trailing decimal zeros (.00 or ,00) from a formatted price string.
+ * Handles prices with currency symbols, billing period suffixes, and tiered pricing unit suffixes (e.g. €10.00/Stück).
+ *
+ * @param price - The formatted price string
+ * @returns The price string without trailing decimal zeros
+ */
+export const omitTrailingDecimalZeros = (price: string): string => {
+  const trailingZerosWithDot = /(\.00)(\s.*)?$/;
+  const trailingZerosWithComma = /(,00)(\s.*)?$/;
+  const trailingZerosWithDotBeforeSlash = /(\.00)(\/[\w\W]*)$/;
+  const trailingZerosWithCommaBeforeSlash = /(,00)(\/[\w\W]*)$/;
+
+  return price
+    .replace(trailingZerosWithDot, '$2')
+    .replace(trailingZerosWithComma, '$2')
+    .replace(trailingZerosWithDotBeforeSlash, '$2')
+    .replace(trailingZerosWithCommaBeforeSlash, '$2');
+};
 
 /**
  * Converts a decimal string value into a valid decimal amount value, without any thousand separators, using dot as the decimal separator.

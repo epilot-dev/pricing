@@ -4,13 +4,7 @@ import { CodeBlock } from '../components/CodeBlock';
 
 const currencies = [
   { code: 'EUR', name: 'Euro', locale: 'de-DE' },
-  { code: 'USD', name: 'US Dollar', locale: 'en-US' },
-  { code: 'GBP', name: 'British Pound', locale: 'en-GB' },
   { code: 'CHF', name: 'Swiss Franc', locale: 'de-CH' },
-  { code: 'SEK', name: 'Swedish Krona', locale: 'sv-SE' },
-  { code: 'PLN', name: 'Polish Zloty', locale: 'pl-PL' },
-  { code: 'CZK', name: 'Czech Koruna', locale: 'cs-CZ' },
-  { code: 'DKK', name: 'Danish Krone', locale: 'da-DK' },
 ];
 
 export function CurrencyDemo() {
@@ -77,8 +71,8 @@ export function CurrencyDemo() {
     <div>
       <h1 className="section-title">Currency & Formatting</h1>
       <p className="section-desc">
-        Multi-currency support with locale-aware formatting. Uses Dinero.js for precise decimal arithmetic and provides
-        utilities for converting between string/integer representations.
+        The epilot platform supports EUR and CHF currencies. Locale-aware formatting uses Dinero.js for precise decimal
+        arithmetic with utilities for converting between string and integer representations.
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

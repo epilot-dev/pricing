@@ -12,7 +12,7 @@ type CouponConfig = {
 
 export function DiscountDemo() {
   const [unitPrice, setUnitPrice] = useState('100.00');
-  const [quantity, setQuantity] = useState(5);
+  const [quantity, setQuantity] = useState(1);
   const [taxRate] = useState(19);
   const [isTaxInclusive, setIsTaxInclusive] = useState(true);
   const [couponConfig, setCouponConfig] = useState<CouponConfig>({
@@ -68,15 +68,14 @@ export function DiscountDemo() {
     { label: '25% Off', config: { type: 'percentage' as const, category: 'discount' as const, value: '25' } },
     { label: '€50 Off', config: { type: 'fixed' as const, category: 'discount' as const, value: '50.00' } },
     { label: '€20 Cashback', config: { type: 'fixed' as const, category: 'cashback' as const, value: '20.00' } },
-    { label: '10% Cashback', config: { type: 'percentage' as const, category: 'cashback' as const, value: '10' } },
   ];
 
   return (
     <div>
       <h1 className="section-title">Discounts & Coupons</h1>
       <p className="section-desc">
-        Apply fixed-value, percentage discounts, and cashback coupons. Coupons are prioritized: cashback &gt; discounts,
-        percentage &gt; fixed, highest value first.
+        Apply fixed-value or percentage discounts, and fixed-value cashback coupons. Discounts reduce the total price
+        while cashback is a separate refund amount. Coupons are prioritized: cashback &gt; discounts, percentage &gt; fixed.
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -241,16 +240,15 @@ export function DiscountDemo() {
 
 const priceItem = {
   quantity: ${quantity},
-  pricing_model: 'per_unit',
-  is_tax_inclusive: ${isTaxInclusive},
   _price: {
+    unit_amount: ${Math.round(parseFloat(unitPrice) * 100)},
     unit_amount_decimal: '${unitPrice}',
     unit_amount_currency: 'EUR',
     pricing_model: 'per_unit',
     is_tax_inclusive: ${isTaxInclusive},
+    type: 'one_time',
     tax: [{ rate: ${taxRate}, type: 'VAT' }],
   },
-  taxes: [{ tax: { rate: ${taxRate} } }],
   // Attach coupons to the price item
   _coupons: [
     {

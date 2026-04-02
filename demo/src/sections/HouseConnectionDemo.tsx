@@ -57,7 +57,7 @@ export function HouseConnectionDemo() {
         type: 'one_time',
         taxRate,
         isTaxInclusive: false,
-        description: 'Trench Work (Tiefbau)',
+        description: 'Trench Work',
       }),
     );
 
@@ -84,7 +84,7 @@ export function HouseConnectionDemo() {
     <div>
       <h1 className="section-title">House Connection</h1>
       <p className="section-desc">
-        Configure Hausanschluss (house connection) pricing for new builds. Combines connection fees, distance-based
+        Configure house connection pricing for new builds. Combines connection fees, distance-based
         trench work, and recurring meter costs.
       </p>
 
@@ -141,7 +141,7 @@ export function HouseConnectionDemo() {
           {/* Distance-based pricing */}
           <div className="card">
             <div className="p-4 bg-amber-50 rounded-xl">
-              <p className="text-xs font-bold text-amber-500 uppercase tracking-widest mb-3">Trench Work (Tiefbau)</p>
+              <p className="text-xs font-bold text-amber-500 uppercase tracking-widest mb-3">Trench Work</p>
               <div className="mb-3">
                 <div className="flex items-center justify-between mb-1">
                   <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Distance to Grid</label>
@@ -188,7 +188,7 @@ export function HouseConnectionDemo() {
           <TariffCard
             gradient="gradient-house"
             icon={<span>🏡</span>}
-            title="Hausanschluss"
+            title="House Connection"
             subtitle="New build connection package"
             badge="CONNECTION"
             price={`EUR ${totalOneTime.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
@@ -295,6 +295,7 @@ ${items
     (i) => `  {
     quantity: ${i.quantity},
     _price: {
+      unit_amount: ${Math.round(parseFloat(i.unitAmountDecimal) * 100)},
       unit_amount_decimal: '${i.unitAmountDecimal}',
       unit_amount_currency: 'EUR',
       pricing_model: 'per_unit',
@@ -303,13 +304,13 @@ ${items
       tax: [{ rate: ${taxRate}, type: 'VAT' }],
       description: '${i.name}',
     },
-    taxes: [{ tax: { rate: ${taxRate} } }],
   },`,
   )
   .join('\n')}
   {
     quantity: 1,
     _price: {
+      unit_amount: ${Math.round(trenchCost * 100)},
       unit_amount_decimal: '${trenchCost.toFixed(2)}',
       unit_amount_currency: 'EUR',
       pricing_model: 'per_unit',
@@ -318,7 +319,6 @@ ${items
       tax: [{ rate: ${taxRate}, type: 'VAT' }],
       description: 'Trench Work (${distance}m)',
     },
-    taxes: [{ tax: { rate: ${taxRate} } }],
   },
 ];
 

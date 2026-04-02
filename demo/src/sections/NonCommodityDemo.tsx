@@ -218,6 +218,11 @@ export function NonCommodityDemo() {
         categories to configure complete packages with one-time and recurring pricing.
       </p>
 
+      <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-700 mb-6">
+        <strong>Note:</strong> The product cards and layout below are illustrative examples only. On the epilot platform,
+        the actual UI depends on the Design configuration and Journey setup configured for each customer.
+      </div>
+
       {/* Product showcase grid — the "journey" visual */}
       <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-4">Select Product Categories</p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
@@ -461,6 +466,7 @@ ${enabledProducts
     (p) => `  {
     quantity: ${p.quantity},
     _price: {
+      unit_amount: ${Math.round(parseFloat(p.price) * 100)},
       unit_amount_decimal: '${p.price}',
       unit_amount_currency: 'EUR',
       pricing_model: 'per_unit',
@@ -469,7 +475,6 @@ ${enabledProducts
       tax: [{ rate: ${taxRate}, type: 'VAT' }],
       description: '${p.name}',
     },
-    taxes: [{ tax: { rate: ${taxRate} } }],
   },`,
   )
   .join('\n')}${enabledProducts.length > 4 ? `\n  // ... ${enabledProducts.length - 4} more items` : ''}

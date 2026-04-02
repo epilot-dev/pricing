@@ -14,7 +14,7 @@ const energyProducts = [
   {
     id: 'electricity',
     title: 'Electricity Tariffs',
-    desc: 'Single & dual-tariff pricing with Grundpreis, Arbeitspreis, and smart meter support.',
+    desc: 'Single and dual-tariff pricing with base price, work price, and smart meter support.',
     icon: '⚡',
     gradient: 'gradient-electricity',
     price: 'from 28.5 ct/kWh',
@@ -30,7 +30,7 @@ const energyProducts = [
   {
     id: 'house-connection',
     title: 'House Connection',
-    desc: 'Hausanschluss fees with distance-based trench work and multi-utility connections',
+    desc: 'House connection fees with distance-based trench work and multi-utility connections',
     icon: '🏡',
     gradient: 'gradient-house',
     price: 'from EUR 1,850',
@@ -277,16 +277,15 @@ export function OverviewDemo({ onNavigate }: OverviewDemoProps) {
 
 const priceItem = {
   quantity: 5,
-  pricing_model: 'per_unit',
-  is_tax_inclusive: true,
   _price: {
+    unit_amount: 4999,
     unit_amount_decimal: '49.99',
     unit_amount_currency: 'EUR',
     pricing_model: 'per_unit',
     is_tax_inclusive: true,
+    type: 'one_time',
     tax: [{ rate: 19, type: 'VAT' }],
   },
-  taxes: [{ tax: { rate: 19 } }],
 };
 
 const result = computeAggregatedAndPriceTotals([priceItem]);

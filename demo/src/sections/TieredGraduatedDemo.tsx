@@ -203,19 +203,17 @@ export function TieredGraduatedDemo() {
 
 const priceItem = {
   quantity: ${quantity},
-  pricing_model: 'tiered_graduated',
-  is_tax_inclusive: ${isTaxInclusive},
   _price: {
     unit_amount_decimal: '0',
     unit_amount_currency: 'EUR',
     pricing_model: 'tiered_graduated',
     is_tax_inclusive: ${isTaxInclusive},
+    type: 'one_time',
     tax: [{ rate: ${taxRate}, type: 'VAT' }],
     tiers: [
-${tiers.map((t) => `      { up_to: ${t.up_to === null ? 'null' : t.up_to}, unit_amount_decimal: '${t.unit_amount_decimal}', flat_fee_amount_decimal: '0' },`).join('\n')}
+${tiers.map((t) => `      { up_to: ${t.up_to === null ? 'null' : t.up_to}, unit_amount: ${t.unit_amount}, unit_amount_decimal: '${t.unit_amount_decimal}', flat_fee_amount_decimal: '0' },`).join('\n')}
     ],
   },
-  taxes: [{ tax: { rate: ${taxRate} } }],
 };
 
 const result = computeAggregatedAndPriceTotals([priceItem]);

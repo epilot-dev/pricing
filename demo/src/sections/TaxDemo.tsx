@@ -200,22 +200,20 @@ export function TaxDemo() {
 // Tax-inclusive: price already contains tax
 const inclusiveItem = {
   quantity: ${quantity},
-  pricing_model: 'per_unit',
-  is_tax_inclusive: true,
   _price: {
+    unit_amount: ${Math.round(parseFloat(unitPrice) * 100)},
     unit_amount_decimal: '${unitPrice}',
     unit_amount_currency: 'EUR',
     pricing_model: 'per_unit',
     is_tax_inclusive: true,
+    type: 'one_time',
     tax: [{ rate: ${taxRate}, type: 'VAT' }],
   },
-  taxes: [{ tax: { rate: ${taxRate} } }],
 };
 
 // Tax-exclusive: tax is added on top
 const exclusiveItem = {
   ...inclusiveItem,
-  is_tax_inclusive: false,
   _price: { ...inclusiveItem._price, is_tax_inclusive: false },
 };
 

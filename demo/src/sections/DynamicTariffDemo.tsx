@@ -6,15 +6,16 @@ import { buildPriceItemDto, fmtCents } from '../helpers';
 
 export function DynamicTariffDemo() {
   const [marketPrice, setMarketPrice] = useState('8.50');
-  const [markup, setMarkup] = useState('2.00');
+  const [margin, setMargin] = useState('2.00');
   const [quantity, setQuantity] = useState(1000); // kWh
   const [taxRate] = useState(19);
   const [isTaxInclusive, setIsTaxInclusive] = useState(false);
 
   const result = useMemo(() => {
-    const totalPrice = (parseFloat(marketPrice) + parseFloat(markup)).toFixed(2);
+    // Convert ct/kWh to EUR/kWh for the library (which expects EUR values)
+    const totalPriceEUR = ((parseFloat(marketPrice) + parseFloat(margin)) / 100).toFixed(4);
     const item = buildPriceItemDto({
-      unitAmountDecimal: totalPrice,
+      unitAmountDecimal: totalPriceEUR,
       quantity,
       pricingModel: 'per_unit',
       type: 'recurring',
@@ -24,15 +25,15 @@ export function DynamicTariffDemo() {
       description: 'Dynamic Energy Tariff',
       dynamicTariff: {
         mode: 'manual',
-        average_market_price_decimal: marketPrice,
-        markup_amount_decimal: markup,
-        markup_amount: Math.round(parseFloat(markup) * 100),
+        average_market_price_decimal: (parseFloat(marketPrice) / 100).toFixed(4),
+        markup_amount_decimal: (parseFloat(margin) / 100).toFixed(4),
+        markup_amount: Math.round(parseFloat(margin)),
       },
     });
     return computeAggregatedAndPriceTotals([item]);
-  }, [marketPrice, markup, quantity, taxRate, isTaxInclusive]);
+  }, [marketPrice, margin, quantity, taxRate, isTaxInclusive]);
 
-  const totalPerUnit = parseFloat(marketPrice) + parseFloat(markup);
+  const totalPerUnit = parseFloat(marketPrice) + parseFloat(margin); // ct/kWh for display
   const lineItem = result.items?.[0];
 
   // Simulate market price fluctuations
@@ -51,9 +52,15 @@ export function DynamicTariffDemo() {
     <div>
       <h1 className="section-title">Dynamic Tariff</h1>
       <p className="section-desc">
-        Market-based pricing for energy products. Combines a day-ahead market price with a configurable markup. Supports
-        both automatic (day_ahead_market) and manual modes.
+        Market-based pricing for energy products. Combines a day-ahead market price with a configurable supplier margin.
+        Uses standard per_unit pricing with <code>dynamic_tariff</code> metadata. Supports both automatic
+        (day_ahead_market) and manual modes.
       </p>
+
+      <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-700 mb-6">
+        <strong>Note:</strong> The price points shown here are simulated values to illustrate a possible example. Actual
+        market prices and margins will vary based on the energy market and supplier configuration.
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-4">
@@ -71,12 +78,12 @@ export function DynamicTariffDemo() {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700">Markup (ct/kWh)</label>
+                <label className="text-sm font-medium text-gray-700">Supplier Margin (ct/kWh)</label>
                 <input
                   type="number"
                   step="0.01"
-                  value={markup}
-                  onChange={(e) => setMarkup(e.target.value)}
+                  value={margin}
+                  onChange={(e) => setMargin(e.target.value)}
                   className="input-field mt-1"
                 />
               </div>
@@ -122,8 +129,8 @@ export function DynamicTariffDemo() {
               </div>
               <div className="flex items-center justify-center text-gray-400 text-lg">+</div>
               <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                <span className="text-sm text-gray-700">Supplier Markup</span>
-                <span className="font-bold text-blue-600">{markup} ct/kWh</span>
+                <span className="text-sm text-gray-700">Supplier Margin</span>
+                <span className="font-bold text-blue-600">{margin} ct/kWh</span>
               </div>
               <div className="flex items-center justify-center text-gray-400 text-lg">=</div>
               <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
@@ -181,24 +188,22 @@ export function DynamicTariffDemo() {
 
 const priceItem = {
   quantity: ${quantity},
-  pricing_model: 'per_unit',
-  is_tax_inclusive: ${isTaxInclusive},
   _price: {
-    unit_amount_decimal: '${totalPerUnit.toFixed(2)}',
+    unit_amount: ${Math.round(totalPerUnit)},
+    unit_amount_decimal: '${(totalPerUnit / 100).toFixed(4)}',
     unit_amount_currency: 'EUR',
     pricing_model: 'per_unit',
     is_tax_inclusive: ${isTaxInclusive},
     type: 'recurring',
     billing_period: 'monthly',
     tax: [{ rate: ${taxRate}, type: 'VAT' }],
-    // Dynamic tariff configuration
+    // Dynamic tariff metadata
     dynamic_tariff: {
       mode: 'manual',  // or 'day_ahead_market'
-      average_market_price_decimal: '${marketPrice}',
-      markup_amount_decimal: '${markup}',
+      average_market_price_decimal: '${(parseFloat(marketPrice) / 100).toFixed(4)}',
+      markup_amount_decimal: '${(parseFloat(margin) / 100).toFixed(4)}',
     },
   },
-  taxes: [{ tax: { rate: ${taxRate} } }],
 };
 
 const result = computeAggregatedAndPriceTotals([priceItem]);

@@ -272,7 +272,7 @@ export function CompositePriceDemo() {
                 <p className="text-sm font-medium text-gray-700 mb-2">By Recurrence:</p>
                 {result.total_details?.breakdown?.recurrences?.map((r: any, i: number) => (
                   <div key={i} className="flex items-center justify-between py-1.5 border-b border-gray-100 text-sm">
-                    <span className={r.type === 'one_time' ? 'badge-blue' : 'badge-green'}>
+                    <span className={`capitalize ${r.type === 'one_time' ? 'badge-blue' : 'badge-green'}`}>
                       {r.type === 'one_time' ? 'One-time' : r.billing_period}
                     </span>
                     <span className="font-medium">{fmtCents(r.amount_total)}</span>
@@ -292,8 +292,6 @@ export function CompositePriceDemo() {
 
 const compositeItem = {
   quantity: ${parentQty},
-  pricing_model: 'per_unit',
-  is_tax_inclusive: true,
   _price: {
     is_composite_price: true,
     pricing_model: 'per_unit',
@@ -306,6 +304,7 @@ const compositeItem = {
 ${components
   .map(
     (c) => `      {
+        unit_amount: ${Math.round(parseFloat(c.unitAmountDecimal) * 100)},
         unit_amount_decimal: '${c.unitAmountDecimal}',
         pricing_model: 'per_unit',
         is_tax_inclusive: true,
@@ -319,7 +318,6 @@ ${components
   price_components: [
 ${components.map((c) => `    { quantity: ${c.quantity}, unit_amount_decimal: '${c.unitAmountDecimal}', type: '${c.type}'${c.billingPeriod ? `, billing_period: '${c.billingPeriod}'` : ''} },`).join('\n')}
   ],
-  taxes: [{ tax: { rate: ${taxRate} } }],
 };
 
 const result = computeAggregatedAndPriceTotals([compositeItem]);

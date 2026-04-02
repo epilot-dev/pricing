@@ -256,9 +256,8 @@ export function RecurringBillingDemo() {
 // Recurring price item
 const priceItem = {
   quantity: ${quantity},
-  pricing_model: 'per_unit',
-  is_tax_inclusive: ${isTaxInclusive},
   _price: {
+    unit_amount: ${Math.round(parseFloat(unitPrice) * 100)},
     unit_amount_decimal: '${unitPrice}',
     unit_amount_currency: 'EUR',
     pricing_model: 'per_unit',
@@ -267,7 +266,6 @@ const priceItem = {
     billing_period: '${basePeriod}',
     tax: [{ rate: ${taxRate}, type: 'VAT' }],
   },
-  taxes: [{ tax: { rate: ${taxRate} } }],
 };
 
 const result = computeAggregatedAndPriceTotals([priceItem]);

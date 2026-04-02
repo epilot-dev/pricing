@@ -174,7 +174,7 @@ export default function App() {
         <div className="sb-footer">
           <div className="sb-status-line">
             <span className="agent-dot" />
-            <span className="sb-version">v5.4.0</span>
+            <span className="sb-version">v5.6.0</span>
             <span style={{ opacity: 0.5 }}>ready</span>
           </div>
           <div className="sb-credit">

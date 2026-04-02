@@ -176,9 +176,25 @@ export default function App() {
             <span style={{ opacity: 0.5 }}>ready</span>
           </div>
           <div className="sb-credit">
-            Built by{' '}
-            <a href="https://github.com/jpinho" target="_blank" rel="noopener noreferrer">
-              @jpinho
+            <a href="https://epilot.cloud" target="_blank" rel="noopener noreferrer">
+              &copy; epilot.cloud 2026
+            </a>
+          </div>
+          <div className="sb-credit" style={{ marginTop: '4px' }}>
+            <a href="https://www.epilot.cloud/en/features/product-hub" target="_blank" rel="noopener noreferrer">
+              Product Hub
+            </a>
+            <span style={{ opacity: 0.3, margin: '0 4px' }}>&middot;</span>
+            <a href="https://www.epilot.cloud/en/privacy-policy" target="_blank" rel="noopener noreferrer">
+              Privacy
+            </a>
+            <span style={{ opacity: 0.3, margin: '0 4px' }}>&middot;</span>
+            <a
+              href="https://cdn.prod.website-files.com/6672e3b0c21bc5b0e9dd785c/669233a35485bcd6658b02f1_epilot_Allgemeine-Geschaeftsbedingungen_2020.08.31.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Terms
             </a>
           </div>
         </div>

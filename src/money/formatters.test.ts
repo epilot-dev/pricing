@@ -5,6 +5,7 @@ import {
   formatAmount,
   formatAmountFromString,
   formatPriceUnit,
+  omitTrailingDecimalZeros,
   parseDecimalValue,
   toIntegerAmount,
   unitDisplayLabels,
@@ -292,6 +293,26 @@ describe('formatPriceUnit', () => {
       expect(result).toStrictEqual(unitDisplayLabels[unitCode as keyof typeof unitDisplayLabels]);
     },
   );
+});
+
+describe('omitTrailingDecimalZeros', () => {
+  it.each`
+    price                | expected
+    ${'10.00 €'}         | ${'10 €'}
+    ${'10,00 €'}         | ${'10 €'}
+    ${'1.000,00 €'}      | ${'1.000 €'}
+    ${'10.50 €'}         | ${'10.50 €'}
+    ${'10,50 €'}         | ${'10,50 €'}
+    ${'€10.00'}          | ${'€10'}
+    ${'€10.00/Stück'}    | ${'€10/Stück'}
+    ${'€10,00/Stück'}    | ${'€10/Stück'}
+    ${'10.00 € / Monat'} | ${'10 € / Monat'}
+    ${'10,00 € / Monat'} | ${'10 € / Monat'}
+    ${'0.00 €'}          | ${'0 €'}
+    ${'10.20 €'}         | ${'10.20 €'}
+  `('should transform "$price" into "$expected"', ({ price, expected }) => {
+    expect(omitTrailingDecimalZeros(price)).toEqual(expected);
+  });
 });
 
 describe('parseDecimalValue', () => {

@@ -2,7 +2,7 @@ import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
 import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
-import { buildPriceItemDto, fmtCents } from '../helpers';
+import { buildPriceItemDto, fmtCents, fmtEur } from '../helpers';
 
 export function TaxDemo() {
   const [unitPrice, setUnitPrice] = useState('100.00');
@@ -110,7 +110,7 @@ export function TaxDemo() {
             <span className="text-xs text-gray-500">Price includes tax</span>
           </div>
           <div className="space-y-3">
-            <ResultCard label="Unit Price (what customer sees)" value={`€${unitPrice}`} />
+            <ResultCard label="Unit Price (what customer sees)" value={fmtEur(parseFloat(unitPrice))} />
             <ResultCard label="Net per unit (excluding tax)" value={fmtCents(incItem?.unit_amount)} />
             <ResultCard label="Line Subtotal (Net)" value={fmtCents(inclusiveResult.amount_subtotal)} />
             <ResultCard label="Tax Amount" value={fmtCents(inclusiveResult.amount_tax)} color="amber" />
@@ -134,7 +134,7 @@ export function TaxDemo() {
             <span className="text-xs text-gray-500">Tax added on top</span>
           </div>
           <div className="space-y-3">
-            <ResultCard label="Unit Price (net)" value={`€${unitPrice}`} />
+            <ResultCard label="Unit Price (net)" value={fmtEur(parseFloat(unitPrice))} />
             <ResultCard label="Gross per unit (including tax)" value={fmtCents(excItem?.unit_amount_gross)} />
             <ResultCard label="Line Subtotal (Net)" value={fmtCents(exclusiveResult.amount_subtotal)} />
             <ResultCard label="Tax Amount" value={fmtCents(exclusiveResult.amount_tax)} color="amber" />

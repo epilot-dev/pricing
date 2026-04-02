@@ -3,7 +3,7 @@ import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
 import { TariffCard } from '../components/TariffCard';
-import { buildPriceItemDto, fmtCents } from '../helpers';
+import { buildPriceItemDto, fmtCents, fmtEur } from '../helpers';
 
 type EnergyType = 'electricity' | 'gas';
 
@@ -301,13 +301,13 @@ export function GetAGDemo() {
             title={tariffTitle}
             subtitle={`${consumption.toLocaleString()} kWh/year \u00b7 PLZ ${zipCode || '...'}`}
             badge={energyType === 'electricity' ? 'STROM' : 'GAS'}
-            price={`EUR ${monthlyGross.toFixed(2)}`}
+            price={fmtEur(monthlyGross)}
             priceUnit="/month"
             priceLabel="Estimated monthly cost (gross)"
             footer={
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-500">Annual total (gross)</span>
-                <span className="font-extrabold text-gray-900 text-lg">EUR {totalGross.toFixed(2)}</span>
+                <span className="font-extrabold text-gray-900 text-lg">{fmtEur(totalGross)}</span>
               </div>
             }
           >
@@ -324,7 +324,7 @@ export function GetAGDemo() {
                     key={fee.key}
                     className={`${fee.color} transition-all duration-300`}
                     style={{ width: `${totalNet > 0 ? (fee.eurCost / totalNet) * 100 : 0}%` }}
-                    title={`${fee.label}: EUR ${fee.eurCost.toFixed(2)}`}
+                    title={`${fee.label}: ${fmtEur(fee.eurCost)}`}
                   />
                 ))}
               </div>
@@ -335,10 +335,10 @@ export function GetAGDemo() {
                   <div className="w-2.5 h-2.5 rounded-full bg-blue-300" />
                   <div>
                     <span className="cost-line-label">Base Price</span>
-                    <p className="text-[10px] text-gray-400">EUR {parseFloat(basePrice).toFixed(2)}/year (fixed)</p>
+                    <p className="text-[10px] text-gray-400">{fmtEur(parseFloat(basePrice))}/year (fixed)</p>
                   </div>
                 </div>
-                <span className="cost-line-value">EUR {baseCost.toFixed(2)}</span>
+                <span className="cost-line-value">{fmtEur(baseCost)}</span>
               </div>
 
               {/* Fee component lines */}
@@ -353,13 +353,13 @@ export function GetAGDemo() {
                       </p>
                     </div>
                   </div>
-                  <span className="cost-line-value">EUR {fee.eurCost.toFixed(2)}</span>
+                  <span className="cost-line-value">{fmtEur(fee.eurCost)}</span>
                 </div>
               ))}
 
               <div className="flex items-center justify-between pt-3 mt-1 border-t border-gray-200">
                 <span className="text-sm font-bold text-gray-600">Net Total (annual)</span>
-                <span className="text-lg font-extrabold text-gray-900">EUR {totalNet.toFixed(2)}</span>
+                <span className="text-lg font-extrabold text-gray-900">{fmtEur(totalNet)}</span>
               </div>
             </div>
           </TariffCard>
@@ -368,7 +368,7 @@ export function GetAGDemo() {
           <div className="grid grid-cols-3 gap-4">
             <div className="card text-center p-5">
               <p className="text-[10px] font-bold text-blue-500 uppercase tracking-widest">Base Price</p>
-              <p className="text-2xl font-extrabold text-blue-600 mt-1">EUR {parseFloat(basePrice).toFixed(2)}</p>
+              <p className="text-2xl font-extrabold text-blue-600 mt-1">{fmtEur(parseFloat(basePrice))}</p>
               <p className="text-xs text-gray-400">per year</p>
             </div>
             <div className="card text-center p-5">

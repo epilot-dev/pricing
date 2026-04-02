@@ -17,7 +17,7 @@ export function TierChart({ bars, title, valueFormatter = (v) => v.toFixed(2) }:
   return (
     <div className="w-full">
       {title && <p className="text-sm font-medium text-gray-700 mb-3">{title}</p>}
-      <div className="flex items-end gap-2 h-48">
+      <div className="flex items-end gap-2 h-24">
         {bars.map((bar, i) => {
           const height = Math.max((bar.value / maxValue) * 100, 4);
           return (

@@ -3,7 +3,7 @@ import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
 import { TariffCard } from '../components/TariffCard';
-import { buildPriceItemDto, fmtCents } from '../helpers';
+import { buildPriceItemDto, fmtCents, fmtEur } from '../helpers';
 
 interface ConnectionItem {
   name: string;
@@ -82,6 +82,7 @@ export function HouseConnectionDemo() {
 
   return (
     <div>
+      <p className="text-[10px] font-bold text-primary-400 uppercase tracking-widest mb-1">Use Case: Utility Connection Packages</p>
       <h1 className="section-title">House Connection</h1>
       <p className="section-desc">
         Configure house connection pricing for new builds. Combines connection fees, distance-based
@@ -175,7 +176,7 @@ export function HouseConnectionDemo() {
                 <div className="flex items-end">
                   <div className="p-3 bg-amber-100 rounded-xl text-center w-full">
                     <p className="text-[10px] text-amber-600 font-bold uppercase tracking-wider">Total</p>
-                    <p className="font-extrabold text-amber-800">EUR {trenchCost.toFixed(2)}</p>
+                    <p className="font-extrabold text-amber-800">{fmtEur(trenchCost)}</p>
                   </div>
                 </div>
               </div>
@@ -191,14 +192,14 @@ export function HouseConnectionDemo() {
             title="House Connection"
             subtitle="New build connection package"
             badge="CONNECTION"
-            price={`EUR ${totalOneTime.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+            price={`${fmtEur(totalOneTime)}`}
             priceUnit=""
             priceLabel="Total one-time costs (net)"
             footer={
               recurringCosts > 0 ? (
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-500">Recurring costs</span>
-                  <span className="font-extrabold text-emerald-600">EUR {recurringCosts.toFixed(2)}/month</span>
+                  <span className="font-extrabold text-emerald-600">{fmtEur(recurringCosts)}/month</span>
                 </div>
               ) : undefined
             }
@@ -214,7 +215,7 @@ export function HouseConnectionDemo() {
                       <span className="text-sm">{item.icon}</span>
                       <span className="cost-line-label">{item.name}</span>
                     </div>
-                    <span className="cost-line-value">EUR {cost.toFixed(2)}</span>
+                    <span className="cost-line-value">{fmtEur(cost)}</span>
                   </div>
                 );
               })}
@@ -225,11 +226,11 @@ export function HouseConnectionDemo() {
                 <div>
                   <span className="cost-line-label">Trench Work</span>
                   <p className="text-[10px] text-gray-400">
-                    {distance}m x EUR {parseFloat(perMeterRate).toFixed(2)}/m
+                    {distance}m x {fmtEur(parseFloat(perMeterRate))}/m
                   </p>
                 </div>
               </div>
-              <span className="cost-line-value">EUR {trenchCost.toFixed(2)}</span>
+              <span className="cost-line-value">{fmtEur(trenchCost)}</span>
             </div>
 
             {items
@@ -244,7 +245,7 @@ export function HouseConnectionDemo() {
                     </div>
                   </div>
                   <span className="cost-line-value text-emerald-600">
-                    EUR {parseFloat(item.unitAmountDecimal).toFixed(2)}
+                    {fmtEur(parseFloat(item.unitAmountDecimal))}
                   </span>
                 </div>
               ))}

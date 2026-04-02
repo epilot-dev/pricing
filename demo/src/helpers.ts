@@ -9,6 +9,16 @@ export function fmtCents(amount: number | undefined, currency = 'EUR'): string {
   }).format(amount / 100);
 }
 
+/** Format a EUR amount (not cents) to currency string: €12,500.00 */
+export function fmtEur(amount: number, currency = 'EUR'): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency.toUpperCase(),
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
+}
+
 /** Format a decimal string to currency */
 export function fmtDecimal(amount: string | undefined, currency = 'EUR'): string {
   if (!amount) return '-';

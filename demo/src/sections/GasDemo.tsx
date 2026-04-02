@@ -3,7 +3,7 @@ import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
 import { TariffCard } from '../components/TariffCard';
-import { buildPriceItemDto, fmtCents } from '../helpers';
+import { buildPriceItemDto, fmtCents, fmtEur } from '../helpers';
 
 export function GasDemo() {
   const [basePrice, setBasePrice] = useState('144.00');
@@ -160,13 +160,13 @@ export function GasDemo() {
             title="Natural Gas Tariff"
             subtitle={`${consumption.toLocaleString()} kWh/year`}
             badge="GAS"
-            price={`EUR ${monthlyGrossEUR.toFixed(2)}`}
+            price={fmtEur(monthlyGrossEUR)}
             priceUnit="/month"
             priceLabel="Estimated monthly cost (gross)"
             footer={
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-500">Annual total (gross)</span>
-                <span className="font-extrabold text-gray-900 text-lg">EUR {totalGrossEUR.toFixed(2)}</span>
+                <span className="font-extrabold text-gray-900 text-lg">{fmtEur(totalGrossEUR)}</span>
               </div>
             }
           >
@@ -191,10 +191,10 @@ export function GasDemo() {
                 <div className="w-2.5 h-2.5 rounded-full bg-blue-400" />
                 <div>
                   <span className="cost-line-label">Base Price</span>
-                  <p className="text-[10px] text-gray-400">EUR {parseFloat(basePrice).toFixed(2)}/year</p>
+                  <p className="text-[10px] text-gray-400">{fmtEur(parseFloat(basePrice))}/year</p>
                 </div>
               </div>
-              <span className="cost-line-value">EUR {baseCostEUR.toFixed(2)}</span>
+              <span className="cost-line-value">{fmtEur(baseCostEUR)}</span>
             </div>
 
             <div className="cost-line">
@@ -207,7 +207,7 @@ export function GasDemo() {
                   </p>
                 </div>
               </div>
-              <span className="cost-line-value">EUR {workCostEUR.toFixed(2)}</span>
+              <span className="cost-line-value">{fmtEur(workCostEUR)}</span>
             </div>
 
             <div className="cost-line">
@@ -218,12 +218,12 @@ export function GasDemo() {
                   <p className="text-[10px] text-gray-400">{levyRate.toFixed(3)} ct/kWh (CO2 + storage)</p>
                 </div>
               </div>
-              <span className="cost-line-value">EUR {levyCostEUR.toFixed(2)}</span>
+              <span className="cost-line-value">{fmtEur(levyCostEUR)}</span>
             </div>
 
             <div className="flex items-center justify-between pt-3 mt-1 border-t border-gray-200">
               <span className="text-sm font-bold text-gray-600">Net Total (annual)</span>
-              <span className="text-lg font-extrabold text-gray-900">EUR {totalNetEUR.toFixed(2)}</span>
+              <span className="text-lg font-extrabold text-gray-900">{fmtEur(totalNetEUR)}</span>
             </div>
           </TariffCard>
 
@@ -284,7 +284,7 @@ const items = [
   {
     quantity: 1,
     _price: {
-      unit_amount: ${Math.round(parseFloat(basePrice) * 100)},       // ${parseFloat(basePrice).toFixed(2)} EUR in cents
+      unit_amount: ${Math.round(parseFloat(basePrice) * 100)},       // ${fmtEur(parseFloat(basePrice))} in cents
       unit_amount_decimal: '${basePrice}',  // EUR
       unit_amount_currency: 'EUR',
       pricing_model: 'per_unit',
@@ -296,10 +296,10 @@ const items = [
     },
   },
   {
-    quantity: ${consumption},
+    quantity: 1,
     _price: {
-      unit_amount: ${Math.round((totalCtPerKwh / 100) * 100)},       // ${(totalCtPerKwh / 100).toFixed(4)} EUR in cents
-      unit_amount_decimal: '${(totalCtPerKwh / 100).toFixed(6)}',  // EUR/kWh (${totalCtPerKwh.toFixed(3)} ct/100)
+      unit_amount: ${Math.round((totalCtPerKwh / 100) * 100)},
+      unit_amount_decimal: '${(totalCtPerKwh / 100).toFixed(6)}',  // EUR/kWh
       unit_amount_currency: 'EUR',
       pricing_model: 'per_unit',
       is_tax_inclusive: false,
@@ -307,6 +307,10 @@ const items = [
       billing_period: 'yearly',
       tax: [{ rate: ${taxRate}, type: 'VAT' }],
       description: 'Work Price incl. Levies',
+      price_mappings: [{
+        frequency_unit: 'yearly',
+        value: ${consumption},  // consumption in kWh
+      }],
     },
   },
 ];

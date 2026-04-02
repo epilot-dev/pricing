@@ -3,7 +3,7 @@ import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
 import { TariffCard } from '../components/TariffCard';
-import { buildPriceItemDto, fmtCents } from '../helpers';
+import { buildPriceItemDto, fmtCents, fmtEur } from '../helpers';
 
 export function ElectricityDemo() {
   const [tariffType, setTariffType] = useState<'single' | 'dual'>('single');
@@ -241,13 +241,13 @@ export function ElectricityDemo() {
             title={tariffType === 'dual' ? 'Dual Tariff (HT/NT)' : 'Single Tariff (ET)'}
             subtitle={`${totalConsumption.toLocaleString()} kWh/year`}
             badge={tariffType === 'dual' ? 'HT/NT' : 'SINGLE'}
-            price={`EUR ${monthlyGross.toFixed(2)}`}
+            price={`${fmtEur(monthlyGross)}`}
             priceUnit="/month"
             priceLabel="Estimated monthly cost (gross)"
             footer={
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-500">Annual total (gross)</span>
-                <span className="font-extrabold text-gray-900 text-lg">EUR {totalGross.toFixed(2)}</span>
+                <span className="font-extrabold text-gray-900 text-lg">{fmtEur(totalGross)}</span>
               </div>
             }
           >
@@ -279,10 +279,10 @@ export function ElectricityDemo() {
                   <div className="w-2.5 h-2.5 rounded-full bg-blue-400" />
                   <div>
                     <span className="cost-line-label">Base Price</span>
-                    <p className="text-[10px] text-gray-400">EUR {parseFloat(basePrice).toFixed(2)}/year</p>
+                    <p className="text-[10px] text-gray-400">{fmtEur(parseFloat(basePrice))}/year</p>
                   </div>
                 </div>
-                <span className="cost-line-value">EUR {baseCost.toFixed(2)}</span>
+                <span className="cost-line-value">{fmtEur(baseCost)}</span>
               </div>
 
               <div className="cost-line">
@@ -295,7 +295,7 @@ export function ElectricityDemo() {
                     </p>
                   </div>
                 </div>
-                <span className="cost-line-value">EUR {htCostEUR.toFixed(2)}</span>
+                <span className="cost-line-value">{fmtEur(htCostEUR)}</span>
               </div>
 
               {tariffType === 'dual' && (
@@ -309,13 +309,13 @@ export function ElectricityDemo() {
                       </p>
                     </div>
                   </div>
-                  <span className="cost-line-value">EUR {ntCostEUR.toFixed(2)}</span>
+                  <span className="cost-line-value">{fmtEur(ntCostEUR)}</span>
                 </div>
               )}
 
               <div className="flex items-center justify-between pt-3 mt-1 border-t border-gray-200">
                 <span className="text-sm font-bold text-gray-600">Net Total (annual)</span>
-                <span className="text-lg font-extrabold text-gray-900">EUR {totalNet.toFixed(2)}</span>
+                <span className="text-lg font-extrabold text-gray-900">{fmtEur(totalNet)}</span>
               </div>
             </div>
           </TariffCard>
@@ -381,7 +381,7 @@ const items = [
     },
   },
   {
-    quantity: ${tariffType === 'dual' ? consumptionHT : totalConsumption},  // ${tariffType === 'dual' ? 'HT' : 'total'} kWh
+    quantity: 1,
     _price: {
       unit_amount: ${Math.round((parseFloat(workPriceHT) / 100) * 100)},
       unit_amount_decimal: '${htEURDisplay}',
@@ -391,12 +391,16 @@ const items = [
       type: 'recurring',
       billing_period: 'yearly',
       tax: [{ rate: ${taxRate}, type: 'VAT' }],
+      price_mappings: [{
+        frequency_unit: 'yearly',
+        value: ${tariffType === 'dual' ? consumptionHT : totalConsumption},  // consumption in kWh
+      }],
     },
   },${
     tariffType === 'dual'
       ? `
   {
-    quantity: ${consumptionNT},  // NT kWh
+    quantity: 1,
     _price: {
       unit_amount: ${Math.round((parseFloat(workPriceNT) / 100) * 100)},
       unit_amount_decimal: '${ntEURDisplay}',
@@ -406,6 +410,10 @@ const items = [
       type: 'recurring',
       billing_period: 'yearly',
       tax: [{ rate: ${taxRate}, type: 'VAT' }],
+      price_mappings: [{
+        frequency_unit: 'yearly',
+        value: ${consumptionNT},  // consumption in kWh
+      }],
     },
   },`
       : ''

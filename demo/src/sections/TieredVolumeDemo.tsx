@@ -3,7 +3,7 @@ import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
 import { TierChart } from '../components/TierChart';
-import { buildPriceItemDto, fmtCents } from '../helpers';
+import { buildPriceItemDto, fmtCents, fmtEur } from '../helpers';
 
 const defaultTiers = [
   { up_to: 10, unit_amount: 5000, unit_amount_decimal: '50.00', flat_fee_amount: 0, flat_fee_amount_decimal: '0' },
@@ -149,7 +149,7 @@ export function TieredVolumeDemo() {
             <TierChart
               bars={chartBars}
               title="Unit Price by Tier (active tier highlighted)"
-              valueFormatter={(v) => `€${v.toFixed(0)}`}
+              valueFormatter={(v) => fmtEur(v)}
             />
           </div>
 

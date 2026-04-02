@@ -2,7 +2,7 @@ import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
 import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
-import { buildPriceItemDto, fmtCents } from '../helpers';
+import { buildPriceItemDto, fmtCents, fmtEur } from '../helpers';
 
 const defaultTiers = [
   { up_to: 10, unit_amount: 5000, unit_amount_decimal: '50.00', flat_fee_amount: 0, flat_fee_amount_decimal: '0' },
@@ -158,7 +158,7 @@ export function TieredGraduatedDemo() {
                   key={i}
                   className={`${tierColors[i]} flex items-center justify-center text-white text-xs font-medium transition-all duration-300`}
                   style={{ width: `${(b.qty / Math.max(totalUnits, 1)) * 100}%` }}
-                  title={`Tier ${b.tier}: ${b.qty} units @ €${b.rate}`}
+                  title={`Tier ${b.tier}: ${b.qty} units @ ${fmtEur(parseFloat(b.rate))}`}
                 >
                   {b.qty > 5 && `${b.qty}u`}
                 </div>

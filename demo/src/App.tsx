@@ -10,7 +10,6 @@ import { HouseConnectionDemo } from './sections/HouseConnectionDemo';
 import { NonCommodityDemo } from './sections/NonCommodityDemo';
 import { OverviewDemo } from './sections/OverviewDemo';
 import { PerUnitDemo } from './sections/PerUnitDemo';
-import { RecurringBillingDemo } from './sections/RecurringBillingDemo';
 import { TaxDemo } from './sections/TaxDemo';
 import { TieredFlatFeeDemo } from './sections/TieredFlatFeeDemo';
 import { TieredGraduatedDemo } from './sections/TieredGraduatedDemo';
@@ -55,7 +54,6 @@ const sections: Section[] = [
       { id: 'tax', label: 'Tax Handling', icon: '🧾', component: TaxDemo },
       { id: 'discounts', label: 'Discounts & Coupons', icon: '🎟️', component: DiscountDemo },
       { id: 'composite', label: 'Composite Pricing', icon: '🧩', component: CompositePriceDemo },
-      { id: 'recurring', label: 'Recurring Billing', icon: '🔄', component: RecurringBillingDemo },
       { id: 'currency', label: 'Currency & Formatting', icon: '💱', component: CurrencyDemo },
       { id: 'dynamic-tariff', label: 'Dynamic Tariff', icon: '⚡', component: DynamicTariffDemo },
       { id: 'getag', label: 'GetAG Energy', icon: '🔌', component: GetAGDemo },

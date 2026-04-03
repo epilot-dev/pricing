@@ -1,4 +1,4 @@
-import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+import { computeAggregatedAndPriceTotals, PricingModel } from '@epilot/pricing';
 import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
@@ -21,7 +21,7 @@ export function TieredFlatFeeDemo() {
     const item = buildPriceItemDto({
       unitAmountDecimal: '0',
       quantity,
-      pricingModel: 'tiered_flatfee',
+      pricingModel: PricingModel.tieredFlatFee,
       taxRate,
       isTaxInclusive,
       tiers,
@@ -36,7 +36,7 @@ export function TieredFlatFeeDemo() {
     setTiers((prev) =>
       prev.map((t, i) => {
         if (i !== idx) return t;
-        if (field === 'up_to') return { ...t, up_to: value === '' ? null : (Number(value) as any) };
+        if (field === 'up_to') return { ...t, up_to: value === '' ? null : (Number(value) as number) };
         return { ...t, flat_fee_amount_decimal: value, flat_fee_amount: Math.round(Number(value) * 100) };
       }),
     );
@@ -172,7 +172,7 @@ const priceItem = {
   _price: {
     unit_amount_decimal: '0',
     unit_amount_currency: 'EUR',
-    pricing_model: 'tiered_flatfee',
+    pricing_model: ${PricingModel.tieredFlatFee},
     is_tax_inclusive: ${isTaxInclusive},
     type: 'one_time',
     tax: [{ rate: ${taxRate}, type: 'VAT' }],

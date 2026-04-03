@@ -16,26 +16,89 @@ interface FeeComponent {
 }
 
 const ELECTRICITY_FEES: FeeComponent[] = [
-  { key: 'procurement', label: 'Energy Procurement', description: 'Wholesale energy cost', ctPerKwh: '8.50', color: 'bg-blue-500' },
+  {
+    key: 'procurement',
+    label: 'Energy Procurement',
+    description: 'Wholesale energy cost',
+    ctPerKwh: '8.50',
+    color: 'bg-blue-500',
+  },
   { key: 'grid', label: 'Grid Fees', description: 'Network usage charges', ctPerKwh: '8.12', color: 'bg-amber-500' },
-  { key: 'concession', label: 'Concession Levy', description: 'Municipality concession fee', ctPerKwh: '1.66', color: 'bg-orange-400' },
-  { key: 'eeg', label: 'EEG Surcharge', description: 'Renewable energy surcharge (currently 0)', ctPerKwh: '0.00', color: 'bg-green-400' },
-  { key: 'kwkg', label: 'KWKG Surcharge', description: 'Combined heat and power promotion', ctPerKwh: '0.275', color: 'bg-teal-400' },
-  { key: 'offshore', label: 'Offshore Levy', description: 'Offshore grid connection costs', ctPerKwh: '0.656', color: 'bg-cyan-400' },
-  { key: 'stromnev', label: '\u00a719 Grid Fee Exemption Levy', description: 'Grid fee exemption reallocation', ctPerKwh: '0.417', color: 'bg-indigo-400' },
-  { key: 'tax', label: 'Electricity Tax', description: 'Federal electricity tax', ctPerKwh: '2.05', color: 'bg-red-400' },
+  {
+    key: 'concession',
+    label: 'Concession Levy',
+    description: 'Municipality concession fee',
+    ctPerKwh: '1.66',
+    color: 'bg-orange-400',
+  },
+  {
+    key: 'eeg',
+    label: 'EEG Surcharge',
+    description: 'Renewable energy surcharge (currently 0)',
+    ctPerKwh: '0.00',
+    color: 'bg-green-400',
+  },
+  {
+    key: 'kwkg',
+    label: 'KWKG Surcharge',
+    description: 'Combined heat and power promotion',
+    ctPerKwh: '0.275',
+    color: 'bg-teal-400',
+  },
+  {
+    key: 'offshore',
+    label: 'Offshore Levy',
+    description: 'Offshore grid connection costs',
+    ctPerKwh: '0.656',
+    color: 'bg-cyan-400',
+  },
+  {
+    key: 'stromnev',
+    label: 'Grid Fee Exemption Levy',
+    description: 'Grid fee exemption reallocation',
+    ctPerKwh: '0.417',
+    color: 'bg-indigo-400',
+  },
+  {
+    key: 'tax',
+    label: 'Electricity Tax',
+    description: 'Federal electricity tax',
+    ctPerKwh: '2.05',
+    color: 'bg-red-400',
+  },
 ];
 
 const GAS_FEES: FeeComponent[] = [
-  { key: 'procurement', label: 'Energy Procurement', description: 'Wholesale gas cost', ctPerKwh: '5.50', color: 'bg-blue-500' },
+  {
+    key: 'procurement',
+    label: 'Energy Procurement',
+    description: 'Wholesale gas cost',
+    ctPerKwh: '5.50',
+    color: 'bg-blue-500',
+  },
   { key: 'grid', label: 'Grid Fees', description: 'Network usage charges', ctPerKwh: '1.80', color: 'bg-amber-500' },
-  { key: 'concession', label: 'Concession Levy', description: 'Municipality concession fee', ctPerKwh: '0.03', color: 'bg-orange-400' },
+  {
+    key: 'concession',
+    label: 'Concession Levy',
+    description: 'Municipality concession fee',
+    ctPerKwh: '0.03',
+    color: 'bg-orange-400',
+  },
   { key: 'co2', label: 'CO2 Levy', description: 'Carbon tax', ctPerKwh: '0.546', color: 'bg-emerald-400' },
-  { key: 'storage', label: 'Gas Storage Levy', description: 'Strategic reserve fee', ctPerKwh: '0.059', color: 'bg-teal-400' },
+  {
+    key: 'storage',
+    label: 'Gas Storage Levy',
+    description: 'Strategic reserve fee',
+    ctPerKwh: '0.059',
+    color: 'bg-teal-400',
+  },
   { key: 'energytax', label: 'Energy Tax', description: 'Federal energy tax', ctPerKwh: '0.55', color: 'bg-red-400' },
 ];
 
-const ZIP_VARIATIONS: Record<string, { electricity: Partial<Record<string, string>>; gas: Partial<Record<string, string>> }> = {
+const ZIP_VARIATIONS: Record<
+  string,
+  { electricity: Partial<Record<string, string>>; gas: Partial<Record<string, string>> }
+> = {
   '10115': { electricity: {}, gas: {} }, // Berlin – defaults
   '80331': { electricity: { grid: '7.45', concession: '1.99' }, gas: { grid: '1.62', concession: '0.03' } },
   '20095': { electricity: { grid: '8.90', concession: '1.59' }, gas: { grid: '1.95', concession: '0.03' } },
@@ -43,9 +106,12 @@ const ZIP_VARIATIONS: Record<string, { electricity: Partial<Record<string, strin
   '70173': { electricity: { grid: '8.35', concession: '1.76' }, gas: { grid: '1.88', concession: '0.03' } },
 };
 
-function applyZipOverrides(fees: FeeComponent[], overrides: Partial<Record<string, string>> | undefined): FeeComponent[] {
+function applyZipOverrides(
+  fees: FeeComponent[],
+  overrides: Partial<Record<string, string>> | undefined,
+): FeeComponent[] {
   if (!overrides) return fees;
-  return fees.map((fee) => overrides[fee.key] ? { ...fee, ctPerKwh: overrides[fee.key]! } : fee);
+  return fees.map((fee) => (overrides[fee.key] ? { ...fee, ctPerKwh: overrides[fee.key]! } : fee));
 }
 
 export function GetAGDemo() {
@@ -86,7 +152,7 @@ export function GetAGDemo() {
   const ctToEurDecimal = (ct: string) => (parseFloat(ct) / 100).toFixed(6);
 
   const result = useMemo(() => {
-    const items: any[] = [];
+    const items: ReturnType<typeof buildPriceItemDto>[] = [];
 
     // Base price – fixed annual fee
     items.push(
@@ -149,9 +215,10 @@ export function GetAGDemo() {
       <h1 className="section-title">GetAG Energy Pricing</h1>
       <p className="section-desc">
         GetAG is a German energy data provider that supplies regulated fee components – grid fees, levies, and taxes –
-        based on delivery address. Each fee is modeled as a standard <code className="text-primary-600 font-mono text-sm">per_unit</code> price
-        item, and the pricing library (<code className="text-primary-600 font-mono text-sm">computeAggregatedAndPriceTotals</code>) computes
-        the totals. GetAG provides the data; @epilot/pricing does the math.
+        based on delivery address. Each fee is modeled as a standard{' '}
+        <code className="text-primary-600 font-mono text-sm">per_unit</code> price item, and the pricing library (
+        <code className="text-primary-600 font-mono text-sm">computeAggregatedAndPriceTotals</code>) computes the
+        totals. GetAG provides the data; @epilot/pricing does the math.
       </p>
 
       <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-700 mb-6">
@@ -176,11 +243,7 @@ export function GetAGDemo() {
                 placeholder="e.g. 10115"
               />
             </div>
-            {isKnownZip && (
-              <p className="text-xs text-green-600 mt-2">
-                Fee data loaded for zip code {zipCode}
-              </p>
-            )}
+            {isKnownZip && <p className="text-xs text-green-600 mt-2">Fee data loaded for zip code {zipCode}</p>}
             {zipCode.length === 5 && !isKnownZip && (
               <p className="text-xs text-amber-600 mt-2">
                 Using default fee values (no specific data for this zip code in the demo)
@@ -406,19 +469,29 @@ export function GetAGDemo() {
             <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-3">How It Works</p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="p-4 bg-blue-50 rounded-xl text-center">
-                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-2 text-lg">1</div>
+                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-2 text-lg">
+                  1
+                </div>
                 <p className="text-sm font-semibold text-blue-700">GetAG provides fees</p>
                 <p className="text-xs text-blue-500 mt-1">Regulated fee values based on zip code and energy type</p>
               </div>
               <div className="p-4 bg-amber-50 rounded-xl text-center">
-                <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-2 text-lg">2</div>
+                <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-2 text-lg">
+                  2
+                </div>
                 <p className="text-sm font-semibold text-amber-700">Map to price items</p>
-                <p className="text-xs text-amber-500 mt-1">Each fee becomes a per_unit price item with ct/kWh converted to EUR</p>
+                <p className="text-xs text-amber-500 mt-1">
+                  Each fee becomes a per_unit price item with ct/kWh converted to EUR
+                </p>
               </div>
               <div className="p-4 bg-green-50 rounded-xl text-center">
-                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-2 text-lg">3</div>
+                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-2 text-lg">
+                  3
+                </div>
                 <p className="text-sm font-semibold text-green-700">Compute totals</p>
-                <p className="text-xs text-green-500 mt-1">@epilot/pricing computes aggregated totals from all line items</p>
+                <p className="text-xs text-green-500 mt-1">
+                  @epilot/pricing computes aggregated totals from all line items
+                </p>
               </div>
             </div>
           </div>
@@ -448,7 +521,6 @@ const items = [
       tax: [{ rate: ${taxRate}, type: 'VAT' }],
       description: 'Base Price',
     },
-    taxes: [{ tax: { rate: ${taxRate} } }],
   },
 ${fees
   .filter((f) => parseFloat(f.ctPerKwh) > 0)
@@ -466,7 +538,6 @@ ${fees
       tax: [{ rate: ${taxRate}, type: 'VAT' }],
       description: '${fee.label}',  // ${fee.ctPerKwh} ct/kWh
     },
-    taxes: [{ tax: { rate: ${taxRate} } }],
   }`,
   )
   .join(',\n')},

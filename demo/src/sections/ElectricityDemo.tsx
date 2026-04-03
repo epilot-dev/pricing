@@ -15,7 +15,7 @@ export function ElectricityDemo() {
   const [taxRate] = useState(19);
 
   const result = useMemo(() => {
-    const items: any[] = [];
+    const items: ReturnType<typeof buildPriceItemDto>[] = [];
 
     items.push(
       buildPriceItemDto({

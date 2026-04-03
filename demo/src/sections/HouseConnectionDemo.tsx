@@ -1,4 +1,5 @@
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+import type { PriceItem } from '@epilot/pricing/shared/types';
 import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
@@ -9,8 +10,8 @@ interface ConnectionItem {
   name: string;
   unitAmountDecimal: string;
   quantity: number;
-  type: 'one_time' | 'recurring';
-  billingPeriod?: string;
+  type: PriceItem['type'];
+  billingPeriod?: PriceItem['billing_period'];
   icon: string;
 }
 
@@ -64,7 +65,7 @@ export function HouseConnectionDemo() {
     return computeAggregatedAndPriceTotals(priceItems);
   }, [items, taxRate, trenchCost]);
 
-  const updateItem = (idx: number, field: keyof ConnectionItem, value: any) => {
+  const updateItem = (idx: number, field: keyof ConnectionItem, value: unknown) => {
     setItems((prev) => prev.map((item, i) => (i === idx ? { ...item, [field]: value } : item)));
   };
 
@@ -82,11 +83,13 @@ export function HouseConnectionDemo() {
 
   return (
     <div>
-      <p className="text-[10px] font-bold text-primary-400 uppercase tracking-widest mb-1">Use Case: Utility Connection Packages</p>
+      <p className="text-[10px] font-bold text-primary-400 uppercase tracking-widest mb-1">
+        Use Case: Utility Connection Packages
+      </p>
       <h1 className="section-title">House Connection</h1>
       <p className="section-desc">
-        Configure house connection pricing for new builds. Combines connection fees, distance-based
-        trench work, and recurring meter costs.
+        Configure house connection pricing for new builds. Combines connection fees, distance-based trench work, and
+        recurring meter costs.
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -244,9 +247,7 @@ export function HouseConnectionDemo() {
                       <p className="text-[10px] text-emerald-500 font-medium">/{item.billingPeriod}</p>
                     </div>
                   </div>
-                  <span className="cost-line-value text-emerald-600">
-                    {fmtEur(parseFloat(item.unitAmountDecimal))}
-                  </span>
+                  <span className="cost-line-value text-emerald-600">{fmtEur(parseFloat(item.unitAmountDecimal))}</span>
                 </div>
               ))}
           </TariffCard>
@@ -267,7 +268,7 @@ export function HouseConnectionDemo() {
               <div className="mt-4 pt-4 border-t border-gray-100">
                 <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-3">By Recurrence</p>
                 <div className="space-y-2">
-                  {result.total_details?.breakdown?.recurrences?.map((r: any, i: number) => (
+                  {result.total_details?.breakdown?.recurrences?.map((r, i: number) => (
                     <div key={i} className="flex items-center justify-between py-2">
                       <span className={r.type === 'one_time' ? 'badge-blue' : 'badge-green'}>
                         {r.type === 'one_time' ? 'One-time' : r.billing_period}

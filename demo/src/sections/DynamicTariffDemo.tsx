@@ -1,4 +1,4 @@
-import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+import { computeAggregatedAndPriceTotals, PricingModel } from '@epilot/pricing';
 import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
@@ -17,7 +17,7 @@ export function DynamicTariffDemo() {
     const item = buildPriceItemDto({
       unitAmountDecimal: totalPriceEUR,
       quantity,
-      pricingModel: 'per_unit',
+      pricingModel: PricingModel.perUnit,
       type: 'recurring',
       billingPeriod: 'monthly',
       taxRate,
@@ -25,16 +25,16 @@ export function DynamicTariffDemo() {
       description: 'Dynamic Energy Tariff',
       dynamicTariff: {
         mode: 'manual',
-        average_market_price_decimal: (parseFloat(marketPrice) / 100).toFixed(4),
-        markup_amount_decimal: (parseFloat(margin) / 100).toFixed(4),
+        average_price: Math.round(parseFloat(marketPrice)),
+        average_price_decimal: (parseFloat(marketPrice) / 100).toFixed(4),
         markup_amount: Math.round(parseFloat(margin)),
+        markup_amount_decimal: (parseFloat(margin) / 100).toFixed(4),
       },
     });
     return computeAggregatedAndPriceTotals([item]);
   }, [marketPrice, margin, quantity, taxRate, isTaxInclusive]);
 
   const totalPerUnit = parseFloat(marketPrice) + parseFloat(margin); // ct/kWh for display
-  const lineItem = result.items?.[0];
 
   // Simulate market price fluctuations
   const priceHistory = useMemo(() => {
@@ -192,7 +192,7 @@ const priceItem = {
     unit_amount: ${Math.round(totalPerUnit)},
     unit_amount_decimal: '${(totalPerUnit / 100).toFixed(4)}',
     unit_amount_currency: 'EUR',
-    pricing_model: 'per_unit',
+    pricing_model: ${PricingModel.perUnit},
     is_tax_inclusive: ${isTaxInclusive},
     type: 'recurring',
     billing_period: 'monthly',
@@ -200,7 +200,9 @@ const priceItem = {
     // Dynamic tariff metadata
     dynamic_tariff: {
       mode: 'manual',  // or 'day_ahead_market'
-      average_market_price_decimal: '${(parseFloat(marketPrice) / 100).toFixed(4)}',
+      average_price: ${Math.round(parseFloat(marketPrice))},
+      average_price_decimal: '${(parseFloat(marketPrice) / 100).toFixed(4)}',
+      markup_amount: ${Math.round(parseFloat(margin))},
       markup_amount_decimal: '${(parseFloat(margin) / 100).toFixed(4)}',
     },
   },

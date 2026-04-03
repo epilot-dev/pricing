@@ -1,4 +1,5 @@
 import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+import type { CompositePriceItemDto, PriceItem } from '@epilot/pricing/shared/types';
 import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
@@ -9,7 +10,7 @@ interface Component {
   unitAmountDecimal: string;
   quantity: number;
   type: 'one_time' | 'recurring';
-  billingPeriod?: string;
+  billingPeriod?: PriceItem['billing_period'];
 }
 
 const defaultComponents: Component[] = [
@@ -27,12 +28,12 @@ export function CompositePriceDemo() {
     const tax = makeTax(taxRate);
 
     // Build a composite price item
-    const compositeItem: any = {
+    const compositeItem: CompositePriceItemDto = {
       quantity: parentQty,
       product_id: 'composite-product',
       price_id: 'composite-price',
       is_tax_inclusive: true,
-      pricing_model: 'per_unit',
+      is_composite_price: true,
       taxes: [{ tax }],
       _price: {
         _id: 'composite-price',
@@ -58,7 +59,7 @@ export function CompositePriceDemo() {
         })),
       },
       _product: { name: 'Bundle Package', type: 'product' },
-      price_components: components.map((comp, i) => ({
+      item_components: components.map((comp, i) => ({
         _id: `comp-${i}`,
         quantity: comp.quantity,
         unit_amount: Math.round(parseFloat(comp.unitAmountDecimal) * 100),
@@ -91,7 +92,7 @@ export function CompositePriceDemo() {
     return computeAggregatedAndPriceTotals([compositeItem]);
   }, [components, parentQty, taxRate]);
 
-  const updateComponent = (idx: number, field: keyof Component, value: any) => {
+  const updateComponent = (idx: number, field: keyof Component, value: unknown) => {
     setComponents((prev) => prev.map((c, i) => (i === idx ? { ...c, [field]: value } : c)));
   };
 
@@ -105,10 +106,6 @@ export function CompositePriceDemo() {
   const removeComponent = (idx: number) => {
     if (components.length > 1) setComponents((prev) => prev.filter((_, i) => i !== idx));
   };
-
-  const oneTimeItems =
-    result.items?.filter((item: any) => item._price?.type === 'one_time' || !item._price?.billing_period) ?? [];
-  const recurringItems = result.items?.filter((item: any) => item._price?.type === 'recurring') ?? [];
 
   return (
     <div>
@@ -270,7 +267,7 @@ export function CompositePriceDemo() {
             {(result.total_details?.breakdown?.recurrences?.length ?? 0) > 0 && (
               <div className="mt-4">
                 <p className="text-sm font-medium text-gray-700 mb-2">By Recurrence:</p>
-                {result.total_details?.breakdown?.recurrences?.map((r: any, i: number) => (
+                {result.total_details?.breakdown?.recurrences?.map((r, i: number) => (
                   <div key={i} className="flex items-center justify-between py-1.5 border-b border-gray-100 text-sm">
                     <span className={`capitalize ${r.type === 'one_time' ? 'badge-blue' : 'badge-green'}`}>
                       {r.type === 'one_time' ? 'One-time' : r.billing_period}
@@ -316,7 +313,7 @@ ${components
     ],
   },
   price_components: [
-${components.map((c) => `    { quantity: ${c.quantity}, unit_amount_decimal: '${c.unitAmountDecimal}', type: '${c.type}'${c.billingPeriod ? `, billing_period: '${c.billingPeriod}'` : ''} },`).join('\n')}
+${components.map((c) => `    { quantity: ${c.quantity}, unit_amount: ${Math.round(parseFloat(c.unitAmountDecimal) * 100)}, unit_amount_decimal: '${c.unitAmountDecimal}', type: '${c.type}'${c.billingPeriod ? `, billing_period: '${c.billingPeriod}'` : ''} },`).join('\n')}
   ],
 };
 

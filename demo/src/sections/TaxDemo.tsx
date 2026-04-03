@@ -173,7 +173,7 @@ export function TaxDemo() {
             </div>
             <div className="text-sm">
               <p className="font-medium text-gray-700 mb-2">Tax Breakdown:</p>
-              {multiTaxResult.total_details?.breakdown?.taxes?.map((t: any, i: number) => {
+              {multiTaxResult.total_details?.breakdown?.taxes?.map((t, i: number) => {
                 const rate = t.tax?.rate ?? t.rateValue ?? 0;
                 const type = t.tax?.type || 'VAT';
                 return (

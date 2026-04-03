@@ -1,4 +1,5 @@
-import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+import { computeAggregatedAndPriceTotals, PricingModel } from '@epilot/pricing';
+import type { Coupon } from '@epilot/pricing/shared/types';
 import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
@@ -6,7 +7,7 @@ import { buildPriceItemDto, fmtCents, makeCoupon } from '../helpers';
 
 type CouponConfig = {
   type: 'fixed' | 'percentage';
-  category: 'discount' | 'cashback';
+  category: Coupon['category'];
   value: string;
 };
 
@@ -39,7 +40,7 @@ export function DiscountDemo() {
             category: couponConfig.category,
             percentageValue: couponConfig.value,
             name: `${couponConfig.value}% ${couponConfig.category}`,
-            ...(couponConfig.category === 'cashback' && { cashbackPeriod: 12 }),
+            ...(couponConfig.category === 'cashback' && { cashbackPeriod: 12 as Coupon['cashbackPeriod'] }),
           })
         : makeCoupon({
             type: 'fixed',
@@ -47,7 +48,7 @@ export function DiscountDemo() {
             fixedValueDecimal: couponConfig.value,
             fixedValue: Math.round(parseFloat(couponConfig.value) * 100),
             name: `€${couponConfig.value} ${couponConfig.category}`,
-            ...(couponConfig.category === 'cashback' && { cashbackPeriod: 12 }),
+            ...(couponConfig.category === 'cashback' && { cashbackPeriod: 12 as Coupon['cashbackPeriod'] }),
           });
 
     const item = buildPriceItemDto({
@@ -75,7 +76,8 @@ export function DiscountDemo() {
       <h1 className="section-title">Discounts & Coupons</h1>
       <p className="section-desc">
         Apply fixed-value or percentage discounts, and fixed-value cashback coupons. Discounts reduce the total price
-        while cashback is a separate refund amount. Coupons are prioritized: cashback &gt; discounts, percentage &gt; fixed.
+        while cashback is a separate refund amount. Coupons are prioritized: cashback &gt; discounts, percentage &gt;
+        fixed.
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -244,7 +246,7 @@ const priceItem = {
     unit_amount: ${Math.round(parseFloat(unitPrice) * 100)},
     unit_amount_decimal: '${unitPrice}',
     unit_amount_currency: 'EUR',
-    pricing_model: 'per_unit',
+    pricing_model: ${PricingModel.perUnit},
     is_tax_inclusive: ${isTaxInclusive},
     type: 'one_time',
     tax: [{ rate: ${taxRate}, type: 'VAT' }],

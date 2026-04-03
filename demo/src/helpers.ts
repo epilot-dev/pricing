@@ -1,3 +1,7 @@
+import type { Currency } from '@epilot/pricing';
+import { PricingModel } from '@epilot/pricing';
+import type { Coupon, Price, PriceItem } from '@epilot/pricing-client';
+
 /** Format cents integer to currency string */
 export function fmtCents(amount: number | undefined, currency = 'EUR'): string {
   if (amount === undefined || amount === null) return '-';
@@ -17,19 +21,6 @@ export function fmtEur(amount: number, currency = 'EUR'): string {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(amount);
-}
-
-/** Format a decimal string to currency */
-export function fmtDecimal(amount: string | undefined, currency = 'EUR'): string {
-  if (!amount) return '-';
-  const num = parseFloat(amount);
-  if (isNaN(num)) return '-';
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: currency.toUpperCase(),
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 6,
-  }).format(num);
 }
 
 /** Create a minimal Tax object */
@@ -55,7 +46,7 @@ export function buildPriceItemDto({
   unitAmountDecimal,
   quantity,
   currency = 'EUR',
-  pricingModel = 'per_unit',
+  pricingModel = PricingModel.perUnit,
   type = 'one_time',
   billingPeriod,
   isTaxInclusive = true,
@@ -69,21 +60,21 @@ export function buildPriceItemDto({
   unitAmountDecimal: string;
   quantity: number;
   currency?: string;
-  pricingModel?: string;
+  pricingModel?: PricingModel;
   type?: 'one_time' | 'recurring';
-  billingPeriod?: string;
+  billingPeriod?: Price['billing_period'];
   isTaxInclusive?: boolean;
   taxRate?: number;
-  tiers?: any[];
-  coupons?: any[];
+  tiers?: Price['tiers'];
+  coupons?: Price['coupons'];
   description?: string;
-  dynamicTariff?: any;
-  getAg?: any;
+  dynamicTariff?: Price['dynamic_tariff'];
+  getAg?: Price['get_ag'];
 }) {
   const tax = makeTax(taxRate);
   const unitAmount = Math.round(parseFloat(unitAmountDecimal) * 100);
 
-  const price: any = {
+  const price: Price = {
     _id: 'demo-price-' + Math.random().toString(36).slice(2, 8),
     unit_amount: unitAmount,
     unit_amount_currency: currency,
@@ -100,7 +91,7 @@ export function buildPriceItemDto({
     ...(getAg && { get_ag: getAg }),
   };
 
-  const item: any = {
+  const item: PriceItem = {
     quantity,
     product_id: 'demo-product',
     price_id: price._id,
@@ -128,14 +119,14 @@ export function makeCoupon({
   name = 'Demo Coupon',
   cashbackPeriod,
 }: {
-  type: 'fixed' | 'percentage';
-  category: 'discount' | 'cashback';
+  type: Coupon['type'];
+  category: Coupon['category'];
   percentageValue?: string;
   fixedValue?: number;
   fixedValueDecimal?: string;
-  currency?: string;
+  currency?: Currency;
   name?: string;
-  cashbackPeriod?: number;
+  cashbackPeriod?: Coupon['cashback_period'];
 }) {
   return {
     _id: 'coupon-' + Math.random().toString(36).slice(2, 8),

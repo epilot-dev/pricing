@@ -1,4 +1,4 @@
-import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+import { computeAggregatedAndPriceTotals, PricingModel } from '@epilot/pricing';
 import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
@@ -41,13 +41,13 @@ export function TieredGraduatedDemo() {
   const [quantity, setQuantity] = useState(75);
   const [tiers, setTiers] = useState(defaultTiers);
   const [isTaxInclusive, setIsTaxInclusive] = useState(true);
-  const [taxRate, setTaxRate] = useState(19);
+  const [taxRate] = useState(19);
 
   const result = useMemo(() => {
     const item = buildPriceItemDto({
       unitAmountDecimal: '0',
       quantity,
-      pricingModel: 'tiered_graduated',
+      pricingModel: PricingModel.tieredGraduated,
       taxRate,
       isTaxInclusive,
       tiers,
@@ -62,7 +62,7 @@ export function TieredGraduatedDemo() {
     setTiers((prev) =>
       prev.map((t, i) => {
         if (i !== idx) return t;
-        if (field === 'up_to') return { ...t, up_to: value === '' ? null : (Number(value) as any) };
+        if (field === 'up_to') return { ...t, up_to: value === '' ? null : (Number(value) as number) };
         return { ...t, unit_amount_decimal: value, unit_amount: Math.round(Number(value) * 100) };
       }),
     );

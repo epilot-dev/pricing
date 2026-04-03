@@ -35,15 +35,16 @@ export default {
       boxShadow: {
         glow: '0 0 20px rgba(99, 102, 241, 0.15)',
         'glow-lg': '0 0 40px rgba(99, 102, 241, 0.2)',
-        'card': '0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03)',
+        card: '0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03)',
         'card-hover': '0 4px 16px rgba(0,0,0,0.08), 0 0 0 1px rgba(99,102,241,0.08)',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'grid-pattern': 'linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px)',
+        'grid-pattern':
+          'linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px)',
       },
       backgroundSize: {
-        'grid': '24px 24px',
+        grid: '24px 24px',
       },
     },
   },

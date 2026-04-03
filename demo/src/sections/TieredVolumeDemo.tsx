@@ -1,4 +1,4 @@
-import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+import { computeAggregatedAndPriceTotals, PricingModel } from '@epilot/pricing';
 import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
@@ -22,7 +22,7 @@ export function TieredVolumeDemo() {
     const item = buildPriceItemDto({
       unitAmountDecimal: '0',
       quantity,
-      pricingModel: 'tiered_volume',
+      pricingModel: PricingModel.tieredVolume,
       taxRate,
       isTaxInclusive,
       tiers,
@@ -30,8 +30,6 @@ export function TieredVolumeDemo() {
     });
     return computeAggregatedAndPriceTotals([item]);
   }, [quantity, tiers, taxRate, isTaxInclusive]);
-
-  const lineItem = result.items?.[0];
 
   // Determine active tier
   const activeTierIdx = tiers.findIndex((t) => t.up_to === null || quantity <= t.up_to);
@@ -42,7 +40,7 @@ export function TieredVolumeDemo() {
         if (i !== idx) return t;
         if (field === 'up_to') {
           const v = value === '' ? null : Number(value);
-          return { ...t, up_to: v as any };
+          return { ...t, up_to: v as number };
         }
         const numVal = Number(value);
         return {
@@ -184,7 +182,7 @@ const priceItem = {
   _price: {
     unit_amount_decimal: '0',
     unit_amount_currency: 'EUR',
-    pricing_model: 'tiered_volume',
+    pricing_model: '${PricingModel.tieredVolume}',
     is_tax_inclusive: ${isTaxInclusive},
     type: 'one_time',
     tax: [{ rate: ${taxRate}, type: 'VAT' }],

@@ -1,3 +1,4 @@
+import type { Currency } from '@epilot/pricing';
 import { formatAmount, formatAmountFromString, getCurrencySymbol, toIntegerAmount } from '@epilot/pricing';
 import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
@@ -21,7 +22,7 @@ export function CurrencyDemo() {
 
   const formattedAmount = useMemo(() => {
     try {
-      return formatAmount({ amount: intAmount, currency: selectedCurrency as any, locale });
+      return formatAmount({ amount: intAmount, currency: selectedCurrency as Currency, locale });
     } catch {
       return `${selectedCurrency} ${parseFloat(amount).toFixed(2)}`;
     }
@@ -30,7 +31,7 @@ export function CurrencyDemo() {
   // formatAmountFromString demo
   const formattedFromString = useMemo(() => {
     try {
-      return formatAmountFromString({ decimalAmount: amount, currency: selectedCurrency as any, locale });
+      return formatAmountFromString({ decimalAmount: amount, currency: selectedCurrency as Currency, locale });
     } catch {
       return `${selectedCurrency} ${amount}`;
     }
@@ -39,7 +40,7 @@ export function CurrencyDemo() {
   // Symbol
   const symbol = useMemo(() => {
     try {
-      return getCurrencySymbol(selectedCurrency as any, locale);
+      return getCurrencySymbol(selectedCurrency as Currency, locale);
     } catch {
       return selectedCurrency;
     }
@@ -58,8 +59,8 @@ export function CurrencyDemo() {
   const allFormats = useMemo(() => {
     return currencies.map((c) => {
       try {
-        const formatted = formatAmount({ amount: intAmount, currency: c.code as any, locale: c.locale });
-        const sym = getCurrencySymbol(c.code as any, c.locale);
+        const formatted = formatAmount({ amount: intAmount, currency: c.code as Currency, locale: c.locale });
+        const sym = getCurrencySymbol(c.code as Currency, c.locale);
         return { ...c, formatted, symbol: sym };
       } catch {
         return { ...c, formatted: `${c.code} ${parseFloat(amount).toFixed(2)}`, symbol: c.code };

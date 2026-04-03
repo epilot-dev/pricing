@@ -14,7 +14,7 @@ export function GasDemo() {
   const [taxRate] = useState(19);
 
   const result = useMemo(() => {
-    const items: any[] = [];
+    const items: ReturnType<typeof buildPriceItemDto>[] = [];
 
     // Base Price: already in EUR/year -- pass directly
     items.push(

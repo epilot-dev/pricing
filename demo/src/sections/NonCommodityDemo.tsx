@@ -1,4 +1,5 @@
-import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+import { computeAggregatedAndPriceTotals, PricingModel } from '@epilot/pricing';
+import type { CompositePriceItem, PriceItem } from '@epilot/pricing/shared/types';
 import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import {
@@ -16,8 +17,8 @@ interface Product {
   category: string;
   price: string;
   quantity: number;
-  type: 'one_time' | 'recurring';
-  billingPeriod?: string;
+  type: PriceItem['type'];
+  billingPeriod?: PriceItem['billing_period'];
   enabled: boolean;
 }
 
@@ -152,7 +153,7 @@ export function NonCommodityDemo() {
     });
   };
 
-  const updateProduct = (idx: number, field: keyof Product, value: any) => {
+  const updateProduct = (idx: number, field: keyof Product, value: unknown) => {
     setProducts((prev) => prev.map((p, i) => (i === idx ? { ...p, [field]: value } : p)));
   };
 
@@ -172,17 +173,17 @@ export function NonCommodityDemo() {
     const tax = makeTax(taxRate);
 
     // Build a composite price item with price_components
-    const compositeItem: any = {
+    const compositeItem: CompositePriceItem = {
       quantity: 1,
       product_id: 'bundle-product',
       price_id: 'bundle-price',
       is_tax_inclusive: false,
-      pricing_model: 'per_unit',
+      is_composite_price: true,
       taxes: [{ tax }],
       _price: {
         _id: 'bundle-price',
         is_composite_price: true,
-        pricing_model: 'per_unit',
+        pricing_model: PricingModel.perUnit,
         is_tax_inclusive: false,
         unit_amount: 0,
         unit_amount_decimal: '0',
@@ -193,7 +194,7 @@ export function NonCommodityDemo() {
           unit_amount: Math.round(parseFloat(p.price) * 100),
           unit_amount_decimal: p.price,
           unit_amount_currency: 'EUR',
-          pricing_model: 'per_unit',
+          pricing_model: PricingModel.perUnit,
           is_tax_inclusive: false,
           type: p.type,
           billing_period: p.billingPeriod,
@@ -203,7 +204,7 @@ export function NonCommodityDemo() {
         })),
       },
       _product: { name: 'Product Bundle', type: 'product' },
-      price_components: enabled.map((p, i) => ({
+      item_components: enabled.map((p, i) => ({
         _id: `comp-${i}`,
         quantity: p.quantity,
         unit_amount: Math.round(parseFloat(p.price) * 100),
@@ -382,9 +383,7 @@ export function NonCommodityDemo() {
                 <div>
                   <p className="tariff-card-label mb-1">Your Product Bundle</p>
                   <div className="flex items-baseline gap-1">
-                    <span className="tariff-card-price">
-                      {fmtEur(oneTimeCosts)}
-                    </span>
+                    <span className="tariff-card-price">{fmtEur(oneTimeCosts)}</span>
                   </div>
                   {monthlyCosts > 0 && (
                     <p className="text-sm opacity-80 mt-1">+ {fmtEur(monthlyCosts)}/month service</p>
@@ -492,7 +491,7 @@ export function NonCommodityDemo() {
               <div className="mt-4 pt-4 border-t border-gray-100">
                 <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-3">By Recurrence</p>
                 <div className="space-y-2">
-                  {result.total_details?.breakdown?.recurrences?.map((r: any, i: number) => (
+                  {result.total_details?.breakdown?.recurrences?.map((r, i: number) => (
                     <div key={i} className="flex items-center justify-between py-2">
                       <span className={`capitalize ${r.type === 'one_time' ? 'badge-blue' : 'badge-green'}`}>
                         {r.type === 'one_time' ? 'One-time' : r.billing_period}
@@ -516,6 +515,7 @@ export function NonCommodityDemo() {
 // Non-commodity bundle using composite price with price_components
 const bundleItem = {
   quantity: 1,
+  is_composite_price: true,
   _price: {
     is_composite_price: true,
     pricing_model: 'per_unit',
@@ -540,11 +540,12 @@ ${enabledProducts
   .join('\n')}${enabledProducts.length > 4 ? `\n      // ... ${enabledProducts.length - 4} more components` : ''}
     ],
   },
-  price_components: [
+  item_components: [
 ${enabledProducts
   .slice(0, 4)
   .map(
-    (p) => `    { quantity: ${p.quantity}, unit_amount_decimal: '${p.price}', type: '${p.type}'${p.billingPeriod ? `, billing_period: '${p.billingPeriod}'` : ''} },`,
+    (p) =>
+      `    { quantity: ${p.quantity}, unit_amount_decimal: '${p.price}', type: '${p.type}'${p.billingPeriod ? `, billing_period: '${p.billingPeriod}'` : ''} },`,
   )
   .join('\n')}${enabledProducts.length > 4 ? `\n    // ... ${enabledProducts.length - 4} more` : ''}
   ],

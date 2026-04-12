@@ -60,8 +60,9 @@ jobs:
         with:
           publish: pnpm run release:publish
           version: pnpm run release
-          title: "chore: version packages"
-          commit: "chore: version packages"
+          title: "chore: release @epilot/pricing"
+          commit: "chore: release @epilot/pricing"
+          createGithubReleases: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

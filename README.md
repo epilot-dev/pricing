@@ -26,6 +26,27 @@ npm install --save @epilot/pricing
 pnpm add @epilot/pricing
 ```
 
+## Releasing
+
+This project uses [Changesets](https://github.com/changesets/changesets) for versioning and publishing.
+
+### Adding a changeset
+
+When you make a change that should be released, run:
+
+```bash
+pnpm changeset
+```
+
+Follow the prompts to select the semver bump type (`patch`, `minor`, `major`) and describe your change.
+
+### Release workflow
+
+1. Create a feature branch and add your changeset(s) alongside your code changes.
+2. Open a PR to `main` — CI runs tests as usual.
+3. When the PR is merged, the **Release** workflow detects pending changesets and opens a **"Version Packages"** PR that bumps `package.json` version and updates the changelog.
+4. When the Version Packages PR is merged, the Release workflow publishes the new version to npm and creates a git tag.
+
 ## ⚠️ Disclaimer
 
 This library is made available as an open source contribution to the community to ensure that all our clients and integrators can have the flexibility to build their own custom frontends and integrations with our platform [^1].

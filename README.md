@@ -1,4 +1,5 @@
 [![CI/CD](https://github.com/epilot-dev/pricing/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/epilot-dev/pricing/actions/workflows/ci-cd.yml)
+[![npm downloads](https://img.shields.io/npm/dm/@epilot/pricing.svg)](https://www.npmjs.com/package/@epilot/pricing)
 
 # Pricing Library
 

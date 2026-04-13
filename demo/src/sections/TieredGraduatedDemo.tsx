@@ -1,8 +1,8 @@
-import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+import { computeAggregatedAndPriceTotals, PricingModel } from '@epilot/pricing';
 import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
-import { buildPriceItemDto, fmtCents } from '../helpers';
+import { buildPriceItemDto, fmtCents, fmtEur } from '../helpers';
 
 const defaultTiers = [
   { up_to: 10, unit_amount: 5000, unit_amount_decimal: '50.00', flat_fee_amount: 0, flat_fee_amount_decimal: '0' },
@@ -41,13 +41,13 @@ export function TieredGraduatedDemo() {
   const [quantity, setQuantity] = useState(75);
   const [tiers, setTiers] = useState(defaultTiers);
   const [isTaxInclusive, setIsTaxInclusive] = useState(true);
-  const [taxRate, setTaxRate] = useState(19);
+  const [taxRate] = useState(19);
 
   const result = useMemo(() => {
     const item = buildPriceItemDto({
       unitAmountDecimal: '0',
       quantity,
-      pricingModel: 'tiered_graduated',
+      pricingModel: PricingModel.tieredGraduated,
       taxRate,
       isTaxInclusive,
       tiers,
@@ -62,7 +62,7 @@ export function TieredGraduatedDemo() {
     setTiers((prev) =>
       prev.map((t, i) => {
         if (i !== idx) return t;
-        if (field === 'up_to') return { ...t, up_to: value === '' ? null : (Number(value) as any) };
+        if (field === 'up_to') return { ...t, up_to: value === '' ? null : (Number(value) as number) };
         return { ...t, unit_amount_decimal: value, unit_amount: Math.round(Number(value) * 100) };
       }),
     );
@@ -158,7 +158,7 @@ export function TieredGraduatedDemo() {
                   key={i}
                   className={`${tierColors[i]} flex items-center justify-center text-white text-xs font-medium transition-all duration-300`}
                   style={{ width: `${(b.qty / Math.max(totalUnits, 1)) * 100}%` }}
-                  title={`Tier ${b.tier}: ${b.qty} units @ €${b.rate}`}
+                  title={`Tier ${b.tier}: ${b.qty} units @ ${fmtEur(parseFloat(b.rate))}`}
                 >
                   {b.qty > 5 && `${b.qty}u`}
                 </div>
@@ -203,19 +203,17 @@ export function TieredGraduatedDemo() {
 
 const priceItem = {
   quantity: ${quantity},
-  pricing_model: 'tiered_graduated',
-  is_tax_inclusive: ${isTaxInclusive},
   _price: {
     unit_amount_decimal: '0',
     unit_amount_currency: 'EUR',
     pricing_model: 'tiered_graduated',
     is_tax_inclusive: ${isTaxInclusive},
+    type: 'one_time',
     tax: [{ rate: ${taxRate}, type: 'VAT' }],
     tiers: [
-${tiers.map((t) => `      { up_to: ${t.up_to === null ? 'null' : t.up_to}, unit_amount_decimal: '${t.unit_amount_decimal}', flat_fee_amount_decimal: '0' },`).join('\n')}
+${tiers.map((t) => `      { up_to: ${t.up_to === null ? 'null' : t.up_to}, unit_amount: ${t.unit_amount}, unit_amount_decimal: '${t.unit_amount_decimal}', flat_fee_amount_decimal: '0' },`).join('\n')}
     ],
   },
-  taxes: [{ tax: { rate: ${taxRate} } }],
 };
 
 const result = computeAggregatedAndPriceTotals([priceItem]);

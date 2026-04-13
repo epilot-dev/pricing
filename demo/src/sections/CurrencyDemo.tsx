@@ -1,16 +1,11 @@
+import type { Currency } from '@epilot/pricing';
 import { formatAmount, formatAmountFromString, getCurrencySymbol, toIntegerAmount } from '@epilot/pricing';
 import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 
 const currencies = [
   { code: 'EUR', name: 'Euro', locale: 'de-DE' },
-  { code: 'USD', name: 'US Dollar', locale: 'en-US' },
-  { code: 'GBP', name: 'British Pound', locale: 'en-GB' },
   { code: 'CHF', name: 'Swiss Franc', locale: 'de-CH' },
-  { code: 'SEK', name: 'Swedish Krona', locale: 'sv-SE' },
-  { code: 'PLN', name: 'Polish Zloty', locale: 'pl-PL' },
-  { code: 'CZK', name: 'Czech Koruna', locale: 'cs-CZ' },
-  { code: 'DKK', name: 'Danish Krone', locale: 'da-DK' },
 ];
 
 export function CurrencyDemo() {
@@ -27,7 +22,7 @@ export function CurrencyDemo() {
 
   const formattedAmount = useMemo(() => {
     try {
-      return formatAmount({ amount: intAmount, currency: selectedCurrency as any, locale });
+      return formatAmount({ amount: intAmount, currency: selectedCurrency as Currency, locale });
     } catch {
       return `${selectedCurrency} ${parseFloat(amount).toFixed(2)}`;
     }
@@ -36,7 +31,7 @@ export function CurrencyDemo() {
   // formatAmountFromString demo
   const formattedFromString = useMemo(() => {
     try {
-      return formatAmountFromString({ decimalAmount: amount, currency: selectedCurrency as any, locale });
+      return formatAmountFromString({ decimalAmount: amount, currency: selectedCurrency as Currency, locale });
     } catch {
       return `${selectedCurrency} ${amount}`;
     }
@@ -45,7 +40,7 @@ export function CurrencyDemo() {
   // Symbol
   const symbol = useMemo(() => {
     try {
-      return getCurrencySymbol(selectedCurrency as any, locale);
+      return getCurrencySymbol(selectedCurrency as Currency, locale);
     } catch {
       return selectedCurrency;
     }
@@ -64,8 +59,8 @@ export function CurrencyDemo() {
   const allFormats = useMemo(() => {
     return currencies.map((c) => {
       try {
-        const formatted = formatAmount({ amount: intAmount, currency: c.code as any, locale: c.locale });
-        const sym = getCurrencySymbol(c.code as any, c.locale);
+        const formatted = formatAmount({ amount: intAmount, currency: c.code as Currency, locale: c.locale });
+        const sym = getCurrencySymbol(c.code as Currency, c.locale);
         return { ...c, formatted, symbol: sym };
       } catch {
         return { ...c, formatted: `${c.code} ${parseFloat(amount).toFixed(2)}`, symbol: c.code };
@@ -77,8 +72,8 @@ export function CurrencyDemo() {
     <div>
       <h1 className="section-title">Currency & Formatting</h1>
       <p className="section-desc">
-        Multi-currency support with locale-aware formatting. Uses Dinero.js for precise decimal arithmetic and provides
-        utilities for converting between string/integer representations.
+        The epilot platform supports EUR and CHF currencies. Locale-aware formatting uses Dinero.js for precise decimal
+        arithmetic with utilities for converting between string and integer representations.
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

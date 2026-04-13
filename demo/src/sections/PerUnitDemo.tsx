@@ -86,8 +86,6 @@ export function PerUnitDemo() {
               <label className="text-sm font-medium text-gray-700">Currency</label>
               <select value={currency} onChange={(e) => setCurrency(e.target.value)} className="select-field mt-1">
                 <option value="EUR">EUR</option>
-                <option value="USD">USD</option>
-                <option value="GBP">GBP</option>
                 <option value="CHF">CHF</option>
               </select>
             </div>
@@ -150,16 +148,15 @@ export function PerUnitDemo() {
 
 const priceItem = {
   quantity: ${quantity},
-  pricing_model: 'per_unit',
-  is_tax_inclusive: ${isTaxInclusive},
   _price: {
+    unit_amount: ${Math.round(parseFloat(unitPrice) * 100)},
     unit_amount_decimal: '${unitPrice}',
     unit_amount_currency: '${currency}',
     pricing_model: 'per_unit',
     is_tax_inclusive: ${isTaxInclusive},
+    type: 'one_time',
     tax: [{ rate: ${taxRate}, type: 'VAT' }],
   },
-  taxes: [{ tax: { rate: ${taxRate} } }],
 };
 
 const result = computeAggregatedAndPriceTotals([priceItem]);

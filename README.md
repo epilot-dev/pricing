@@ -1,4 +1,4 @@
-[![CI](https://github.com/epilot-dev/pricing/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/epilot-dev/pricing/actions/workflows/ci.yml) [![CodeQL](https://github.com/epilot-dev/pricing/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/epilot-dev/pricing/actions/workflows/codeql.yml)
+[![CI/CD](https://github.com/epilot-dev/pricing/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/epilot-dev/pricing/actions/workflows/ci-cd.yml)
 
 # Pricing Library
 

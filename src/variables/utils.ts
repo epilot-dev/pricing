@@ -203,6 +203,7 @@ export const getUnitAmount = (
     amount: amount || 0,
     currency: item.currency as any,
     locale: i18n.language,
+    enableSubunitDisplay: true,
   });
 };
 
@@ -264,7 +265,7 @@ const getTieredUnitAmount = (
         language,
         descriptionCurrency,
         descriptionTranslationFactory,
-        { showStartsAt: false },
+        { showStartsAt: false, enableSubunitDisplay: true },
         tax,
       )?.split('/')[0]; // remove the unit part as it is not needed
     }
@@ -277,7 +278,7 @@ const getTieredUnitAmount = (
         language,
         descriptionCurrency,
         descriptionTranslationFactory,
-        { showStartsAt: false, showOnRequest: !isUnitAmountApproved },
+        { showStartsAt: false, showOnRequest: !isUnitAmountApproved, enableSubunitDisplay: true },
         tax,
       )?.split('/')[0]; // remove the unit part as it is not needed
     }
@@ -290,7 +291,7 @@ const getTieredUnitAmount = (
         language,
         descriptionCurrency,
         descriptionTranslationFactory,
-        { showStartsAt: false },
+        { showStartsAt: false, enableSubunitDisplay: true },
         tax,
       )?.split('/')[0]; // remove the unit part as it is not needed
     }
@@ -310,6 +311,7 @@ const getGetAgUnitAmount = (item: PriceItem, i18n: I18n, useUnitAmountNet: boole
       amount,
       currency: item.currency as any,
       locale: i18n.language,
+      enableSubunitDisplay: true,
     });
   }
 };

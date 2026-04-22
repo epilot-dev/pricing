@@ -1,14 +1,13 @@
-[![CI](https://github.com/epilot-dev/pricing/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/epilot-dev/pricing/actions/workflows/ci.yml) [![CodeQL](https://github.com/epilot-dev/pricing/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/epilot-dev/pricing/actions/workflows/codeql.yml)
+[![CI/CD](https://github.com/epilot-dev/pricing/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/epilot-dev/pricing/actions/workflows/ci-cd.yml)
+[![npm downloads](https://img.shields.io/npm/dm/@epilot/pricing.svg)](https://www.npmjs.com/package/@epilot/pricing)
 
 # Pricing Library
 
 A library that provides pricing utility operations for Pricing Entities within the epilot 360 Platform, such as calculation of price item totals and aggregated totals. The purpose of this library is to provide support for common pricing concerns to all our APIs, micro-frontends and epilot Journeys.
 
-## Interactive Playground
+## Interactive Playground - WIP
 
 Explore the library's capabilities live in your browser — configure tariffs, bundle products, and see real-time price calculations.
-
-[![epilot Pricing Playground](demo/screenshots/playground-overview.png)](https://docs.epilot.io/pricing-playground/index.html)
 
 [**Open Pricing Playground**](https://docs.epilot.io/pricing-playground/index.html)
 
@@ -27,6 +26,27 @@ npm install --save @epilot/pricing
 ```bash
 pnpm add @epilot/pricing
 ```
+
+## Releasing
+
+This project uses [Changesets](https://github.com/changesets/changesets) for versioning and publishing.
+
+### Adding a changeset
+
+When you make a change that should be released, run:
+
+```bash
+pnpm changeset
+```
+
+Follow the prompts to select the semver bump type (`patch`, `minor`, `major`) and describe your change.
+
+### Release workflow
+
+1. Create a feature branch and add your changeset(s) alongside your code changes.
+2. Open a PR to `main` — CI runs tests as usual.
+3. When the PR is merged, the **Release** workflow detects pending changesets and opens a **"Version Packages"** PR that bumps `package.json` version and updates the changelog.
+4. When the Version Packages PR is merged, the Release workflow publishes the new version to npm and creates a git tag.
 
 ## ⚠️ Disclaimer
 

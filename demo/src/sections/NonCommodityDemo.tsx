@@ -1,4 +1,5 @@
-import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+import { computeAggregatedAndPriceTotals, PricingModel } from '@epilot/pricing';
+import type { CompositePriceItem, PriceItem } from '@epilot/pricing/shared/types';
 import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import {
@@ -9,15 +10,15 @@ import {
   SmartHomeIllustration,
 } from '../components/ProductShowcase';
 import { ResultCard } from '../components/ResultCard';
-import { buildPriceItemDto, fmtCents } from '../helpers';
+import { fmtCents, fmtEur, makeTax } from '../helpers';
 
 interface Product {
   name: string;
   category: string;
   price: string;
   quantity: number;
-  type: 'one_time' | 'recurring';
-  billingPeriod?: string;
+  type: PriceItem['type'];
+  billingPeriod?: PriceItem['billing_period'];
   enabled: boolean;
 }
 
@@ -152,26 +153,14 @@ export function NonCommodityDemo() {
     });
   };
 
-  const updateProduct = (idx: number, field: keyof Product, value: any) => {
+  const updateProduct = (idx: number, field: keyof Product, value: unknown) => {
     setProducts((prev) => prev.map((p, i) => (i === idx ? { ...p, [field]: value } : p)));
   };
 
   const result = useMemo(() => {
-    const items = products
-      .filter((p) => p.enabled)
-      .map((p) =>
-        buildPriceItemDto({
-          unitAmountDecimal: p.price,
-          quantity: p.quantity,
-          type: p.type,
-          billingPeriod: p.billingPeriod,
-          taxRate,
-          isTaxInclusive: false,
-          description: p.name,
-        }),
-      );
+    const enabled = products.filter((p) => p.enabled);
 
-    if (items.length === 0) {
+    if (enabled.length === 0) {
       return {
         amount_subtotal: 0,
         amount_tax: 0,
@@ -181,7 +170,71 @@ export function NonCommodityDemo() {
       };
     }
 
-    return computeAggregatedAndPriceTotals(items);
+    const tax = makeTax(taxRate);
+
+    // Build a composite price item with price_components
+    const compositeItem: CompositePriceItem = {
+      quantity: 1,
+      product_id: 'bundle-product',
+      price_id: 'bundle-price',
+      is_tax_inclusive: false,
+      is_composite_price: true,
+      taxes: [{ tax }],
+      _price: {
+        _id: 'bundle-price',
+        is_composite_price: true,
+        pricing_model: PricingModel.perUnit,
+        is_tax_inclusive: false,
+        unit_amount: 0,
+        unit_amount_decimal: '0',
+        unit_amount_currency: 'EUR',
+        tax: [tax],
+        price_components: enabled.map((p, i) => ({
+          _id: `comp-${i}`,
+          unit_amount: Math.round(parseFloat(p.price) * 100),
+          unit_amount_decimal: p.price,
+          unit_amount_currency: 'EUR',
+          pricing_model: PricingModel.perUnit,
+          is_tax_inclusive: false,
+          type: p.type,
+          billing_period: p.billingPeriod,
+          tax: [tax],
+          description: p.name,
+          _title: p.name,
+        })),
+      },
+      _product: { name: 'Product Bundle', type: 'product' },
+      item_components: enabled.map((p, i) => ({
+        _id: `comp-${i}`,
+        quantity: p.quantity,
+        unit_amount: Math.round(parseFloat(p.price) * 100),
+        unit_amount_decimal: p.price,
+        unit_amount_currency: 'EUR',
+        pricing_model: 'per_unit',
+        is_tax_inclusive: false,
+        type: p.type,
+        billing_period: p.billingPeriod,
+        tax: [tax],
+        description: p.name,
+        _title: p.name,
+        taxes: [{ tax }],
+        _price: {
+          _id: `comp-price-${i}`,
+          unit_amount: Math.round(parseFloat(p.price) * 100),
+          unit_amount_decimal: p.price,
+          unit_amount_currency: 'EUR',
+          pricing_model: 'per_unit',
+          is_tax_inclusive: false,
+          type: p.type,
+          billing_period: p.billingPeriod,
+          tax: [tax],
+          description: p.name,
+          _title: p.name,
+        },
+      })),
+    };
+
+    return computeAggregatedAndPriceTotals([compositeItem]);
   }, [products, taxRate]);
 
   const enabledProducts = products.filter((p) => p.enabled);
@@ -212,11 +265,19 @@ export function NonCommodityDemo() {
 
   return (
     <div>
+      <p className="text-[10px] font-bold text-primary-400 uppercase tracking-widest mb-1">
+        Use Case: Non-Commodity Product Bundles
+      </p>
       <h1 className="section-title">Products & Add-ons</h1>
       <p className="section-desc">
         Build product bundles for your customers — solar panels, wallboxes, heat pumps, and smart home devices. Select
         categories to configure complete packages with one-time and recurring pricing.
       </p>
+
+      <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-700 mb-6">
+        <strong>Note:</strong> The product cards and layout below are illustrative examples only. On the epilot
+        platform, the actual UI depends on the Design configuration and Journey setup configured for each customer.
+      </div>
 
       {/* Product showcase grid — the "journey" visual */}
       <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-4">Select Product Categories</p>
@@ -239,8 +300,8 @@ export function NonCommodityDemo() {
               gradient={cat}
               title={meta.label}
               description={`${catProducts.length} products available`}
-              price={`EUR ${catOneTime.toLocaleString('de-DE', { minimumFractionDigits: 0 })}`}
-              priceLabel={catRecurring > 0 ? `+ EUR ${catRecurring.toFixed(2)}/mo` : 'one-time'}
+              price={`${fmtEur(catOneTime)}`}
+              priceLabel={catRecurring > 0 ? `+ ${fmtEur(catRecurring)}/mo` : 'one-time'}
               features={meta.features}
               tag={enabled ? 'Selected' : undefined}
               tagColor={enabled ? 'bg-emerald-100 text-emerald-700' : undefined}
@@ -320,14 +381,12 @@ export function NonCommodityDemo() {
             <div className="tariff-card-header gradient-primary">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="tariff-card-label mb-1">Your Bundle</p>
+                  <p className="tariff-card-label mb-1">Your Product Bundle</p>
                   <div className="flex items-baseline gap-1">
-                    <span className="tariff-card-price">
-                      EUR {oneTimeCosts.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </span>
+                    <span className="tariff-card-price">{fmtEur(oneTimeCosts)}</span>
                   </div>
                   {monthlyCosts > 0 && (
-                    <p className="text-sm opacity-80 mt-1">+ EUR {monthlyCosts.toFixed(2)}/month service</p>
+                    <p className="text-sm opacity-80 mt-1">+ {fmtEur(monthlyCosts)}/month service</p>
                   )}
                 </div>
                 <div className="text-right">
@@ -358,7 +417,7 @@ export function NonCommodityDemo() {
                             key={cat.category}
                             className={`${colors[cat.category]} transition-all duration-300`}
                             style={{ width: `${(cat.oneTime / oneTimeCosts) * 100}%` }}
-                            title={`${cat.label}: EUR ${cat.oneTime.toFixed(2)}`}
+                            title={`${cat.label}: ${fmtEur(cat.oneTime)}`}
                           />
                         );
                       })}
@@ -388,7 +447,7 @@ export function NonCommodityDemo() {
                                 {p.quantity > 1 && <span className="text-gray-400"> x{p.quantity}</span>}
                               </span>
                               <span className="cost-line-value">
-                                EUR {(parseFloat(p.price) * p.quantity).toFixed(2)}
+                                {fmtEur(parseFloat(p.price) * p.quantity)}
                                 {p.type === 'recurring' && (
                                   <span className="text-emerald-600 text-xs font-semibold ml-1">/mo</span>
                                 )}
@@ -404,12 +463,12 @@ export function NonCommodityDemo() {
               <div className="tariff-card-footer">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-sm text-gray-500">One-time total (net)</span>
-                  <span className="font-extrabold text-gray-900">EUR {oneTimeCosts.toFixed(2)}</span>
+                  <span className="font-extrabold text-gray-900">{fmtEur(oneTimeCosts)}</span>
                 </div>
                 {monthlyCosts > 0 && (
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-500">Monthly total (net)</span>
-                    <span className="font-extrabold text-emerald-600">EUR {monthlyCosts.toFixed(2)}/mo</span>
+                    <span className="font-extrabold text-emerald-600">{fmtEur(monthlyCosts)}/mo</span>
                   </div>
                 )}
               </div>
@@ -432,9 +491,9 @@ export function NonCommodityDemo() {
               <div className="mt-4 pt-4 border-t border-gray-100">
                 <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-3">By Recurrence</p>
                 <div className="space-y-2">
-                  {result.total_details?.breakdown?.recurrences?.map((r: any, i: number) => (
+                  {result.total_details?.breakdown?.recurrences?.map((r, i: number) => (
                     <div key={i} className="flex items-center justify-between py-2">
-                      <span className={r.type === 'one_time' ? 'badge-blue' : 'badge-green'}>
+                      <span className={`capitalize ${r.type === 'one_time' ? 'badge-blue' : 'badge-green'}`}>
                         {r.type === 'one_time' ? 'One-time' : r.billing_period}
                       </span>
                       <span className="font-extrabold text-sm tabular-nums">{fmtCents(r.amount_total)}</span>
@@ -453,29 +512,46 @@ export function NonCommodityDemo() {
           title="Usage"
           code={`import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
 
-// Non-commodity bundle: hardware + services + maintenance
-const items = [
+// Non-commodity bundle using composite price with price_components
+const bundleItem = {
+  quantity: 1,
+  is_composite_price: true,
+  _price: {
+    is_composite_price: true,
+    pricing_model: 'per_unit',
+    is_tax_inclusive: false,
+    unit_amount: 0,
+    unit_amount_decimal: '0',
+    unit_amount_currency: 'EUR',
+    tax: [{ rate: ${taxRate}, type: 'VAT' }],
+    price_components: [
 ${enabledProducts
   .slice(0, 4)
   .map(
-    (p) => `  {
-    quantity: ${p.quantity},
-    _price: {
-      unit_amount_decimal: '${p.price}',
-      unit_amount_currency: 'EUR',
-      pricing_model: 'per_unit',
-      is_tax_inclusive: false,
-      type: '${p.type}',${p.billingPeriod ? `\n      billing_period: '${p.billingPeriod}',` : ''}
-      tax: [{ rate: ${taxRate}, type: 'VAT' }],
-      description: '${p.name}',
-    },
-    taxes: [{ tax: { rate: ${taxRate} } }],
-  },`,
+    (p) => `      {
+        unit_amount: ${Math.round(parseFloat(p.price) * 100)},
+        unit_amount_decimal: '${p.price}',
+        pricing_model: 'per_unit',
+        is_tax_inclusive: false,
+        type: '${p.type}',${p.billingPeriod ? `\n        billing_period: '${p.billingPeriod}',` : ''}
+        description: '${p.name}',
+      },`,
   )
-  .join('\n')}${enabledProducts.length > 4 ? `\n  // ... ${enabledProducts.length - 4} more items` : ''}
-];
+  .join('\n')}${enabledProducts.length > 4 ? `\n      // ... ${enabledProducts.length - 4} more components` : ''}
+    ],
+  },
+  item_components: [
+${enabledProducts
+  .slice(0, 4)
+  .map(
+    (p) =>
+      `    { quantity: ${p.quantity}, unit_amount_decimal: '${p.price}', type: '${p.type}'${p.billingPeriod ? `, billing_period: '${p.billingPeriod}'` : ''} },`,
+  )
+  .join('\n')}${enabledProducts.length > 4 ? `\n    // ... ${enabledProducts.length - 4} more` : ''}
+  ],
+};
 
-const result = computeAggregatedAndPriceTotals(items);
+const result = computeAggregatedAndPriceTotals([bundleItem]);
 // result.amount_total = ${fmtCents(result.amount_total)}`}
         />
       </div>

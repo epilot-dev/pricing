@@ -2,7 +2,7 @@ import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
 import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
-import { buildPriceItemDto, fmtCents } from '../helpers';
+import { buildPriceItemDto, fmtCents, fmtEur } from '../helpers';
 
 export function TaxDemo() {
   const [unitPrice, setUnitPrice] = useState('100.00');
@@ -110,7 +110,7 @@ export function TaxDemo() {
             <span className="text-xs text-gray-500">Price includes tax</span>
           </div>
           <div className="space-y-3">
-            <ResultCard label="Unit Price (what customer sees)" value={`€${unitPrice}`} />
+            <ResultCard label="Unit Price (what customer sees)" value={fmtEur(parseFloat(unitPrice))} />
             <ResultCard label="Net per unit (excluding tax)" value={fmtCents(incItem?.unit_amount)} />
             <ResultCard label="Line Subtotal (Net)" value={fmtCents(inclusiveResult.amount_subtotal)} />
             <ResultCard label="Tax Amount" value={fmtCents(inclusiveResult.amount_tax)} color="amber" />
@@ -134,7 +134,7 @@ export function TaxDemo() {
             <span className="text-xs text-gray-500">Tax added on top</span>
           </div>
           <div className="space-y-3">
-            <ResultCard label="Unit Price (net)" value={`€${unitPrice}`} />
+            <ResultCard label="Unit Price (net)" value={fmtEur(parseFloat(unitPrice))} />
             <ResultCard label="Gross per unit (including tax)" value={fmtCents(excItem?.unit_amount_gross)} />
             <ResultCard label="Line Subtotal (Net)" value={fmtCents(exclusiveResult.amount_subtotal)} />
             <ResultCard label="Tax Amount" value={fmtCents(exclusiveResult.amount_tax)} color="amber" />
@@ -173,7 +173,7 @@ export function TaxDemo() {
             </div>
             <div className="text-sm">
               <p className="font-medium text-gray-700 mb-2">Tax Breakdown:</p>
-              {multiTaxResult.total_details?.breakdown?.taxes?.map((t: any, i: number) => {
+              {multiTaxResult.total_details?.breakdown?.taxes?.map((t, i: number) => {
                 const rate = t.tax?.rate ?? t.rateValue ?? 0;
                 const type = t.tax?.type || 'VAT';
                 return (
@@ -200,22 +200,20 @@ export function TaxDemo() {
 // Tax-inclusive: price already contains tax
 const inclusiveItem = {
   quantity: ${quantity},
-  pricing_model: 'per_unit',
-  is_tax_inclusive: true,
   _price: {
+    unit_amount: ${Math.round(parseFloat(unitPrice) * 100)},
     unit_amount_decimal: '${unitPrice}',
     unit_amount_currency: 'EUR',
     pricing_model: 'per_unit',
     is_tax_inclusive: true,
+    type: 'one_time',
     tax: [{ rate: ${taxRate}, type: 'VAT' }],
   },
-  taxes: [{ tax: { rate: ${taxRate} } }],
 };
 
 // Tax-exclusive: tax is added on top
 const exclusiveItem = {
   ...inclusiveItem,
-  is_tax_inclusive: false,
   _price: { ...inclusiveItem._price, is_tax_inclusive: false },
 };
 

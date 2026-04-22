@@ -3,6 +3,7 @@ export {
   formatAmount,
   formatAmountFromString,
   formatPriceUnit,
+  omitTrailingDecimalZeros,
   parseDecimalValue,
   toIntegerAmount,
   addSeparatorToDineroString,

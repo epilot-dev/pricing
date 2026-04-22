@@ -14,7 +14,7 @@ const energyProducts = [
   {
     id: 'electricity',
     title: 'Electricity Tariffs',
-    desc: 'Single & dual-tariff pricing with Grundpreis, Arbeitspreis, and smart meter support.',
+    desc: 'Single and dual-tariff pricing with base price, work price, and smart meter support.',
     icon: '⚡',
     gradient: 'gradient-electricity',
     price: 'from 28.5 ct/kWh',
@@ -30,10 +30,10 @@ const energyProducts = [
   {
     id: 'house-connection',
     title: 'House Connection',
-    desc: 'Hausanschluss fees with distance-based trench work and multi-utility connections',
+    desc: 'House connection fees with distance-based trench work and multi-utility connections',
     icon: '🏡',
     gradient: 'gradient-house',
-    price: 'from EUR 1,850',
+    price: 'from €1,850.00',
   },
   {
     id: 'non-commodity',
@@ -41,7 +41,7 @@ const energyProducts = [
     desc: 'Solar, wallboxes, heat pumps, and smart home bundles with service contracts',
     icon: '☀️',
     gradient: 'gradient-solar',
-    price: 'Bundles from EUR 899',
+    price: 'Bundles from €899.00',
   },
 ];
 
@@ -50,32 +50,32 @@ const addOnShowcase = [
     title: 'Solar & Battery',
     desc: 'Complete PV systems with battery storage and installation',
     illustration: SolarIllustration,
-    price: 'EUR 12,500',
-    sub: '+ EUR 29.90/mo maintenance',
+    price: '€12,500.00',
+    sub: '+ €29.90/mo maintenance',
     features: ['10 kWp solar system', '10 kWh battery storage', 'Professional installation', 'Maintenance contract'],
   },
   {
     title: 'E-Mobility',
     desc: 'Wallbox charging solutions for home and fleet',
     illustration: WallboxIllustration,
-    price: 'EUR 899',
-    sub: '+ EUR 59/mo charging flat rate',
+    price: '€899.00',
+    sub: '+ €59.00/mo charging flat rate',
     features: ['11 kW wallbox', 'Professional installation', 'Smart charging', 'Monthly flat rate'],
   },
   {
     title: 'Heat Pumps',
     desc: 'Modern heating solutions with smart controls',
     illustration: HeatPumpIllustration,
-    price: 'EUR 15,800',
-    sub: '+ EUR 39.90/mo service',
+    price: '€15,800.00',
+    sub: '+ €39.90/mo service',
     features: ['Air-to-water system', 'Installation included', 'Smart thermostat', 'Service contract'],
   },
   {
     title: 'Smart Home',
     desc: 'Intelligent energy management and automation',
     illustration: SmartHomeIllustration,
-    price: 'EUR 249',
-    sub: 'Energy manager from EUR 499',
+    price: '€249.00',
+    sub: 'Energy manager from €499.00',
     features: ['Smart thermostat', 'Energy monitoring', 'App control', 'Consumption insights'],
   },
 ];
@@ -277,20 +277,19 @@ export function OverviewDemo({ onNavigate }: OverviewDemoProps) {
 
 const priceItem = {
   quantity: 5,
-  pricing_model: 'per_unit',
-  is_tax_inclusive: true,
   _price: {
+    unit_amount: 4999,
     unit_amount_decimal: '49.99',
     unit_amount_currency: 'EUR',
     pricing_model: 'per_unit',
     is_tax_inclusive: true,
+    type: 'one_time',
     tax: [{ rate: 19, type: 'VAT' }],
   },
-  taxes: [{ tax: { rate: 19 } }],
 };
 
 const result = computeAggregatedAndPriceTotals([priceItem]);
-// result.amount_total → 24995 (EUR 249.95)`}
+// result.amount_total → 24995 (€249.95)`}
         />
       </div>
     </div>

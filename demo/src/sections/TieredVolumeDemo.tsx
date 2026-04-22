@@ -1,9 +1,9 @@
-import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+import { computeAggregatedAndPriceTotals, PricingModel } from '@epilot/pricing';
 import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
 import { TierChart } from '../components/TierChart';
-import { buildPriceItemDto, fmtCents } from '../helpers';
+import { buildPriceItemDto, fmtCents, fmtEur } from '../helpers';
 
 const defaultTiers = [
   { up_to: 10, unit_amount: 5000, unit_amount_decimal: '50.00', flat_fee_amount: 0, flat_fee_amount_decimal: '0' },
@@ -22,7 +22,7 @@ export function TieredVolumeDemo() {
     const item = buildPriceItemDto({
       unitAmountDecimal: '0',
       quantity,
-      pricingModel: 'tiered_volume',
+      pricingModel: PricingModel.tieredVolume,
       taxRate,
       isTaxInclusive,
       tiers,
@@ -30,8 +30,6 @@ export function TieredVolumeDemo() {
     });
     return computeAggregatedAndPriceTotals([item]);
   }, [quantity, tiers, taxRate, isTaxInclusive]);
-
-  const lineItem = result.items?.[0];
 
   // Determine active tier
   const activeTierIdx = tiers.findIndex((t) => t.up_to === null || quantity <= t.up_to);
@@ -42,7 +40,7 @@ export function TieredVolumeDemo() {
         if (i !== idx) return t;
         if (field === 'up_to') {
           const v = value === '' ? null : Number(value);
-          return { ...t, up_to: v as any };
+          return { ...t, up_to: v as number };
         }
         const numVal = Number(value);
         return {
@@ -149,7 +147,7 @@ export function TieredVolumeDemo() {
             <TierChart
               bars={chartBars}
               title="Unit Price by Tier (active tier highlighted)"
-              valueFormatter={(v) => `€${v.toFixed(0)}`}
+              valueFormatter={(v) => fmtEur(v)}
             />
           </div>
 
@@ -157,7 +155,10 @@ export function TieredVolumeDemo() {
           <div className="card">
             <h3 className="font-semibold text-gray-900 mb-3">Computed Result</h3>
             <div className="grid grid-cols-2 gap-3">
-              <ResultCard label="Unit Price (selected tier)" value={fmtCents(lineItem?.unit_amount)} />
+              <ResultCard
+                label="Unit Price (selected tier)"
+                value={activeTierIdx >= 0 ? fmtCents(tiers[activeTierIdx].unit_amount) : '-'}
+              />
               <ResultCard label="Quantity" value={quantity} />
               <ResultCard label="Subtotal (Net)" value={fmtCents(result.amount_subtotal)} />
               <ResultCard label="Total (Gross)" value={fmtCents(result.amount_total)} highlight color="green" />
@@ -178,19 +179,17 @@ export function TieredVolumeDemo() {
 
 const priceItem = {
   quantity: ${quantity},
-  pricing_model: 'tiered_volume',
-  is_tax_inclusive: ${isTaxInclusive},
   _price: {
     unit_amount_decimal: '0',
     unit_amount_currency: 'EUR',
-    pricing_model: 'tiered_volume',
+    pricing_model: '${PricingModel.tieredVolume}',
     is_tax_inclusive: ${isTaxInclusive},
+    type: 'one_time',
     tax: [{ rate: ${taxRate}, type: 'VAT' }],
     tiers: [
-${tiers.map((t) => `      { up_to: ${t.up_to === null ? 'null' : t.up_to}, unit_amount_decimal: '${t.unit_amount_decimal}', flat_fee_amount_decimal: '0' },`).join('\n')}
+${tiers.map((t) => `      { up_to: ${t.up_to === null ? 'null' : t.up_to}, unit_amount: ${t.unit_amount}, unit_amount_decimal: '${t.unit_amount_decimal}', flat_fee_amount_decimal: '0' },`).join('\n')}
     ],
   },
-  taxes: [{ tax: { rate: ${taxRate} } }],
 };
 
 const result = computeAggregatedAndPriceTotals([priceItem]);

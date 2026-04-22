@@ -1,4 +1,4 @@
-import { computeAggregatedAndPriceTotals } from '@epilot/pricing';
+import { computeAggregatedAndPriceTotals, PricingModel } from '@epilot/pricing';
 import { useState, useMemo } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import { ResultCard } from '../components/ResultCard';
@@ -21,7 +21,7 @@ export function TieredFlatFeeDemo() {
     const item = buildPriceItemDto({
       unitAmountDecimal: '0',
       quantity,
-      pricingModel: 'tiered_flatfee',
+      pricingModel: PricingModel.tieredFlatFee,
       taxRate,
       isTaxInclusive,
       tiers,
@@ -36,7 +36,7 @@ export function TieredFlatFeeDemo() {
     setTiers((prev) =>
       prev.map((t, i) => {
         if (i !== idx) return t;
-        if (field === 'up_to') return { ...t, up_to: value === '' ? null : (Number(value) as any) };
+        if (field === 'up_to') return { ...t, up_to: value === '' ? null : (Number(value) as number) };
         return { ...t, flat_fee_amount_decimal: value, flat_fee_amount: Math.round(Number(value) * 100) };
       }),
     );
@@ -152,7 +152,7 @@ export function TieredFlatFeeDemo() {
               <ResultCard label="Tax" value={fmtCents(result.amount_tax)} color="amber" />
               <ResultCard label="Total (Gross)" value={fmtCents(result.amount_total)} highlight color="green" />
               <ResultCard
-                label="Effective $/unit"
+                label="Effective cost/unit"
                 value={quantity > 0 ? fmtCents(Math.round((result.amount_total ?? 0) / quantity)) : '-'}
                 color="blue"
               />
@@ -169,19 +169,17 @@ export function TieredFlatFeeDemo() {
 
 const priceItem = {
   quantity: ${quantity},
-  pricing_model: 'tiered_flatfee',
-  is_tax_inclusive: ${isTaxInclusive},
   _price: {
     unit_amount_decimal: '0',
     unit_amount_currency: 'EUR',
-    pricing_model: 'tiered_flatfee',
+    pricing_model: ${PricingModel.tieredFlatFee},
     is_tax_inclusive: ${isTaxInclusive},
+    type: 'one_time',
     tax: [{ rate: ${taxRate}, type: 'VAT' }],
     tiers: [
-${tiers.map((t) => `      { up_to: ${t.up_to === null ? 'null' : t.up_to}, unit_amount_decimal: '0', flat_fee_amount_decimal: '${t.flat_fee_amount_decimal}' },`).join('\n')}
+${tiers.map((t) => `      { up_to: ${t.up_to === null ? 'null' : t.up_to}, unit_amount_decimal: '0', flat_fee_amount: ${t.flat_fee_amount}, flat_fee_amount_decimal: '${t.flat_fee_amount_decimal}' },`).join('\n')}
     ],
   },
-  taxes: [{ tax: { rate: ${taxRate} } }],
 };
 
 const result = computeAggregatedAndPriceTotals([priceItem]);

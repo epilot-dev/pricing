@@ -148,10 +148,6 @@ export const computeCumulativeValue = (
       precision: 2,
       useRealPrecision: false,
     })}${formattedUnit ? `/${formattedUnit}` : ''}`,
-    averageWithPrecision: `${formatAmountFromString({
-      decimalAmount: addSeparatorToDineroString(average),
-      ...formatOptions,
-    })}${formattedUnit ? `/${formattedUnit}` : ''}`,
     subtotal:
       (startsAt ? `${startsAt} ` : '') +
       formatAmountFromString({
@@ -171,10 +167,6 @@ export const computeCumulativeValue = (
       ...formatOptions,
       precision: 2,
       useRealPrecision: false,
-    })}${formattedUnit ? `/${formattedUnit}` : ''}`,
-    subAverageWithPrecision: `${formatAmountFromString({
-      decimalAmount: addSeparatorToDineroString(subAverage!),
-      ...formatOptions,
     })}${formattedUnit ? `/${formattedUnit}` : ''}`,
     breakdown,
   };

@@ -144,7 +144,7 @@ export function getTierDescription(
     return;
   }
 
-  const { showStartsAt = true, enableSubunitDisplay = false, precision = 2 } = options;
+  const { showStartsAt = true, enableSubunitDisplay = false, precision } = options;
   const showUnitAmount =
     (pricingModel === PricingModel.tieredGraduated || pricingModel === PricingModel.tieredVolume) &&
     typeof tier.unit_amount === 'number';
@@ -161,7 +161,7 @@ export function getTierDescription(
     currency,
     locale,
     enableSubunitDisplay,
-    precision,
+    ...(precision !== undefined ? { precision } : { useRealPrecision: true }),
   };
 
   const unitAmountDecimal =

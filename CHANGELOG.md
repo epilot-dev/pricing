@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.6.3
+
+### Patch Changes
+
+- eaa6cb3: Improve tier display string
+
 ## 5.6.2
 
 ### Patch Changes

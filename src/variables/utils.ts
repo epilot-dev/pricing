@@ -207,6 +207,11 @@ export const getUnitAmount = (
   });
 };
 
+export const getDecimalPrecision = (unitAmountDecimal?: string): number => {
+  const dotIndex = unitAmountDecimal?.indexOf('.');
+  return unitAmountDecimal && dotIndex !== undefined && dotIndex !== -1 ? unitAmountDecimal.length - dotIndex - 1 : 2;
+};
+
 const getTieredUnitAmount = (
   item: PriceItemWithParent,
   i18n: I18n,
@@ -248,6 +253,8 @@ const getTieredUnitAmount = (
     item._price.pricing_model as PricingModel,
   );
 
+  const netPrecision = useUnitAmountNet ? getDecimalPrecision(displayableTier?.unit_amount_decimal) : undefined;
+
   const descriptionUnit = '';
   const descriptionCurrency = item.currency as Currency;
   const descriptionTranslationFactory = (key: string) => i18n.t(`table_order.${key}`);
@@ -265,7 +272,7 @@ const getTieredUnitAmount = (
         language,
         descriptionCurrency,
         descriptionTranslationFactory,
-        { showStartsAt: false, enableSubunitDisplay: true },
+        { showStartsAt: false, enableSubunitDisplay: true, precision: netPrecision },
         tax,
       )?.split('/')[0]; // remove the unit part as it is not needed
     }
@@ -278,7 +285,12 @@ const getTieredUnitAmount = (
         language,
         descriptionCurrency,
         descriptionTranslationFactory,
-        { showStartsAt: false, showOnRequest: !isUnitAmountApproved, enableSubunitDisplay: true },
+        {
+          showStartsAt: false,
+          showOnRequest: !isUnitAmountApproved,
+          enableSubunitDisplay: true,
+          precision: netPrecision,
+        },
         tax,
       )?.split('/')[0]; // remove the unit part as it is not needed
     }
@@ -291,7 +303,7 @@ const getTieredUnitAmount = (
         language,
         descriptionCurrency,
         descriptionTranslationFactory,
-        { showStartsAt: false, enableSubunitDisplay: true },
+        { showStartsAt: false, enableSubunitDisplay: true, precision: netPrecision },
         tax,
       )?.split('/')[0]; // remove the unit part as it is not needed
     }

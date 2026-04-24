@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { fixedDiscountCoupon } from '../coupons/__tests__/coupon.fixtures';
 import type { I18n } from '../shared/types';
 import type { PriceItemWithParent } from './types';
-import { getUnitAmount } from './utils';
+import { getDecimalPrecision, getUnitAmount } from './utils';
 
 const mockI18n = {
   t: (key: string, fallback: string) => key || fallback,
@@ -46,5 +46,31 @@ describe('getUnitAmount', () => {
     expect(netAmount).not.toBe(grossAmount);
     expect(netAmount).toBe('663,41\xa0€');
     expect(grossAmount).toBe('789,46\xa0€');
+  });
+});
+
+describe('getDecimalPrecision', () => {
+  it('returns 2 when input is undefined', () => {
+    expect(getDecimalPrecision(undefined)).toBe(2);
+  });
+
+  it('returns 2 when input has no decimal point', () => {
+    expect(getDecimalPrecision('12')).toBe(2);
+  });
+
+  it('returns 2 for a two-decimal string', () => {
+    expect(getDecimalPrecision('12.00')).toBe(2);
+  });
+
+  it('returns 1 for a one-decimal string', () => {
+    expect(getDecimalPrecision('12.5')).toBe(1);
+  });
+
+  it('returns the full precision for a high-precision string', () => {
+    expect(getDecimalPrecision('0.12345')).toBe(5);
+  });
+
+  it('returns the full precision for a high-precision string', () => {
+    expect(getDecimalPrecision('10.12345')).toBe(5);
   });
 });

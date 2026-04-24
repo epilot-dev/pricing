@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.6.5
+
+### Patch Changes
+
+- 5bf57e3: Handle correct precision on net unit amount values
+
 ## 5.6.4
 
 ### Patch Changes

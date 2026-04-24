@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.6.4
+
+### Patch Changes
+
+- 50e9464: Use subunit format on tier details row
+
 ## 5.6.3
 
 ### Patch Changes

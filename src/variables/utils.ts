@@ -445,13 +445,11 @@ export const getFormattedTieredDetails = (
           amount: tierDetails.unit_amount_decimal || 0,
           currency: currency,
           locale,
-          enableSubunitDisplay: true,
         }),
         unit_amount_net: safeFormatAmount({
           amount: tierDetails.unit_amount_net || 0,
           currency: currency,
           locale,
-          enableSubunitDisplay: true,
         }),
         amount_total: safeFormatAmount({
           amount: tierDetails.amount_total || 0,

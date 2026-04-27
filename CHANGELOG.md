@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.6.6
+
+### Patch Changes
+
+- 046bf2e: Include each cashback individually in computation result
+
 ## 5.6.5
 
 ### Patch Changes

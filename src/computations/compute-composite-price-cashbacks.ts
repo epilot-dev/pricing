@@ -1,5 +1,5 @@
 import { getAppliedCompositeCashbackCoupons } from '../coupons/utils';
-import { toDinero, toDineroFromInteger } from '../money/to-dinero';
+import { toDinero } from '../money/to-dinero';
 import { convertCashbackAmountsPrecision } from '../prices/convert-precision';
 import { getSafeQuantity } from '../shared/get-safe-quantity';
 import type { RedeemedPromo, PricingDetails, CompositePriceItem, Dinero, Coupon } from '../shared/types';
@@ -35,18 +35,13 @@ export const computeCompositePriceCashbacks = (
       cashback_amount_decimal: cashbackAmountWithPrecision.cashback_amount_decimal!,
     });
 
-    // Update existing breakdown
-    const cashbackMatch = cashbacks.find((cashback) => cashback.cashback_period === cashbackPeriod);
-
-    if (cashbackMatch) {
-      const cashbackAmountTotal = toDineroFromInteger(cashbackMatch.amount_total);
-      cashbackMatch.amount_total = cashbackAmountTotal.add(toDineroFromInteger(cashback_amount)).getAmount();
-    } else {
-      cashbacks.push({
-        cashback_period: cashbackPeriod,
-        amount_total: cashback_amount,
-      });
-    }
+    // Preserve one entry per applied cashback rather than summing entries
+    // that share the same cashback_period, so consumers can render each
+    // cashback as its own line.
+    cashbacks.push({
+      cashback_period: cashbackPeriod,
+      amount_total: cashback_amount,
+    });
   }
 
   return {

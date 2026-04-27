@@ -5,21 +5,31 @@ import { normalizeTimeFrequencyFromDineroInputValue } from '../time-frequency/no
 /**
  * Recurrence amounts after cashbacks can only be computed
  * after all recurrences and cashbacks have been computed.
+ *
+ * Each cashback entry is subtracted from the recurrence total. Multiple
+ * entries may share the same cashback_period (one entry per applied
+ * cashback coupon) so we accumulate across the full array.
  */
 export const computeRecurrenceAfterCashbackAmounts = (recurrence: RecurrenceAmount, cashbacks: CashbackAmount[]) => {
-  /* Only the first cashback is taken into account */
-  const cashback = cashbacks[0];
-
-  if (!cashback || !recurrence.type) {
+  if (!recurrence.type) {
     return recurrence;
   }
 
-  const cashbackAmount = toDineroFromInteger(cashback.amount_total);
+  const validCashbacks = cashbacks.filter(Boolean);
+
+  if (!validCashbacks.length) {
+    return recurrence;
+  }
+
+  const summedCashback = validCashbacks.reduce(
+    (acc, cashback) => acc.add(toDineroFromInteger(cashback.amount_total)),
+    toDineroFromInteger(0),
+  );
 
   const normalizedCashbackAmount =
     recurrence.type === 'recurring'
-      ? normalizeTimeFrequencyFromDineroInputValue(cashbackAmount, 'yearly', recurrence.billing_period!)
-      : cashbackAmount;
+      ? normalizeTimeFrequencyFromDineroInputValue(summedCashback, 'yearly', recurrence.billing_period!)
+      : summedCashback;
 
   const afterCashbackAmountTotal = toDineroFromInteger(recurrence.amount_total).subtract(normalizedCashbackAmount);
 

@@ -9368,7 +9368,11 @@ export const computedCompositePriceWithComponentsWithCashbacks = {
       cashbacks: [
         {
           cashback_period: '12',
-          amount_total: 2000,
+          amount_total: 1000,
+        },
+        {
+          cashback_period: '12',
+          amount_total: 1000,
         },
       ],
     },
@@ -9771,7 +9775,11 @@ export const computedCompositePriceWithComponentsWithCashbacks = {
           cashbacks: [
             {
               cashback_period: '12',
-              amount_total: 2000,
+              amount_total: 1000,
+            },
+            {
+              cashback_period: '12',
+              amount_total: 1000,
             },
           ],
         },

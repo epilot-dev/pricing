@@ -360,19 +360,14 @@ const recomputeDetailTotals = (
       ? toDineroFromInteger(priceItemToAppend.cashback_amount!)
       : undefined;
 
-  // Cashback totals
+  // Cashback totals — preserve one entry per applied cashback rather than
+  // summing entries that share the same cashback_period, so consumers can
+  // render each cashback as its own line.
   if (priceCashBackAmount && Boolean(coupon)) {
-    const cashbackMatch = cashbacks.find((cashback) => cashback.cashback_period === cashbackPeriod);
-
-    if (cashbackMatch) {
-      const cashbackAmountTotal = toDineroFromInteger(cashbackMatch.amount_total);
-      cashbackMatch.amount_total = cashbackAmountTotal.add(priceCashBackAmount).getAmount();
-    } else {
-      cashbacks.push({
-        cashback_period: cashbackPeriod,
-        amount_total: priceCashBackAmount.getAmount(),
-      });
-    }
+    cashbacks.push({
+      cashback_period: cashbackPeriod,
+      amount_total: priceCashBackAmount.getAmount(),
+    });
   }
 
   // Remove empty cashbacks from the breakdown

@@ -41,6 +41,7 @@ export const computeCompositePriceCashbacks = (
     cashbacks.push({
       cashback_period: cashbackPeriod,
       amount_total: cashback_amount,
+      ...(cashbackCoupon.name && { cashback_name: cashbackCoupon.name }),
     });
   }
 

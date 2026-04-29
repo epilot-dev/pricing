@@ -8103,6 +8103,7 @@ export const computedPriceWithFixedAmountCashbackCoupon = {
         {
           amount_total: 1000,
           cashback_period: '12',
+          cashback_name: 'Summer Cashback',
         },
       ],
     },
@@ -8251,6 +8252,7 @@ export const computedPriceWithFixedAmountCashbackCouponAndPriceMappings = {
         {
           cashback_period: '12',
           amount_total: 2000,
+          cashback_name: 'Summer Cashback',
         },
       ],
     },
@@ -8405,6 +8407,7 @@ export const computedPriceWithPercentageCashbackCoupon = {
         {
           amount_total: 1000,
           cashback_period: '12',
+          cashback_name: 'Summer Cashback',
         },
       ],
     },
@@ -8553,6 +8556,7 @@ export const computedRecurringPriceWithFixedAmountCashbackCoupon = {
         {
           amount_total: 1000,
           cashback_period: '12',
+          cashback_name: 'Summer Cashback',
         },
       ],
     },
@@ -9369,10 +9373,12 @@ export const computedCompositePriceWithComponentsWithCashbacks = {
         {
           cashback_period: '12',
           amount_total: 1000,
+          cashback_name: 'Summer Cashback',
         },
         {
           cashback_period: '12',
           amount_total: 1000,
+          cashback_name: 'Summer Cashback',
         },
       ],
     },
@@ -9776,10 +9782,12 @@ export const computedCompositePriceWithComponentsWithCashbacks = {
             {
               cashback_period: '12',
               amount_total: 1000,
+              cashback_name: 'Summer Cashback',
             },
             {
               cashback_period: '12',
               amount_total: 1000,
+              cashback_name: 'Summer Cashback',
             },
           ],
         },

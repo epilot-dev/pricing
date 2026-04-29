@@ -575,6 +575,7 @@ describe('computeAggregatedAndPriceTotals', () => {
           {
             amount_total: 10000,
             cashback_period: '12',
+            cashback_name: 'Summer Cashback',
           },
         ]);
       });

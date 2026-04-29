@@ -367,6 +367,7 @@ const recomputeDetailTotals = (
     cashbacks.push({
       cashback_period: cashbackPeriod,
       amount_total: priceCashBackAmount.getAmount(),
+      ...(coupon?.name && { cashback_name: coupon.name }),
     });
   }
 

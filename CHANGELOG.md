@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.6.7
+
+### Patch Changes
+
+- 9be4bb1: Include cashback name in cashback breakdown
+
 ## 5.6.6
 
 ### Patch Changes

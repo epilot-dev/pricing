@@ -73,6 +73,7 @@ export const computeCumulativeValue = (
   };
 
   const breakdown: CumulativePriceBreakdownItem[] = [];
+  const taxRate = getTaxValue(tax);
 
   const total = priceTiersForQuantity.reduce(
     (total: Dinero, tier: PriceTier, index: number) => {
@@ -84,17 +85,20 @@ export const computeCumulativeValue = (
         quantity: quantityToSelectTier,
       });
       const tierAmount = toDinero(tier.unit_amount_decimal!, formatOptions.currency).multiply(graduatedQuantity);
+      const tierAmountWithTax = isTaxInclusive ? tierAmount : tierAmount.multiply(1 + taxRate);
+      const unitAmount = toDinero(tier.unit_amount_decimal!, formatOptions.currency);
+      const unitAmountWithTax = isTaxInclusive ? unitAmount : unitAmount.multiply(1 + taxRate);
 
       breakdown.push({
         quantityUsed: `${graduatedQuantity.toLocaleString(formatOptions.locale, {
           maximumFractionDigits: 6,
         })} ${formattedUnit}`,
         tierAmountDecimal: `${formatAmountFromString({
-          decimalAmount: tier.unit_amount_decimal!,
+          decimalAmount: addSeparatorToDineroString(unitAmountWithTax.getAmount().toString()),
           ...formatOptions,
         })}${formattedUnit ? `/${formattedUnit}` : ''}`,
         totalAmountDecimal: formatAmountFromString({
-          decimalAmount: addSeparatorToDineroString(tierAmount.getAmount().toString()),
+          decimalAmount: addSeparatorToDineroString(tierAmountWithTax.getAmount().toString()),
           ...formatOptions,
         }),
       });
@@ -111,7 +115,6 @@ export const computeCumulativeValue = (
       defaultValue: 'Starts at',
     });
 
-  const taxRate = getTaxValue(tax);
   const amountTotal = isTaxInclusive ? total : total.multiply(1 + taxRate);
   const amountSubtotal = isTaxInclusive ? total.divide(1 + taxRate) : total;
 

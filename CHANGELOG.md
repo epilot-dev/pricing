@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.6.8
+
+### Patch Changes
+
+- 9e380f5: Fix computeCumulativeValue to handle tax computation correctly
+
 ## 5.6.7
 
 ### Patch Changes

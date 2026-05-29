@@ -1,4 +1,4 @@
-import { DEFAULT_CURRENCY } from '../money/constants';
+import { DEFAULT_CURRENCY, DEFAULT_INTEGER_AMOUNT_PRECISION } from '../money/constants';
 import { toDineroFromInteger } from '../money/to-dinero';
 import { isOnRequestUnitAmountApproved } from '../prices/approval';
 import {
@@ -27,18 +27,27 @@ import { computeRecurrenceAfterCashbackAmounts } from './compute-recurrence-afte
 
 type ComputeAggregatedAndPriceTotalsOptions = {
   redeemedPromos?: Array<RedeemedPromo>;
+  /**
+   * Precision of the returned integer amount fields (`amount_total`, `unit_amount`, etc.).
+   * Defaults to `DEFAULT_INTEGER_AMOUNT_PRECISION` (2), which rounds to whole cents.
+   * Pass `DECIMAL_PRECISION` (12) to preserve sub-cent precision so consumers can
+   * render rates like `0.1524 EUR/kWh` without losing decimals to monetary rounding.
+   * The `*_decimal` string fields are always preserved at full precision regardless.
+   */
+  precision?: number;
 };
 
 /**
  * Computes all the integer amounts for the price items using the string decimal representation defined on prices unit_amount field.
  * All totals are computed with a decimal precision of DECIMAL_PRECISION.
- * After the calculations the integer amounts are scaled to a precision of 2.
+ * After the calculations the integer amounts are scaled to the requested `precision`
+ * (defaults to `DEFAULT_INTEGER_AMOUNT_PRECISION`, i.e. cents).
  *
  * This function computes both line items and aggregated totals.
  */
 export const computeAggregatedAndPriceTotals = (
   priceItems: PriceItemsDto,
-  { redeemedPromos = [] }: ComputeAggregatedAndPriceTotalsOptions = {},
+  { redeemedPromos = [], precision = DEFAULT_INTEGER_AMOUNT_PRECISION }: ComputeAggregatedAndPriceTotalsOptions = {},
 ): PricingDetails => {
   const initialPricingDetails: Omit<PricingDetails, 'items'> & {
     items: NonNullable<PricingDetails['items']>;
@@ -87,7 +96,7 @@ export const computeAggregatedAndPriceTotals = (
         ...(typeof itemBreakdown?.amount_total === 'number' && {
           amount_total_decimal: toDineroFromInteger(itemBreakdown.amount_total).toUnit().toString(),
         }),
-        item_components: convertPriceComponentsPrecision(compositePriceItemToAppend.item_components ?? [], 2),
+        item_components: convertPriceComponentsPrecision(compositePriceItemToAppend.item_components ?? [], precision),
       };
 
       return {
@@ -123,7 +132,7 @@ export const computeAggregatedAndPriceTotals = (
         ? recomputeDetailTotals(details, price, priceItemToAppend as PriceItem)
         : details;
 
-      const newItem = convertPriceItemPrecision(priceItemToAppend as PriceItem, 2);
+      const newItem = convertPriceItemPrecision(priceItemToAppend as PriceItem, precision);
 
       return {
         ...updatedTotals,
@@ -142,7 +151,7 @@ export const computeAggregatedAndPriceTotals = (
     );
   }
 
-  return convertPricingPrecision(priceDetails, 2);
+  return convertPricingPrecision(priceDetails, precision);
 };
 
 /**

@@ -406,7 +406,6 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
         item.total_details.breakdown.recurrences = recurrences;
       }
 
-      item.unit_amount_net = unitAmountNetFormatted;
       item.unit_amount = unitAmountFormatted;
       item.amount_subtotal = unitAmountSubtotalFormatted;
       item.amount_tax = amountTaxFormatted;
@@ -450,7 +449,7 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
       const quantityDisplayValue = !isCoupon ? getQuantity(item, item.parent_item) : undefined;
 
       const unitAmountDisplayValue = isUnitAmountApproved ? originalUnitAmountFormatted : item.unit_amount;
-      const unitAmountNetDisplayValue = isUnitAmountApproved ? originalUnitAmountNetFormatted : item.unit_amount_net;
+      const unitAmountNetDisplayValue = isUnitAmountApproved ? originalUnitAmountNetFormatted : unitAmountNetFormatted;
       delete item.parent_item;
 
       // build custom variable

@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.6.9
+
+### Patch Changes
+
+- 1d27ed4: Updated the processOrderTableData function to ensure that the line item unit_amount_net remains a raw numeric value, while the formatted value is still accessible under price.unit_amount_net.
+
 ## 5.6.8
 
 ### Patch Changes

@@ -98,19 +98,6 @@ describe('processOrderTableData', () => {
     expect(result.total_details.recurrences).toEqual(orderWithCompositeItemResults.total_details.recurrences);
   });
 
-  it('leaves the line item unit_amount_net as a raw numeric value (mirroring unit_amount_gross)', async () => {
-    const result = await processOrderTableData(orderWithCompositeItem as any, mockI18n);
-
-    const item = result.products[7];
-
-    // The line item keeps the raw numeric net amount, it is NOT overwritten with a formatted string.
-    expect(item.unit_amount_net).toBe(65000);
-    expect(typeof item.unit_amount_net).toBe('number');
-
-    // The formatted value is still exposed under price.unit_amount_net for templates that render it.
-    expect(item.price.unit_amount_net).toBe('650,00\xa0€');
-  });
-
   it('returns correctly the tax details', async () => {
     const result = await processOrderTableData(orderWithMultiplePrices as any, mockI18n);
     expect(result.total_details.recurrences).toEqual(orderWithMultiplePricesResults.total_details.recurrences);

@@ -52,7 +52,10 @@ export const applyDiscounts = (
       priceItem?._price?.billing_period as BillingPeriod,
     );
 
-    afterCashbackAmountTotal = unitAmountGross.subtract(normalizedCashbackAmount);
+    // Deduct the cashback from the line total, not the per-unit gross.
+    const amountTotal = toDineroFromInteger(itemValues.amount_total!, currency);
+
+    afterCashbackAmountTotal = amountTotal.subtract(normalizedCashbackAmount);
 
     return {
       ...itemValues,

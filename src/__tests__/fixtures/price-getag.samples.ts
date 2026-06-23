@@ -1,5 +1,22 @@
-import type { PriceItemDto } from '../../shared/types';
+import type { Coupon, PriceItemDto } from '../../shared/types';
 import { tax19percent } from './tax.samples';
+
+/**
+ * Attaches a coupon to every price component of a composite price, mirroring
+ * how coupons reach components (e.g. GetAG) in a journey. Useful for tests
+ * that exercise coupon/cashback behaviour on composite GetAG prices.
+ */
+export const withCouponOnComponents = (composite: PriceItemDto, coupon: Coupon): PriceItemDto =>
+  ({
+    ...composite,
+    _price: {
+      ...(composite._price as any),
+      price_components: (composite._price as any)?.price_components?.map((component: any) => ({
+        ...component,
+        _coupons: [coupon],
+      })),
+    },
+  }) as PriceItemDto;
 
 export const priceGetAG: PriceItemDto = {
   quantity: 1,

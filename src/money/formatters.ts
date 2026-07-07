@@ -61,17 +61,27 @@ const parseUnknownAmount = (
 ): number => {
   const integerAmount = Number(amount);
 
-  if (isNaN(integerAmount)) {
-    /* Kept here for backwards compatibility */
-    console.error(
-      `formatAmount: expects an integer amount, received this instead "${amount}", fallbacks to zero.`,
-      new Error(`NaN error, unable to cast ${amount} to number.`),
-    );
-
-    return 0;
-  } else {
+  /* Integer amounts pass through unchanged (backwards compatible). */
+  if (Number.isInteger(integerAmount)) {
     return integerAmount;
   }
+
+  /*
+   * Round finite non-integers to the nearest minor unit so dinero never throws
+   * "You must provide an integer.". `|| 0` normalises Math.round's negative zero
+   * (e.g. -0.4 -> -0) to +0 so a zero amount never renders with a spurious minus sign.
+   */
+  if (Number.isFinite(integerAmount)) {
+    return Math.round(integerAmount) || 0;
+  }
+
+  /* NaN / ±Infinity — kept here for backwards compatibility. */
+  console.error(
+    `formatAmount: expects an integer amount, received this instead "${amount}", fallbacks to zero.`,
+    new Error(`NaN error, unable to cast ${amount} to number.`),
+  );
+
+  return 0;
 };
 
 // /**

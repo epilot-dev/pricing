@@ -1,7 +1,7 @@
-import type { Tax } from '@epilot/pricing-client';
+import type { Tax, TaxItem } from '@epilot/pricing-client';
 import { TaxRates } from './constants';
 
-export const getTaxValue = (tax?: Tax): number => {
+export const getTaxValue = (tax?: Tax | TaxItem): number => {
   if (!tax) {
     return TaxRates.nontaxable;
   }

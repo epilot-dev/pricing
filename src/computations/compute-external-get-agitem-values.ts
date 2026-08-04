@@ -1,4 +1,4 @@
-import type { PriceGetAg, Tax } from '@epilot/pricing-client';
+import type { PriceGetAg, Tax, TaxItem } from '@epilot/pricing-client';
 import type { Currency } from 'dinero.js';
 import { toDinero, toDineroFromInteger } from '../money/to-dinero';
 import { MarkupPricingModel, TypeGetAg } from '../prices/constants';
@@ -22,7 +22,7 @@ export const computeExternalGetAGItemValues = ({
   unitAmountMultiplier: number;
   userInput: number;
   externalFeeAmountDecimal?: string;
-  tax?: Tax;
+  tax?: Tax | TaxItem;
 }): PriceItemsTotals => {
   if (externalFeeAmountDecimal === undefined || getAg === undefined || userInput === 0) {
     return {

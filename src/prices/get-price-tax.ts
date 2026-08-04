@@ -1,9 +1,14 @@
+import type { TaxItem } from '@epilot/pricing-client';
 import type { Tax, Price, TaxAmountDto } from '../shared/types';
 
 /**
  * Gets a price tax with the proper tax behavior override
  */
-export const getPriceTax = (applicableTax?: Tax, price?: Price, priceItemTaxes?: TaxAmountDto[]): Tax | undefined => {
+export const getPriceTax = (
+  applicableTax?: Tax | TaxItem,
+  price?: Price,
+  priceItemTaxes?: TaxAmountDto[],
+): Tax | TaxItem | undefined => {
   if (applicableTax) {
     return applicableTax;
   }

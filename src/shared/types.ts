@@ -10,6 +10,7 @@ export type {
   PriceItems,
   PriceItemsDto,
   Tax,
+  TaxItem,
   TaxAmountDto,
   TaxAmount,
   CompositePrice,

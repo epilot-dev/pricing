@@ -1,4 +1,4 @@
-import type { Tax } from '@epilot/pricing-client';
+import type { Tax, TaxItem } from '@epilot/pricing-client';
 import type { Currency, Dinero } from 'dinero.js';
 import { toDinero } from '../money/to-dinero';
 import type { PriceItemsTotals } from '../prices/types';
@@ -15,7 +15,7 @@ export const computePerUnitPriceItemValues = ({
   currency: Currency;
   isTaxInclusive: boolean;
   unitAmountMultiplier: number;
-  tax?: Tax;
+  tax?: Tax | TaxItem;
 }): PriceItemsTotals => {
   const unitAmount = toDinero(unitAmountDecimal, currency);
   const taxRate = getTaxValue(tax);

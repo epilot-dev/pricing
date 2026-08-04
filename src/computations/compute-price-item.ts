@@ -6,6 +6,7 @@ import type {
   RedeemedPromo,
   PriceItem,
   Price,
+  TaxItem,
 } from '@epilot/pricing-client';
 import type { Currency } from 'dinero.js';
 import { isValidCoupon } from '../coupons/guards';
@@ -86,7 +87,7 @@ export const computePriceItem = (
     externalFeeMapping,
     redeemedPromos,
   }: {
-    tax?: Tax;
+    tax?: Tax | TaxItem;
     quantity: number;
     priceMapping?: PriceInputMapping;
     externalFeeMapping?: ExternalFeeMapping;

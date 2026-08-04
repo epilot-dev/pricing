@@ -1,8 +1,8 @@
-import type { CompositePriceItem, PriceItem, Tax } from '@epilot/pricing-client';
+import type { CompositePriceItem, PriceItem, Tax, TaxItem } from '@epilot/pricing-client';
 import { isCompositePriceItem } from '../prices/utils';
 
 export const extractTaxFromPriceItem = (item: PriceItem | CompositePriceItem) => {
-  let tax: Tax | undefined = undefined;
+  let tax: Tax | TaxItem | undefined = undefined;
 
   if (
     isCompositePriceItem(item) &&

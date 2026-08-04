@@ -1,4 +1,4 @@
-import type { PriceTier, Tax, Price } from '@epilot/pricing-client';
+import type { PriceTier, Tax, Price, TaxItem } from '@epilot/pricing-client';
 import type { Currency } from 'dinero.js';
 import { toDineroFromInteger } from '../money/to-dinero';
 import type { PriceItemsTotals } from '../prices/types';
@@ -20,7 +20,7 @@ export const computeTieredGraduatedPriceItemValues = ({
   currency: Currency;
   isTaxInclusive: boolean;
   quantityToSelectTier: number;
-  tax?: Tax;
+  tax?: Tax | TaxItem;
   quantity: number;
   isUsingPriceMappingToSelectTier: boolean;
   unchangedPriceDisplayInJourneys: Price['price_display_in_journeys'];

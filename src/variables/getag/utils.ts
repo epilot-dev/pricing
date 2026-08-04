@@ -2,7 +2,7 @@ import type { PriceGetAg, TariffTypeGetAg } from '@epilot/pricing-client';
 import { formatFeeAmountFromString } from '../../getag/formatters';
 import { DEFAULT_CURRENCY } from '../../money/constants';
 import { toDinero } from '../../money/to-dinero';
-import type { Currency, I18n, Tax } from '../../shared/types';
+import type { Currency, I18n, Tax, TaxItem } from '../../shared/types';
 import { getAmountWithTax } from '../../taxes/get-amount-with-tax';
 import { normalizeValueToFrequencyUnit } from '../../time-frequency/normalizers';
 import type { TimeFrequency } from '../../time-frequency/types';
@@ -77,7 +77,7 @@ const getDetailsFee = ({
   i18n: I18n;
   billingPeriod: TimeFrequency;
   unitPricePeriod: TimeFrequency;
-  tax?: Tax;
+  tax?: Tax | TaxItem;
   variableUnit?: string;
 }): ExternalFeesDetailsFee | undefined => {
   if (!fee) {

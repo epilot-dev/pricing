@@ -18,6 +18,7 @@ import type {
   Price,
   PriceItem,
   Tax,
+  TaxItem,
   Currency,
 } from '../shared/types';
 import { computeCompositePrice } from './compute-composite-price';
@@ -28,6 +29,13 @@ import { computeRecurrenceAfterCashbackAmounts } from './compute-recurrence-afte
 type ComputeAggregatedAndPriceTotalsOptions = {
   redeemedPromos?: Array<RedeemedPromo>;
 };
+
+/**
+ * TaxItem (an ad-hoc tax with no backing entity) has no _id — unlike Tax, it
+ * can't be shared/deduplicated across price items by identity, only by rate.
+ */
+const getTaxId = (tax?: Tax | TaxItem | Partial<Tax>): string | undefined =>
+  tax && '_id' in tax ? tax._id : undefined;
 
 /**
  * Computes all the integer amounts for the price items using the string decimal representation defined on prices unit_amount field.
@@ -161,9 +169,10 @@ const recomputeDetailTotals = (
    * itemRateValue is only used for outdated prices, not migrated yet
    */
   const itemRateValue = priceItemToAppend.taxes?.[0]?.rateValue;
+  const itemTaxId = getTaxId(itemTax);
   const tax = taxes.find(
     (item) =>
-      (item.tax?._id && itemTax?._id && item.tax?._id === itemTax?._id) ||
+      (item.tax?._id && itemTaxId && item.tax?._id === itemTaxId) ||
       item.tax?.rate === itemTax?.rate ||
       item.tax?.rate === itemRateValue,
   );
@@ -218,8 +227,8 @@ const recomputeDetailTotals = (
 
     if (tax.tax && itemTax) {
       // Populates missing data in deprecated taxes
-      if (!tax.tax._id && itemTax._id) {
-        tax.tax._id = itemTax._id;
+      if (!tax.tax._id && itemTaxId) {
+        tax.tax._id = itemTaxId;
       }
 
       if (!tax.tax.type && itemTax.type) {
@@ -227,10 +236,10 @@ const recomputeDetailTotals = (
       }
     }
   } else if (itemTax) {
-    const { _id, type, rate } = itemTax;
+    const { type, rate } = itemTax;
     taxes.push({
       tax: {
-        ...(_id && { _id }),
+        ...(itemTaxId && { _id: itemTaxId }),
         ...(type && { type }),
         rate,
       },

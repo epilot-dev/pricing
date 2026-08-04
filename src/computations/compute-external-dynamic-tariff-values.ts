@@ -1,4 +1,4 @@
-import type { PriceDynamicTariff, Tax } from '@epilot/pricing-client';
+import type { PriceDynamicTariff, Tax, TaxItem } from '@epilot/pricing-client';
 import type { Currency } from 'dinero.js';
 import { toDinero } from '../money/to-dinero';
 import { ModeDynamicTariff } from '../prices/constants';
@@ -19,7 +19,7 @@ export const computeExternalDynamicTariffValues = ({
   isTaxInclusive: boolean;
   unitAmountMultiplier: number;
   externalFeeAmountDecimal?: string;
-  tax?: Tax;
+  tax?: Tax | TaxItem;
 }): PriceItemsTotals => {
   if (externalFeeAmountDecimal === undefined || dynamicTariff === undefined) {
     return {

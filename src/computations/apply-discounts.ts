@@ -1,3 +1,4 @@
+import type { TaxItem } from '@epilot/pricing-client';
 import { isCashbackCoupon, isFixedValueCoupon, isPercentageCoupon } from '../coupons/guards';
 import { toDineroFromInteger, toDinero } from '../money/to-dinero';
 import { PricingModel } from '../prices/constants';
@@ -21,7 +22,7 @@ export const applyDiscounts = (
     currency: Currency;
     isTaxInclusive: boolean;
     unitAmountMultiplier: number;
-    tax?: Tax;
+    tax?: Tax | TaxItem;
     coupon: Coupon;
   },
 ): PriceItemsTotals => {

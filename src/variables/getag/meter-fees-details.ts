@@ -1,5 +1,5 @@
 import type { Currency } from 'dinero.js';
-import type { Tax } from '../../shared/types';
+import type { Tax, TaxItem } from '../../shared/types';
 import type { I18n } from '../../shared/types';
 import type { TimeFrequency } from '../../time-frequency/types';
 import type { ExternalFeesMetadata, ExternalFeesDetails, ExternalFeesDetailsGroup } from '../types';
@@ -12,7 +12,7 @@ export const processMeterFeesDetails = (
   i18n: I18n,
   billingPeriod: TimeFrequency,
   unitPricePeriod: TimeFrequency,
-  tax?: Tax,
+  tax?: Tax | TaxItem,
   variableUnit?: string,
 ) => {
   if (!result.groups) {

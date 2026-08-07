@@ -314,18 +314,27 @@ const getTieredUnitAmount = (
 };
 
 const getGetAgUnitAmount = (item: PriceItem, i18n: I18n, useUnitAmountNet: boolean) => {
-  const amount = useUnitAmountNet
-    ? item.unit_amount_net || 0
-    : ((item.is_tax_inclusive ?? item._price?.is_tax_inclusive) ? item.unit_amount_gross : item.unit_amount_net) || 0;
+  if (item._price?.is_composite_price) return;
 
-  if (!item._price?.is_composite_price) {
-    return safeFormatAmount({
-      amount,
-      currency: item.currency as any,
-      locale: i18n.language,
-      enableSubunitDisplay: true,
-    });
+  let amount;
+  if (item._price?.get_ag?.type === 'work_price') {
+    amount = useUnitAmountNet
+      ? item.unit_amount_net_decimal || '0'
+      : ((item.is_tax_inclusive ?? item._price?.is_tax_inclusive)
+          ? item.unit_amount_gross_decimal
+          : item.unit_amount_net_decimal) || '0';
+  } else {
+    amount = useUnitAmountNet
+      ? item.unit_amount_net || 0
+      : ((item.is_tax_inclusive ?? item._price?.is_tax_inclusive) ? item.unit_amount_gross : item.unit_amount_net) || 0;
   }
+
+  return safeFormatAmount({
+    amount,
+    currency: item.currency as any,
+    locale: i18n.language,
+    enableSubunitDisplay: true,
+  });
 };
 
 export const getSafeAmount = (value: unknown) =>

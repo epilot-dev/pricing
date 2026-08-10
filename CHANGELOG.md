@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.7.2
+
+### Patch Changes
+
+- ecc5e54: Support TaxItem (an ad-hoc tax rate with no backing entity) alongside Tax wherever a tax object is accepted or returned, following the @epilot/pricing-client bump that introduced it. Ad-hoc/custom line items with no product or price reference can now be taxed without a full Tax entity.
+
 ## 5.7.1
 
 ### Patch Changes

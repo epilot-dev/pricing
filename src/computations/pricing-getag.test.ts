@@ -1,4 +1,4 @@
-import type { PriceItem, PriceItemDto } from '@epilot/pricing-client';
+import type { CompositePriceItem, PriceItem, PriceItemDto } from '@epilot/pricing-client';
 import { describe, expect, it } from 'vitest';
 import {
   compositePriceGetAG,
@@ -8,7 +8,9 @@ import {
   priceGetAG,
   priceTieredFlatFeeGetAG,
   priceTieredVolumeGetAG,
+  withCouponOnComponents,
 } from '../__tests__/fixtures/price-getag.samples';
+import { percentageCashbackCoupon, percentageDiscountCoupon } from '../coupons/__tests__/coupon.fixtures';
 import { computeAggregatedAndPriceTotals } from './compute-totals';
 
 describe('GetAG - computeAggregatedAndPriceTotals', () => {
@@ -676,6 +678,54 @@ describe('GetAG - computeAggregatedAndPriceTotals', () => {
             }),
           );
         });
+      });
+    });
+  });
+
+  describe('when a coupon is applied to GetAG components', () => {
+    describe('percentage cashback', () => {
+      it('does not produce a negative after-cashback total for work prices (regression)', () => {
+        const result = computeAggregatedAndPriceTotals([
+          withCouponOnComponents(compositePriceGetAG, percentageCashbackCoupon),
+        ]);
+
+        const components = (result.items?.[0] as CompositePriceItem)?.item_components;
+        const basePriceComponent = components?.[0];
+        const workPriceComponent = components?.[1];
+
+        // Base price component: amount_total === unit gross, so the value was already correct.
+        expect(basePriceComponent?.amount_total).toBe(1538);
+        expect(basePriceComponent?.cashback_amount).toBe(154);
+        expect(basePriceComponent?.after_cashback_amount_total).toBe(1525);
+
+        // Work price component: amount_total = per-unit gross × consumption.
+        // Previously after_cashback was computed from the tiny per-unit gross
+        // (≈ 24) minus the whole cashback, yielding a negative total (-177).
+        // It must now be derived from the line total instead: 24144 - 201 = 23943.
+        expect(workPriceComponent?.amount_total).toBe(24144);
+        expect(workPriceComponent?.cashback_amount).toBe(2414);
+        expect(workPriceComponent?.after_cashback_amount_total).toBe(23943);
+        expect(workPriceComponent?.after_cashback_amount_total).toBeGreaterThan(0);
+      });
+    });
+
+    describe('percentage discount', () => {
+      it('keeps before-discount totals above the discounted totals for GetAG components', () => {
+        const result = computeAggregatedAndPriceTotals([
+          withCouponOnComponents(compositePriceGetAG, percentageDiscountCoupon),
+        ]);
+
+        const components = (result.items?.[0] as CompositePriceItem)?.item_components;
+        const workPriceComponent = components?.[1];
+
+        // before_discount (24144) stays above the discounted total (18108).
+        expect(workPriceComponent?.before_discount_amount_total).toBe(24144);
+        expect(workPriceComponent?.amount_total).toBe(18108);
+        expect(workPriceComponent?.discount_amount).toBe(6036);
+
+        const recurrence = result.total_details?.breakdown?.recurrences?.[0];
+        expect(recurrence?.before_discount_amount_total).toBe(25682);
+        expect(recurrence?.amount_total).toBe(19262);
       });
     });
   });

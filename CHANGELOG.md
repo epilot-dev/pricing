@@ -1,5 +1,19 @@
 # Change Log
 
+## 5.8.0
+
+### Minor Changes
+
+- 99bc437: Migrate from `@epilot/pricing-client` to `@epilot/sdk`.
+
+  The peer dependency on `@epilot/pricing-client` is replaced by `@epilot/sdk` (`^2.18.31`), and all types are now imported from `@epilot/sdk/pricing`. Consumers must install `@epilot/sdk` instead of `@epilot/pricing-client`.
+
+  The legacy `PriceTierEnhanced` type (removed from the OpenAPI spec and absent from the SDK) is now defined and exported by this package directly.
+
+### Patch Changes
+
+- ecc5e54: Support TaxItem (an ad-hoc tax rate with no backing entity) alongside Tax wherever a tax object is accepted or returned, following the @epilot/pricing-client bump that introduced it. Ad-hoc/custom line items with no product or price reference can now be taxed without a full Tax entity.
+
 ## 5.7.1
 
 ### Patch Changes

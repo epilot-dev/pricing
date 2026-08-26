@@ -1,4 +1,4 @@
-import type { TaxItem } from '@epilot/pricing-client';
+import type { TaxItem } from '@epilot/sdk/pricing';
 import { isCashbackCoupon, isFixedValueCoupon, isPercentageCoupon } from '../coupons/guards';
 import { toDineroFromInteger, toDinero } from '../money/to-dinero';
 import { PricingModel } from '../prices/constants';

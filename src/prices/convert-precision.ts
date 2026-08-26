@@ -1,4 +1,4 @@
-import type { CashbackAmount, PriceGetAg, TaxAmount, TaxAmountBreakdown } from '@epilot/pricing-client';
+import type { CashbackAmount, PriceGetAg, TaxAmount, TaxAmountBreakdown } from '@epilot/sdk/pricing';
 import { toDineroFromInteger } from '../money/to-dinero';
 import { PricingModel } from '../prices/constants';
 import type {

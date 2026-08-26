@@ -1,5 +1,5 @@
 import type { Currency, TimeFrequency } from '@epilot/pricing';
-import type { CompositePriceItem, PriceItem } from '@epilot/pricing-client';
+import type { CompositePriceItem, PriceItem } from '@epilot/sdk/pricing';
 import { formatPriceUnit } from '../../money/formatters';
 import type { I18n } from '../../shared/types';
 import { extractTaxFromPriceItem } from '../../taxes/extract-tax-from-price';

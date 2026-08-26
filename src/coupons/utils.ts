@@ -1,4 +1,4 @@
-import type { CompositePriceItem, Coupon, RedeemedPromo } from '@epilot/pricing-client';
+import type { CompositePriceItem, Coupon, RedeemedPromo } from '@epilot/sdk/pricing';
 import { isCashbackCoupon, isPercentageCoupon, isFixedValueCoupon } from './guards';
 
 const getTimestamp = (dateString?: string): number => {

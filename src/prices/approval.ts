@@ -1,4 +1,4 @@
-import type { PriceItem, CompositePriceItem, Price } from '@epilot/pricing-client';
+import type { PriceItem, CompositePriceItem, Price } from '@epilot/sdk/pricing';
 import { isCompositePriceItem } from './utils';
 
 /**

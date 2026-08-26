@@ -1,4 +1,4 @@
-import type { CompositePriceItemDto } from '@epilot/pricing-client';
+import type { CompositePriceItemDto } from '@epilot/sdk/pricing';
 import { describe, expect, it } from 'vitest';
 import * as samples from '../__tests__/fixtures/price.samples';
 import * as results from '../__tests__/fixtures/pricing.results';

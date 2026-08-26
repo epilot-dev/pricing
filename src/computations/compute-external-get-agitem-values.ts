@@ -1,4 +1,4 @@
-import type { PriceGetAg, Tax, TaxItem } from '@epilot/pricing-client';
+import type { PriceGetAg, Tax, TaxItem } from '@epilot/sdk/pricing';
 import type { Currency } from 'dinero.js';
 import { toDinero, toDineroFromInteger } from '../money/to-dinero';
 import { MarkupPricingModel, TypeGetAg } from '../prices/constants';

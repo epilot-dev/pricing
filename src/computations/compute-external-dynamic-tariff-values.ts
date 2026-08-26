@@ -1,4 +1,4 @@
-import type { PriceDynamicTariff, Tax, TaxItem } from '@epilot/pricing-client';
+import type { PriceDynamicTariff, Tax, TaxItem } from '@epilot/sdk/pricing';
 import type { Currency } from 'dinero.js';
 import { toDinero } from '../money/to-dinero';
 import { ModeDynamicTariff } from '../prices/constants';

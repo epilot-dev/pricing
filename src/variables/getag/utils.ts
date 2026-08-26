@@ -1,4 +1,4 @@
-import type { PriceGetAg, TariffTypeGetAg } from '@epilot/pricing-client';
+import type { PriceGetAg, TariffTypeGetAg } from '@epilot/sdk/pricing';
 import { formatFeeAmountFromString } from '../../getag/formatters';
 import { DEFAULT_CURRENCY } from '../../money/constants';
 import { toDinero } from '../../money/to-dinero';

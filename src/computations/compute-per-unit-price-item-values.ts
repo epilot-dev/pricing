@@ -1,4 +1,4 @@
-import type { Tax, TaxItem } from '@epilot/pricing-client';
+import type { Tax, TaxItem } from '@epilot/sdk/pricing';
 import type { Currency, Dinero } from 'dinero.js';
 import { toDinero } from '../money/to-dinero';
 import type { PriceItemsTotals } from '../prices/types';

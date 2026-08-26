@@ -1,4 +1,4 @@
-import type { CompositePriceItem, PriceGetAg, PriceItem, TariffTypeGetAg } from '@epilot/pricing-client';
+import type { CompositePriceItem, PriceGetAg, PriceItem, TariffTypeGetAg } from '@epilot/sdk/pricing';
 import { describe, expect, it } from 'vitest';
 import { extractGetAgConfig } from './extract-config';
 

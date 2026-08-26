@@ -1,5 +1,5 @@
 ---
-"@epilot/pricing": major
+"@epilot/pricing": minor
 ---
 
 Migrate from `@epilot/pricing-client` to `@epilot/sdk`.

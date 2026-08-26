@@ -1,4 +1,4 @@
-import type { Tax, TaxItem } from '@epilot/pricing-client';
+import type { Tax, TaxItem } from '@epilot/sdk/pricing';
 import { TaxRates } from './constants';
 
 export const getTaxValue = (tax?: Tax | TaxItem): number => {

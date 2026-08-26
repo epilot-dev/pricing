@@ -6,7 +6,7 @@ import type {
   Price,
   CompositePriceItem,
   TaxAmountDto,
-} from '@epilot/pricing-client';
+} from '@epilot/sdk/pricing';
 import { DEFAULT_CURRENCY } from '../money/constants';
 import { toDinero } from '../money/to-dinero';
 import { PricingModel } from '../prices/constants';

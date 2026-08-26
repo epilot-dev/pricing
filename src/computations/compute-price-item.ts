@@ -7,7 +7,7 @@ import type {
   PriceItem,
   Price,
   TaxItem,
-} from '@epilot/pricing-client';
+} from '@epilot/sdk/pricing';
 import type { Currency } from 'dinero.js';
 import { isValidCoupon } from '../coupons/guards';
 import { getCouponOrder, getRedeemedPromoCouponIds } from '../coupons/utils';

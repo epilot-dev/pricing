@@ -1,4 +1,4 @@
-import type { PriceItemDto } from '@epilot/pricing-client';
+import type { PriceItemDto } from '@epilot/sdk/pricing';
 import { describe, expect, it } from 'vitest';
 import {
   compositePriceDynamicManual,

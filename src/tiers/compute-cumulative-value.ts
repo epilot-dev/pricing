@@ -1,4 +1,4 @@
-import type { PriceTier, Tax } from '@epilot/pricing-client';
+import type { PriceTier, Tax } from '@epilot/sdk/pricing';
 import type { Currency, Dinero } from 'dinero.js';
 import { DEFAULT_LOCALE } from '../money/constants';
 import { DEFAULT_CURRENCY } from '../money/constants';

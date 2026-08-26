@@ -1,4 +1,4 @@
-import type { Coupon } from '@epilot/pricing-client';
+import type { Coupon } from '@epilot/sdk/pricing';
 import type { Currency } from 'dinero.js';
 import type { RemoveIndexSignature } from '../shared/type-utils';
 

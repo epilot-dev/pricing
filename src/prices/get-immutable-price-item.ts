@@ -1,4 +1,4 @@
-import type { PriceItem, CompositePriceItem, PricingDetails } from '@epilot/pricing-client';
+import type { PriceItem, CompositePriceItem, PricingDetails } from '@epilot/sdk/pricing';
 import { isValidCoupon } from '../coupons/guards';
 import { toDinero } from '../money/to-dinero';
 

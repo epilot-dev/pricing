@@ -1,4 +1,4 @@
-import type { TaxItem } from '@epilot/pricing-client';
+import type { TaxItem } from '@epilot/sdk/pricing';
 import type { Tax, Price, TaxAmountDto } from '../shared/types';
 
 /**

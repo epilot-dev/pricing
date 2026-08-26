@@ -6,7 +6,7 @@ import type {
   Product,
   RecurrenceAmount,
   RecurrenceAmountWithTax,
-} from '@epilot/pricing-client';
+} from '@epilot/sdk/pricing';
 
 export type PriceItemWithParent =
   | (PriceItem & { parent_item: CompositePriceItem })

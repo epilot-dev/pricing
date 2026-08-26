@@ -1,4 +1,4 @@
-import type { PriceGetAg, TariffTypeGetAg } from '@epilot/pricing-client';
+import type { PriceGetAg, TariffTypeGetAg } from '@epilot/sdk/pricing';
 import { describe, expect, it, vi } from 'vitest';
 import { tax19percent } from '../../__tests__/fixtures/tax.samples';
 import type { Currency, I18n } from '../../shared/types';

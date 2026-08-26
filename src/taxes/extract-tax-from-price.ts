@@ -1,4 +1,4 @@
-import type { CompositePriceItem, PriceItem, Tax, TaxItem } from '@epilot/pricing-client';
+import type { CompositePriceItem, PriceItem, Tax, TaxItem } from '@epilot/sdk/pricing';
 import { isCompositePriceItem } from '../prices/utils';
 
 export const extractTaxFromPriceItem = (item: PriceItem | CompositePriceItem) => {

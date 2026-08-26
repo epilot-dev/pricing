@@ -1,4 +1,4 @@
-import type { Price, RecurrenceAmount, RecurrenceAmountWithTax, Tax } from '@epilot/pricing-client';
+import type { Price, RecurrenceAmount, RecurrenceAmountWithTax, Tax } from '@epilot/sdk/pricing';
 
 export const getPriceRecurrence = (price: Price | undefined, recurrences: RecurrenceAmount[]) => {
   if (price?.type === 'recurring') {

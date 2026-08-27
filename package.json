@@ -67,13 +67,13 @@
     "dinero.js": "^1.9.1"
   },
   "peerDependencies": {
-    "@epilot/sdk": "^2.18.31",
+    "@epilot/sdk": "^2.19.3",
     "i18next": "^25.1.2"
   },
   "devDependencies": {
     "@changesets/cli": "^2.30.0",
     "@epilot/eslint-config": "^3.0.5",
-    "@epilot/sdk": "^2.18.31",
+    "@epilot/sdk": "^2.19.3",
     "@types/dinero.js": "^1.9.4",
     "@vitest/coverage-v8": "^1.6.1",
     "concurrently": "^9.1.2",

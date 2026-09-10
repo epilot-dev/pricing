@@ -23,7 +23,8 @@ export type GetTieredUnitAmountOptions = {
 
 export type ExternalFeesMetadata = {
   billing_period: string;
-  inputs: {
+  /** Inputs the price was computed with. */
+  inputs?: {
     consumptionHT?: number;
     consumptionNT?: number;
     type?: 'power' | 'gas';

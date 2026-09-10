@@ -69,10 +69,54 @@ describe('processExternalFeesDetails', () => {
     expect(markups.markup_procurement).toMatchObject({ amount: '5.00 cents/kWh', amount_yearly: '-' });
   });
 
-  it('falls back to the power fee set when inputs.type is missing', () => {
-    const result = processExternalFeesDetails(item, metadataWithoutInputs, 'EUR' as Currency, i18n, 'kWh');
+  it('uses the power fee set when the breakdown carries power-only keys', () => {
+    const powerMetadata: ExternalFeesMetadata = {
+      ...metadataWithoutInputs,
+      breakdown: {
+        ...metadataWithoutInputs.breakdown,
+        variable: { ...metadataWithoutInputs.breakdown.variable, power_tax: { amount: 1, amount_decimal: '0.01' } },
+      },
+    } as ExternalFeesMetadata;
 
-    expect(result.groups?.['other_fees'].fees).toHaveProperty('concession');
+    const result = processExternalFeesDetails(item, powerMetadata, 'EUR' as Currency, i18n, 'kWh');
+
+    expect(result.groups?.['other_fees'].fees).toHaveProperty('power_tax');
     expect(result.groups?.['other_fees'].fees).not.toHaveProperty('gas_tax');
+  });
+
+  it('uses the gas fee set when inputs is missing but the breakdown is a gas compute result', () => {
+    // Order OR-2143 (org 16582003): composite "Strom" price with get_ag.category "power",
+    // but the fee metadata attached at checkout is the gas compute result and has no `inputs`.
+    const gasFee = { amount: 1, amount_decimal: '0.01', unit_amount: 1, unit_amount_decimal: '0.01' };
+    const gasMetadata: ExternalFeesMetadata = {
+      billing_period: 'monthly',
+      breakdown: {
+        static: {
+          basic_fee: { amount: 67, amount_decimal: '0.67' },
+          invoice_fee: { amount: 0, amount_decimal: '0' },
+          maintenance_fee: { amount: 67, amount_decimal: '0.67' },
+          metering_reading_fee: { amount: 33, amount_decimal: '0.33' },
+        },
+        variable: {
+          concession: gasFee,
+          grid_fee: gasFee,
+          performance: gasFee,
+          co2: gasFee,
+          control_energy: gasFee,
+          neutrality_charge: gasFee,
+          gas_tax: gasFee,
+          gas_storage: gasFee,
+          gas_conversion_charge: gasFee,
+        },
+        variable_ht: {},
+      },
+    } as ExternalFeesMetadata;
+
+    const result = processExternalFeesDetails(item, gasMetadata, 'EUR' as Currency, i18n, 'kWh');
+
+    expect(result.groups?.['other_fees'].fees).toHaveProperty('gas_tax');
+    expect(result.groups?.['other_fees'].fees).toHaveProperty('co2');
+    expect(result.groups?.['other_fees'].fees).not.toHaveProperty('power_tax');
+    expect(result.groups?.['meter_fees'] ?? result.groups?.['network_operating_fees']).toBeDefined();
   });
 });

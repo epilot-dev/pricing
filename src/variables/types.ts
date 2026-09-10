@@ -23,7 +23,12 @@ export type GetTieredUnitAmountOptions = {
 
 export type ExternalFeesMetadata = {
   billing_period: string;
-  inputs: {
+  /**
+   * Client-side annotation of the GetAG compute request. The pricing API never
+   * returns it, so it is absent whenever the price item was not built by the
+   * Journey renderer (e.g. carts submitted through the public API).
+   */
+  inputs?: {
     consumptionHT?: number;
     consumptionNT?: number;
     type?: 'power' | 'gas';

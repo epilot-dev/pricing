@@ -53,9 +53,9 @@ export const processExternalFeesDetails = (
     i18n,
     billingPeriod,
     unitPricePeriod,
+    feesType,
     tax,
     formattedUnit,
-    feesType,
   );
 
   processMeterFeesDetails(
@@ -76,9 +76,9 @@ export const processExternalFeesDetails = (
     i18n,
     billingPeriod,
     unitPricePeriod,
+    feesType,
     tax,
     formattedUnit,
-    feesType,
   );
 
   processExternalDisplayFeesDetails(result as ExternalFeesDetails);

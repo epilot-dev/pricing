@@ -84,9 +84,9 @@ describe('processExternalFeesDetails', () => {
     expect(result.groups?.['other_fees'].fees).not.toHaveProperty('gas_tax');
   });
 
-  it('uses the gas fee set when inputs is missing but the breakdown is a gas compute result', () => {
-    // Order OR-2143 (org 16582003): composite "Strom" price with get_ag.category "power",
-    // but the fee metadata attached at checkout is the gas compute result and has no `inputs`.
+  it('follows the getag category, not the breakdown, when inputs is missing', () => {
+    // Seen in production: a `category: 'power'` price whose attached metadata is the gas compute
+    // result, with no `inputs`. The category decides, so the gas fees are dropped.
     const gasFee = { amount: 1, amount_decimal: '0.01', unit_amount: 1, unit_amount_decimal: '0.01' };
     const gasMetadata: ExternalFeesMetadata = {
       billing_period: 'monthly',
@@ -114,9 +114,13 @@ describe('processExternalFeesDetails', () => {
 
     const result = processExternalFeesDetails(item, gasMetadata, 'EUR' as Currency, i18n, 'kWh');
 
-    expect(result.groups?.['other_fees'].fees).toHaveProperty('gas_tax');
-    expect(result.groups?.['other_fees'].fees).toHaveProperty('co2');
-    expect(result.groups?.['other_fees'].fees).not.toHaveProperty('power_tax');
+    const otherFees = result.groups?.['other_fees'].fees as Record<string, unknown>;
+
+    expect(otherFees['gas_tax']).toBeUndefined();
+    expect(otherFees['co2']).toBeUndefined();
+    expect(Object.keys(otherFees)).toEqual(
+      expect.arrayContaining(['concession', 'chp', 'extra_charge', 'offshore_liability_fee', 'power_tax']),
+    );
     expect(result.groups?.['meter_fees'] ?? result.groups?.['network_operating_fees']).toBeDefined();
   });
 });

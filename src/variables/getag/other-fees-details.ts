@@ -3,7 +3,7 @@ import type { Tax, TaxItem } from '../../shared/types';
 import type { I18n } from '../../shared/types';
 import type { TimeFrequency } from '../../time-frequency/types';
 import type { ExternalFeesMetadata, ExternalFeesDetails, ExternalFeesDetailsGroup } from '../types';
-import { resolveExternalFeesType, type ExternalFeesType } from './resolve-fees-type';
+import type { ExternalFeesType } from './resolve-fees-type';
 import { getDetailsFee } from './utils';
 
 export const processOtherFeesDetails = (
@@ -13,12 +13,10 @@ export const processOtherFeesDetails = (
   i18n: I18n,
   billingPeriod: TimeFrequency,
   unitPricePeriod: TimeFrequency,
+  type: ExternalFeesType,
   tax?: Tax | TaxItem,
   variableUnit?: string,
-  feesType?: ExternalFeesType,
 ) => {
-  const type = feesType ?? resolveExternalFeesType(externalFeesMetadata);
-
   if (!result.groups) {
     result.groups = {};
   }

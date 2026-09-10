@@ -15,7 +15,9 @@ const metadata = (
     breakdown: { static: {}, variable: {}, variable_ht: {}, ...breakdown },
   }) as ExternalFeesMetadata;
 
-/** Shape of the pricing API gas compute result, as seen on order OR-2143 (org 16582003). */
+const itemWithGetAg = (getAg: Record<string, unknown>) => ({ get_ag: getAg }) as unknown as PriceItem;
+
+/** Shape of the pricing API gas compute result. */
 const gasBreakdown: Partial<ExternalFeesMetadata['breakdown']> = {
   static: { basic_fee: fee, invoice_fee: fee, maintenance_fee: fee, metering_reading_fee: fee },
   variable: {
@@ -38,58 +40,76 @@ const powerBreakdown: Partial<ExternalFeesMetadata['breakdown']> = {
 
 describe('resolveExternalFeesType', () => {
   it('uses inputs.type when the journey attached it', () => {
-    expect(resolveExternalFeesType(metadata(powerBreakdown, { type: 'gas' }))).toBe('gas');
-    expect(resolveExternalFeesType(metadata(gasBreakdown, { type: 'power' }))).toBe('power');
+    expect(resolveExternalFeesType(metadata(powerBreakdown, { type: 'gas' }), itemWithGetAg({}))).toBe('gas');
+    expect(resolveExternalFeesType(metadata(gasBreakdown, { type: 'power' }), itemWithGetAg({}))).toBe('power');
   });
 
-  it('derives gas from gas-only breakdown keys when inputs is missing', () => {
-    expect(resolveExternalFeesType(metadata(gasBreakdown))).toBe('gas');
-  });
+  describe('when inputs.type is missing', () => {
+    it('uses the getag category of a work_price item', () => {
+      const item = itemWithGetAg({
+        category: 'gas',
+        consumption_type: 'household',
+        tariff_type: 'HT',
+        type: 'work_price',
+        markup_amount: 11,
+        markup_amount_decimal: '0.1054',
+      });
 
-  it('derives gas from gas-only static keys alone', () => {
-    expect(resolveExternalFeesType(metadata({ static: { basic_fee: fee, invoice_fee: fee } }))).toBe('gas');
-  });
-
-  it('derives power from power-only breakdown keys when inputs is missing', () => {
-    expect(resolveExternalFeesType(metadata(powerBreakdown))).toBe('power');
-  });
-
-  it('derives power from the HT/NT network fee keys', () => {
-    expect(resolveExternalFeesType(metadata({ variable: { power_kwh_ht: fee, power_kwh_nt: fee } }))).toBe('power');
-  });
-
-  it('ignores inputs without a valid type and falls through to the breakdown', () => {
-    expect(resolveExternalFeesType(metadata(gasBreakdown, { consumptionHT: 1000 }))).toBe('gas');
-  });
-
-  describe('when the breakdown only has commodity-agnostic keys', () => {
-    const agnostic = metadata({ static: { basic_fee: fee }, variable: { concession: fee } });
-
-    it('falls back to the getag category of a simple price item', () => {
-      const item = { get_ag: { type: 'work_price', tariff_type: 'HT', category: 'gas' } } as unknown as PriceItem;
-
-      expect(resolveExternalFeesType(agnostic, item)).toBe('gas');
+      expect(resolveExternalFeesType(metadata(powerBreakdown), item)).toBe('gas');
     });
 
-    it('falls back to the getag category of a composite price component', () => {
+    it('uses the getag category of a base_price item', () => {
+      const item = itemWithGetAg({ category: 'gas', consumption_type: 'household', type: 'base_price' });
+
+      expect(resolveExternalFeesType(metadata(powerBreakdown), item)).toBe('gas');
+    });
+
+    it('uses the getag category even when get_ag omits the optional type', () => {
+      const item = itemWithGetAg({ category: 'gas', consumption_type: 'household' });
+
+      expect(resolveExternalFeesType(metadata(powerBreakdown), item)).toBe('gas');
+    });
+
+    it('uses the getag category of the first composite component that carries one', () => {
       const item = {
         is_composite_price: true,
         item_components: [
+          { _id: 'no-getag-component' },
           { get_ag: { type: 'base_price', category: 'gas' } },
           { get_ag: { type: 'work_price', tariff_type: 'HT', category: 'gas' } },
         ],
       } as unknown as CompositePriceItem;
 
-      expect(resolveExternalFeesType(agnostic, item)).toBe('gas');
+      expect(resolveExternalFeesType(metadata(powerBreakdown), item)).toBe('gas');
     });
 
-    it('defaults to power when nothing else is known', () => {
-      expect(resolveExternalFeesType(agnostic)).toBe('power');
-      expect(resolveExternalFeesType(agnostic, {} as PriceItem)).toBe('power');
+    it('ignores inputs without a valid type', () => {
+      const item = itemWithGetAg({ category: 'gas', type: 'work_price', tariff_type: 'HT' });
+
+      expect(resolveExternalFeesType(metadata(gasBreakdown, { consumptionHT: 1000 }), item)).toBe('gas');
+    });
+
+    /** Seen in production: a `category: 'power'` price carrying a gas compute result. */
+    it('follows the getag category even when the breakdown disagrees with it', () => {
+      const item = itemWithGetAg({ category: 'power', type: 'work_price', tariff_type: 'HT' });
+
+      expect(resolveExternalFeesType(metadata(gasBreakdown), item)).toBe('power');
+    });
+  });
+
+  describe('when the item carries no getag category', () => {
+    it('defaults to power', () => {
+      expect(resolveExternalFeesType(metadata(gasBreakdown), {} as PriceItem)).toBe('power');
+      expect(resolveExternalFeesType(metadata(powerBreakdown), itemWithGetAg({}))).toBe('power');
+      expect(resolveExternalFeesType(metadata(gasBreakdown), { is_composite_price: true } as CompositePriceItem)).toBe(
+        'power',
+      );
     });
   });
 
   it('tolerates a missing breakdown entirely', () => {
-    expect(resolveExternalFeesType({ billing_period: 'monthly' } as ExternalFeesMetadata)).toBe('power');
+    const item = itemWithGetAg({ category: 'gas', type: 'work_price', tariff_type: 'HT' });
+
+    expect(resolveExternalFeesType({ billing_period: 'monthly' } as ExternalFeesMetadata, item)).toBe('gas');
   });
 });

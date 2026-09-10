@@ -70,6 +70,15 @@ describe('resolveExternalFeesType', () => {
       expect(resolveExternalFeesType(metadata(powerBreakdown), item)).toBe('gas');
     });
 
+    it('uses a composite component category even when the component omits the optional type', () => {
+      const item = {
+        is_composite_price: true,
+        item_components: [{ get_ag: { category: 'gas', consumption_type: 'household' } }],
+      } as unknown as CompositePriceItem;
+
+      expect(resolveExternalFeesType(metadata(powerBreakdown), item)).toBe('gas');
+    });
+
     it('uses the getag category of the first composite component that carries one', () => {
       const item = {
         is_composite_price: true,

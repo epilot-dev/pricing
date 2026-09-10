@@ -23,7 +23,12 @@ export type GetTieredUnitAmountOptions = {
 
 export type ExternalFeesMetadata = {
   billing_period: string;
-  inputs: {
+  /**
+   * Consumption inputs the price was computed with.
+   * Only attached by the journey app; orders created through other channels
+   * (360 cockpit, public API, pre-2024 journeys) may not carry it.
+   */
+  inputs?: {
     consumptionHT?: number;
     consumptionNT?: number;
     type?: 'power' | 'gas';

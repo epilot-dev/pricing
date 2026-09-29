@@ -8,6 +8,7 @@ import {
   DEFAULT_LOCALE,
   DEFAULT_SUBUNIT_FORMAT,
   GENERIC_UNIT_DISPLAY_LABEL,
+  MAX_REAL_PRECISION_DISPLAY,
   MAX_SUPPORTED_FORMAT_PRECISION,
 } from './constants';
 import { getCurrencySymbol } from './get-currency-symbol';
@@ -134,12 +135,15 @@ function getPrecisionAndFormatFromStringAmount({
   shouldDisplayAsCents: boolean;
 }) {
   if (useRealPrecision) {
-    const [, decimalNumbers] = decimalAmount.split('.');
+    const [integerNumbers, rawDecimalNumbers] = decimalAmount.split('.');
+    // Trailing zeros carry no precision, e.g. 8.970000000000 should be displayed as 8,97
+    const decimalNumbers = rawDecimalNumbers?.replace(/0+$/, '');
 
     const precisionFromLength = getPrecisionFromDecimalNumbersLength(decimalNumbers, shouldDisplayAsCents);
-    const amountPrecision = shouldDisplayAsCents
-      ? Math.min(precisionFromLength, MAX_SUPPORTED_FORMAT_PRECISION)
-      : precisionFromLength;
+    const isBelowOne = Math.abs(Number(integerNumbers)) === 0;
+    const maxPrecision =
+      shouldDisplayAsCents || isBelowOne ? MAX_SUPPORTED_FORMAT_PRECISION : MAX_REAL_PRECISION_DISPLAY;
+    const amountPrecision = Math.min(precisionFromLength, maxPrecision);
     const precisionToFormat = '0'.repeat(amountPrecision);
     const amountFormat = DEFAULT_FORMAT.replace('.00', `.${precisionToFormat}`);
 

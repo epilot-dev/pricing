@@ -19,6 +19,11 @@ export const DEFAULT_SUBUNIT = CURRENCIES_SUBUNITS[DEFAULT_CURRENCY];
 export const DECIMAL_PRECISION = 12;
 export const DEFAULT_INTEGER_AMOUNT_PRECISION = 2;
 export const MAX_SUPPORTED_FORMAT_PRECISION = 6;
+/**
+ * Max decimal places displayed for amounts >= 1 when using real precision.
+ * Amounts below 1 (e.g. per kWh prices) are capped at MAX_SUPPORTED_FORMAT_PRECISION instead.
+ */
+export const MAX_REAL_PRECISION_DISPLAY = 4;
 export const DEFAULT_FORMAT = '$0,0.00';
 export const DEFAULT_SUBUNIT_FORMAT = '$0,0';
 export const DEFAULT_LOCALE = 'de';

@@ -277,77 +277,24 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
       let unitAmountNetFormatted = originalUnitAmountNetFormatted;
       let unitAmountFormatted = originalUnitAmountFormatted;
 
-      let unitAmountSubtotal;
+      const formatItemAmount = (amount: number) =>
+        safeFormatAmount({ amount, currency: item.currency, locale: i18n.language });
 
-      if (isItemContainingDiscountCoupon) {
-        unitAmountSubtotal = (item as PriceItem).before_discount_amount_subtotal ?? 0;
-      } else if (isDiscountCoupon) {
-        unitAmountSubtotal = -((item as PriceItem).discount_amount_net ?? 0);
-      } else if (isCashbackCoupon) {
-        unitAmountSubtotal = 0;
-      } else {
-        unitAmountSubtotal = (item as PriceItem).amount_subtotal ?? 0;
-      }
-
-      let amountTax;
-
-      if (isItemContainingDiscountCoupon) {
-        amountTax = (item as PriceItem).before_discount_tax_amount ?? 0;
-      } else if (isDiscountCoupon) {
-        amountTax = -((item as PriceItem).tax_discount_amount ?? 0);
-      } else if (isCashbackCoupon) {
-        amountTax = 0;
-      } else {
-        amountTax = (item as PriceItem).amount_tax ?? 0;
-      }
-
-      let amountTotal;
-
-      if (isItemContainingDiscountCoupon) {
-        amountTotal = (item as PriceItem).before_discount_amount_total ?? 0;
-      } else if (isDiscountCoupon) {
-        amountTotal = -((item as PriceItem).discount_amount ?? 0);
-      } else if (isCashbackCoupon) {
-        if (isCompositePrice(item)) {
-          // for composite prices we can have multiple cashback coupons
-          // we need to find the one that belongs to the item of the current coupon product item
-          amountTotal = -(
-            (item as CompositePriceItem)._coupons?.find((coupon: Coupon) => coupon._id === couponId)?.cashback_amount ??
-            0
-          );
-        } else {
-          amountTotal = -((item as PriceItem).cashback_amount ?? 0);
-        }
-      } else {
-        amountTotal = (item as PriceItem).amount_total ?? 0;
-      }
-
-      let unitAmountSubtotalFormatted = safeFormatAmount({
-        amount: unitAmountSubtotal,
-        currency: item.currency,
-        locale: i18n.language,
+      const lineItemAmounts = getLineItemAmounts(item, {
+        couponId,
+        isDiscountCoupon,
+        isCashbackCoupon,
+        isItemContainingDiscountCoupon,
       });
 
-      let amountTaxFormatted = safeFormatAmount({
-        amount: amountTax,
-        currency: item.currency,
-        locale: i18n.language,
-      });
-
-      let amountTotalFormatted = safeFormatAmount({
-        amount: amountTotal,
-        currency: item.currency,
-        locale: i18n.language,
-      });
+      let unitAmountSubtotalFormatted = formatItemAmount(lineItemAmounts.amountSubtotal);
+      let amountTaxFormatted = formatItemAmount(lineItemAmounts.amountTax);
+      let amountTotalFormatted = formatItemAmount(lineItemAmounts.amountTotal);
 
       if (!isUnitAmountApproved || item.is_composite_price) {
         // Format total tax
         if (item.total_details) {
-          item.total_details.amount_tax = safeFormatAmount({
-            amount: item.total_details.amount_tax || 0,
-            currency: item.currency,
-            locale: i18n.language,
-          });
+          item.total_details.amount_tax = formatItemAmount(item.total_details.amount_tax || 0);
         }
 
         // Format recurrence taxes
@@ -484,36 +431,14 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
           long_description: item._price?.long_description,
           unit_amount: isCashbackCoupon ? '' : unitAmountDisplayValue || '',
           unit_amount_net: isCashbackCoupon ? '' : unitAmountNetDisplayValue || '',
-          amount_subtotal: isUnitAmountApproved
-            ? safeFormatAmount({
-                amount: item.amount_subtotal || 0,
-                currency: item.currency,
-                locale: i18n.language,
-              })
-            : item.amount_subtotal,
-          amount_total: isUnitAmountApproved
-            ? safeFormatAmount({
-                amount: item.amount_total || 0,
-                currency: item.currency,
-                locale: i18n.language,
-              })
-            : item.amount_total,
+          amount_subtotal: isUnitAmountApproved ? formatItemAmount(item.amount_subtotal || 0) : item.amount_subtotal,
+          amount_total: isUnitAmountApproved ? formatItemAmount(item.amount_total || 0) : item.amount_total,
           tax: {
             rate: isUnitAmountApproved ? getTaxRate(item, i18n) : i18n.t('table_order.show_as_on_request'),
-            amount: safeFormatAmount({
-              amount: item.amount_tax,
-              currency: item.currency,
-              locale: i18n.language,
-            }),
+            amount: formatItemAmount(item.amount_tax),
           },
           tax_rate: !isCoupon ? getTaxRate(item, i18n) : undefined,
-          amount_tax: isUnitAmountApproved
-            ? safeFormatAmount({
-                amount: item.amount_tax,
-                currency: item.currency,
-                locale: i18n.language,
-              })
-            : item.amount_tax,
+          amount_tax: isUnitAmountApproved ? formatItemAmount(item.amount_tax) : item.amount_tax,
           price_display_in_journeys: i18n.t(item._price?.price_display_in_journeys),
           billing_period:
             item?.type === 'recurring' || item._price?.type === 'recurring'
@@ -543,27 +468,68 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
     delete data.prices;
     delete data.price;
 
-    data.amount_total = safeFormatAmount({
-      amount: data.amount_total || 0,
-      currency: data.currency,
-      locale: i18n.language,
-    });
-    data.amount_subtotal = safeFormatAmount({
-      amount: data.amount_subtotal || 0,
-      currency: data.currency,
-      locale: i18n.language,
-    });
+    data.amount_total = formatAmount(data.amount_total || 0);
+    data.amount_subtotal = formatAmount(data.amount_subtotal || 0);
 
     if (data.total_details?.amount_tax) {
-      data.total_details.amount_tax = safeFormatAmount({
-        amount: data.total_details.amount_tax || 0,
-        currency: data.currency,
-        locale: i18n.language,
-      });
+      data.total_details.amount_tax = formatAmount(data.total_details.amount_tax || 0);
     }
   }
 
   return data;
+};
+
+/**
+ * Picks the subtotal, tax and total to display for a line item:
+ * - items containing a discount coupon show their amounts before the discount
+ * - discount coupon lines show the (negative) discount amounts
+ * - cashback coupon lines only show the (negative) cashback as total
+ */
+const getLineItemAmounts = (
+  item: PriceItem | CompositePriceItem,
+  {
+    couponId,
+    isDiscountCoupon,
+    isCashbackCoupon,
+    isItemContainingDiscountCoupon,
+  }: {
+    couponId: string | undefined;
+    isDiscountCoupon: boolean;
+    isCashbackCoupon: boolean;
+    isItemContainingDiscountCoupon: boolean;
+  },
+): { amountSubtotal: number; amountTax: number; amountTotal: number } => {
+  if (isItemContainingDiscountCoupon) {
+    return {
+      amountSubtotal: item.before_discount_amount_subtotal ?? 0,
+      amountTax: item.before_discount_tax_amount ?? 0,
+      amountTotal: item.before_discount_amount_total ?? 0,
+    };
+  }
+
+  if (isDiscountCoupon) {
+    return {
+      amountSubtotal: -(item.discount_amount_net ?? 0),
+      amountTax: -(item.tax_discount_amount ?? 0),
+      amountTotal: -(item.discount_amount ?? 0),
+    };
+  }
+
+  if (isCashbackCoupon) {
+    // for composite prices we can have multiple cashback coupons
+    // we need to find the one that belongs to the item of the current coupon product item
+    const cashbackAmount = isCompositePrice(item)
+      ? item._coupons?.find((coupon: Coupon) => coupon._id === couponId)?.cashback_amount
+      : item.cashback_amount;
+
+    return { amountSubtotal: 0, amountTax: 0, amountTotal: -(cashbackAmount ?? 0) };
+  }
+
+  return {
+    amountSubtotal: item.amount_subtotal ?? 0,
+    amountTax: item.amount_tax ?? 0,
+    amountTotal: item.amount_total ?? 0,
+  };
 };
 
 const getFormattedCouponDescription = (

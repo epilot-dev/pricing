@@ -15,7 +15,7 @@ import type {
 /**
  * Converts an integer amount from DECIMAL_PRECISION to the given precision.
  */
-export const convertIntegerPrecision = (amount: number, precision: number): number =>
+const convertIntegerPrecision = (amount: number, precision: number): number =>
   toDineroFromInteger(amount).convertPrecision(precision).getAmount();
 
 /**

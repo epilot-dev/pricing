@@ -1,7 +1,7 @@
 import { formatAmount, formatAmountFromString, formatPriceUnit } from '../money/formatters';
 import { PricingModel } from '../prices/constants';
 import { isVariablePriceItem } from '../prices/is-variable-price';
-import { isCompositePrice, isTieredPricingModel } from '../prices/utils';
+import { isCompositePriceItem, isTieredPricingModel } from '../prices/utils';
 import { isTruthy } from '../shared/is-truthy';
 import type {
   Currency,
@@ -142,7 +142,7 @@ export const unitAmountApproved = (item: PriceItemWithParent): boolean => {
 
   const isHiddenPriceApproved = item.on_request_approved || item.parent_item?.on_request_approved;
 
-  if (isCompositePrice(item)) {
+  if (isCompositePriceItem(item)) {
     const hasNonHiddenComponent = !findHiddenComponent(item);
 
     return Boolean((hasNonHiddenComponent && hasNonHiddenPrice) || isHiddenPriceApproved);
@@ -372,7 +372,7 @@ export const getPriceDisplayInJourneys = (
     return itemDisplayType;
   }
 
-  if (isCompositePrice(priceItem)) {
+  if (isCompositePriceItem(priceItem)) {
     return findHiddenComponentDisplayInJourney(priceItem);
   } else {
     const parentDisplayType = getPriceDisplayType((priceItem as PriceItemWithParent).parent_item?._price);

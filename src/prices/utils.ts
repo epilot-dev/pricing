@@ -25,11 +25,6 @@ export const isCompositePriceItemDto = (
   priceItem: PriceItemDto | CompositePriceItemDto,
 ): priceItem is CompositePriceItemDto => hasCompositePrice(priceItem);
 
-/**
- * Alias of isCompositePriceItem
- */
-export const isCompositePrice = isCompositePriceItem;
-
 export const isTieredPricingModel = (pricingModel: string | undefined): boolean =>
   pricingModel === PricingModel.tieredVolume ||
   pricingModel === PricingModel.tieredGraduated ||

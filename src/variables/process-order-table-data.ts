@@ -2,7 +2,7 @@ import type { Currency } from 'dinero.js';
 import { formatPriceUnit } from '../money/formatters';
 import { getRecurrencesWithEstimatedPrices } from '../prices/get-recurrences-with-estimated-prices';
 import { isVariablePrice, isVariablePriceItem } from '../prices/is-variable-price';
-import { isCompositePrice, isTieredPricingModel } from '../prices/utils';
+import { isCompositePriceItem, isTieredPricingModel } from '../prices/utils';
 import { isTruthy } from '../shared/is-truthy';
 import type {
   I18n,
@@ -373,7 +373,7 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
 
       if (item.external_fees_metadata) {
         const unit =
-          isCompositePrice(item) && Array.isArray(item._price?.price_components)
+          isCompositePriceItem(item) && Array.isArray(item._price?.price_components)
             ? item._price?.price_components.find((component: Price) => isVariablePrice(component) && component.unit)
                 ?.unit
             : item._price?.unit;
@@ -518,7 +518,7 @@ const getLineItemAmounts = (
   if (isCashbackCoupon) {
     // for composite prices we can have multiple cashback coupons
     // we need to find the one that belongs to the item of the current coupon product item
-    const cashbackAmount = isCompositePrice(item)
+    const cashbackAmount = isCompositePriceItem(item)
       ? item._coupons?.find((coupon: Coupon) => coupon._id === couponId)?.cashback_amount
       : item.cashback_amount;
 

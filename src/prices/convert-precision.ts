@@ -15,13 +15,13 @@ import type {
 /**
  * Converts an integer amount from DECIMAL_PRECISION to the given precision.
  */
-const convertIntegerPrecision = (amount: number, precision: number): number =>
+export const convertIntegerPrecision = (amount: number, precision: number): number =>
   toDineroFromInteger(amount).convertPrecision(precision).getAmount();
 
 /**
  * Converts an integer amount with DECIMAL_PRECISION to its decimal string representation, e.g. 10.5
  */
-const toDecimalString = (amount: number): string => toDineroFromInteger(amount).toUnit().toString();
+export const toDecimalString = (amount: number): string => toDineroFromInteger(amount).toUnit().toString();
 
 /**
  * Optional price item amounts which, when set, are converted and accompanied by a `<field>_decimal` value.

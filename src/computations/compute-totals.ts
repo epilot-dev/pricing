@@ -5,6 +5,7 @@ import {
   convertPriceComponentsPrecision,
   convertPriceItemPrecision,
   convertPricingPrecision,
+  toDecimalString,
 } from '../prices/convert-precision';
 import { getImmutablePriceItem } from '../prices/get-immutable-price-item';
 import { getPriceRecurrence, getPriceRecurrenceByTax } from '../prices/get-price-recurrence';
@@ -36,6 +37,9 @@ type ComputeAggregatedAndPriceTotalsOptions = {
  */
 const getTaxId = (tax?: Tax | TaxItem | Partial<Tax>): string | undefined =>
   tax && '_id' in tax ? tax._id : undefined;
+
+const toDineroIfDefined = (amount: number | undefined) =>
+  typeof amount !== 'undefined' ? toDineroFromInteger(amount) : undefined;
 
 /**
  * Computes all the integer amounts for the price items using the string decimal representation defined on prices unit_amount field.
@@ -90,10 +94,10 @@ export const computeAggregatedAndPriceTotals = (
         ...compositePriceItemToAppend,
         ...itemBreakdown,
         ...(typeof itemBreakdown?.amount_subtotal === 'number' && {
-          amount_subtotal_decimal: toDineroFromInteger(itemBreakdown.amount_subtotal).toUnit().toString(),
+          amount_subtotal_decimal: toDecimalString(itemBreakdown.amount_subtotal),
         }),
         ...(typeof itemBreakdown?.amount_total === 'number' && {
-          amount_total_decimal: toDineroFromInteger(itemBreakdown.amount_total).toUnit().toString(),
+          amount_total_decimal: toDecimalString(itemBreakdown.amount_total),
         }),
         item_components: convertPriceComponentsPrecision(compositePriceItemToAppend.item_components ?? [], 2),
       };
@@ -202,20 +206,9 @@ const recomputeDetailTotals = (
     : null;
   const priceSubtotal = toDineroFromInteger(priceItemToAppend.amount_subtotal!);
   const priceTotal = toDineroFromInteger(priceItemToAppend.amount_total!);
-  const priceDiscountAmount =
-    typeof priceItemToAppend.discount_amount !== 'undefined'
-      ? toDineroFromInteger(priceItemToAppend.discount_amount!)
-      : undefined;
-
-  const priceBeforeDiscountAmountTotal =
-    typeof priceItemToAppend.before_discount_amount_total !== 'undefined'
-      ? toDineroFromInteger(priceItemToAppend.before_discount_amount_total!)
-      : undefined;
-
-  const priceBeforeDiscountAmountSubtotal =
-    typeof priceItemToAppend.before_discount_amount_subtotal !== 'undefined'
-      ? toDineroFromInteger(priceItemToAppend.before_discount_amount_subtotal)
-      : undefined;
+  const priceDiscountAmount = toDineroIfDefined(priceItemToAppend.discount_amount);
+  const priceBeforeDiscountAmountTotal = toDineroIfDefined(priceItemToAppend.before_discount_amount_total);
+  const priceBeforeDiscountAmountSubtotal = toDineroIfDefined(priceItemToAppend.before_discount_amount_subtotal);
 
   const priceTax = toDineroFromInteger(priceItemToAppend.taxes?.[0]?.amount || priceItemToAppend.amount_tax || 0);
 
@@ -293,16 +286,11 @@ const recomputeDetailTotals = (
     recurrence.amount_total_decimal = totalAmount.toUnit().toString();
     recurrence.amount_tax = taxAmount.getAmount();
 
-    const existingRecurrenceBeforeDiscountAmountTotal =
-      typeof recurrence.before_discount_amount_total !== 'undefined'
-        ? toDineroFromInteger(recurrence.before_discount_amount_total)
-        : undefined;
-    const existingRecurrenceBeforeDiscountAmountSubtotal =
-      typeof recurrence.before_discount_amount_subtotal !== 'undefined'
-        ? toDineroFromInteger(recurrence.before_discount_amount_subtotal)
-        : undefined;
-    const discountAmount =
-      typeof recurrence.discount_amount !== 'undefined' ? toDineroFromInteger(recurrence.discount_amount) : undefined;
+    const existingRecurrenceBeforeDiscountAmountTotal = toDineroIfDefined(recurrence.before_discount_amount_total);
+    const existingRecurrenceBeforeDiscountAmountSubtotal = toDineroIfDefined(
+      recurrence.before_discount_amount_subtotal,
+    );
+    const discountAmount = toDineroIfDefined(recurrence.discount_amount);
 
     if (priceBeforeDiscountAmountTotal || existingRecurrenceBeforeDiscountAmountTotal) {
       // If recurrence doesn't have before_discount_amount_total yet, initialize it with current total (before adding this item)
@@ -364,10 +352,7 @@ const recomputeDetailTotals = (
    */
   const coupon = (priceItemToAppend as PriceItemDto)?._coupons?.[0];
   const cashbackPeriod = priceItemToAppend.cashback_period ?? '0';
-  const priceCashBackAmount =
-    typeof priceItemToAppend.cashback_amount !== 'undefined'
-      ? toDineroFromInteger(priceItemToAppend.cashback_amount!)
-      : undefined;
+  const priceCashBackAmount = toDineroIfDefined(priceItemToAppend.cashback_amount);
 
   // Cashback totals — preserve one entry per applied cashback rather than
   // summing entries that share the same cashback_period, so consumers can
@@ -380,18 +365,15 @@ const recomputeDetailTotals = (
     });
   }
 
-  // Remove empty cashbacks from the breakdown
-  if (cashbacks.length > 0) {
-    cashbacks.filter((cashback) => cashback.amount_total > 0);
-  }
+  const amountTax = totalTax.add(priceTax).getAmount();
 
   return {
     ...details,
     amount_subtotal: subtotal.add(priceSubtotal).getAmount(),
     amount_total: total.add(priceTotal).getAmount(),
-    amount_tax: totalTax.add(priceTax).getAmount(),
+    amount_tax: amountTax,
     total_details: {
-      amount_tax: totalTax.add(priceTax).getAmount(),
+      amount_tax: amountTax,
       breakdown: {
         taxes,
         recurrences,

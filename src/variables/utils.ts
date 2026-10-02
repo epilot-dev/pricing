@@ -1,7 +1,7 @@
 import { formatAmount, formatAmountFromString, formatPriceUnit } from '../money/formatters';
 import { PricingModel } from '../prices/constants';
 import { isVariablePriceItem } from '../prices/is-variable-price';
-import { isCompositePrice } from '../prices/utils';
+import { isCompositePrice, isTieredPricingModel } from '../prices/utils';
 import { isTruthy } from '../shared/is-truthy';
 import type {
   Currency,
@@ -128,14 +128,9 @@ export const withValidLineItem = (item: any) => !!item?.['_price'] && !item?.['_
  * @todo Use String.padEnd instead
  */
 export const fillPostSpaces = (value: string, fillLength: number) => {
-  if (value) {
-    const fillSpaces = fillLength - value.length;
-    for (let i = 0; i < fillSpaces; i++) {
-      value = value + '&nbsp;';
-    }
-  }
+  const fillSpaces = value ? fillLength - value.length : 0;
 
-  return value;
+  return fillSpaces > 0 ? value + '&nbsp;'.repeat(Math.ceil(fillSpaces)) : value;
 };
 
 export const unitAmountApproved = (item: PriceItemWithParent): boolean => {
@@ -175,11 +170,7 @@ export const getUnitAmount = (
     return undefined;
   }
 
-  if (
-    item._price?.pricing_model === PricingModel.tieredGraduated ||
-    item._price?.pricing_model === PricingModel.tieredVolume ||
-    item._price?.pricing_model === PricingModel.tieredFlatFee
-  ) {
+  if (isTieredPricingModel(item._price?.pricing_model)) {
     return getTieredUnitAmount(item, i18n, { isUnitAmountApproved, useUnitAmountNet });
   }
 

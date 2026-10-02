@@ -1,9 +1,8 @@
 import type { Currency } from 'dinero.js';
 import { formatPriceUnit } from '../money/formatters';
-import { PricingModel } from '../prices/constants';
 import { getRecurrencesWithEstimatedPrices } from '../prices/get-recurrences-with-estimated-prices';
 import { isVariablePrice, isVariablePriceItem } from '../prices/is-variable-price';
-import { isCompositePrice } from '../prices/utils';
+import { isCompositePrice, isTieredPricingModel } from '../prices/utils';
 import { isTruthy } from '../shared/is-truthy';
 import type {
   I18n,
@@ -524,10 +523,7 @@ export const processOrderTableData = (data: any, i18n: I18n) => {
           quantity_billing_period: item.quantity_billing_period,
           unit: unit,
           display_unit: getDisplayUnit(item),
-          is_tiered_price:
-            item._price?.pricing_model === PricingModel.tieredVolume ||
-            item._price?.pricing_model === PricingModel.tieredGraduated ||
-            item._price?.pricing_model === PricingModel.tieredFlatFee,
+          is_tiered_price: isTieredPricingModel(item._price?.pricing_model),
           ...(tiersDetails && tiersDetails.length === 1 && { ...tiersDetails[0] }),
         },
         ...item._product,

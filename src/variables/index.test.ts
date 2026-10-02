@@ -1,4 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { compositePriceCashbackCombinedWithComponentCashbacks } from '../__tests__/fixtures/price.samples';
+import { tax19percent } from '../__tests__/fixtures/tax.samples';
+import { computeAggregatedAndPriceTotals } from '../computations/compute-totals';
+import {
+  fixedCashbackCoupon,
+  lowFixedCashbackCoupon,
+  percentage10DiscountCoupon,
+} from '../coupons/__tests__/coupon.fixtures';
 import type { I18n, CompositePrice, PriceInputMappings, PriceItem } from '../shared/types';
 import {
   orderWithCompositeItem,
@@ -390,5 +398,158 @@ describe('getHiddenAmountString', () => {
     expect(resultWithZeroNumber).toBe('show_as_starting_price 0');
     expect(resultWithNumber).toBe('show_as_starting_price 123');
     expect(resultWithUndefined).toBe('show_as_starting_price');
+  });
+});
+
+describe('processOrderTableData line item amounts', () => {
+  const buildPriceItem = (id: string, unitAmountDecimal: string, coupons?: PriceItem['_coupons']) => ({
+    price_id: id,
+    quantity: 2,
+    taxes: [{ tax: tax19percent }],
+    _price: {
+      _id: id,
+      unit_amount_currency: 'EUR',
+      unit_amount_decimal: unitAmountDecimal,
+      type: 'one_time' as const,
+      is_tax_inclusive: true,
+      pricing_model: 'per_unit' as const,
+      tax: [tax19percent],
+      description: `Price ${id}`,
+    },
+    _product: { name: `Product ${id}`, type: 'product' },
+    ...(coupons && { _coupons: coupons }),
+  });
+
+  /* Builds the order table data the same way an order is built from computed prices */
+  const processOrder = (priceItems: Parameters<typeof computeAggregatedAndPriceTotals>[0]) => {
+    const totals = computeAggregatedAndPriceTotals(priceItems);
+
+    return processOrderTableData({ ...totals, line_items: totals.items }, mockI18n);
+  };
+
+  /* Formatted amounts may use non-breaking spaces */
+  const normalizeSpaces = (value: unknown) => (typeof value === 'string' ? value.replace(/\s/g, ' ') : value);
+
+  type DisplayedProduct = { name?: string; is_composite_component?: boolean; price: Record<string, unknown> };
+
+  const getDisplayedAmounts = (product: DisplayedProduct) => ({
+    name: product.name,
+    unit_amount: normalizeSpaces(product.price.unit_amount),
+    unit_amount_net: normalizeSpaces(product.price.unit_amount_net),
+    amount_subtotal: normalizeSpaces(product.price.amount_subtotal),
+    amount_tax: normalizeSpaces(product.price.amount_tax),
+    amount_total: normalizeSpaces(product.price.amount_total),
+  });
+
+  const discountCoupon = { ...percentage10DiscountCoupon, category: 'discount' as const };
+
+  it('shows items with a discount coupon before discount, followed by a line with the discount', () => {
+    const data = processOrder([buildPriceItem('a', '11.90', [discountCoupon])]);
+
+    expect(data.products.map(getDisplayedAmounts)).toEqual([
+      {
+        name: 'Product a',
+        unit_amount: '11,90 €',
+        unit_amount_net: '10,00 €',
+        amount_subtotal: '20,00 €',
+        amount_tax: '3,80 €',
+        amount_total: '23,80 €',
+      },
+      {
+        name: discountCoupon.name,
+        unit_amount: '-1,19 €',
+        unit_amount_net: '-1,00 €',
+        amount_subtotal: '-2,00 €',
+        amount_tax: '-0,38 €',
+        amount_total: '-2,38 €',
+      },
+    ]);
+  });
+
+  it('shows a line with the cashback for items with a cashback coupon', () => {
+    const data = processOrder([buildPriceItem('b', '23.80', [fixedCashbackCoupon])]);
+
+    expect(data.products.map(getDisplayedAmounts)).toEqual([
+      {
+        name: 'Product b',
+        unit_amount: '23,80 €',
+        unit_amount_net: '20,00 €',
+        amount_subtotal: '40,00 €',
+        amount_tax: '7,60 €',
+        amount_total: '47,60 €',
+      },
+      {
+        name: fixedCashbackCoupon.name,
+        unit_amount: '',
+        unit_amount_net: '',
+        amount_subtotal: '0,00 €',
+        amount_tax: '0,00 €',
+        amount_total: '-20,00 €',
+      },
+    ]);
+    expect(data.products[1].price.type).toBe('one_time');
+  });
+
+  it('shows the cashback of the composite price coupon', () => {
+    const data = processOrder([compositePriceCashbackCombinedWithComponentCashbacks]);
+
+    expect(
+      data.products.map((product: DisplayedProduct) => [
+        product.name,
+        Boolean(product.is_composite_component),
+        normalizeSpaces(product.price.amount_total),
+      ]),
+    ).toEqual([
+      ['Eletricity Pack 1', false, '0,00 €'],
+      [fixedCashbackCoupon.name, false, '-10,00 €'],
+      ['Base price per month', true, '10,00 €'],
+      ['Wallbox 11 kW', true, '100,00 €'],
+      [fixedCashbackCoupon.name, true, '-10,00 €'],
+    ]);
+  });
+
+  it('shows the cashback of each composite price coupon on its own line', () => {
+    const data = processOrder([
+      {
+        ...compositePriceCashbackCombinedWithComponentCashbacks,
+        _coupons: [fixedCashbackCoupon, lowFixedCashbackCoupon],
+      },
+    ]);
+
+    expect(
+      data.products
+        .filter((product: DisplayedProduct) => !product.is_composite_component)
+        .map((product: DisplayedProduct) => [product.name, normalizeSpaces(product.price.amount_total)]),
+    ).toEqual([
+      ['Eletricity Pack 1', '0,00 €'],
+      [fixedCashbackCoupon.name, '-10,00 €'],
+      [lowFixedCashbackCoupon.name, '-5,00 €'],
+    ]);
+  });
+
+  it('formats the order totals, discount recurrence and cashbacks', () => {
+    const data = processOrder([
+      buildPriceItem('a', '11.90', [discountCoupon]),
+      buildPriceItem('b', '23.80', [fixedCashbackCoupon]),
+    ]);
+
+    expect(normalizeSpaces(data.amount_total)).toBe('69,02 €');
+    expect(normalizeSpaces(data.amount_subtotal)).toBe('58,00 €');
+    expect(normalizeSpaces(data.total_details.amount_tax)).toBe('11,02 €');
+    expect(data.total_details.recurrences).toHaveLength(2);
+    expect(data.total_details.recurrences[0].is_discount_recurrence).toBe(true);
+    expect(normalizeSpaces(data.total_details.recurrences[0].amount_total)).toBe('-2,38 €');
+    expect(data.total_details.recurrences[1]).toMatchObject({
+      amount_total_decimal: '69.02',
+      amount_subtotal_decimal: '58',
+      amount_tax_decimal: '11.02',
+      type: 'one_time',
+    });
+    expect(
+      data.total_details.cashbacks.map(({ amount, ...rest }: Record<string, string>) => ({
+        ...rest,
+        amount: normalizeSpaces(amount),
+      })),
+    ).toEqual([{ name: 'table_order.cashback', period: 'table_order.cashback_period.12', amount: '20,00 €' }]);
   });
 });

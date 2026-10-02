@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { fixedDiscountCoupon } from '../coupons/__tests__/coupon.fixtures';
 import type { I18n } from '../shared/types';
 import type { PriceItemWithParent } from './types';
-import { getDecimalPrecision, getUnitAmount } from './utils';
+import { fillPostSpaces, getDecimalPrecision, getUnitAmount } from './utils';
 
 const mockI18n = {
   t: (key: string, fallback: string) => key || fallback,
@@ -72,5 +72,18 @@ describe('getDecimalPrecision', () => {
 
   it('returns the full precision for a high-precision string', () => {
     expect(getDecimalPrecision('10.12345')).toBe(5);
+  });
+});
+
+describe('fillPostSpaces', () => {
+  it.each([
+    ['1.', 4, '1.&nbsp;&nbsp;'],
+    ['1.2.', 6, '1.2.&nbsp;&nbsp;'],
+    ['10.', 4, '10.&nbsp;'],
+    ['1.2.3.', 4, '1.2.3.'],
+    ['1234', 4, '1234'],
+    ['', 4, ''],
+  ])('fills %j up to %d characters', (value, fillLength, expected) => {
+    expect(fillPostSpaces(value, fillLength)).toBe(expected);
   });
 });

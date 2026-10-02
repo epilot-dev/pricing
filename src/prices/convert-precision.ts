@@ -12,6 +12,148 @@ import type {
   TierDetails,
 } from '../shared/types';
 
+/**
+ * Converts an integer amount from DECIMAL_PRECISION to the given precision.
+ */
+const convertIntegerPrecision = (amount: number, precision: number): number =>
+  toDineroFromInteger(amount).convertPrecision(precision).getAmount();
+
+/**
+ * Converts an integer amount with DECIMAL_PRECISION to its decimal string representation, e.g. 10.5
+ */
+export const toDecimalString = (amount: number): string => toDineroFromInteger(amount).toUnit().toString();
+
+/**
+ * Optional price item amounts which, when set, are converted and accompanied by a `<field>_decimal` value.
+ * The order of each list defines the order of the keys in the output, so don't reorder them.
+ */
+const UNIT_AMOUNT_FIELDS = [
+  'unit_amount',
+  'before_discount_unit_amount',
+  'before_discount_unit_amount_gross',
+  'before_discount_unit_amount_net',
+  'unit_discount_amount',
+  'unit_amount_net',
+  'unit_discount_amount_net',
+  'unit_amount_gross',
+] as const;
+
+const DISCOUNT_AND_CASHBACK_AMOUNT_FIELDS = [
+  'discount_amount',
+  'before_discount_amount_total',
+  'before_discount_amount_subtotal',
+  'cashback_amount',
+  'after_cashback_amount_total',
+] as const;
+
+const TAX_DISCOUNT_AMOUNT_FIELDS = [
+  'tax_discount_amount',
+  'discount_amount_net',
+  'before_discount_tax_amount',
+] as const;
+
+/**
+ * Converts every field holding a number, adding its `<field>_decimal` counterpart right after it.
+ */
+const convertAmountFieldsWithDecimals = (
+  item: PriceItem,
+  fields: ReadonlyArray<keyof PriceItem>,
+  precision: number,
+): Partial<PriceItem> =>
+  Object.fromEntries(
+    fields.flatMap((field) => {
+      const amount = item[field];
+
+      return typeof amount === 'number'
+        ? [
+            [field, convertIntegerPrecision(amount, precision)],
+            [`${field}_decimal`, toDecimalString(amount)],
+          ]
+        : [];
+    }),
+  );
+
+const hasPricingModel = (priceItem: PriceItem, pricingModel: PricingModel): boolean =>
+  priceItem.pricing_model === pricingModel || priceItem._price?.pricing_model === pricingModel;
+
+/**
+ * @todo Also output the decimal values
+ */
+const convertTierDetailsPrecision = (tier: TierDetails, precision: number): TierDetails => ({
+  ...tier,
+  unit_amount_gross: convertIntegerPrecision(tier.unit_amount_gross, precision),
+  unit_amount_net: convertIntegerPrecision(tier.unit_amount_net, precision),
+  amount_total: convertIntegerPrecision(tier.amount_total, precision),
+  amount_subtotal: convertIntegerPrecision(tier.amount_subtotal, precision),
+  amount_tax: convertIntegerPrecision(tier.amount_tax, precision),
+});
+
+type AdditionalMarkups = NonNullable<PriceGetAg['additional_markups']>;
+
+const convertAdditionalMarkupsPrecision = (additionalMarkups: AdditionalMarkups, precision: number) => {
+  const convertIfInteger = (amount: number | undefined) =>
+    Number.isInteger(amount) ? convertIntegerPrecision(amount!, precision) : undefined;
+  const toDecimalStringIfInteger = (amount: number | undefined) =>
+    Number.isInteger(amount) ? toDecimalString(amount!) : undefined;
+
+  return Object.fromEntries(
+    Object.entries(additionalMarkups).map(([key, value]) => [
+      key,
+      {
+        amount: value.amount,
+        amount_decimal: value.amount_decimal,
+        amount_net: convertIfInteger(value.amount_net),
+        amount_gross: convertIfInteger(value.amount_gross),
+        amount_net_decimal: toDecimalStringIfInteger(value.amount_net),
+        amount_gross_decimal: toDecimalStringIfInteger(value.amount_gross),
+      },
+    ]),
+  );
+};
+
+const convertGetAgPrecision = (getAg: PriceGetAg, precision: number): PriceGetAg => ({
+  ...getAg,
+  unit_amount_net: convertIntegerPrecision(getAg.unit_amount_net, precision),
+  unit_amount_gross: convertIntegerPrecision(getAg.unit_amount_gross, precision),
+  unit_amount_net_decimal: toDecimalString(getAg.unit_amount_net),
+  unit_amount_gross_decimal: toDecimalString(getAg.unit_amount_gross),
+  markup_amount_net: convertIntegerPrecision(getAg.markup_amount_net!, precision),
+  markup_amount_net_decimal: toDecimalString(getAg.markup_amount_net!),
+  markup_amount_gross: convertIntegerPrecision(getAg.markup_amount_gross!, precision),
+  markup_amount_gross_decimal: toDecimalString(getAg.markup_amount_gross!),
+  ...(getAg.additional_markups_enabled &&
+    getAg.additional_markups && {
+      additional_markups: convertAdditionalMarkupsPrecision(getAg.additional_markups, precision),
+    }),
+  markup_total_amount_net: convertIntegerPrecision(getAg.markup_total_amount_net!, precision),
+  markup_total_amount_net_decimal: toDecimalString(getAg.markup_total_amount_net!),
+  markup_total_amount_gross: convertIntegerPrecision(getAg.markup_total_amount_gross!, precision),
+  markup_total_amount_gross_decimal: toDecimalString(getAg.markup_total_amount_gross!),
+});
+
+type DynamicTariff = NonNullable<PriceItem['dynamic_tariff']>;
+
+/**
+ * Unlike the other amounts, dynamic tariff amounts of 0 are omitted (set to undefined).
+ */
+const convertDynamicTariffPrecision = (dynamicTariff: DynamicTariff, precision: number): DynamicTariff => {
+  const convertIfSet = (amount: number | undefined) =>
+    amount ? convertIntegerPrecision(amount, precision) : undefined;
+  const toDecimalStringIfSet = (amount: number | undefined) => (amount ? toDecimalString(amount) : undefined);
+
+  return {
+    ...dynamicTariff,
+    unit_amount_net: convertIfSet(dynamicTariff.unit_amount_net),
+    unit_amount_gross: convertIfSet(dynamicTariff.unit_amount_gross),
+    unit_amount_net_decimal: toDecimalStringIfSet(dynamicTariff.unit_amount_net),
+    unit_amount_gross_decimal: toDecimalStringIfSet(dynamicTariff.unit_amount_gross),
+    markup_amount_net: convertIfSet(dynamicTariff.markup_amount_net),
+    markup_amount_net_decimal: toDecimalStringIfSet(dynamicTariff.markup_amount_net),
+    markup_amount_gross: convertIfSet(dynamicTariff.markup_amount_gross),
+    markup_amount_gross_decimal: toDecimalStringIfSet(dynamicTariff.markup_amount_gross),
+  };
+};
+
 export const convertPriceComponentsPrecision = (items: PriceItem[], precision = 2): PriceItem[] =>
   items.map((component) => convertPriceItemPrecision(component, precision));
 
@@ -22,213 +164,28 @@ export const convertPriceComponentsPrecision = (items: PriceItem[], precision = 
  */
 export const convertPriceItemPrecision = (priceItem: PriceItem, precision = 2): PriceItem => ({
   ...priceItem,
-  ...(typeof priceItem.unit_amount === 'number' && {
-    unit_amount: toDineroFromInteger(priceItem.unit_amount).convertPrecision(precision).getAmount(),
-    unit_amount_decimal: toDineroFromInteger(priceItem.unit_amount).toUnit().toString(),
-  }),
-  ...(typeof priceItem.before_discount_unit_amount === 'number' && {
-    before_discount_unit_amount: toDineroFromInteger(priceItem.before_discount_unit_amount)
-      .convertPrecision(precision)
-      .getAmount(),
-    before_discount_unit_amount_decimal: toDineroFromInteger(priceItem.before_discount_unit_amount).toUnit().toString(),
-  }),
-  ...(typeof priceItem.before_discount_unit_amount_gross === 'number' && {
-    before_discount_unit_amount_gross: toDineroFromInteger(priceItem.before_discount_unit_amount_gross)
-      .convertPrecision(precision)
-      .getAmount(),
-    before_discount_unit_amount_gross_decimal: toDineroFromInteger(priceItem.before_discount_unit_amount_gross)
-      .toUnit()
-      .toString(),
-  }),
-  ...(typeof priceItem.before_discount_unit_amount_net === 'number' && {
-    before_discount_unit_amount_net: toDineroFromInteger(priceItem.before_discount_unit_amount_net)
-      .convertPrecision(precision)
-      .getAmount(),
-    before_discount_unit_amount_net_decimal: toDineroFromInteger(priceItem.before_discount_unit_amount_net)
-      .toUnit()
-      .toString(),
-  }),
-  ...(typeof priceItem.unit_discount_amount === 'number' && {
-    unit_discount_amount: toDineroFromInteger(priceItem.unit_discount_amount).convertPrecision(precision).getAmount(),
-    unit_discount_amount_decimal: toDineroFromInteger(priceItem.unit_discount_amount).toUnit().toString(),
-  }),
-  ...(typeof priceItem.unit_amount_net === 'number' && {
-    unit_amount_net: toDineroFromInteger(priceItem.unit_amount_net).convertPrecision(precision).getAmount(),
-    unit_amount_net_decimal: toDineroFromInteger(priceItem.unit_amount_net).toUnit().toString(),
-  }),
-  ...(typeof priceItem.unit_discount_amount_net === 'number' && {
-    unit_discount_amount_net: toDineroFromInteger(priceItem.unit_discount_amount_net)
-      .convertPrecision(precision)
-      .getAmount(),
-    unit_discount_amount_net_decimal: toDineroFromInteger(priceItem.unit_discount_amount_net).toUnit().toString(),
-  }),
-  ...(typeof priceItem.unit_amount_gross === 'number' && {
-    unit_amount_gross: toDineroFromInteger(priceItem.unit_amount_gross).convertPrecision(precision).getAmount(),
-    unit_amount_gross_decimal: toDineroFromInteger(priceItem.unit_amount_gross).toUnit().toString(),
-  }),
-  amount_subtotal: toDineroFromInteger(priceItem.amount_subtotal!).convertPrecision(precision).getAmount(),
-  amount_subtotal_decimal: toDineroFromInteger(priceItem.amount_subtotal!).toUnit().toString(),
-  amount_total: toDineroFromInteger(priceItem.amount_total!).convertPrecision(precision).getAmount(),
-  amount_total_decimal: toDineroFromInteger(priceItem.amount_total!).toUnit().toString(),
-  ...(typeof priceItem.discount_amount === 'number' && {
-    discount_amount: toDineroFromInteger(priceItem.discount_amount).convertPrecision(precision).getAmount(),
-    discount_amount_decimal: toDineroFromInteger(priceItem.discount_amount).toUnit().toString(),
-  }),
-  ...(typeof priceItem.discount_percentage === 'number' && { discount_percentage: priceItem.discount_percentage }),
-  ...(typeof priceItem.before_discount_amount_total === 'number' && {
-    before_discount_amount_total: toDineroFromInteger(priceItem.before_discount_amount_total)
-      .convertPrecision(precision)
-      .getAmount(),
-    before_discount_amount_total_decimal: toDineroFromInteger(priceItem.before_discount_amount_total)
-      .toUnit()
-      .toString(),
-  }),
-  ...(typeof priceItem.before_discount_amount_subtotal === 'number' && {
-    before_discount_amount_subtotal: toDineroFromInteger(priceItem.before_discount_amount_subtotal)
-      .convertPrecision(precision)
-      .getAmount(),
-    before_discount_amount_subtotal_decimal: toDineroFromInteger(priceItem.before_discount_amount_subtotal)
-      .toUnit()
-      .toString(),
-  }),
-  ...(typeof priceItem.cashback_amount === 'number' && {
-    cashback_amount: toDineroFromInteger(priceItem.cashback_amount).convertPrecision(precision).getAmount(),
-    cashback_amount_decimal: toDineroFromInteger(priceItem.cashback_amount).toUnit().toString(),
-  }),
-  ...(typeof priceItem.after_cashback_amount_total === 'number' && {
-    after_cashback_amount_total: toDineroFromInteger(priceItem.after_cashback_amount_total)
-      .convertPrecision(precision)
-      .getAmount(),
-    after_cashback_amount_total_decimal: toDineroFromInteger(priceItem.after_cashback_amount_total).toUnit().toString(),
-  }),
-  amount_tax: toDineroFromInteger(priceItem.amount_tax || 0)
-    .convertPrecision(precision)
-    .getAmount(),
-  ...(typeof priceItem.tax_discount_amount === 'number' && {
-    tax_discount_amount: toDineroFromInteger(priceItem.tax_discount_amount).convertPrecision(precision).getAmount(),
-    tax_discount_amount_decimal: toDineroFromInteger(priceItem.tax_discount_amount).toUnit().toString(),
-  }),
-  ...(typeof priceItem.discount_amount_net === 'number' && {
-    discount_amount_net: toDineroFromInteger(priceItem.discount_amount_net).convertPrecision(precision).getAmount(),
-    discount_amount_net_decimal: toDineroFromInteger(priceItem.discount_amount_net).toUnit().toString(),
-  }),
-  ...(typeof priceItem.before_discount_tax_amount === 'number' && {
-    before_discount_tax_amount: toDineroFromInteger(priceItem.before_discount_tax_amount)
-      .convertPrecision(precision)
-      .getAmount(),
-    before_discount_tax_amount_decimal: toDineroFromInteger(priceItem.before_discount_tax_amount).toUnit().toString(),
-  }),
+  ...convertAmountFieldsWithDecimals(priceItem, UNIT_AMOUNT_FIELDS, precision),
+  amount_subtotal: convertIntegerPrecision(priceItem.amount_subtotal!, precision),
+  amount_subtotal_decimal: toDecimalString(priceItem.amount_subtotal!),
+  amount_total: convertIntegerPrecision(priceItem.amount_total!, precision),
+  amount_total_decimal: toDecimalString(priceItem.amount_total!),
+  ...convertAmountFieldsWithDecimals(priceItem, DISCOUNT_AND_CASHBACK_AMOUNT_FIELDS, precision),
+  amount_tax: convertIntegerPrecision(priceItem.amount_tax || 0, precision),
+  ...convertAmountFieldsWithDecimals(priceItem, TAX_DISCOUNT_AMOUNT_FIELDS, precision),
   taxes: priceItem.taxes!.map((tax: TaxAmount) => ({
     ...tax,
-    amount: toDineroFromInteger(tax.amount || 0)
-      .convertPrecision(precision)
-      .getAmount(),
+    amount: convertIntegerPrecision(tax.amount || 0, precision),
   })),
   ...(priceItem.tiers_details && {
-    tiers_details: priceItem.tiers_details.map((tier: TierDetails) => {
-      /**
-       * @todo Also output the decimal values
-       */
-      return {
-        ...tier,
-        unit_amount_gross: toDineroFromInteger(tier.unit_amount_gross).convertPrecision(precision).getAmount(),
-        unit_amount_net: toDineroFromInteger(tier.unit_amount_net).convertPrecision(precision).getAmount(),
-        amount_total: toDineroFromInteger(tier.amount_total).convertPrecision(precision).getAmount(),
-        amount_subtotal: toDineroFromInteger(tier.amount_subtotal).convertPrecision(precision).getAmount(),
-        amount_tax: toDineroFromInteger(tier.amount_tax).convertPrecision(precision).getAmount(),
-      };
-    }),
+    tiers_details: priceItem.tiers_details.map((tier) => convertTierDetailsPrecision(tier, precision)),
   }),
   ...(priceItem.get_ag &&
-    (priceItem.pricing_model === PricingModel.externalGetAG ||
-      priceItem._price?.pricing_model === PricingModel.externalGetAG) && {
-      get_ag: {
-        ...priceItem.get_ag,
-        unit_amount_net: toDineroFromInteger(priceItem.get_ag.unit_amount_net).convertPrecision(precision).getAmount(),
-        unit_amount_gross: toDineroFromInteger(priceItem.get_ag.unit_amount_gross)
-          .convertPrecision(precision)
-          .getAmount(),
-        unit_amount_net_decimal: toDineroFromInteger(priceItem.get_ag.unit_amount_net).toUnit().toString(),
-        unit_amount_gross_decimal: toDineroFromInteger(priceItem.get_ag.unit_amount_gross).toUnit().toString(),
-        markup_amount_net: toDineroFromInteger(priceItem.get_ag.markup_amount_net!)
-          .convertPrecision(precision)
-          .getAmount(),
-        markup_amount_net_decimal: toDineroFromInteger(priceItem.get_ag.markup_amount_net!).toUnit().toString(),
-        markup_amount_gross: toDineroFromInteger(priceItem.get_ag.markup_amount_gross!)
-          .convertPrecision(precision)
-          .getAmount(),
-        markup_amount_gross_decimal: toDineroFromInteger(priceItem.get_ag.markup_amount_gross!).toUnit().toString(),
-        ...(priceItem.get_ag.additional_markups_enabled &&
-          priceItem.get_ag.additional_markups && {
-            additional_markups: Object.entries(
-              priceItem.get_ag.additional_markups as NonNullable<PriceGetAg['additional_markups']>,
-            ).reduce(
-              (acc, [key, value]) => ({
-                ...acc,
-                [key]: {
-                  amount: value.amount,
-                  amount_decimal: value.amount_decimal,
-                  amount_net: Number.isInteger(value.amount_net)
-                    ? toDineroFromInteger(value.amount_net!).convertPrecision(precision).getAmount()
-                    : undefined,
-                  amount_gross: Number.isInteger(value.amount_gross)
-                    ? toDineroFromInteger(value.amount_gross!).convertPrecision(precision).getAmount()
-                    : undefined,
-                  amount_net_decimal: Number.isInteger(value.amount_net)
-                    ? toDineroFromInteger(value.amount_net!).toUnit().toString()
-                    : undefined,
-                  amount_gross_decimal: Number.isInteger(value.amount_gross)
-                    ? toDineroFromInteger(value.amount_gross!).toUnit().toString()
-                    : undefined,
-                },
-              }),
-              {},
-            ),
-          }),
-        markup_total_amount_net: toDineroFromInteger(priceItem.get_ag.markup_total_amount_net!)
-          .convertPrecision(precision)
-          .getAmount(),
-        markup_total_amount_net_decimal: toDineroFromInteger(priceItem.get_ag.markup_total_amount_net!)
-          .toUnit()
-          .toString(),
-        markup_total_amount_gross: toDineroFromInteger(priceItem.get_ag.markup_total_amount_gross!)
-          .convertPrecision(precision)
-          .getAmount(),
-        markup_total_amount_gross_decimal: toDineroFromInteger(priceItem.get_ag.markup_total_amount_gross!)
-          .toUnit()
-          .toString(),
-      },
+    hasPricingModel(priceItem, PricingModel.externalGetAG) && {
+      get_ag: convertGetAgPrecision(priceItem.get_ag, precision),
     }),
   ...(priceItem.dynamic_tariff &&
-    (priceItem.pricing_model === PricingModel.dynamicTariff ||
-      priceItem._price?.pricing_model === PricingModel.dynamicTariff) && {
-      dynamic_tariff: {
-        ...priceItem.dynamic_tariff,
-        unit_amount_net: priceItem.dynamic_tariff.unit_amount_net
-          ? toDineroFromInteger(priceItem.dynamic_tariff.unit_amount_net).convertPrecision(precision).getAmount()
-          : undefined,
-        unit_amount_gross: priceItem.dynamic_tariff.unit_amount_gross
-          ? toDineroFromInteger(priceItem.dynamic_tariff.unit_amount_gross).convertPrecision(precision).getAmount()
-          : undefined,
-        unit_amount_net_decimal: priceItem.dynamic_tariff.unit_amount_net
-          ? toDineroFromInteger(priceItem.dynamic_tariff.unit_amount_net).toUnit().toString()
-          : undefined,
-        unit_amount_gross_decimal: priceItem.dynamic_tariff.unit_amount_gross
-          ? toDineroFromInteger(priceItem.dynamic_tariff.unit_amount_gross).toUnit().toString()
-          : undefined,
-        markup_amount_net: priceItem.dynamic_tariff.markup_amount_net
-          ? toDineroFromInteger(priceItem.dynamic_tariff.markup_amount_net).convertPrecision(precision).getAmount()
-          : undefined,
-        markup_amount_net_decimal: priceItem.dynamic_tariff.markup_amount_net
-          ? toDineroFromInteger(priceItem.dynamic_tariff.markup_amount_net).toUnit().toString()
-          : undefined,
-        markup_amount_gross: priceItem.dynamic_tariff.markup_amount_gross
-          ? toDineroFromInteger(priceItem.dynamic_tariff.markup_amount_gross).convertPrecision(precision).getAmount()
-          : undefined,
-        markup_amount_gross_decimal: priceItem.dynamic_tariff.markup_amount_gross
-          ? toDineroFromInteger(priceItem.dynamic_tariff.markup_amount_gross).toUnit().toString()
-          : undefined,
-      },
+    hasPricingModel(priceItem, PricingModel.dynamicTariff) && {
+      dynamic_tariff: convertDynamicTariffPrecision(priceItem.dynamic_tariff, precision),
     }),
 });
 
@@ -240,72 +197,73 @@ const isPricingDetails = (details: unknown): details is PricingDetails =>
       (details as { amount_tax: unknown }).amount_tax !== undefined,
   );
 
+/**
+ * Optional recurrence amounts, only converted when they hold an integer.
+ * The order defines the order of the keys in the output, so don't reorder it.
+ */
+const OPTIONAL_RECURRENCE_AMOUNT_FIELDS = [
+  'discount_amount',
+  'before_discount_amount_total',
+  'before_discount_amount_subtotal',
+  'after_cashback_amount_total',
+] as const;
+
+const convertRecurrencePrecision = (recurrence: RecurrenceAmount, precision: number): RecurrenceAmount => ({
+  ...recurrence,
+  unit_amount_gross: convertIntegerPrecision(recurrence.unit_amount_gross!, precision),
+  ...(Number.isInteger(recurrence.unit_amount_net) && {
+    unit_amount_net: convertIntegerPrecision(recurrence.unit_amount_net!, precision),
+  }),
+  amount_subtotal: convertIntegerPrecision(recurrence.amount_subtotal, precision),
+  amount_total: convertIntegerPrecision(recurrence.amount_total, precision),
+  amount_tax: convertIntegerPrecision(recurrence.amount_tax!, precision),
+  ...Object.fromEntries(
+    OPTIONAL_RECURRENCE_AMOUNT_FIELDS.filter((field) => Number.isInteger(recurrence[field])).map((field) => [
+      field,
+      convertIntegerPrecision(recurrence[field]!, precision),
+    ]),
+  ),
+});
+
+const convertRecurrenceByTaxPrecision = (
+  recurrence: RecurrenceAmountWithTax,
+  precision: number,
+): RecurrenceAmountWithTax => ({
+  ...recurrence,
+  amount_total: convertIntegerPrecision(recurrence.amount_total, precision),
+  amount_subtotal: convertIntegerPrecision(recurrence.amount_subtotal, precision),
+  amount_tax: convertIntegerPrecision(recurrence.amount_tax!, precision),
+  tax: {
+    ...recurrence.tax,
+    amount: convertIntegerPrecision(recurrence.tax?.amount!, precision),
+  },
+});
+
 const convertBreakDownPrecision = (details: PricingDetails | CompositePriceItem, precision: number): PricingDetails => {
+  const breakdown = details.total_details?.breakdown;
+
   return {
-    amount_subtotal: toDineroFromInteger(details.amount_subtotal!).convertPrecision(precision).getAmount(),
-    amount_total: toDineroFromInteger(details.amount_total!).convertPrecision(precision).getAmount(),
+    amount_subtotal: convertIntegerPrecision(details.amount_subtotal!, precision),
+    amount_total: convertIntegerPrecision(details.amount_total!, precision),
     ...(isPricingDetails(details) && {
-      amount_tax: toDineroFromInteger(details.amount_tax!).convertPrecision(precision).getAmount(),
+      amount_tax: convertIntegerPrecision(details.amount_tax!, precision),
     }),
     total_details: {
       ...details.total_details,
-      amount_tax: toDineroFromInteger(details.total_details?.amount_tax!).convertPrecision(precision).getAmount(),
+      amount_tax: convertIntegerPrecision(details.total_details?.amount_tax!, precision),
       breakdown: {
-        ...details.total_details?.breakdown,
-        taxes: details.total_details?.breakdown?.taxes!.map((tax: TaxAmountBreakdown) => ({
+        ...breakdown,
+        taxes: breakdown?.taxes!.map((tax: TaxAmountBreakdown) => ({
           ...tax,
-          amount: toDineroFromInteger(tax.amount!).convertPrecision(precision).getAmount(),
+          amount: convertIntegerPrecision(tax.amount!, precision),
         })),
-        recurrences: details.total_details?.breakdown?.recurrences!.map((recurrence: RecurrenceAmount) => {
-          return {
-            ...recurrence,
-            unit_amount_gross: toDineroFromInteger(recurrence.unit_amount_gross!)
-              .convertPrecision(precision)
-              .getAmount(),
-            ...(Number.isInteger(recurrence.unit_amount_net) && {
-              unit_amount_net: toDineroFromInteger(recurrence.unit_amount_net!).convertPrecision(precision).getAmount(),
-            }),
-            amount_subtotal: toDineroFromInteger(recurrence.amount_subtotal).convertPrecision(precision).getAmount(),
-            amount_total: toDineroFromInteger(recurrence.amount_total).convertPrecision(precision).getAmount(),
-            amount_tax: toDineroFromInteger(recurrence.amount_tax!).convertPrecision(precision).getAmount(),
-            ...(Number.isInteger(recurrence.discount_amount) && {
-              discount_amount: toDineroFromInteger(recurrence.discount_amount!).convertPrecision(precision).getAmount(),
-            }),
-            ...(Number.isInteger(recurrence.before_discount_amount_total) && {
-              before_discount_amount_total: toDineroFromInteger(recurrence.before_discount_amount_total!)
-                .convertPrecision(precision)
-                .getAmount(),
-            }),
-            ...(Number.isInteger(recurrence.before_discount_amount_subtotal) && {
-              before_discount_amount_subtotal: toDineroFromInteger(recurrence.before_discount_amount_subtotal!)
-                .convertPrecision(precision)
-                .getAmount(),
-            }),
-            ...(typeof recurrence.after_cashback_amount_total === 'number' &&
-              Number.isInteger(recurrence.after_cashback_amount_total) && {
-                after_cashback_amount_total: toDineroFromInteger(recurrence.after_cashback_amount_total)
-                  .convertPrecision(precision)
-                  .getAmount(),
-              }),
-          };
-        }),
-        recurrencesByTax: details.total_details?.breakdown?.recurrencesByTax!.map(
-          (recurrence: RecurrenceAmountWithTax) => {
-            return {
-              ...recurrence,
-              amount_total: toDineroFromInteger(recurrence.amount_total).convertPrecision(precision).getAmount(),
-              amount_subtotal: toDineroFromInteger(recurrence.amount_subtotal).convertPrecision(precision).getAmount(),
-              amount_tax: toDineroFromInteger(recurrence.amount_tax!).convertPrecision(precision).getAmount(),
-              tax: {
-                ...recurrence.tax,
-                amount: toDineroFromInteger(recurrence.tax?.amount!).convertPrecision(precision).getAmount(),
-              },
-            };
-          },
+        recurrences: breakdown?.recurrences!.map((recurrence) => convertRecurrencePrecision(recurrence, precision)),
+        recurrencesByTax: breakdown?.recurrencesByTax!.map((recurrence) =>
+          convertRecurrenceByTaxPrecision(recurrence, precision),
         ),
-        cashbacks: details.total_details?.breakdown?.cashbacks?.map((cashback: CashbackAmount) => ({
+        cashbacks: breakdown?.cashbacks?.map((cashback: CashbackAmount) => ({
           ...cashback,
-          amount_total: toDineroFromInteger(cashback.amount_total!).convertPrecision(precision).getAmount(),
+          amount_total: convertIntegerPrecision(cashback.amount_total!, precision),
         })),
       },
     },
@@ -333,47 +291,59 @@ export const convertPricingPrecision = (details: PricingDetails, precision: numb
 });
 
 /**
+ * Values computed when applying coupons, which don't belong in a price item dto.
+ */
+const COUPON_COMPUTED_FIELDS = [
+  'before_discount_amount_total',
+  'before_discount_amount_total_decimal',
+  'before_discount_amount_subtotal',
+  'before_discount_amount_subtotal_decimal',
+  'before_discount_unit_amount',
+  'before_discount_unit_amount_decimal',
+  'before_discount_unit_amount_gross',
+  'before_discount_unit_amount_gross_decimal',
+  'before_discount_unit_amount_net',
+  'before_discount_unit_amount_net_decimal',
+  'before_discount_tax_amount',
+  'before_discount_tax_amount_decimal',
+  'discount_amount',
+  'discount_amount_decimal',
+  'discount_percentage',
+  'discount_amount_net',
+  'discount_amount_net_decimal',
+  'tax_discount_amount',
+  'tax_discount_amount_decimal',
+  'unit_discount_amount',
+  'unit_discount_amount_decimal',
+  'unit_discount_amount_net',
+  'unit_discount_amount_net_decimal',
+  'cashback_amount',
+  'cashback_amount_decimal',
+  'after_cashback_amount_total',
+  'after_cashback_amount_total_decimal',
+  'cashback_period',
+] as const satisfies ReadonlyArray<keyof PriceItem>;
+
+/**
  * Removes all computed values from a price item and returns a price item dto.
  */
-export const convertPriceItemWithCouponAppliedToPriceItemDto = ({
-  before_discount_amount_total,
-  before_discount_amount_total_decimal,
-  before_discount_amount_subtotal,
-  before_discount_amount_subtotal_decimal,
-  before_discount_unit_amount,
-  before_discount_unit_amount_decimal,
-  before_discount_unit_amount_gross,
-  before_discount_unit_amount_gross_decimal,
-  before_discount_unit_amount_net,
-  before_discount_unit_amount_net_decimal,
-  before_discount_tax_amount,
-  before_discount_tax_amount_decimal,
-  discount_amount,
-  discount_amount_decimal,
-  discount_percentage,
-  discount_amount_net,
-  discount_amount_net_decimal,
-  tax_discount_amount,
-  tax_discount_amount_decimal,
-  unit_discount_amount,
-  unit_discount_amount_decimal,
-  unit_discount_amount_net,
-  unit_discount_amount_net_decimal,
-  cashback_amount,
-  cashback_amount_decimal,
-  after_cashback_amount_total,
-  after_cashback_amount_total_decimal,
-  cashback_period,
-  ...priceItem
-}: PriceItem): PriceItemDto =>
-  ({
+export const convertPriceItemWithCouponAppliedToPriceItemDto = (priceItemWithCoupon: PriceItem): PriceItemDto => {
+  const { before_discount_unit_amount, before_discount_unit_amount_decimal } = priceItemWithCoupon;
+  const priceItem: Partial<PriceItem> = { ...priceItemWithCoupon };
+
+  for (const field of COUPON_COMPUTED_FIELDS) {
+    delete priceItem[field];
+  }
+
+  return {
     ...priceItem,
     ...(before_discount_unit_amount && {
       unit_amount: before_discount_unit_amount,
       unit_amount_decimal: before_discount_unit_amount_decimal,
     }),
     _price: priceItem._price as Price,
-  }) as PriceItemDto;
+  } as PriceItemDto;
+};
 
 export const convertCashbackAmountsPrecision = (
   cashbackAmount: number | undefined,
@@ -383,15 +353,13 @@ export const convertCashbackAmountsPrecision = (
   return {
     ...(cashbackAmount &&
       typeof cashbackAmount === 'number' && {
-        cashback_amount: toDineroFromInteger(cashbackAmount).convertPrecision(precision).getAmount(),
-        cashback_amount_decimal: toDineroFromInteger(cashbackAmount).toUnit().toString(),
+        cashback_amount: convertIntegerPrecision(cashbackAmount, precision),
+        cashback_amount_decimal: toDecimalString(cashbackAmount),
       }),
     ...(afterCashbackAmountTotal &&
       typeof afterCashbackAmountTotal === 'number' && {
-        after_cashback_amount_total: toDineroFromInteger(afterCashbackAmountTotal)
-          .convertPrecision(precision)
-          .getAmount(),
-        after_cashback_amount_total_decimal: toDineroFromInteger(afterCashbackAmountTotal).toUnit().toString(),
+        after_cashback_amount_total: convertIntegerPrecision(afterCashbackAmountTotal, precision),
+        after_cashback_amount_total_decimal: toDecimalString(afterCashbackAmountTotal),
       }),
   };
 };

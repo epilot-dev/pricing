@@ -1,0 +1,1108 @@
+[
+  {
+    "items": [
+      {
+        "price_id": "price#4",
+        "product_id": "prod-id#1234",
+        "quantity": 1,
+        "description": "Eletricity Pack 1",
+        "_price": {
+          "unit_amount_currency": "EUR",
+          "sales_tax": "standard",
+          "active": true,
+          "type": "one_time",
+          "is_composite_price": true,
+          "_tags": [
+            "composite"
+          ],
+          "_title": "Eletricity Pack 1",
+          "description": "Eletricity Pack 1",
+          "price_components": [
+            {
+              "_id": "price#4-comp#1",
+              "unit_amount": 1000,
+              "unit_amount_currency": "EUR",
+              "unit_amount_decimal": "10.00",
+              "active": true,
+              "price_display_in_journeys": "show_price",
+              "type": "recurring",
+              "billing_period": "monthly",
+              "billing_duration_unit": "months",
+              "notice_time_unit": "months",
+              "termination_time_unit": "months",
+              "renewal_duration_unit": "months",
+              "_title": "Base price per month",
+              "description": "Base price per month",
+              "tax": [
+                {
+                  "_id": "10",
+                  "rate": 10,
+                  "type": "VAT",
+                  "_schema": "tax",
+                  "_org": "739224",
+                  "_title": "",
+                  "_created_at": "2022-06-29T20:26:19.020Z",
+                  "_updated_at": "2022-06-29T20:26:19.020Z"
+                }
+              ],
+              "is_tax_inclusive": true,
+              "pricing_model": "per_unit",
+              "_coupons": [
+                {
+                  "_id": "coupon#2",
+                  "_schema": "coupon",
+                  "_org": "org#1",
+                  "_created_at": "2022-06-15T09:17:06.510Z",
+                  "_updated_at": "2022-06-17T11:48:20.104Z",
+                  "_title": "Winter Sale",
+                  "name": "Winter Sale",
+                  "type": "fixed",
+                  "fixed_value": 500,
+                  "fixed_value_decimal": "5.00",
+                  "fixed_value_currency": "EUR"
+                }
+              ]
+            },
+            {
+              "_id": "price#4-comp#3",
+              "pricing_model": "per_unit",
+              "unit_amount": 10000,
+              "unit_amount_currency": "EUR",
+              "unit_amount_decimal": "100.00",
+              "sales_tax": "standard",
+              "active": true,
+              "price_display_in_journeys": "show_price",
+              "type": "one_time",
+              "_title": "Wallbox 11 kW",
+              "tax": [
+                {
+                  "_id": "10",
+                  "rate": 10,
+                  "type": "VAT",
+                  "_schema": "tax",
+                  "_org": "739224",
+                  "_title": "",
+                  "_created_at": "2022-06-29T20:26:19.020Z",
+                  "_updated_at": "2022-06-29T20:26:19.020Z"
+                }
+              ],
+              "is_tax_inclusive": true,
+              "billing_period": "weekly",
+              "billing_duration_unit": "months",
+              "notice_time_unit": "months",
+              "termination_time_unit": "months",
+              "renewal_duration_unit": "months",
+              "description": "Wallbox 11 kW",
+              "_coupons": [
+                {
+                  "_id": "coupon#1",
+                  "_schema": "coupon",
+                  "_org": "org#1",
+                  "_created_at": "2022-06-15T09:17:06.510Z",
+                  "_updated_at": "2022-06-17T11:48:20.104Z",
+                  "_title": "Winter Sale",
+                  "name": "Winter Sale",
+                  "type": "percentage",
+                  "percentage_value": "10"
+                }
+              ]
+            },
+            {
+              "_id": "price#4-comp#3",
+              "pricing_model": "per_unit",
+              "unit_amount": 10000,
+              "unit_amount_currency": "EUR",
+              "unit_amount_decimal": "100.00",
+              "sales_tax": "standard",
+              "active": true,
+              "price_display_in_journeys": "show_price",
+              "type": "one_time",
+              "_title": "Wallbox 11 kW",
+              "tax": [
+                {
+                  "_id": "10",
+                  "rate": 10,
+                  "type": "VAT",
+                  "_schema": "tax",
+                  "_org": "739224",
+                  "_title": "",
+                  "_created_at": "2022-06-29T20:26:19.020Z",
+                  "_updated_at": "2022-06-29T20:26:19.020Z"
+                }
+              ],
+              "is_tax_inclusive": true,
+              "billing_period": "weekly",
+              "billing_duration_unit": "months",
+              "notice_time_unit": "months",
+              "termination_time_unit": "months",
+              "renewal_duration_unit": "months",
+              "description": "Wallbox 11 kW",
+              "_coupons": []
+            }
+          ],
+          "_id": "price#4",
+          "price_display_in_journeys": "show_price"
+        },
+        "_product": {},
+        "currency": "EUR",
+        "item_components": [
+          {
+            "pricing_model": "per_unit",
+            "quantity": 1,
+            "type": "recurring",
+            "billing_period": "monthly",
+            "price_id": "price#4-comp#1",
+            "product_id": "prod-id#1234",
+            "_price": {
+              "_id": "price#4-comp#1",
+              "unit_amount": 1000,
+              "unit_amount_currency": "EUR",
+              "unit_amount_decimal": "10.00",
+              "active": true,
+              "price_display_in_journeys": "show_price",
+              "type": "recurring",
+              "billing_period": "monthly",
+              "billing_duration_unit": "months",
+              "notice_time_unit": "months",
+              "termination_time_unit": "months",
+              "renewal_duration_unit": "months",
+              "_title": "Base price per month",
+              "description": "Base price per month",
+              "tax": [
+                {
+                  "_id": "10",
+                  "rate": 10,
+                  "type": "VAT",
+                  "_schema": "tax",
+                  "_org": "739224",
+                  "_title": "",
+                  "_created_at": "2022-06-29T20:26:19.020Z",
+                  "_updated_at": "2022-06-29T20:26:19.020Z"
+                }
+              ],
+              "is_tax_inclusive": true,
+              "pricing_model": "per_unit",
+              "_coupons": [
+                {
+                  "_id": "coupon#2",
+                  "_schema": "coupon",
+                  "_org": "org#1",
+                  "_created_at": "2022-06-15T09:17:06.510Z",
+                  "_updated_at": "2022-06-17T11:48:20.104Z",
+                  "_title": "Winter Sale",
+                  "name": "Winter Sale",
+                  "type": "fixed",
+                  "fixed_value": 500,
+                  "fixed_value_decimal": "5.00",
+                  "fixed_value_currency": "EUR"
+                }
+              ]
+            },
+            "taxes": [
+              {
+                "tax": {
+                  "_id": "10",
+                  "rate": 10,
+                  "type": "VAT",
+                  "_schema": "tax",
+                  "_org": "739224",
+                  "_title": "",
+                  "_created_at": "2022-06-29T20:26:19.020Z",
+                  "_updated_at": "2022-06-29T20:26:19.020Z"
+                },
+                "amount": 45
+              }
+            ],
+            "_coupons": [
+              {
+                "_id": "coupon#2",
+                "_schema": "coupon",
+                "_org": "org#1",
+                "_created_at": "2022-06-15T09:17:06.510Z",
+                "_updated_at": "2022-06-17T11:48:20.104Z",
+                "_title": "Winter Sale",
+                "name": "Winter Sale",
+                "type": "fixed",
+                "fixed_value": 500,
+                "fixed_value_decimal": "5.00",
+                "fixed_value_currency": "EUR"
+              }
+            ],
+            "unit_amount": 500,
+            "unit_amount_net": 455,
+            "unit_amount_gross": 500,
+            "amount_subtotal": 455,
+            "amount_total": 500,
+            "amount_tax": 45,
+            "unit_discount_amount": 500,
+            "before_discount_unit_amount": 1000,
+            "before_discount_unit_amount_gross": 1000,
+            "before_discount_unit_amount_net": 909,
+            "unit_discount_amount_net": 455,
+            "tax_discount_amount": 45,
+            "before_discount_tax_amount": 91,
+            "discount_amount": 500,
+            "discount_amount_net": 455,
+            "before_discount_amount_total": 1000,
+            "before_discount_amount_subtotal": 909,
+            "currency": "EUR",
+            "description": "Base price per month",
+            "is_tax_inclusive": true,
+            "unit_amount_decimal": "5",
+            "before_discount_unit_amount_decimal": "10",
+            "before_discount_unit_amount_gross_decimal": "10",
+            "before_discount_unit_amount_net_decimal": "9.090909090909",
+            "unit_discount_amount_decimal": "5",
+            "unit_amount_net_decimal": "4.545454545454",
+            "unit_discount_amount_net_decimal": "4.545454545455",
+            "unit_amount_gross_decimal": "5",
+            "amount_subtotal_decimal": "4.545454545454",
+            "amount_total_decimal": "5",
+            "discount_amount_decimal": "5",
+            "before_discount_amount_total_decimal": "10",
+            "before_discount_amount_subtotal_decimal": "9.090909090909",
+            "tax_discount_amount_decimal": "0.454545454545",
+            "discount_amount_net_decimal": "4.545454545455",
+            "before_discount_tax_amount_decimal": "0.909090909091"
+          },
+          {
+            "pricing_model": "per_unit",
+            "quantity": 1,
+            "type": "one_time",
+            "price_id": "price#4-comp#3",
+            "product_id": "prod-id#1234",
+            "_price": {
+              "_id": "price#4-comp#3",
+              "pricing_model": "per_unit",
+              "unit_amount": 10000,
+              "unit_amount_currency": "EUR",
+              "unit_amount_decimal": "100.00",
+              "sales_tax": "standard",
+              "active": true,
+              "price_display_in_journeys": "show_price",
+              "type": "one_time",
+              "_title": "Wallbox 11 kW",
+              "tax": [
+                {
+                  "_id": "10",
+                  "rate": 10,
+                  "type": "VAT",
+                  "_schema": "tax",
+                  "_org": "739224",
+                  "_title": "",
+                  "_created_at": "2022-06-29T20:26:19.020Z",
+                  "_updated_at": "2022-06-29T20:26:19.020Z"
+                }
+              ],
+              "is_tax_inclusive": true,
+              "billing_period": "weekly",
+              "billing_duration_unit": "months",
+              "notice_time_unit": "months",
+              "termination_time_unit": "months",
+              "renewal_duration_unit": "months",
+              "description": "Wallbox 11 kW",
+              "_coupons": [
+                {
+                  "_id": "coupon#1",
+                  "_schema": "coupon",
+                  "_org": "org#1",
+                  "_created_at": "2022-06-15T09:17:06.510Z",
+                  "_updated_at": "2022-06-17T11:48:20.104Z",
+                  "_title": "Winter Sale",
+                  "name": "Winter Sale",
+                  "type": "percentage",
+                  "percentage_value": "10"
+                }
+              ]
+            },
+            "taxes": [
+              {
+                "tax": {
+                  "_id": "10",
+                  "rate": 10,
+                  "type": "VAT",
+                  "_schema": "tax",
+                  "_org": "739224",
+                  "_title": "",
+                  "_created_at": "2022-06-29T20:26:19.020Z",
+                  "_updated_at": "2022-06-29T20:26:19.020Z"
+                },
+                "amount": 818
+              }
+            ],
+            "_coupons": [
+              {
+                "_id": "coupon#1",
+                "_schema": "coupon",
+                "_org": "org#1",
+                "_created_at": "2022-06-15T09:17:06.510Z",
+                "_updated_at": "2022-06-17T11:48:20.104Z",
+                "_title": "Winter Sale",
+                "name": "Winter Sale",
+                "type": "percentage",
+                "percentage_value": "10"
+              }
+            ],
+            "unit_amount": 9000,
+            "unit_amount_net": 8182,
+            "unit_amount_gross": 9000,
+            "amount_subtotal": 8182,
+            "amount_total": 9000,
+            "amount_tax": 818,
+            "unit_discount_amount": 1000,
+            "before_discount_unit_amount": 10000,
+            "before_discount_unit_amount_gross": 10000,
+            "before_discount_unit_amount_net": 9091,
+            "unit_discount_amount_net": 909,
+            "tax_discount_amount": 91,
+            "before_discount_tax_amount": 909,
+            "discount_amount": 1000,
+            "discount_amount_net": 909,
+            "discount_percentage": 10,
+            "before_discount_amount_total": 10000,
+            "before_discount_amount_subtotal": 9091,
+            "currency": "EUR",
+            "description": "Wallbox 11 kW",
+            "is_tax_inclusive": true,
+            "unit_amount_decimal": "90",
+            "before_discount_unit_amount_decimal": "100",
+            "before_discount_unit_amount_gross_decimal": "100",
+            "before_discount_unit_amount_net_decimal": "90.909090909091",
+            "unit_discount_amount_decimal": "10",
+            "unit_amount_net_decimal": "81.818181818182",
+            "unit_discount_amount_net_decimal": "9.090909090909",
+            "unit_amount_gross_decimal": "90",
+            "amount_subtotal_decimal": "81.818181818182",
+            "amount_total_decimal": "90",
+            "discount_amount_decimal": "10",
+            "before_discount_amount_total_decimal": "100",
+            "before_discount_amount_subtotal_decimal": "90.909090909091",
+            "tax_discount_amount_decimal": "0.909090909091",
+            "discount_amount_net_decimal": "9.090909090909",
+            "before_discount_tax_amount_decimal": "9.090909090909"
+          },
+          {
+            "pricing_model": "per_unit",
+            "quantity": 1,
+            "type": "one_time",
+            "price_id": "price#4-comp#3",
+            "product_id": "prod-id#1234",
+            "_price": {
+              "_id": "price#4-comp#3",
+              "pricing_model": "per_unit",
+              "unit_amount": 10000,
+              "unit_amount_currency": "EUR",
+              "unit_amount_decimal": "100.00",
+              "sales_tax": "standard",
+              "active": true,
+              "price_display_in_journeys": "show_price",
+              "type": "one_time",
+              "_title": "Wallbox 11 kW",
+              "tax": [
+                {
+                  "_id": "10",
+                  "rate": 10,
+                  "type": "VAT",
+                  "_schema": "tax",
+                  "_org": "739224",
+                  "_title": "",
+                  "_created_at": "2022-06-29T20:26:19.020Z",
+                  "_updated_at": "2022-06-29T20:26:19.020Z"
+                }
+              ],
+              "is_tax_inclusive": true,
+              "billing_period": "weekly",
+              "billing_duration_unit": "months",
+              "notice_time_unit": "months",
+              "termination_time_unit": "months",
+              "renewal_duration_unit": "months",
+              "description": "Wallbox 11 kW",
+              "_coupons": []
+            },
+            "taxes": [
+              {
+                "tax": {
+                  "_id": "10",
+                  "rate": 10,
+                  "type": "VAT",
+                  "_schema": "tax",
+                  "_org": "739224",
+                  "_title": "",
+                  "_created_at": "2022-06-29T20:26:19.020Z",
+                  "_updated_at": "2022-06-29T20:26:19.020Z"
+                },
+                "amount": 909
+              }
+            ],
+            "_coupons": [],
+            "unit_amount": 10000,
+            "unit_amount_net": 9091,
+            "unit_amount_gross": 10000,
+            "amount_subtotal": 9091,
+            "amount_total": 10000,
+            "amount_tax": 909,
+            "currency": "EUR",
+            "description": "Wallbox 11 kW",
+            "is_tax_inclusive": true,
+            "unit_amount_decimal": "100",
+            "unit_amount_net_decimal": "90.909090909091",
+            "unit_amount_gross_decimal": "100",
+            "amount_subtotal_decimal": "90.909090909091",
+            "amount_total_decimal": "100"
+          }
+        ],
+        "amount_subtotal": 17727,
+        "amount_total": 19500,
+        "total_details": {
+          "amount_tax": 1773,
+          "breakdown": {
+            "taxes": [
+              {
+                "tax": {
+                  "_id": "10",
+                  "type": "VAT",
+                  "rate": 10
+                },
+                "amount": 1773
+              }
+            ],
+            "recurrences": [
+              {
+                "type": "recurring",
+                "billing_period": "monthly",
+                "unit_amount_gross": 500,
+                "unit_amount_net": 455,
+                "amount_subtotal": 455,
+                "amount_total": 500,
+                "amount_subtotal_decimal": "4.545454545454",
+                "amount_total_decimal": "5",
+                "amount_tax": 45,
+                "before_discount_amount_total": 1000,
+                "before_discount_amount_total_decimal": "10",
+                "before_discount_amount_subtotal": 909,
+                "before_discount_amount_subtotal_decimal": "9.090909090909",
+                "discount_amount": 500,
+                "discount_amount_decimal": "5"
+              },
+              {
+                "type": "one_time",
+                "unit_amount_gross": 19000,
+                "unit_amount_net": 17273,
+                "amount_subtotal": 17273,
+                "amount_total": 19000,
+                "amount_subtotal_decimal": "172.727272727273",
+                "amount_total_decimal": "190",
+                "amount_tax": 1727,
+                "before_discount_amount_total": 20000,
+                "before_discount_amount_total_decimal": "200",
+                "before_discount_amount_subtotal": 18182,
+                "before_discount_amount_subtotal_decimal": "181.818181818182",
+                "discount_amount": 1000,
+                "discount_amount_decimal": "10"
+              }
+            ],
+            "recurrencesByTax": [
+              {
+                "type": "recurring",
+                "billing_period": "monthly",
+                "amount_total": 500,
+                "amount_subtotal": 455,
+                "amount_tax": 45,
+                "tax": {
+                  "tax": {
+                    "_id": "10",
+                    "type": "VAT",
+                    "rate": 10
+                  },
+                  "amount": 1773
+                }
+              },
+              {
+                "type": "one_time",
+                "amount_total": 19000,
+                "amount_subtotal": 17273,
+                "amount_tax": 1727,
+                "tax": {
+                  "tax": {
+                    "_id": "10",
+                    "type": "VAT",
+                    "rate": 10
+                  },
+                  "amount": 1773
+                }
+              }
+            ],
+            "cashbacks": []
+          }
+        },
+        "amount_tax": 1773,
+        "amount_subtotal_decimal": "177.272727272727",
+        "amount_total_decimal": "195"
+      }
+    ],
+    "amount_subtotal": 17727,
+    "amount_total": 19500,
+    "amount_tax": 1773,
+    "total_details": {
+      "amount_tax": 1773,
+      "breakdown": {
+        "taxes": [
+          {
+            "tax": {
+              "_id": "10",
+              "type": "VAT",
+              "rate": 10
+            },
+            "amount": 1773
+          }
+        ],
+        "recurrences": [
+          {
+            "type": "recurring",
+            "billing_period": "monthly",
+            "unit_amount_gross": 500,
+            "unit_amount_net": 455,
+            "amount_subtotal": 455,
+            "amount_total": 500,
+            "amount_subtotal_decimal": "4.545454545454",
+            "amount_total_decimal": "5",
+            "amount_tax": 45,
+            "before_discount_amount_total": 1000,
+            "before_discount_amount_total_decimal": "10",
+            "before_discount_amount_subtotal": 909,
+            "before_discount_amount_subtotal_decimal": "9.090909090909",
+            "discount_amount": 500,
+            "discount_amount_decimal": "5"
+          },
+          {
+            "type": "one_time",
+            "unit_amount_gross": 19000,
+            "unit_amount_net": 17273,
+            "amount_subtotal": 17273,
+            "amount_total": 19000,
+            "amount_subtotal_decimal": "172.727272727273",
+            "amount_total_decimal": "190",
+            "amount_tax": 1727,
+            "before_discount_amount_total": 20000,
+            "before_discount_amount_total_decimal": "200",
+            "before_discount_amount_subtotal": 18182,
+            "before_discount_amount_subtotal_decimal": "181.818181818182",
+            "discount_amount": 1000,
+            "discount_amount_decimal": "10"
+          }
+        ],
+        "recurrencesByTax": [
+          {
+            "type": "recurring",
+            "billing_period": "monthly",
+            "amount_total": 500,
+            "amount_subtotal": 455,
+            "amount_tax": 45,
+            "tax": {
+              "tax": {
+                "_id": "10",
+                "type": "VAT",
+                "rate": 10
+              },
+              "amount": 1773
+            }
+          },
+          {
+            "type": "one_time",
+            "amount_total": 19000,
+            "amount_subtotal": 17273,
+            "amount_tax": 1727,
+            "tax": {
+              "tax": {
+                "_id": "10",
+                "type": "VAT",
+                "rate": 10
+              },
+              "amount": 1773
+            }
+          }
+        ],
+        "cashbacks": []
+      }
+    },
+    "currency": "EUR"
+  },
+  {
+    "items": [
+      {
+        "price_id": "price#4",
+        "product_id": "prod-id#1234",
+        "quantity": 1,
+        "description": "Eletricity Pack 1",
+        "_price": {
+          "unit_amount_currency": "EUR",
+          "sales_tax": "standard",
+          "active": true,
+          "type": "one_time",
+          "is_composite_price": true,
+          "_tags": [
+            "composite"
+          ],
+          "_title": "Eletricity Pack 1",
+          "description": "Eletricity Pack 1",
+          "price_components": [
+            {
+              "_id": "price#4-comp#1",
+              "unit_amount": 1000,
+              "unit_amount_currency": "EUR",
+              "unit_amount_decimal": "10.00",
+              "active": true,
+              "price_display_in_journeys": "show_price",
+              "type": "recurring",
+              "billing_period": "monthly",
+              "billing_duration_unit": "months",
+              "notice_time_unit": "months",
+              "termination_time_unit": "months",
+              "renewal_duration_unit": "months",
+              "_title": "Base price per month",
+              "description": "Base price per month",
+              "tax": [
+                {
+                  "_id": "10",
+                  "rate": 10,
+                  "type": "VAT",
+                  "_schema": "tax",
+                  "_org": "739224",
+                  "_title": "",
+                  "_created_at": "2022-06-29T20:26:19.020Z",
+                  "_updated_at": "2022-06-29T20:26:19.020Z"
+                }
+              ],
+              "is_tax_inclusive": true,
+              "pricing_model": "per_unit",
+              "_coupons": []
+            },
+            {
+              "_id": "price#4-comp#3",
+              "pricing_model": "per_unit",
+              "unit_amount": 10000,
+              "unit_amount_currency": "EUR",
+              "unit_amount_decimal": "100.00",
+              "sales_tax": "standard",
+              "active": true,
+              "price_display_in_journeys": "show_price",
+              "type": "one_time",
+              "_title": "Wallbox 11 kW",
+              "tax": [
+                {
+                  "_id": "10",
+                  "rate": 10,
+                  "type": "VAT",
+                  "_schema": "tax",
+                  "_org": "739224",
+                  "_title": "",
+                  "_created_at": "2022-06-29T20:26:19.020Z",
+                  "_updated_at": "2022-06-29T20:26:19.020Z"
+                }
+              ],
+              "is_tax_inclusive": true,
+              "billing_period": "weekly",
+              "billing_duration_unit": "months",
+              "notice_time_unit": "months",
+              "termination_time_unit": "months",
+              "renewal_duration_unit": "months",
+              "description": "Wallbox 11 kW",
+              "_coupons": [
+                {
+                  "_id": "coupon#3",
+                  "_schema": "coupon",
+                  "_org": "org#1",
+                  "_created_at": "2022-06-15T09:17:06.510Z",
+                  "_updated_at": "2022-06-17T11:48:20.104Z",
+                  "_title": "Summer Cashback",
+                  "name": "Summer Cashback",
+                  "type": "fixed",
+                  "category": "cashback",
+                  "fixed_value": 1000,
+                  "fixed_value_decimal": "10.00",
+                  "fixed_value_currency": "EUR",
+                  "cashback_period": "12"
+                }
+              ]
+            }
+          ],
+          "_id": "price#4",
+          "price_display_in_journeys": "show_price"
+        },
+        "_product": {},
+        "_coupons": [
+          {
+            "_id": "coupon#3",
+            "_schema": "coupon",
+            "_org": "org#1",
+            "_created_at": "2022-06-15T09:17:06.510Z",
+            "_updated_at": "2022-06-17T11:48:20.104Z",
+            "_title": "Summer Cashback",
+            "name": "Summer Cashback",
+            "type": "fixed",
+            "category": "cashback",
+            "fixed_value": 1000,
+            "fixed_value_decimal": "10.00",
+            "fixed_value_currency": "EUR",
+            "cashback_period": "12",
+            "cashback_amount": 1000,
+            "cashback_amount_decimal": "10"
+          }
+        ],
+        "currency": "EUR",
+        "item_components": [
+          {
+            "pricing_model": "per_unit",
+            "quantity": 1,
+            "type": "recurring",
+            "billing_period": "monthly",
+            "price_id": "price#4-comp#1",
+            "product_id": "prod-id#1234",
+            "_price": {
+              "_id": "price#4-comp#1",
+              "unit_amount": 1000,
+              "unit_amount_currency": "EUR",
+              "unit_amount_decimal": "10.00",
+              "active": true,
+              "price_display_in_journeys": "show_price",
+              "type": "recurring",
+              "billing_period": "monthly",
+              "billing_duration_unit": "months",
+              "notice_time_unit": "months",
+              "termination_time_unit": "months",
+              "renewal_duration_unit": "months",
+              "_title": "Base price per month",
+              "description": "Base price per month",
+              "tax": [
+                {
+                  "_id": "10",
+                  "rate": 10,
+                  "type": "VAT",
+                  "_schema": "tax",
+                  "_org": "739224",
+                  "_title": "",
+                  "_created_at": "2022-06-29T20:26:19.020Z",
+                  "_updated_at": "2022-06-29T20:26:19.020Z"
+                }
+              ],
+              "is_tax_inclusive": true,
+              "pricing_model": "per_unit",
+              "_coupons": []
+            },
+            "taxes": [
+              {
+                "tax": {
+                  "_id": "10",
+                  "rate": 10,
+                  "type": "VAT",
+                  "_schema": "tax",
+                  "_org": "739224",
+                  "_title": "",
+                  "_created_at": "2022-06-29T20:26:19.020Z",
+                  "_updated_at": "2022-06-29T20:26:19.020Z"
+                },
+                "amount": 91
+              }
+            ],
+            "_coupons": [],
+            "unit_amount": 1000,
+            "unit_amount_net": 909,
+            "unit_amount_gross": 1000,
+            "amount_subtotal": 909,
+            "amount_total": 1000,
+            "amount_tax": 91,
+            "currency": "EUR",
+            "description": "Base price per month",
+            "is_tax_inclusive": true,
+            "unit_amount_decimal": "10",
+            "unit_amount_net_decimal": "9.090909090909",
+            "unit_amount_gross_decimal": "10",
+            "amount_subtotal_decimal": "9.090909090909",
+            "amount_total_decimal": "10"
+          },
+          {
+            "pricing_model": "per_unit",
+            "quantity": 1,
+            "type": "one_time",
+            "price_id": "price#4-comp#3",
+            "product_id": "prod-id#1234",
+            "_price": {
+              "_id": "price#4-comp#3",
+              "pricing_model": "per_unit",
+              "unit_amount": 10000,
+              "unit_amount_currency": "EUR",
+              "unit_amount_decimal": "100.00",
+              "sales_tax": "standard",
+              "active": true,
+              "price_display_in_journeys": "show_price",
+              "type": "one_time",
+              "_title": "Wallbox 11 kW",
+              "tax": [
+                {
+                  "_id": "10",
+                  "rate": 10,
+                  "type": "VAT",
+                  "_schema": "tax",
+                  "_org": "739224",
+                  "_title": "",
+                  "_created_at": "2022-06-29T20:26:19.020Z",
+                  "_updated_at": "2022-06-29T20:26:19.020Z"
+                }
+              ],
+              "is_tax_inclusive": true,
+              "billing_period": "weekly",
+              "billing_duration_unit": "months",
+              "notice_time_unit": "months",
+              "termination_time_unit": "months",
+              "renewal_duration_unit": "months",
+              "description": "Wallbox 11 kW",
+              "_coupons": [
+                {
+                  "_id": "coupon#3",
+                  "_schema": "coupon",
+                  "_org": "org#1",
+                  "_created_at": "2022-06-15T09:17:06.510Z",
+                  "_updated_at": "2022-06-17T11:48:20.104Z",
+                  "_title": "Summer Cashback",
+                  "name": "Summer Cashback",
+                  "type": "fixed",
+                  "category": "cashback",
+                  "fixed_value": 1000,
+                  "fixed_value_decimal": "10.00",
+                  "fixed_value_currency": "EUR",
+                  "cashback_period": "12"
+                }
+              ]
+            },
+            "taxes": [
+              {
+                "tax": {
+                  "_id": "10",
+                  "rate": 10,
+                  "type": "VAT",
+                  "_schema": "tax",
+                  "_org": "739224",
+                  "_title": "",
+                  "_created_at": "2022-06-29T20:26:19.020Z",
+                  "_updated_at": "2022-06-29T20:26:19.020Z"
+                },
+                "amount": 909
+              }
+            ],
+            "_coupons": [
+              {
+                "_id": "coupon#3",
+                "_schema": "coupon",
+                "_org": "org#1",
+                "_created_at": "2022-06-15T09:17:06.510Z",
+                "_updated_at": "2022-06-17T11:48:20.104Z",
+                "_title": "Summer Cashback",
+                "name": "Summer Cashback",
+                "type": "fixed",
+                "category": "cashback",
+                "fixed_value": 1000,
+                "fixed_value_decimal": "10.00",
+                "fixed_value_currency": "EUR",
+                "cashback_period": "12"
+              }
+            ],
+            "unit_amount": 10000,
+            "unit_amount_net": 9091,
+            "unit_amount_gross": 10000,
+            "amount_subtotal": 9091,
+            "amount_total": 10000,
+            "amount_tax": 909,
+            "cashback_amount": 1000,
+            "after_cashback_amount_total": 9981,
+            "currency": "EUR",
+            "description": "Wallbox 11 kW",
+            "cashback_period": "12",
+            "is_tax_inclusive": true,
+            "unit_amount_decimal": "100",
+            "unit_amount_net_decimal": "90.909090909091",
+            "unit_amount_gross_decimal": "100",
+            "amount_subtotal_decimal": "90.909090909091",
+            "amount_total_decimal": "100",
+            "cashback_amount_decimal": "10",
+            "after_cashback_amount_total_decimal": "99.807692307692"
+          }
+        ],
+        "amount_subtotal": 10000,
+        "amount_total": 11000,
+        "total_details": {
+          "amount_tax": 1000,
+          "breakdown": {
+            "taxes": [
+              {
+                "tax": {
+                  "_id": "10",
+                  "type": "VAT",
+                  "rate": 10
+                },
+                "amount": 1000
+              }
+            ],
+            "recurrences": [
+              {
+                "type": "recurring",
+                "billing_period": "monthly",
+                "unit_amount_gross": 1000,
+                "unit_amount_net": 909,
+                "amount_subtotal": 909,
+                "amount_total": 1000,
+                "amount_subtotal_decimal": "9.090909090909",
+                "amount_total_decimal": "10",
+                "amount_tax": 91
+              },
+              {
+                "type": "one_time",
+                "unit_amount_gross": 10000,
+                "unit_amount_net": 9091,
+                "amount_subtotal": 9091,
+                "amount_total": 10000,
+                "amount_subtotal_decimal": "90.909090909091",
+                "amount_total_decimal": "100",
+                "amount_tax": 909
+              }
+            ],
+            "recurrencesByTax": [
+              {
+                "type": "recurring",
+                "billing_period": "monthly",
+                "amount_total": 1000,
+                "amount_subtotal": 909,
+                "amount_tax": 91,
+                "tax": {
+                  "tax": {
+                    "_id": "10",
+                    "type": "VAT",
+                    "rate": 10
+                  },
+                  "amount": 1000
+                }
+              },
+              {
+                "type": "one_time",
+                "amount_total": 10000,
+                "amount_subtotal": 9091,
+                "amount_tax": 909,
+                "tax": {
+                  "tax": {
+                    "_id": "10",
+                    "type": "VAT",
+                    "rate": 10
+                  },
+                  "amount": 1000
+                }
+              }
+            ],
+            "cashbacks": [
+              {
+                "cashback_period": "12",
+                "amount_total": 1000,
+                "cashback_name": "Summer Cashback"
+              },
+              {
+                "cashback_period": "12",
+                "amount_total": 1000,
+                "cashback_name": "Summer Cashback"
+              }
+            ]
+          }
+        },
+        "amount_tax": 1000,
+        "amount_subtotal_decimal": "100",
+        "amount_total_decimal": "110"
+      }
+    ],
+    "amount_subtotal": 10000,
+    "amount_total": 11000,
+    "amount_tax": 1000,
+    "total_details": {
+      "amount_tax": 1000,
+      "breakdown": {
+        "taxes": [
+          {
+            "tax": {
+              "_id": "10",
+              "type": "VAT",
+              "rate": 10
+            },
+            "amount": 1000
+          }
+        ],
+        "recurrences": [
+          {
+            "type": "recurring",
+            "billing_period": "monthly",
+            "unit_amount_gross": 1000,
+            "unit_amount_net": 909,
+            "amount_subtotal": 909,
+            "amount_total": 1000,
+            "amount_subtotal_decimal": "9.090909090909",
+            "amount_total_decimal": "10",
+            "amount_tax": 91,
+            "after_cashback_amount_total": 833,
+            "after_cashback_amount_total_decimal": "8.333333333333"
+          },
+          {
+            "type": "one_time",
+            "unit_amount_gross": 10000,
+            "unit_amount_net": 9091,
+            "amount_subtotal": 9091,
+            "amount_total": 10000,
+            "amount_subtotal_decimal": "90.909090909091",
+            "amount_total_decimal": "100",
+            "amount_tax": 909,
+            "after_cashback_amount_total": 8000,
+            "after_cashback_amount_total_decimal": "80"
+          }
+        ],
+        "recurrencesByTax": [
+          {
+            "type": "recurring",
+            "billing_period": "monthly",
+            "amount_total": 1000,
+            "amount_subtotal": 909,
+            "amount_tax": 91,
+            "tax": {
+              "tax": {
+                "_id": "10",
+                "type": "VAT",
+                "rate": 10
+              },
+              "amount": 1000
+            }
+          },
+          {
+            "type": "one_time",
+            "amount_total": 10000,
+            "amount_subtotal": 9091,
+            "amount_tax": 909,
+            "tax": {
+              "tax": {
+                "_id": "10",
+                "type": "VAT",
+                "rate": 10
+              },
+              "amount": 1000
+            }
+          }
+        ],
+        "cashbacks": [
+          {
+            "cashback_period": "12",
+            "amount_total": 1000,
+            "cashback_name": "Summer Cashback"
+          },
+          {
+            "cashback_period": "12",
+            "amount_total": 1000,
+            "cashback_name": "Summer Cashback"
+          }
+        ]
+      }
+    },
+    "currency": "EUR"
+  }
+]

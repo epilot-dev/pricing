@@ -1,7 +1,7 @@
 import type { Currency, Dinero } from 'dinero.js';
-import { dinero } from './dinero';
 import { DEFAULT_CURRENCY } from './constants';
 import { DECIMAL_PRECISION } from './constants';
+import { dinero } from './dinero';
 
 /**
  * Utility mapper from Integer amount into DineroJS object using DECIMAL_PRECISION (12).

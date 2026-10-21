@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.9.2
+
+### Patch Changes
+
+- 4ebe2ca: No functional changes. Release published from CI via npm trusted publishing (OIDC) with provenance.
+
 ## 5.9.1
 
 ### Patch Changes

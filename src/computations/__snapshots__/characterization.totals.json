@@ -1,0 +1,173 @@
+{
+  "amount_subtotal": 558724,
+  "amount_total": 664882,
+  "amount_tax": 106158,
+  "total_details": {
+    "amount_tax": 106158,
+    "breakdown": {
+      "taxes": [
+        {
+          "tax": {
+            "_id": "19",
+            "type": "VAT",
+            "rate": 19
+          },
+          "amount": 106158
+        }
+      ],
+      "recurrences": [
+        {
+          "type": "one_time",
+          "unit_amount_gross": 38347,
+          "unit_amount_net": 32224,
+          "amount_subtotal": 255125,
+          "amount_total": 303599,
+          "amount_subtotal_decimal": "2551.252100840364",
+          "amount_total_decimal": "3035.99",
+          "amount_tax": 48474,
+          "before_discount_amount_total": 337550,
+          "before_discount_amount_total_decimal": "3375.5",
+          "before_discount_amount_subtotal": 283655,
+          "before_discount_amount_subtotal_decimal": "2836.554621848777",
+          "discount_amount": 33951,
+          "discount_amount_decimal": "339.51",
+          "after_cashback_amount_total": 156550,
+          "after_cashback_amount_total_decimal": "1565.5031"
+        },
+        {
+          "type": "recurring",
+          "billing_period": "monthly",
+          "unit_amount_gross": 45632,
+          "unit_amount_net": 38347,
+          "amount_subtotal": 303599,
+          "amount_total": 361283,
+          "amount_subtotal_decimal": "3035.99",
+          "amount_total_decimal": "3612.8281",
+          "amount_tax": 57684,
+          "before_discount_amount_total": 401685,
+          "before_discount_amount_total_decimal": "4016.845",
+          "before_discount_amount_subtotal": 337550,
+          "before_discount_amount_subtotal_decimal": "3375.5",
+          "discount_amount": 40402,
+          "discount_amount_decimal": "404.0169",
+          "after_cashback_amount_total": 349029,
+          "after_cashback_amount_total_decimal": "3490.287525"
+        }
+      ],
+      "recurrencesByTax": [
+        {
+          "type": "one_time",
+          "amount_total": 303599,
+          "amount_subtotal": 255125,
+          "amount_tax": 48474,
+          "tax": {
+            "tax": {
+              "_id": "19",
+              "type": "VAT",
+              "rate": 19
+            },
+            "amount": 106158
+          }
+        },
+        {
+          "type": "recurring",
+          "billing_period": "monthly",
+          "amount_total": 361283,
+          "amount_subtotal": 303599,
+          "amount_tax": 57684,
+          "tax": {
+            "tax": {
+              "_id": "19",
+              "type": "VAT",
+              "rate": 19
+            },
+            "amount": 106158
+          }
+        }
+      ],
+      "cashbacks": [
+        {
+          "cashback_period": "12",
+          "amount_total": 15000,
+          "cashback_name": "Summer Cashback"
+        },
+        {
+          "cashback_period": "12",
+          "amount_total": 1851,
+          "cashback_name": "Summer Cashback"
+        },
+        {
+          "cashback_period": "12",
+          "amount_total": 15000,
+          "cashback_name": "Summer Cashback"
+        },
+        {
+          "cashback_period": "12",
+          "amount_total": 2203,
+          "cashback_name": "Summer Cashback"
+        },
+        {
+          "cashback_period": "12",
+          "amount_total": 15000,
+          "cashback_name": "Summer Cashback"
+        },
+        {
+          "cashback_period": "12",
+          "amount_total": 1500,
+          "cashback_name": "Summer Cashback"
+        },
+        {
+          "cashback_period": "12",
+          "amount_total": 15000,
+          "cashback_name": "Summer Cashback"
+        },
+        {
+          "cashback_period": "12",
+          "amount_total": 1785,
+          "cashback_name": "Summer Cashback"
+        },
+        {
+          "cashback_period": "12",
+          "amount_total": 15000,
+          "cashback_name": "Summer Cashback"
+        },
+        {
+          "cashback_period": "12",
+          "amount_total": 1500,
+          "cashback_name": "Summer Cashback"
+        },
+        {
+          "cashback_period": "12",
+          "amount_total": 15000,
+          "cashback_name": "Summer Cashback"
+        },
+        {
+          "cashback_period": "12",
+          "amount_total": 1785,
+          "cashback_name": "Summer Cashback"
+        },
+        {
+          "cashback_period": "12",
+          "amount_total": 15000,
+          "cashback_name": "Summer Cashback"
+        },
+        {
+          "cashback_period": "12",
+          "amount_total": 7500,
+          "cashback_name": "Summer Cashback"
+        },
+        {
+          "cashback_period": "12",
+          "amount_total": 15000,
+          "cashback_name": "Summer Cashback"
+        },
+        {
+          "cashback_period": "12",
+          "amount_total": 8925,
+          "cashback_name": "Summer Cashback"
+        }
+      ]
+    }
+  },
+  "currency": "EUR"
+}

@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.9.1
+
+### Patch Changes
+
+- f5edc13: Fix `TypeError: (0, x.default) is not a function` when a consumer bundles `@epilot/pricing` with `mainFields: ['module','main']`. The `dinero.js` factory is now resolved regardless of whether the CJS or ESM build is picked up.
+
 ## 5.9.0
 
 ### Minor Changes

@@ -1,4 +1,3 @@
-import dinero from 'dinero.js';
 import type { Currency } from 'dinero.js';
 import { CURRENCIES_SUBUNITS, DEFAULT_CURRENCY, DEFAULT_SUBUNIT } from './constants';
 import {
@@ -10,6 +9,7 @@ import {
   GENERIC_UNIT_DISPLAY_LABEL,
   MAX_SUPPORTED_FORMAT_PRECISION,
 } from './constants';
+import { dinero } from './dinero';
 import { getCurrencySymbol } from './get-currency-symbol';
 import { toDinero } from './to-dinero';
 

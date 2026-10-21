@@ -1,4 +1,5 @@
-import dinero, { type Currency, type Dinero } from 'dinero.js';
+import type { Currency, Dinero } from 'dinero.js';
+import { dinero } from './dinero';
 import { DEFAULT_CURRENCY } from './constants';
 import { DECIMAL_PRECISION } from './constants';
 

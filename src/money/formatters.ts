@@ -1,4 +1,4 @@
-import dinero from 'dinero.js';
+import { dinero } from './dinero';
 import type { Currency } from 'dinero.js';
 import { CURRENCIES_SUBUNITS, DEFAULT_CURRENCY, DEFAULT_SUBUNIT } from './constants';
 import {

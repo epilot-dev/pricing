@@ -2,16 +2,10 @@ import fs from 'fs/promises';
 import esbuild from 'esbuild';
 import packageJson from './package.json' with { type: 'json' };
 
-// dinero.js is bundled rather than left external: it ships a CJS build (`main`) and an ESM
-// build (`module`). When this package's CJS entry `require('dinero.js')` is itself bundled by a
-// consumer using `mainFields: ['module', 'main']` (e.g. esbuild for Lambdas), the ESM build is
-// picked and `.default` becomes the module namespace -> "TypeError: (0, x.default) is not a function".
-const bundledDeps = new Set(['dinero.js']);
-
 const externalDeps = [
   ...Object.keys(packageJson.peerDependencies ?? {}),
   ...Object.keys(packageJson.dependencies ?? {}),
-].filter((dep) => !bundledDeps.has(dep));
+];
 
 const buildFormats = [
   {

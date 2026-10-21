@@ -18,10 +18,10 @@ describe('dist bundle interop', () => {
     execFileSync('node', ['esbuild.config.js'], { cwd: root, stdio: 'ignore' });
   }, 60_000);
 
-  it('does not leave a bare dinero.js import in dist', () => {
+  it('keeps dinero.js external in dist', () => {
     for (const file of ['dist/cjs/index.cjs', 'dist/esm/index.mjs']) {
       const code = fs.readFileSync(path.join(root, file), 'utf8');
-      expect(code).not.toMatch(/require\(["']dinero\.js["']\)|from\s*["']dinero\.js["']/);
+      expect(code).toMatch(/require\(["']dinero\.js["']\)|from\s*["']dinero\.js["']/);
     }
   });
 

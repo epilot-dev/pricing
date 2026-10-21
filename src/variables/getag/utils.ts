@@ -198,8 +198,8 @@ const getMarkupDetailsFee = ({
       ? getConsumptionBasedAmounts(
           procurementMarkup?.amount_gross_decimal,
           options.tariffType === 'HT'
-            ? externalFeesMetadata.inputs.consumptionHT
-            : externalFeesMetadata.inputs.consumptionNT,
+            ? externalFeesMetadata.inputs?.consumptionHT
+            : externalFeesMetadata.inputs?.consumptionNT,
           billingPeriod,
         ).yearlyAmountDecimal
       : undefined;
@@ -266,8 +266,8 @@ const getMarkupDetailsFee = ({
       ? getConsumptionBasedAmounts(
           priceGetAgConfig?.markup_amount_gross_decimal,
           options.tariffType === 'HT'
-            ? externalFeesMetadata.inputs.consumptionHT
-            : externalFeesMetadata.inputs.consumptionNT,
+            ? externalFeesMetadata.inputs?.consumptionHT
+            : externalFeesMetadata.inputs?.consumptionNT,
           billingPeriod,
           currency,
         ).yearlyAmountDecimal

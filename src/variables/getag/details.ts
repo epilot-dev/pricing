@@ -9,6 +9,7 @@ import { processMarkupsFeesDetails } from './markup-fees-details';
 import { processMeterFeesDetails } from './meter-fees-details';
 import { processNetworkOperatingFeesDetails } from './network-fees-details';
 import { processOtherFeesDetails } from './other-fees-details';
+import { resolveExternalFeesType } from './resolve-fees-type';
 
 export const processExternalFeesDetails = (
   item: PriceItem | CompositePriceItem,
@@ -22,6 +23,7 @@ export const processExternalFeesDetails = (
   const tax = extractTaxFromPriceItem(item);
   const taxRate = tax?.rate;
   const formattedUnit = formatPriceUnit(unit, true);
+  const feesType = resolveExternalFeesType(externalFeesMetadata, item);
 
   const result: Partial<ExternalFeesDetails> = {
     unit_price_period: i18n.t(`table_order.recurrences.billing_period.${unitPricePeriod}`),
@@ -51,6 +53,7 @@ export const processExternalFeesDetails = (
     i18n,
     billingPeriod,
     unitPricePeriod,
+    feesType,
     tax,
     formattedUnit,
   );
@@ -73,6 +76,7 @@ export const processExternalFeesDetails = (
     i18n,
     billingPeriod,
     unitPricePeriod,
+    feesType,
     tax,
     formattedUnit,
   );

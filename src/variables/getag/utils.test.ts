@@ -451,4 +451,79 @@ describe('getMarkupDetailsFee', () => {
       });
     });
   });
+
+  describe('when externalFeesMetadata.inputs is missing', () => {
+    // Orders created outside the journey app (360 cockpit, public API, pre-2024 journeys)
+    // carry getag fee metadata without the client-side `inputs` object.
+    const externalFeesMetadataWithoutInputs: ExternalFeesMetadata = {
+      billing_period: mockExternalFeesMetadata.billing_period,
+      breakdown: mockExternalFeesMetadata.breakdown,
+    };
+
+    const priceGetAgConfig: PriceGetAg = {
+      category: 'power',
+      markup_amount: 10,
+      markup_amount_decimal: '0.10',
+      markup_amount_gross_decimal: '0.10',
+      unit_amount_gross: 0,
+      unit_amount_net: 0,
+      additional_markups_enabled: true,
+      additional_markups: {
+        procurement: {
+          amount: 5,
+          amount_decimal: '0.05',
+          amount_gross_decimal: '0.05',
+        },
+      },
+    } as PriceGetAg;
+
+    it.each(['HT', 'NT'] as TariffTypeGetAg[])(
+      'should not throw and omit the yearly amount for the %s work price markup',
+      (tariffType) => {
+        const result = getMarkupDetailsFee({
+          ...defaultParams,
+          priceGetAgConfig,
+          externalFeesMetadata: externalFeesMetadataWithoutInputs,
+          options: { type: 'work_price', tariffType },
+        });
+
+        expect(result).toEqual({
+          amount: '10.00 cents/kWh',
+          amount_decimal: '0.10',
+          amount_yearly_decimal: '0',
+          amount_yearly: '-',
+          label: 'Work Price Markup',
+        });
+      },
+    );
+
+    it.each(['HT', 'NT'] as TariffTypeGetAg[])(
+      'should not throw and omit the yearly amount for the %s procurement markup',
+      (tariffType) => {
+        const result = getMarkupDetailsFee({
+          ...defaultParams,
+          priceGetAgConfig,
+          externalFeesMetadata: externalFeesMetadataWithoutInputs,
+          options: { type: 'additional_markup', tariffType, key: 'procurement' },
+        });
+
+        expect(result).toMatchObject({
+          amount: '5.00 cents/kWh',
+          amount_yearly: '-',
+        });
+      },
+    );
+
+    it('should still return the base price markup', () => {
+      const result = getMarkupDetailsFee({
+        ...defaultParams,
+        priceGetAgConfig,
+        externalFeesMetadata: externalFeesMetadataWithoutInputs,
+        options: { type: 'base_price' },
+      });
+
+      expect(result).toBeDefined();
+      expect(result?.label).toBe('Base Price Markup');
+    });
+  });
 });

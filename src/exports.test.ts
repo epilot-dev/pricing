@@ -34,6 +34,7 @@ const expectedNamedExports = [
   'processOrderTableData',
   'formatFeeAmountFromString',
   'extractGetAgConfig',
+  'resolveExternalFeesType',
   'getAmountWithTax',
   'getTaxValue',
   'computePriceDiff',

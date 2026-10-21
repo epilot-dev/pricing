@@ -1062,3 +1062,79 @@ it('should apply cashbacks in composite price if it has requires_promo_code set 
     },
   ]);
 });
+
+describe('computeAggregatedAndPriceTotals — precision option', () => {
+  const subCentRatePriceItem: PriceItemDto = {
+    quantity: 1,
+    _price: {
+      unit_amount: 15,
+      unit_amount_decimal: '0.1524',
+      unit_amount_currency: 'EUR',
+      pricing_model: 'per_unit',
+      is_tax_inclusive: false,
+      type: 'recurring',
+      billing_period: 'yearly',
+      tax: [],
+    } as unknown as Price,
+  };
+
+  it('defaults to precision 2 — integers rounded to whole cents (current behaviour)', () => {
+    const result = computeAggregatedAndPriceTotals([subCentRatePriceItem]);
+    const item = result.items?.[0];
+
+    expect(item).toEqual(
+      expect.objectContaining({
+        unit_amount: 15,
+        unit_amount_gross: 15,
+        amount_total: 15,
+        unit_amount_gross_decimal: '0.1524',
+        amount_total_decimal: '0.1524',
+      }),
+    );
+    expect(result.total_details?.breakdown?.recurrences?.[0]).toEqual(
+      expect.objectContaining({ amount_total: 15, amount_total_decimal: '0.1524' }),
+    );
+  });
+
+  it('preserves sub-cent integer precision when precision is set to DECIMAL_PRECISION (12)', () => {
+    const result = computeAggregatedAndPriceTotals([subCentRatePriceItem], { precision: 12 });
+    const item = result.items?.[0];
+
+    // Integer fields now carry the full 12-decimal precision: 0.1524 EUR = 152_400_000_000 at precision 12.
+    expect(item).toEqual(
+      expect.objectContaining({
+        unit_amount: 152_400_000_000,
+        unit_amount_gross: 152_400_000_000,
+        amount_total: 152_400_000_000,
+        unit_amount_gross_decimal: '0.1524',
+        amount_total_decimal: '0.1524',
+      }),
+    );
+    expect(result.total_details?.breakdown?.recurrences?.[0]).toEqual(
+      expect.objectContaining({
+        amount_total: 152_400_000_000,
+        amount_total_decimal: '0.1524',
+      }),
+    );
+  });
+
+  it('does not silently round to zero for sub-cent amounts when precision is preserved', () => {
+    const subCentItem: PriceItemDto = {
+      ...subCentRatePriceItem,
+      _price: {
+        ...(subCentRatePriceItem._price as Price),
+        unit_amount: 0,
+        unit_amount_decimal: '0.00352',
+      } as unknown as Price,
+    };
+
+    const rounded = computeAggregatedAndPriceTotals([subCentItem]);
+    const preserved = computeAggregatedAndPriceTotals([subCentItem], { precision: 12 });
+
+    expect(rounded.items?.[0]?.amount_total).toBe(0);
+    expect(rounded.items?.[0]?.amount_total_decimal).toBe('0.00352');
+
+    expect(preserved.items?.[0]?.amount_total).toBe(3_520_000_000);
+    expect(preserved.items?.[0]?.amount_total_decimal).toBe('0.00352');
+  });
+});

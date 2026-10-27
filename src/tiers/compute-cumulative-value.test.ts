@@ -72,8 +72,8 @@ describe('computeCumulativeValue', () => {
     ${onRequestTiers}      | ${5}                 | ${'kWh'}    | ${'en'}      | ${'EUR'} | ${undefined}   | ${true}       | ${undefined} | ${{ rate: 19 }} | ${{ total: '€50.00', totalWithPrecision: '€50.00', average: '€10.00/kWh', subAverage: '€8.40/kWh', subtotal: '€42.02', subtotalWithPrecision: '€42.016806722689', breakdown: [{ quantityUsed: '5 kWh', tierAmountDecimal: '€10.00/kWh', totalAmountDecimal: '€50.00' }] }}
     ${onRequestTiers}      | ${15}                | ${'kWh'}    | ${'en'}      | ${'EUR'} | ${undefined}   | ${true}       | ${undefined} | ${{ rate: 19 }} | ${'Price on request'}
     ${onRequestTiers}      | ${15}                | ${'kWh'}    | ${'en'}      | ${'EUR'} | ${undefined}   | ${false}      | ${undefined} | ${{ rate: 19 }} | ${{ total: '€145.00', totalWithPrecision: '€145.00', average: '€9.67/kWh', subAverage: '€8.12/kWh', subtotal: '€121.85', subtotalWithPrecision: '€121.848739495798', breakdown: [{ quantityUsed: '10 kWh', tierAmountDecimal: '€10.00/kWh', totalAmountDecimal: '€100.00' }, { quantityUsed: '5 kWh', tierAmountDecimal: '€9.00/kWh', totalAmountDecimal: '€45.00' }] }}
-    ${decimalTiers}        | ${7}                 | ${'kWh'}    | ${'en'}      | ${'EUR'} | ${undefined}   | ${false}      | ${undefined} | ${{ rate: 19 }} | ${{ total: '38.59 cents', totalWithPrecision: '38.5915 cents', average: '5.51 cents/kWh', subAverage: '4.63 cents/kWh', subtotal: '32.43 cents', subtotalWithPrecision: '32.429832 cents', breakdown: [{ quantityUsed: '5 kWh', tierAmountDecimal: '5.5451 cents/kWh', totalAmountDecimal: '27.7255 cents' }, { quantityUsed: '2 kWh', tierAmountDecimal: '5.433 cents/kWh', totalAmountDecimal: '10.866 cents' }] }}
-    ${decimalTiers}        | ${7}                 | ${'kWh'}    | ${'en'}      | ${'EUR'} | ${undefined}   | ${false}      | ${true}      | ${{ rate: 19 }} | ${{ total: 'Starts at 38.59 cents', totalWithPrecision: 'Starts at 38.5915 cents', average: '5.51 cents/kWh', subAverage: '4.63 cents/kWh', subtotal: 'Starts at 32.43 cents', subtotalWithPrecision: 'Starts at 32.429832 cents', breakdown: [{ quantityUsed: '5 kWh', tierAmountDecimal: '5.5451 cents/kWh', totalAmountDecimal: '27.7255 cents' }, { quantityUsed: '2 kWh', tierAmountDecimal: '5.433 cents/kWh', totalAmountDecimal: '10.866 cents' }] }}
+    ${decimalTiers}        | ${7}                 | ${'kWh'}    | ${'en'}      | ${'EUR'} | ${undefined}   | ${false}      | ${undefined} | ${{ rate: 19 }} | ${{ total: '38.59 cents', totalWithPrecision: '38.5915 cents', average: '5.51 cents/kWh', subAverage: '4.63 cents/kWh', subtotal: '32.43 cents', subtotalWithPrecision: '32.429832 cents', breakdown: [{ quantityUsed: '5 kWh', tierAmountDecimal: '5.5451 cents/kWh', totalAmountDecimal: '27.73 cents' }, { quantityUsed: '2 kWh', tierAmountDecimal: '5.433 cents/kWh', totalAmountDecimal: '10.87 cents' }] }}
+    ${decimalTiers}        | ${7}                 | ${'kWh'}    | ${'en'}      | ${'EUR'} | ${undefined}   | ${false}      | ${true}      | ${{ rate: 19 }} | ${{ total: 'Starts at 38.59 cents', totalWithPrecision: 'Starts at 38.5915 cents', average: '5.51 cents/kWh', subAverage: '4.63 cents/kWh', subtotal: 'Starts at 32.43 cents', subtotalWithPrecision: 'Starts at 32.429832 cents', breakdown: [{ quantityUsed: '5 kWh', tierAmountDecimal: '5.5451 cents/kWh', totalAmountDecimal: '27.73 cents' }, { quantityUsed: '2 kWh', tierAmountDecimal: '5.433 cents/kWh', totalAmountDecimal: '10.87 cents' }] }}
   `(
     'should compute cumulative value correctly when quantityToSelectTier=$quantityToSelectTier, isTaxInclusive=$isTaxInclusive and tax=$tax',
     ({
@@ -105,4 +105,28 @@ describe('computeCumulativeValue', () => {
       expect(result).toEqual(expected);
     },
   );
+
+  it('rounds the breakdown of a fractional quantity like the totals', () => {
+    // 1000 kWh a year, normalised to a monthly price: 83.333… kWh
+    const result = computeCumulativeValue(
+      [
+        { up_to: 50, unit_amount: 34, unit_amount_decimal: '0.3456' },
+        { up_to: null, unit_amount: 30, unit_amount_decimal: '0.30' },
+      ],
+      1000 / 12,
+      'kWh',
+      'en',
+      'EUR',
+      mockedTranslationFn,
+    );
+
+    expect(result).toMatchObject({
+      total: '€27.28',
+      breakdown: [
+        // The unit price keeps its real precision.
+        { quantityUsed: '50 kWh', tierAmountDecimal: '34.56 cents/kWh', totalAmountDecimal: '€17.28' },
+        { quantityUsed: '33.33 kWh', tierAmountDecimal: '30.00 cents/kWh', totalAmountDecimal: '€10.00' },
+      ],
+    });
+  });
 });

@@ -90,16 +90,21 @@ export const computeCumulativeValue = (
       const unitAmountWithTax = isTaxInclusive ? unitAmount : unitAmount.multiply(1 + taxRate);
 
       breakdown.push({
+        // Rounded for display like the totals: a quantity normalised from a yearly
+        // consumption is a repeating decimal (1000 / 12 = 83.333…).
         quantityUsed: `${graduatedQuantity.toLocaleString(formatOptions.locale, {
-          maximumFractionDigits: 6,
+          maximumFractionDigits: 2,
         })} ${formattedUnit}`,
         tierAmountDecimal: `${formatAmountFromString({
           decimalAmount: addSeparatorToDineroString(unitAmountWithTax.getAmount().toString()),
           ...formatOptions,
         })}${formattedUnit ? `/${formattedUnit}` : ''}`,
+        // The tier's unit price keeps its real precision; its amount is rounded like `total`.
         totalAmountDecimal: formatAmountFromString({
           decimalAmount: addSeparatorToDineroString(tierAmountWithTax.getAmount().toString()),
           ...formatOptions,
+          precision: 2,
+          useRealPrecision: false,
         }),
       });
 

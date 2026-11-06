@@ -1,0 +1,85 @@
+name: Release Snapshot
+
+# Publishes a branch to npm as `0.0.0-<branch>-<timestamp>` under the
+# `snapshot` dist-tag, so it can be installed elsewhere before merging.
+# Run it from the Actions tab ("Run workflow", pick the branch) or with
+# `gh workflow run release-snapshot.yml --ref <branch>`.
+#
+# Needs its own trusted publisher on npmjs.com
+# (workflow file: release-snapshot.yml) with direct publishing allowed.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release-snapshot:
+    name: Release snapshot
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # npm trusted publishing (OIDC)
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      # Node 24 ships npm >= 11.5.1, required for npm trusted publishing.
+      # No dependency cache: this job runs branch code, and a poisoned cache
+      # could later be restored by the Release job on main.
+      - name: Use Node.js 24.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+      # Also builds, via the `prepare` script.
+      - run: pnpm install --frozen-lockfile
+
+      - name: Version snapshot
+        id: version
+        env:
+          BRANCH: ${{ github.ref_name }}
+          SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          # Snapshot version is 0.0.0-<tag>-<timestamp>; semver prerelease
+          # identifiers only allow [0-9A-Za-z-].
+          tag=$(printf '%s' "$BRANCH" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//' | cut -c1-40 | sed -E 's/-+$//')
+
+          # Branches don't need their own changeset to be snapshotted. This one
+          # only exists inside this run; the bump type doesn't affect snapshot
+          # versions.
+          printf -- '---\n"@epilot/pricing": patch\n---\n\nSnapshot of `%s` (%s)\n' "$BRANCH" "${SHA:0:7}" \
+            > ".changeset/ci-snapshot-${GITHUB_RUN_ID}.md"
+
+          pnpm run release --snapshot "${tag:-branch}"
+
+          version=$(node -p "require('./package.json').version")
+          if [[ "$version" != 0.0.0-* ]]; then
+            echo "::error::Expected a 0.0.0-* snapshot version, got $version."
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Publish snapshot
+        run: pnpm run release:publish --tag snapshot --no-git-tag
+
+      - name: Summary
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          BRANCH: ${{ github.ref_name }}
+          SHA: ${{ github.sha }}
+        run: |
+          {
+            echo "### 📦 Snapshot published from \`$BRANCH\` (\`${SHA:0:7}\`)"
+            echo
+            echo '```bash'
+            echo "pnpm add @epilot/pricing@$VERSION"
+            echo '```'
+            echo
+            echo 'Published under the `snapshot` dist-tag, `latest` is untouched.'
+          } >> "$GITHUB_STEP_SUMMARY"

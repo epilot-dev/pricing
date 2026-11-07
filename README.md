@@ -48,6 +48,16 @@ Follow the prompts to select the semver bump type (`patch`, `minor`, `major`) an
 3. When the PR is merged, the **Release** workflow detects pending changesets and opens a **"Version Packages"** PR that bumps `package.json` version and updates the changelog.
 4. When the Version Packages PR is merged, the Release workflow publishes the new version to npm and creates a git tag.
 
+### Snapshot releases
+
+To try a branch in another project before it is merged, publish a snapshot of it to npm: Actions → **Release Snapshot** → **Run workflow**, then pick the branch. Or from the terminal:
+
+```bash
+gh workflow run release-snapshot.yml --ref <branch>
+```
+
+The branch doesn't need a changeset. The snapshot is published as `0.0.0-<branch>-<timestamp>` (e.g. `0.0.0-feat-tiered-fix-20261106143000`) under the `snapshot` dist-tag, so `latest` is never affected. The install command is shown in the run summary.
+
 ## ⚠️ Disclaimer
 
 This library is made available as an open source contribution to the community to ensure that all our clients and integrators can have the flexibility to build their own custom frontends and integrations with our platform [^1].

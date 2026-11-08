@@ -13,7 +13,7 @@ export const processNetworkOperatingFeesDetails = (
   tax?: Tax | TaxItem,
   variableUnit?: string,
 ) => {
-  const type = externalFeesMetadata.inputs.type || 'power';
+  const type = externalFeesMetadata.inputs?.type || 'power';
 
   if (!result.groups) {
     result.groups = {};

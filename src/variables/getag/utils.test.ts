@@ -214,6 +214,82 @@ describe('getMarkupDetailsFee', () => {
     },
   };
 
+  describe('when the metadata carries no inputs', () => {
+    /**
+     * `inputs` is annotated by the Journey renderer after the GetAG compute call,
+     * so it is absent on carts submitted through the public API. The breakdown must
+     * still render — only the consumption-based yearly amounts are unknown.
+     */
+    const metadataWithoutInputs = {
+      billing_period: 'monthly',
+      breakdown: {
+        static: {},
+        variable: {},
+        variable_ht: {},
+      },
+    } as ExternalFeesMetadata;
+
+    it('should render the work price markup without yearly amounts', () => {
+      const priceGetAgConfig: PriceGetAg = {
+        category: 'power',
+        markup_amount: 10,
+        markup_amount_decimal: '0.10',
+        markup_amount_gross_decimal: '0.10',
+        unit_amount_gross: 0,
+        unit_amount_net: 0,
+      };
+
+      const result = getMarkupDetailsFee({
+        ...defaultParams,
+        priceGetAgConfig,
+        externalFeesMetadata: metadataWithoutInputs,
+        options: { type: 'work_price', tariffType: 'HT' as TariffTypeGetAg },
+      });
+
+      expect(result).toEqual({
+        label: 'Work Price Markup',
+        amount: '10.00 cents/kWh',
+        amount_decimal: '0.10',
+        amount_yearly_decimal: '0',
+        amount_yearly: '-',
+      });
+    });
+
+    it('should render the procurement markup without yearly amounts', () => {
+      const priceGetAgConfig: PriceGetAg = {
+        category: 'power',
+        markup_amount: 10,
+        markup_amount_decimal: '0.10',
+        markup_amount_gross_decimal: '0.10',
+        unit_amount_gross: 0,
+        unit_amount_net: 0,
+        additional_markups_enabled: true,
+        additional_markups: {
+          procurement: {
+            amount: 5,
+            amount_decimal: '0.05',
+            amount_gross_decimal: '0.05',
+          },
+        },
+      };
+
+      const result = getMarkupDetailsFee({
+        ...defaultParams,
+        priceGetAgConfig,
+        externalFeesMetadata: metadataWithoutInputs,
+        options: { type: 'additional_markup', tariffType: 'NT' as TariffTypeGetAg, key: 'procurement' },
+      });
+
+      expect(result).toEqual({
+        label: 'Procurement Markup',
+        amount: '5.00 cents/kWh',
+        amount_decimal: '0.05',
+        amount_yearly_decimal: '0',
+        amount_yearly: '-',
+      });
+    });
+  });
+
   describe('when priceGetAgConfig is undefined', () => {
     it('should return undefined', () => {
       const result = getMarkupDetailsFee({

@@ -1,5 +1,5 @@
 import type { CompositePriceItem, PriceGetAg, PriceItem, TariffTypeGetAg } from '@epilot/sdk/pricing';
-import { isCompositePrice } from '../prices/utils';
+import { isCompositePriceItem } from '../prices/utils';
 
 /**
  * Extracts the GetAg configuration from a price item.
@@ -27,11 +27,11 @@ export const extractGetAgConfig = (
     return (getAgConfig.tariff_type ?? 'HT') === targetTariffType;
   };
 
-  if (!isCompositePrice(item) && matchesConfig(item.get_ag)) {
+  if (!isCompositePriceItem(item) && matchesConfig(item.get_ag)) {
     return item.get_ag;
   }
 
-  if (isCompositePrice(item) && Array.isArray(item.item_components)) {
+  if (isCompositePriceItem(item) && Array.isArray(item.item_components)) {
     const component = item.item_components.find((comp) => matchesConfig(comp.get_ag));
 
     return component?.get_ag;

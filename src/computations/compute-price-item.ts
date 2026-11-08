@@ -115,6 +115,8 @@ export const computePriceItem = (
   const { safeQuantity, quantityToSelectTier, unitAmountMultiplier, isUsingPriceMappingToSelectTier } =
     computeQuantities(price, quantity, priceMapping);
 
+  const tierSelectionQuantity = quantityToSelectTier === undefined ? 1 : quantityToSelectTier;
+
   const externalFeeAmountDecimal = computeExternalFee(
     externalFeeMapping,
     priceItem.billing_period || price?.billing_period,
@@ -128,7 +130,7 @@ export const computePriceItem = (
         tiers: price.tiers,
         currency,
         isTaxInclusive,
-        quantityToSelectTier: quantityToSelectTier === undefined ? 1 : quantityToSelectTier,
+        quantityToSelectTier: tierSelectionQuantity,
         tax: priceTax,
         unitAmountMultiplier,
         unchangedPriceDisplayInJourneys: priceItem._price?.unchanged_price_display_in_journeys,
@@ -139,7 +141,7 @@ export const computePriceItem = (
         tiers: price.tiers,
         currency,
         isTaxInclusive,
-        quantityToSelectTier: quantityToSelectTier === undefined ? 1 : quantityToSelectTier,
+        quantityToSelectTier: tierSelectionQuantity,
         tax: priceTax,
         quantity: safeQuantity,
         isUsingPriceMappingToSelectTier,
@@ -151,7 +153,7 @@ export const computePriceItem = (
         tiers: price.tiers,
         currency,
         isTaxInclusive,
-        quantityToSelectTier: quantityToSelectTier === undefined ? 1 : quantityToSelectTier,
+        quantityToSelectTier: tierSelectionQuantity,
         tax: priceTax,
         quantity: safeQuantity,
         isUsingPriceMappingToSelectTier,
@@ -174,7 +176,7 @@ export const computePriceItem = (
         currency,
         isTaxInclusive,
         unitAmountMultiplier,
-        userInput: quantityToSelectTier === undefined ? 1 : quantityToSelectTier,
+        userInput: tierSelectionQuantity,
         externalFeeAmountDecimal,
         tax: priceTax,
       });
@@ -238,7 +240,7 @@ export const computePriceItem = (
     _price: {
       ...mapToPriceSnapshot(price),
       ...(itemValues.price_display_in_journeys && {
-        price_display_in_journeys: itemValues.price_display_in_journeys ?? price?.price_display_in_journeys,
+        price_display_in_journeys: itemValues.price_display_in_journeys,
         unchanged_price_display_in_journeys:
           priceItem._price?.unchanged_price_display_in_journeys ?? price?.price_display_in_journeys,
       }),

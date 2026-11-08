@@ -445,3 +445,263 @@ describe('applyDiscounts', () => {
     });
   });
 });
+
+describe('applyDiscounts output', () => {
+  /**
+   * Integer amount with DECIMAL_PRECISION (12) for an amount in EUR with up to 6 decimals.
+   */
+  const eur = (amount: number) => Math.round(amount * 10 ** 6) * 10 ** 6;
+
+  const percentage10Coupon = { ...percentage10DiscountCoupon, category: 'discount' as const };
+  const fixed5Coupon = { ...fixedDiscountCoupon, category: 'discount' as const };
+
+  const itemValues = {
+    unit_amount: eur(11.9),
+    unit_amount_net: eur(10),
+    unit_amount_gross: eur(11.9),
+    amount_subtotal: eur(20),
+    amount_total: eur(23.8),
+    amount_tax: eur(3.8),
+  };
+
+  const params = {
+    priceItem: priceItem1,
+    currency: DEFAULT_CURRENCY as Currency,
+    isTaxInclusive: true,
+    unitAmountMultiplier: 2,
+    tax: tax19percent,
+  };
+
+  const graduatedPriceItem = {
+    ...priceItem1,
+    _price: { ...priceItem1._price, pricing_model: 'tiered_graduated' as const },
+  };
+
+  const graduatedItemValues = {
+    ...itemValues,
+    tiers_details: [
+      {
+        quantity: 2,
+        unit_amount: 1190,
+        unit_amount_decimal: '11.90',
+        unit_amount_net: eur(10),
+        unit_amount_gross: eur(11.9),
+        amount_subtotal: eur(20),
+        amount_total: eur(23.8),
+        amount_tax: eur(3.8),
+      },
+      {
+        quantity: 3,
+        unit_amount: 952,
+        unit_amount_decimal: '9.52',
+        unit_amount_net: eur(8),
+        unit_amount_gross: eur(9.52),
+        amount_subtotal: eur(24),
+        amount_total: eur(28.56),
+        amount_tax: eur(4.56),
+      },
+    ],
+  };
+
+  it('outputs the discount amounts in a stable key order', () => {
+    const result = applyDiscounts(itemValues, { ...params, coupon: percentage10Coupon });
+
+    expect(Object.keys(result)).toEqual([
+      'unit_amount',
+      'unit_amount_net',
+      'unit_amount_gross',
+      'amount_subtotal',
+      'amount_total',
+      'amount_tax',
+      'unit_discount_amount',
+      'before_discount_unit_amount',
+      'before_discount_unit_amount_gross',
+      'before_discount_unit_amount_net',
+      'unit_discount_amount_net',
+      'tax_discount_amount',
+      'before_discount_tax_amount',
+      'discount_amount',
+      'discount_amount_net',
+      'discount_percentage',
+      'before_discount_amount_total',
+      'before_discount_amount_subtotal',
+    ]);
+  });
+
+  it('applies a tax inclusive percentage discount', () => {
+    const result = applyDiscounts(itemValues, { ...params, coupon: percentage10Coupon });
+
+    expect(result).toStrictEqual({
+      unit_amount: eur(10.71),
+      unit_amount_net: eur(9),
+      unit_amount_gross: eur(10.71),
+      amount_subtotal: eur(18),
+      amount_total: eur(21.42),
+      amount_tax: eur(3.42),
+      unit_discount_amount: eur(1.19),
+      before_discount_unit_amount: eur(11.9),
+      before_discount_unit_amount_gross: eur(11.9),
+      before_discount_unit_amount_net: eur(10),
+      unit_discount_amount_net: eur(1),
+      tax_discount_amount: eur(0.38),
+      before_discount_tax_amount: eur(3.8),
+      discount_amount: eur(2.38),
+      discount_amount_net: eur(2),
+      discount_percentage: 10,
+      before_discount_amount_total: eur(23.8),
+      before_discount_amount_subtotal: eur(20),
+    });
+  });
+
+  it('applies a tax exclusive fixed discount without discount_percentage', () => {
+    const result = applyDiscounts(itemValues, { ...params, isTaxInclusive: false, coupon: fixed5Coupon });
+
+    expect(result).toStrictEqual({
+      unit_amount: eur(5),
+      unit_amount_net: eur(5),
+      unit_amount_gross: eur(5.95),
+      amount_subtotal: eur(10),
+      amount_total: eur(11.9),
+      amount_tax: eur(1.9),
+      unit_discount_amount: eur(5.95),
+      before_discount_unit_amount: eur(10),
+      before_discount_unit_amount_gross: eur(11.9),
+      before_discount_unit_amount_net: eur(10),
+      unit_discount_amount_net: eur(5),
+      tax_discount_amount: eur(1.9),
+      before_discount_tax_amount: eur(3.8),
+      discount_amount: eur(11.9),
+      discount_amount_net: eur(10),
+      before_discount_amount_total: eur(23.8),
+      before_discount_amount_subtotal: eur(20),
+    });
+  });
+
+  it('caps fixed discounts at the unit amount', () => {
+    const result = applyDiscounts(
+      { ...itemValues, unit_amount_net: eur(3), unit_amount_gross: eur(3.57) },
+      { ...params, isTaxInclusive: false, coupon: fixed5Coupon },
+    );
+
+    expect(result.unit_amount_net).toBe(0);
+    expect(result.unit_amount_gross).toBe(0);
+    expect(result.amount_total).toBe(0);
+    expect(result.unit_discount_amount_net).toBe(eur(3));
+    expect(result.discount_amount).toBe(eur(7.14));
+  });
+
+  it('throws when a fixed discount has a different currency', () => {
+    expect(() =>
+      applyDiscounts(itemValues, {
+        ...params,
+        coupon: { ...fixed5Coupon, fixed_value_currency: 'CHF' },
+      }),
+    ).toThrow();
+  });
+
+  it('applies a tax exclusive fixed discount to each graduated tier', () => {
+    const result = applyDiscounts(graduatedItemValues, {
+      ...params,
+      priceItem: graduatedPriceItem,
+      isTaxInclusive: false,
+      coupon: fixed5Coupon,
+    });
+
+    expect(result).toStrictEqual({
+      ...graduatedItemValues,
+      unit_amount_gross: eur(9.52),
+      unit_amount_net: eur(8),
+      amount_subtotal: eur(19),
+      amount_total: eur(22.61),
+      amount_tax: eur(3.61),
+      unit_discount_amount: eur(11.9),
+      before_discount_unit_amount: eur(18),
+      before_discount_unit_amount_gross: eur(21.42),
+      before_discount_unit_amount_net: eur(18),
+      unit_discount_amount_net: eur(10),
+      tax_discount_amount: eur(4.75),
+      before_discount_tax_amount: eur(8.36),
+      discount_amount: eur(29.75),
+      discount_amount_net: eur(25),
+      before_discount_amount_total: eur(52.36),
+      before_discount_amount_subtotal: eur(44),
+    });
+    expect(Object.keys(result)).toEqual([
+      'unit_amount',
+      'unit_amount_net',
+      'unit_amount_gross',
+      'amount_subtotal',
+      'amount_total',
+      'amount_tax',
+      'tiers_details',
+      'unit_discount_amount',
+      'before_discount_unit_amount',
+      'before_discount_unit_amount_gross',
+      'before_discount_unit_amount_net',
+      'unit_discount_amount_net',
+      'tax_discount_amount',
+      'before_discount_tax_amount',
+      'discount_amount',
+      'discount_amount_net',
+      'before_discount_amount_total',
+      'before_discount_amount_subtotal',
+    ]);
+  });
+
+  it('applies a tax inclusive percentage discount to each graduated tier', () => {
+    const result = applyDiscounts(graduatedItemValues, {
+      ...params,
+      priceItem: graduatedPriceItem,
+      coupon: percentage10Coupon,
+    });
+
+    expect(result).toMatchObject({
+      unit_amount_gross: eur(19.278),
+      unit_amount_net: eur(16.2),
+      amount_subtotal: eur(39.6),
+      amount_total: eur(47.124),
+      discount_amount: eur(5.236),
+      discount_amount_net: eur(4.4),
+      before_discount_amount_total: eur(52.36),
+      before_discount_amount_subtotal: eur(44),
+      discount_percentage: 10,
+    });
+    expect(Object.keys(result).slice(-2)).toEqual(['before_discount_amount_subtotal', 'discount_percentage']);
+  });
+
+  it('sums up to 0 without discount_percentage when there are no graduated tiers', () => {
+    const result = applyDiscounts(
+      { ...itemValues, tiers_details: [] },
+      { ...params, priceItem: graduatedPriceItem, coupon: percentage10Coupon },
+    );
+
+    expect(result).toStrictEqual({
+      ...itemValues,
+      tiers_details: [],
+      unit_amount_gross: 0,
+      unit_amount_net: 0,
+      amount_subtotal: 0,
+      amount_total: 0,
+      amount_tax: 0,
+      unit_discount_amount: 0,
+      before_discount_unit_amount: 0,
+      before_discount_unit_amount_gross: 0,
+      before_discount_unit_amount_net: 0,
+      unit_discount_amount_net: 0,
+      tax_discount_amount: 0,
+      before_discount_tax_amount: 0,
+      discount_amount: 0,
+      discount_amount_net: 0,
+      before_discount_amount_total: 0,
+      before_discount_amount_subtotal: 0,
+    });
+  });
+
+  it('does not modify the given item values', () => {
+    const input = structuredClone(graduatedItemValues);
+
+    applyDiscounts(input, { ...params, priceItem: graduatedPriceItem, coupon: percentage10Coupon });
+
+    expect(input).toStrictEqual(graduatedItemValues);
+  });
+});

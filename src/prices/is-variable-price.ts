@@ -1,13 +1,8 @@
 import type { CompositePrice, CompositePriceItem, Price, PriceItem } from '../shared/types';
 import { MarkupPricingModel, PricingModel, TypeGetAg } from './constants';
+import { isTieredPricingModel } from './utils';
 
-const isTieredPrice = (price: Price): boolean => {
-  return (
-    price.pricing_model === PricingModel.tieredVolume ||
-    price.pricing_model === PricingModel.tieredGraduated ||
-    price.pricing_model === PricingModel.tieredFlatFee
-  );
-};
+const isTieredPrice = (price: Price): boolean => isTieredPricingModel(price.pricing_model);
 
 export const isVariablePrice = (price: Price | CompositePrice): boolean => {
   if (price.is_composite_price || Array.isArray(price.price_components)) return false;

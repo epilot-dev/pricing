@@ -1,6 +1,7 @@
 import type { Currency, I18n, Tax, TaxItem } from '../../shared/types';
 import type { TimeFrequency } from '../../time-frequency/types';
 import type { ExternalFeesMetadata, ExternalFeesDetails, ExternalFeesDetailsGroup } from '../types';
+import type { ExternalFeesType } from './resolve-fees-type';
 import { getDetailsFee } from './utils';
 
 export const processNetworkOperatingFeesDetails = (
@@ -10,11 +11,10 @@ export const processNetworkOperatingFeesDetails = (
   i18n: I18n,
   billingPeriod: TimeFrequency,
   unitPricePeriod: TimeFrequency,
+  type: ExternalFeesType,
   tax?: Tax | TaxItem,
   variableUnit?: string,
 ) => {
-  const type = externalFeesMetadata.inputs.type || 'power';
-
   if (!result.groups) {
     result.groups = {};
   }

@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { Currency } from '../shared/types';
 import { GENERIC_UNIT_DISPLAY_LABEL } from './constants';
 import {
@@ -13,6 +13,10 @@ import {
 import { toDinero } from './to-dinero';
 
 describe('formatAmount', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it('should be resilient by formatting invalid amounts. defaulting to zero and providing a good log msg', () => {
     const consoleErrorSpy = vi.spyOn(console, 'error');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -112,6 +116,61 @@ describe('formatAmount', () => {
     expect(() => {
       formatAmount({ amount: 'invalid_amount' });
     }).not.toThrow();
+  });
+
+  it.each`
+    amount       | expected
+    ${100.5}     | ${'1,01\xa0€'}
+    ${100.4}     | ${'1,00\xa0€'}
+    ${-100.5}    | ${'-1,00\xa0€'}
+    ${-0.4}      | ${'0,00\xa0€'}
+    ${Infinity}  | ${'0,00\xa0€'}
+    ${-Infinity} | ${'0,00\xa0€'}
+    ${NaN}       | ${'0,00\xa0€'}
+  `(
+    'should never throw: rounds finite floats and falls back to zero for non-finite amounts ($amount)',
+    ({ amount, expected }: { amount: number; expected: string }) => {
+      vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
+      let formattedAmount = '';
+      expect(() => {
+        formattedAmount = formatAmount({ amount });
+      }).not.toThrow();
+
+      expect(formattedAmount).toEqual(expected);
+    },
+  );
+
+  it('should round a finite float to the nearest minor unit without logging an error', () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    expect(formatAmount({ amount: 100.5 })).toEqual('1,01\xa0€');
+    expect(formatAmount({ amount: 100.4 })).toEqual('1,00\xa0€');
+    expect(formatAmount({ amount: -100.5 })).toEqual('-1,00\xa0€');
+    // Math.round(-0.4) === -0, normalised to +0 so no spurious minus sign is shown
+    expect(formatAmount({ amount: -0.4 })).toEqual('0,00\xa0€');
+
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
+  });
+
+  it('should fall back to zero and log an error for a non-finite amount', () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    expect(formatAmount({ amount: Infinity })).toEqual('0,00\xa0€');
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'formatAmount: expects an integer amount, received this instead "Infinity", fallbacks to zero.',
+      new Error('NaN error, unable to cast Infinity to number.'),
+    );
+  });
+
+  it('should round a finite float before the subunit (cents) display path', () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    // Math.round(22.6) === 23 -> 0,23 € -> displayed as cents
+    expect(formatAmount({ amount: 22.6, enableSubunitDisplay: true })).toEqual('23 Cent');
+
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 });
 

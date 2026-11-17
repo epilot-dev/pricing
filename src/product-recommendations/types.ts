@@ -1,24 +1,17 @@
-/**
- * A product + price offered to customers matched by a product recommendation rule.
- */
-export type ProductRecommendationOfferItem = {
-  product_id: string;
-  price_id: string;
-  /**
-   * Optional presentation config for highlighting this offer (e.g. a badge). Opaque to this library.
-   */
-  highlight_config?: Record<string, unknown>;
-};
+import type { Offer } from '@epilot/sdk/pricing';
 
 /**
- * A group of offers within a product recommendation rule.
+ * A product + price offered to customers matched by a product recommendation rule.
+ * Same shape as an item of the pricing API's `Offer` (incl. its `highlight_config`).
  */
-export type ProductRecommendationOfferGroup = {
+export type ProductRecommendationOfferItem = NonNullable<Offer['items']>[number];
+
+/**
+ * A group of offers within a product recommendation rule: the pricing API's `Offer`
+ * (`target_id` absent = everyone on the rule's source tariff), plus an `id` and required `items`.
+ */
+export type ProductRecommendationOfferGroup = Omit<Offer, 'items'> & {
   id: string;
-  /**
-   * The target (audience) this group applies to. When absent, the group applies to everyone on the rule's source tariff.
-   */
-  target_id?: string;
   items: ProductRecommendationOfferItem[];
 };
 

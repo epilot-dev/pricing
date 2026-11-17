@@ -1,33 +1,18 @@
-import type { Offer } from '@epilot/sdk/pricing';
+import type { ProductRecommendationOfferGroup, ProductRecommendationRule } from '@epilot/sdk/pricing';
 
 /**
- * A product + price offered to customers matched by a product recommendation rule.
- * Same shape as an item of the pricing API's `Offer` (incl. its `highlight_config`).
+ * The rule table types come from the pricing API spec (`@epilot/sdk/pricing`):
+ * - `ProductRecommendationRule`: a row; customers on the `source` product + price are offered the items of
+ *   the `offer_groups`. `source: null` marks the fallback rule ("any other product").
+ * - `ProductRecommendationOfferGroup`: the API's `Offer` plus an `id`; `target_id` absent = everyone on the
+ *   rule's source tariff.
  */
-export type ProductRecommendationOfferItem = NonNullable<Offer['items']>[number];
+export type { ProductRecommendationOfferGroup, ProductRecommendationRule };
 
 /**
- * A group of offers within a product recommendation rule: the pricing API's `Offer`
- * (`target_id` absent = everyone on the rule's source tariff), plus an `id` and required `items`.
+ * A product + price offered to customers matched by a product recommendation rule (incl. its `highlight_config`).
  */
-export type ProductRecommendationOfferGroup = Omit<Offer, 'items'> & {
-  id: string;
-  items: ProductRecommendationOfferItem[];
-};
-
-/**
- * A row of the rule table of a `product_recommendation` entity:
- * customers on the `source` product + price are offered the items of the `offer_groups`.
- */
-export type ProductRecommendationRule = {
-  id: string;
-  /**
-   * The source tariff (product + price) this rule applies to.
-   * `null` marks the fallback rule ("any other product"); at most one rule may be the fallback.
-   */
-  source: { product_id: string; price_id: string } | null;
-  offer_groups: ProductRecommendationOfferGroup[];
-};
+export type ProductRecommendationOfferItem = ProductRecommendationOfferGroup['items'][number];
 
 /**
  * A has_many relation attribute value.

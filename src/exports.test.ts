@@ -39,6 +39,8 @@ const expectedNamedExports = [
   'computePriceDiff',
   'isVariablePrice',
   'isVariablePriceItem',
+  'extractProductRecommendationRuleRelations',
+  'validateProductRecommendationRules',
 ];
 
 /**

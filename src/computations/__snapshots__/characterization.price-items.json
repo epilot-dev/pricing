@@ -1,0 +1,4454 @@
+{
+  "per_unit, tax inclusive, no coupon": {
+    "price_id": "per_unit-inclusive-none",
+    "product_id": "product-per_unit-inclusive-none",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 2955
+      }
+    ],
+    "_price": {
+      "_id": "per_unit-inclusive-none",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "per_unit",
+      "is_tax_inclusive": true,
+      "type": "one_time",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price per_unit-inclusive-none"
+    },
+    "_product": {
+      "_id": "product-per_unit-inclusive-none",
+      "name": "Product per_unit-inclusive-none",
+      "type": "product"
+    },
+    "unit_amount": 1234,
+    "unit_amount_net": 1037,
+    "unit_amount_gross": 1234,
+    "amount_subtotal": 15555,
+    "amount_total": 18510,
+    "amount_tax": 2955,
+    "currency": "EUR",
+    "description": "Price per_unit-inclusive-none",
+    "type": "one_time",
+    "is_tax_inclusive": true,
+    "unit_amount_decimal": "12.34",
+    "unit_amount_net_decimal": "10.36974789916",
+    "unit_amount_gross_decimal": "12.34",
+    "amount_subtotal_decimal": "155.5462184874",
+    "amount_total_decimal": "185.1"
+  },
+  "per_unit, tax inclusive, percentage discount": {
+    "price_id": "per_unit-inclusive-coupon#1",
+    "product_id": "product-per_unit-inclusive-coupon#1",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 2660
+      }
+    ],
+    "_price": {
+      "_id": "per_unit-inclusive-coupon#1",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "per_unit",
+      "is_tax_inclusive": true,
+      "type": "one_time",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price per_unit-inclusive-coupon#1"
+    },
+    "_product": {
+      "_id": "product-per_unit-inclusive-coupon#1",
+      "name": "Product per_unit-inclusive-coupon#1",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#1",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Winter Sale",
+        "name": "Winter Sale",
+        "type": "percentage",
+        "percentage_value": "10",
+        "category": "discount"
+      }
+    ],
+    "unit_amount": 1111,
+    "unit_amount_net": 933,
+    "unit_amount_gross": 1111,
+    "amount_subtotal": 13999,
+    "amount_total": 16659,
+    "amount_tax": 2660,
+    "unit_discount_amount": 123,
+    "before_discount_unit_amount": 1234,
+    "before_discount_unit_amount_gross": 1234,
+    "before_discount_unit_amount_net": 1037,
+    "unit_discount_amount_net": 104,
+    "tax_discount_amount": 296,
+    "before_discount_tax_amount": 2955,
+    "discount_amount": 1851,
+    "discount_amount_net": 1555,
+    "discount_percentage": 10,
+    "before_discount_amount_total": 18510,
+    "before_discount_amount_subtotal": 15555,
+    "currency": "EUR",
+    "description": "Price per_unit-inclusive-coupon#1",
+    "type": "one_time",
+    "is_tax_inclusive": true,
+    "unit_amount_decimal": "11.106",
+    "before_discount_unit_amount_decimal": "12.34",
+    "before_discount_unit_amount_gross_decimal": "12.34",
+    "before_discount_unit_amount_net_decimal": "10.36974789916",
+    "unit_discount_amount_decimal": "1.234",
+    "unit_amount_net_decimal": "9.332773109244",
+    "unit_discount_amount_net_decimal": "1.036974789916",
+    "unit_amount_gross_decimal": "11.106",
+    "amount_subtotal_decimal": "139.99159663866",
+    "amount_total_decimal": "166.59",
+    "discount_amount_decimal": "18.51",
+    "before_discount_amount_total_decimal": "185.1",
+    "before_discount_amount_subtotal_decimal": "155.5462184874",
+    "tax_discount_amount_decimal": "2.95537815126",
+    "discount_amount_net_decimal": "15.55462184874",
+    "before_discount_tax_amount_decimal": "29.5537815126"
+  },
+  "per_unit, tax inclusive, fixed discount": {
+    "price_id": "per_unit-inclusive-coupon#2",
+    "product_id": "product-per_unit-inclusive-coupon#2",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 1758
+      }
+    ],
+    "_price": {
+      "_id": "per_unit-inclusive-coupon#2",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "per_unit",
+      "is_tax_inclusive": true,
+      "type": "one_time",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price per_unit-inclusive-coupon#2"
+    },
+    "_product": {
+      "_id": "product-per_unit-inclusive-coupon#2",
+      "name": "Product per_unit-inclusive-coupon#2",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#2",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Winter Sale",
+        "name": "Winter Sale",
+        "type": "fixed",
+        "fixed_value": 500,
+        "fixed_value_decimal": "5.00",
+        "fixed_value_currency": "EUR",
+        "category": "discount"
+      }
+    ],
+    "unit_amount": 734,
+    "unit_amount_net": 617,
+    "unit_amount_gross": 734,
+    "amount_subtotal": 9252,
+    "amount_total": 11010,
+    "amount_tax": 1758,
+    "unit_discount_amount": 500,
+    "before_discount_unit_amount": 1234,
+    "before_discount_unit_amount_gross": 1234,
+    "before_discount_unit_amount_net": 1037,
+    "unit_discount_amount_net": 420,
+    "tax_discount_amount": 1197,
+    "before_discount_tax_amount": 2955,
+    "discount_amount": 7500,
+    "discount_amount_net": 6303,
+    "before_discount_amount_total": 18510,
+    "before_discount_amount_subtotal": 15555,
+    "currency": "EUR",
+    "description": "Price per_unit-inclusive-coupon#2",
+    "type": "one_time",
+    "is_tax_inclusive": true,
+    "unit_amount_decimal": "7.34",
+    "before_discount_unit_amount_decimal": "12.34",
+    "before_discount_unit_amount_gross_decimal": "12.34",
+    "before_discount_unit_amount_net_decimal": "10.36974789916",
+    "unit_discount_amount_decimal": "5",
+    "unit_amount_net_decimal": "6.168067226891",
+    "unit_discount_amount_net_decimal": "4.201680672269",
+    "unit_amount_gross_decimal": "7.34",
+    "amount_subtotal_decimal": "92.521008403365",
+    "amount_total_decimal": "110.1",
+    "discount_amount_decimal": "75",
+    "before_discount_amount_total_decimal": "185.1",
+    "before_discount_amount_subtotal_decimal": "155.5462184874",
+    "tax_discount_amount_decimal": "11.974789915965",
+    "discount_amount_net_decimal": "63.025210084035",
+    "before_discount_tax_amount_decimal": "29.5537815126"
+  },
+  "per_unit, tax inclusive, fixed cashback": {
+    "price_id": "per_unit-inclusive-coupon#3",
+    "product_id": "product-per_unit-inclusive-coupon#3",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 2955
+      }
+    ],
+    "_price": {
+      "_id": "per_unit-inclusive-coupon#3",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "per_unit",
+      "is_tax_inclusive": true,
+      "type": "one_time",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price per_unit-inclusive-coupon#3"
+    },
+    "_product": {
+      "_id": "product-per_unit-inclusive-coupon#3",
+      "name": "Product per_unit-inclusive-coupon#3",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#3",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Summer Cashback",
+        "name": "Summer Cashback",
+        "type": "fixed",
+        "category": "cashback",
+        "fixed_value": 1000,
+        "fixed_value_decimal": "10.00",
+        "fixed_value_currency": "EUR",
+        "cashback_period": "12"
+      }
+    ],
+    "unit_amount": 1234,
+    "unit_amount_net": 1037,
+    "unit_amount_gross": 1234,
+    "amount_subtotal": 15555,
+    "amount_total": 18510,
+    "amount_tax": 2955,
+    "cashback_amount": 15000,
+    "after_cashback_amount_total": -13766,
+    "currency": "EUR",
+    "description": "Price per_unit-inclusive-coupon#3",
+    "cashback_period": "12",
+    "type": "one_time",
+    "is_tax_inclusive": true,
+    "unit_amount_decimal": "12.34",
+    "unit_amount_net_decimal": "10.36974789916",
+    "unit_amount_gross_decimal": "12.34",
+    "amount_subtotal_decimal": "155.5462184874",
+    "amount_total_decimal": "185.1",
+    "cashback_amount_decimal": "150",
+    "after_cashback_amount_total_decimal": "-137.66"
+  },
+  "per_unit, tax inclusive, percentage cashback": {
+    "price_id": "per_unit-inclusive-coupon#3",
+    "product_id": "product-per_unit-inclusive-coupon#3",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 2955
+      }
+    ],
+    "_price": {
+      "_id": "per_unit-inclusive-coupon#3",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "per_unit",
+      "is_tax_inclusive": true,
+      "type": "one_time",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price per_unit-inclusive-coupon#3"
+    },
+    "_product": {
+      "_id": "product-per_unit-inclusive-coupon#3",
+      "name": "Product per_unit-inclusive-coupon#3",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#3",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Summer Cashback",
+        "name": "Summer Cashback",
+        "type": "percentage",
+        "category": "cashback",
+        "percentage_value": "10",
+        "cashback_period": "12"
+      }
+    ],
+    "unit_amount": 1234,
+    "unit_amount_net": 1037,
+    "unit_amount_gross": 1234,
+    "amount_subtotal": 15555,
+    "amount_total": 18510,
+    "amount_tax": 2955,
+    "cashback_amount": 1851,
+    "after_cashback_amount_total": -617,
+    "currency": "EUR",
+    "description": "Price per_unit-inclusive-coupon#3",
+    "cashback_period": "12",
+    "type": "one_time",
+    "is_tax_inclusive": true,
+    "unit_amount_decimal": "12.34",
+    "unit_amount_net_decimal": "10.36974789916",
+    "unit_amount_gross_decimal": "12.34",
+    "amount_subtotal_decimal": "155.5462184874",
+    "amount_total_decimal": "185.1",
+    "cashback_amount_decimal": "18.51",
+    "after_cashback_amount_total_decimal": "-6.17"
+  },
+  "per_unit, tax exclusive, no coupon": {
+    "price_id": "per_unit-exclusive-none",
+    "product_id": "product-per_unit-exclusive-none",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 3517
+      }
+    ],
+    "_price": {
+      "_id": "per_unit-exclusive-none",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "per_unit",
+      "is_tax_inclusive": false,
+      "type": "recurring",
+      "billing_period": "monthly",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price per_unit-exclusive-none"
+    },
+    "_product": {
+      "_id": "product-per_unit-exclusive-none",
+      "name": "Product per_unit-exclusive-none",
+      "type": "product"
+    },
+    "unit_amount": 1234,
+    "unit_amount_net": 1234,
+    "unit_amount_gross": 1468,
+    "amount_subtotal": 18510,
+    "amount_total": 22027,
+    "amount_tax": 3517,
+    "currency": "EUR",
+    "description": "Price per_unit-exclusive-none",
+    "type": "recurring",
+    "billing_period": "monthly",
+    "is_tax_inclusive": false,
+    "unit_amount_decimal": "12.34",
+    "unit_amount_net_decimal": "12.34",
+    "unit_amount_gross_decimal": "14.6846",
+    "amount_subtotal_decimal": "185.1",
+    "amount_total_decimal": "220.269"
+  },
+  "per_unit, tax exclusive, percentage discount": {
+    "price_id": "per_unit-exclusive-coupon#1",
+    "product_id": "product-per_unit-exclusive-coupon#1",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 3165
+      }
+    ],
+    "_price": {
+      "_id": "per_unit-exclusive-coupon#1",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "per_unit",
+      "is_tax_inclusive": false,
+      "type": "recurring",
+      "billing_period": "monthly",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price per_unit-exclusive-coupon#1"
+    },
+    "_product": {
+      "_id": "product-per_unit-exclusive-coupon#1",
+      "name": "Product per_unit-exclusive-coupon#1",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#1",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Winter Sale",
+        "name": "Winter Sale",
+        "type": "percentage",
+        "percentage_value": "10",
+        "category": "discount"
+      }
+    ],
+    "unit_amount": 1111,
+    "unit_amount_net": 1111,
+    "unit_amount_gross": 1322,
+    "amount_subtotal": 16659,
+    "amount_total": 19824,
+    "amount_tax": 3165,
+    "unit_discount_amount": 147,
+    "before_discount_unit_amount": 1234,
+    "before_discount_unit_amount_gross": 1468,
+    "before_discount_unit_amount_net": 1234,
+    "unit_discount_amount_net": 123,
+    "tax_discount_amount": 352,
+    "before_discount_tax_amount": 3517,
+    "discount_amount": 2203,
+    "discount_amount_net": 1851,
+    "discount_percentage": 10,
+    "before_discount_amount_total": 22027,
+    "before_discount_amount_subtotal": 18510,
+    "currency": "EUR",
+    "description": "Price per_unit-exclusive-coupon#1",
+    "type": "recurring",
+    "billing_period": "monthly",
+    "is_tax_inclusive": false,
+    "unit_amount_decimal": "11.106",
+    "before_discount_unit_amount_decimal": "12.34",
+    "before_discount_unit_amount_gross_decimal": "14.6846",
+    "before_discount_unit_amount_net_decimal": "12.34",
+    "unit_discount_amount_decimal": "1.46846",
+    "unit_amount_net_decimal": "11.106",
+    "unit_discount_amount_net_decimal": "1.234",
+    "unit_amount_gross_decimal": "13.21614",
+    "amount_subtotal_decimal": "166.59",
+    "amount_total_decimal": "198.2421",
+    "discount_amount_decimal": "22.0269",
+    "before_discount_amount_total_decimal": "220.269",
+    "before_discount_amount_subtotal_decimal": "185.1",
+    "tax_discount_amount_decimal": "3.5169",
+    "discount_amount_net_decimal": "18.51",
+    "before_discount_tax_amount_decimal": "35.169"
+  },
+  "per_unit, tax exclusive, fixed discount": {
+    "price_id": "per_unit-exclusive-coupon#2",
+    "product_id": "product-per_unit-exclusive-coupon#2",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 2092
+      }
+    ],
+    "_price": {
+      "_id": "per_unit-exclusive-coupon#2",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "per_unit",
+      "is_tax_inclusive": false,
+      "type": "recurring",
+      "billing_period": "monthly",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price per_unit-exclusive-coupon#2"
+    },
+    "_product": {
+      "_id": "product-per_unit-exclusive-coupon#2",
+      "name": "Product per_unit-exclusive-coupon#2",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#2",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Winter Sale",
+        "name": "Winter Sale",
+        "type": "fixed",
+        "fixed_value": 500,
+        "fixed_value_decimal": "5.00",
+        "fixed_value_currency": "EUR",
+        "category": "discount"
+      }
+    ],
+    "unit_amount": 734,
+    "unit_amount_net": 734,
+    "unit_amount_gross": 873,
+    "amount_subtotal": 11010,
+    "amount_total": 13102,
+    "amount_tax": 2092,
+    "unit_discount_amount": 595,
+    "before_discount_unit_amount": 1234,
+    "before_discount_unit_amount_gross": 1468,
+    "before_discount_unit_amount_net": 1234,
+    "unit_discount_amount_net": 500,
+    "tax_discount_amount": 1425,
+    "before_discount_tax_amount": 3517,
+    "discount_amount": 8925,
+    "discount_amount_net": 7500,
+    "before_discount_amount_total": 22027,
+    "before_discount_amount_subtotal": 18510,
+    "currency": "EUR",
+    "description": "Price per_unit-exclusive-coupon#2",
+    "type": "recurring",
+    "billing_period": "monthly",
+    "is_tax_inclusive": false,
+    "unit_amount_decimal": "7.34",
+    "before_discount_unit_amount_decimal": "12.34",
+    "before_discount_unit_amount_gross_decimal": "14.6846",
+    "before_discount_unit_amount_net_decimal": "12.34",
+    "unit_discount_amount_decimal": "5.95",
+    "unit_amount_net_decimal": "7.34",
+    "unit_discount_amount_net_decimal": "5",
+    "unit_amount_gross_decimal": "8.7346",
+    "amount_subtotal_decimal": "110.1",
+    "amount_total_decimal": "131.019",
+    "discount_amount_decimal": "89.25",
+    "before_discount_amount_total_decimal": "220.269",
+    "before_discount_amount_subtotal_decimal": "185.1",
+    "tax_discount_amount_decimal": "14.25",
+    "discount_amount_net_decimal": "75",
+    "before_discount_tax_amount_decimal": "35.169"
+  },
+  "per_unit, tax exclusive, fixed cashback": {
+    "price_id": "per_unit-exclusive-coupon#3",
+    "product_id": "product-per_unit-exclusive-coupon#3",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 3517
+      }
+    ],
+    "_price": {
+      "_id": "per_unit-exclusive-coupon#3",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "per_unit",
+      "is_tax_inclusive": false,
+      "type": "recurring",
+      "billing_period": "monthly",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price per_unit-exclusive-coupon#3"
+    },
+    "_product": {
+      "_id": "product-per_unit-exclusive-coupon#3",
+      "name": "Product per_unit-exclusive-coupon#3",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#3",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Summer Cashback",
+        "name": "Summer Cashback",
+        "type": "fixed",
+        "category": "cashback",
+        "fixed_value": 1000,
+        "fixed_value_decimal": "10.00",
+        "fixed_value_currency": "EUR",
+        "cashback_period": "12"
+      }
+    ],
+    "unit_amount": 1234,
+    "unit_amount_net": 1234,
+    "unit_amount_gross": 1468,
+    "amount_subtotal": 18510,
+    "amount_total": 22027,
+    "amount_tax": 3517,
+    "cashback_amount": 15000,
+    "after_cashback_amount_total": 218,
+    "currency": "EUR",
+    "description": "Price per_unit-exclusive-coupon#3",
+    "cashback_period": "12",
+    "type": "recurring",
+    "billing_period": "monthly",
+    "is_tax_inclusive": false,
+    "unit_amount_decimal": "12.34",
+    "unit_amount_net_decimal": "12.34",
+    "unit_amount_gross_decimal": "14.6846",
+    "amount_subtotal_decimal": "185.1",
+    "amount_total_decimal": "220.269",
+    "cashback_amount_decimal": "150",
+    "after_cashback_amount_total_decimal": "2.1846"
+  },
+  "per_unit, tax exclusive, percentage cashback": {
+    "price_id": "per_unit-exclusive-coupon#3",
+    "product_id": "product-per_unit-exclusive-coupon#3",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 3517
+      }
+    ],
+    "_price": {
+      "_id": "per_unit-exclusive-coupon#3",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "per_unit",
+      "is_tax_inclusive": false,
+      "type": "recurring",
+      "billing_period": "monthly",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price per_unit-exclusive-coupon#3"
+    },
+    "_product": {
+      "_id": "product-per_unit-exclusive-coupon#3",
+      "name": "Product per_unit-exclusive-coupon#3",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#3",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Summer Cashback",
+        "name": "Summer Cashback",
+        "type": "percentage",
+        "category": "cashback",
+        "percentage_value": "10",
+        "cashback_period": "12"
+      }
+    ],
+    "unit_amount": 1234,
+    "unit_amount_net": 1234,
+    "unit_amount_gross": 1468,
+    "amount_subtotal": 18510,
+    "amount_total": 22027,
+    "amount_tax": 3517,
+    "cashback_amount": 2203,
+    "after_cashback_amount_total": 1285,
+    "currency": "EUR",
+    "description": "Price per_unit-exclusive-coupon#3",
+    "cashback_period": "12",
+    "type": "recurring",
+    "billing_period": "monthly",
+    "is_tax_inclusive": false,
+    "unit_amount_decimal": "12.34",
+    "unit_amount_net_decimal": "12.34",
+    "unit_amount_gross_decimal": "14.6846",
+    "amount_subtotal_decimal": "185.1",
+    "amount_total_decimal": "220.269",
+    "cashback_amount_decimal": "22.0269",
+    "after_cashback_amount_total_decimal": "12.849025"
+  },
+  "tiered_volume, tax inclusive, no coupon": {
+    "price_id": "tiered_volume-inclusive-none",
+    "product_id": "product-tiered_volume-inclusive-none",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 2395
+      }
+    ],
+    "_price": {
+      "_id": "tiered_volume-inclusive-none",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_volume",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": true,
+      "type": "one_time",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_volume-inclusive-none"
+    },
+    "_product": {
+      "_id": "product-tiered_volume-inclusive-none",
+      "name": "Product tiered_volume-inclusive-none",
+      "type": "product"
+    },
+    "tiers_details": [
+      {
+        "quantity": 15,
+        "unit_amount": 1000,
+        "unit_amount_decimal": "10.00",
+        "unit_amount_net": 840,
+        "unit_amount_gross": 1000,
+        "amount_subtotal": 12605,
+        "amount_total": 15000,
+        "amount_tax": 2395
+      }
+    ],
+    "unit_amount_gross": 1000,
+    "unit_amount_net": 840,
+    "amount_subtotal": 12605,
+    "amount_total": 15000,
+    "amount_tax": 2395,
+    "price_display_in_journeys": "[undefined]",
+    "currency": "EUR",
+    "description": "Price tiered_volume-inclusive-none",
+    "type": "one_time",
+    "is_tax_inclusive": true,
+    "unit_amount_net_decimal": "8.403361344538",
+    "unit_amount_gross_decimal": "10",
+    "amount_subtotal_decimal": "126.05042016807",
+    "amount_total_decimal": "150"
+  },
+  "tiered_volume, tax inclusive, percentage discount": {
+    "price_id": "tiered_volume-inclusive-coupon#1",
+    "product_id": "product-tiered_volume-inclusive-coupon#1",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 2155
+      }
+    ],
+    "_price": {
+      "_id": "tiered_volume-inclusive-coupon#1",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_volume",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": true,
+      "type": "one_time",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_volume-inclusive-coupon#1"
+    },
+    "_product": {
+      "_id": "product-tiered_volume-inclusive-coupon#1",
+      "name": "Product tiered_volume-inclusive-coupon#1",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#1",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Winter Sale",
+        "name": "Winter Sale",
+        "type": "percentage",
+        "percentage_value": "10",
+        "category": "discount"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 15,
+        "unit_amount": 1000,
+        "unit_amount_decimal": "10.00",
+        "unit_amount_net": 840,
+        "unit_amount_gross": 1000,
+        "amount_subtotal": 12605,
+        "amount_total": 15000,
+        "amount_tax": 2395
+      }
+    ],
+    "unit_amount_gross": 900,
+    "unit_amount_net": 756,
+    "amount_subtotal": 11345,
+    "amount_total": 13500,
+    "amount_tax": 2155,
+    "price_display_in_journeys": "[undefined]",
+    "unit_amount": 900,
+    "unit_discount_amount": 100,
+    "before_discount_unit_amount": 1000,
+    "before_discount_unit_amount_gross": 1000,
+    "before_discount_unit_amount_net": 840,
+    "unit_discount_amount_net": 84,
+    "tax_discount_amount": 239,
+    "before_discount_tax_amount": 2395,
+    "discount_amount": 1500,
+    "discount_amount_net": 1261,
+    "discount_percentage": 10,
+    "before_discount_amount_total": 15000,
+    "before_discount_amount_subtotal": 12605,
+    "currency": "EUR",
+    "description": "Price tiered_volume-inclusive-coupon#1",
+    "type": "one_time",
+    "is_tax_inclusive": true,
+    "unit_amount_decimal": "9",
+    "before_discount_unit_amount_decimal": "10",
+    "before_discount_unit_amount_gross_decimal": "10",
+    "before_discount_unit_amount_net_decimal": "8.403361344538",
+    "unit_discount_amount_decimal": "1",
+    "unit_amount_net_decimal": "7.563025210084",
+    "unit_discount_amount_net_decimal": "0.840336134454",
+    "unit_amount_gross_decimal": "9",
+    "amount_subtotal_decimal": "113.44537815126",
+    "amount_total_decimal": "135",
+    "discount_amount_decimal": "15",
+    "before_discount_amount_total_decimal": "150",
+    "before_discount_amount_subtotal_decimal": "126.05042016807",
+    "tax_discount_amount_decimal": "2.39495798319",
+    "discount_amount_net_decimal": "12.60504201681",
+    "before_discount_tax_amount_decimal": "23.94957983193"
+  },
+  "tiered_volume, tax inclusive, fixed discount": {
+    "price_id": "tiered_volume-inclusive-coupon#2",
+    "product_id": "product-tiered_volume-inclusive-coupon#2",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 1197
+      }
+    ],
+    "_price": {
+      "_id": "tiered_volume-inclusive-coupon#2",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_volume",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": true,
+      "type": "one_time",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_volume-inclusive-coupon#2"
+    },
+    "_product": {
+      "_id": "product-tiered_volume-inclusive-coupon#2",
+      "name": "Product tiered_volume-inclusive-coupon#2",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#2",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Winter Sale",
+        "name": "Winter Sale",
+        "type": "fixed",
+        "fixed_value": 500,
+        "fixed_value_decimal": "5.00",
+        "fixed_value_currency": "EUR",
+        "category": "discount"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 15,
+        "unit_amount": 1000,
+        "unit_amount_decimal": "10.00",
+        "unit_amount_net": 840,
+        "unit_amount_gross": 1000,
+        "amount_subtotal": 12605,
+        "amount_total": 15000,
+        "amount_tax": 2395
+      }
+    ],
+    "unit_amount_gross": 500,
+    "unit_amount_net": 420,
+    "amount_subtotal": 6303,
+    "amount_total": 7500,
+    "amount_tax": 1197,
+    "price_display_in_journeys": "[undefined]",
+    "unit_amount": 500,
+    "unit_discount_amount": 500,
+    "before_discount_unit_amount": 1000,
+    "before_discount_unit_amount_gross": 1000,
+    "before_discount_unit_amount_net": 840,
+    "unit_discount_amount_net": 420,
+    "tax_discount_amount": 1197,
+    "before_discount_tax_amount": 2395,
+    "discount_amount": 7500,
+    "discount_amount_net": 6303,
+    "before_discount_amount_total": 15000,
+    "before_discount_amount_subtotal": 12605,
+    "currency": "EUR",
+    "description": "Price tiered_volume-inclusive-coupon#2",
+    "type": "one_time",
+    "is_tax_inclusive": true,
+    "unit_amount_decimal": "5",
+    "before_discount_unit_amount_decimal": "10",
+    "before_discount_unit_amount_gross_decimal": "10",
+    "before_discount_unit_amount_net_decimal": "8.403361344538",
+    "unit_discount_amount_decimal": "5",
+    "unit_amount_net_decimal": "4.201680672269",
+    "unit_discount_amount_net_decimal": "4.201680672269",
+    "unit_amount_gross_decimal": "5",
+    "amount_subtotal_decimal": "63.025210084035",
+    "amount_total_decimal": "75",
+    "discount_amount_decimal": "75",
+    "before_discount_amount_total_decimal": "150",
+    "before_discount_amount_subtotal_decimal": "126.05042016807",
+    "tax_discount_amount_decimal": "11.974789915965",
+    "discount_amount_net_decimal": "63.025210084035",
+    "before_discount_tax_amount_decimal": "23.94957983193"
+  },
+  "tiered_volume, tax inclusive, fixed cashback": {
+    "price_id": "tiered_volume-inclusive-coupon#3",
+    "product_id": "product-tiered_volume-inclusive-coupon#3",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 2395
+      }
+    ],
+    "_price": {
+      "_id": "tiered_volume-inclusive-coupon#3",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_volume",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": true,
+      "type": "one_time",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_volume-inclusive-coupon#3"
+    },
+    "_product": {
+      "_id": "product-tiered_volume-inclusive-coupon#3",
+      "name": "Product tiered_volume-inclusive-coupon#3",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#3",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Summer Cashback",
+        "name": "Summer Cashback",
+        "type": "fixed",
+        "category": "cashback",
+        "fixed_value": 1000,
+        "fixed_value_decimal": "10.00",
+        "fixed_value_currency": "EUR",
+        "cashback_period": "12"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 15,
+        "unit_amount": 1000,
+        "unit_amount_decimal": "10.00",
+        "unit_amount_net": 840,
+        "unit_amount_gross": 1000,
+        "amount_subtotal": 12605,
+        "amount_total": 15000,
+        "amount_tax": 2395
+      }
+    ],
+    "unit_amount_gross": 1000,
+    "unit_amount_net": 840,
+    "amount_subtotal": 12605,
+    "amount_total": 15000,
+    "amount_tax": 2395,
+    "price_display_in_journeys": "[undefined]",
+    "cashback_amount": 15000,
+    "after_cashback_amount_total": -14000,
+    "currency": "EUR",
+    "description": "Price tiered_volume-inclusive-coupon#3",
+    "cashback_period": "12",
+    "type": "one_time",
+    "is_tax_inclusive": true,
+    "unit_amount_net_decimal": "8.403361344538",
+    "unit_amount_gross_decimal": "10",
+    "amount_subtotal_decimal": "126.05042016807",
+    "amount_total_decimal": "150",
+    "cashback_amount_decimal": "150",
+    "after_cashback_amount_total_decimal": "-140"
+  },
+  "tiered_volume, tax inclusive, percentage cashback": {
+    "price_id": "tiered_volume-inclusive-coupon#3",
+    "product_id": "product-tiered_volume-inclusive-coupon#3",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 2395
+      }
+    ],
+    "_price": {
+      "_id": "tiered_volume-inclusive-coupon#3",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_volume",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": true,
+      "type": "one_time",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_volume-inclusive-coupon#3"
+    },
+    "_product": {
+      "_id": "product-tiered_volume-inclusive-coupon#3",
+      "name": "Product tiered_volume-inclusive-coupon#3",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#3",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Summer Cashback",
+        "name": "Summer Cashback",
+        "type": "percentage",
+        "category": "cashback",
+        "percentage_value": "10",
+        "cashback_period": "12"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 15,
+        "unit_amount": 1000,
+        "unit_amount_decimal": "10.00",
+        "unit_amount_net": 840,
+        "unit_amount_gross": 1000,
+        "amount_subtotal": 12605,
+        "amount_total": 15000,
+        "amount_tax": 2395
+      }
+    ],
+    "unit_amount_gross": 1000,
+    "unit_amount_net": 840,
+    "amount_subtotal": 12605,
+    "amount_total": 15000,
+    "amount_tax": 2395,
+    "price_display_in_journeys": "[undefined]",
+    "cashback_amount": 1500,
+    "after_cashback_amount_total": -500,
+    "currency": "EUR",
+    "description": "Price tiered_volume-inclusive-coupon#3",
+    "cashback_period": "12",
+    "type": "one_time",
+    "is_tax_inclusive": true,
+    "unit_amount_net_decimal": "8.403361344538",
+    "unit_amount_gross_decimal": "10",
+    "amount_subtotal_decimal": "126.05042016807",
+    "amount_total_decimal": "150",
+    "cashback_amount_decimal": "15",
+    "after_cashback_amount_total_decimal": "-5"
+  },
+  "tiered_volume, tax exclusive, no coupon": {
+    "price_id": "tiered_volume-exclusive-none",
+    "product_id": "product-tiered_volume-exclusive-none",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 2850
+      }
+    ],
+    "_price": {
+      "_id": "tiered_volume-exclusive-none",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_volume",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": false,
+      "type": "recurring",
+      "billing_period": "monthly",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_volume-exclusive-none"
+    },
+    "_product": {
+      "_id": "product-tiered_volume-exclusive-none",
+      "name": "Product tiered_volume-exclusive-none",
+      "type": "product"
+    },
+    "tiers_details": [
+      {
+        "quantity": 15,
+        "unit_amount": 1000,
+        "unit_amount_decimal": "10.00",
+        "unit_amount_net": 1000,
+        "unit_amount_gross": 1190,
+        "amount_subtotal": 15000,
+        "amount_total": 17850,
+        "amount_tax": 2850
+      }
+    ],
+    "unit_amount_gross": 1190,
+    "unit_amount_net": 1000,
+    "amount_subtotal": 15000,
+    "amount_total": 17850,
+    "amount_tax": 2850,
+    "price_display_in_journeys": "[undefined]",
+    "currency": "EUR",
+    "description": "Price tiered_volume-exclusive-none",
+    "type": "recurring",
+    "billing_period": "monthly",
+    "is_tax_inclusive": false,
+    "unit_amount_net_decimal": "10",
+    "unit_amount_gross_decimal": "11.9",
+    "amount_subtotal_decimal": "150",
+    "amount_total_decimal": "178.5"
+  },
+  "tiered_volume, tax exclusive, percentage discount": {
+    "price_id": "tiered_volume-exclusive-coupon#1",
+    "product_id": "product-tiered_volume-exclusive-coupon#1",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 2565
+      }
+    ],
+    "_price": {
+      "_id": "tiered_volume-exclusive-coupon#1",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_volume",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": false,
+      "type": "recurring",
+      "billing_period": "monthly",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_volume-exclusive-coupon#1"
+    },
+    "_product": {
+      "_id": "product-tiered_volume-exclusive-coupon#1",
+      "name": "Product tiered_volume-exclusive-coupon#1",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#1",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Winter Sale",
+        "name": "Winter Sale",
+        "type": "percentage",
+        "percentage_value": "10",
+        "category": "discount"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 15,
+        "unit_amount": 1000,
+        "unit_amount_decimal": "10.00",
+        "unit_amount_net": 1000,
+        "unit_amount_gross": 1190,
+        "amount_subtotal": 15000,
+        "amount_total": 17850,
+        "amount_tax": 2850
+      }
+    ],
+    "unit_amount_gross": 1071,
+    "unit_amount_net": 900,
+    "amount_subtotal": 13500,
+    "amount_total": 16065,
+    "amount_tax": 2565,
+    "price_display_in_journeys": "[undefined]",
+    "unit_amount": 900,
+    "unit_discount_amount": 119,
+    "before_discount_unit_amount": 1000,
+    "before_discount_unit_amount_gross": 1190,
+    "before_discount_unit_amount_net": 1000,
+    "unit_discount_amount_net": 100,
+    "tax_discount_amount": 285,
+    "before_discount_tax_amount": 2850,
+    "discount_amount": 1785,
+    "discount_amount_net": 1500,
+    "discount_percentage": 10,
+    "before_discount_amount_total": 17850,
+    "before_discount_amount_subtotal": 15000,
+    "currency": "EUR",
+    "description": "Price tiered_volume-exclusive-coupon#1",
+    "type": "recurring",
+    "billing_period": "monthly",
+    "is_tax_inclusive": false,
+    "unit_amount_decimal": "9",
+    "before_discount_unit_amount_decimal": "10",
+    "before_discount_unit_amount_gross_decimal": "11.9",
+    "before_discount_unit_amount_net_decimal": "10",
+    "unit_discount_amount_decimal": "1.19",
+    "unit_amount_net_decimal": "9",
+    "unit_discount_amount_net_decimal": "1",
+    "unit_amount_gross_decimal": "10.71",
+    "amount_subtotal_decimal": "135",
+    "amount_total_decimal": "160.65",
+    "discount_amount_decimal": "17.85",
+    "before_discount_amount_total_decimal": "178.5",
+    "before_discount_amount_subtotal_decimal": "150",
+    "tax_discount_amount_decimal": "2.85",
+    "discount_amount_net_decimal": "15",
+    "before_discount_tax_amount_decimal": "28.5"
+  },
+  "tiered_volume, tax exclusive, fixed discount": {
+    "price_id": "tiered_volume-exclusive-coupon#2",
+    "product_id": "product-tiered_volume-exclusive-coupon#2",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 1425
+      }
+    ],
+    "_price": {
+      "_id": "tiered_volume-exclusive-coupon#2",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_volume",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": false,
+      "type": "recurring",
+      "billing_period": "monthly",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_volume-exclusive-coupon#2"
+    },
+    "_product": {
+      "_id": "product-tiered_volume-exclusive-coupon#2",
+      "name": "Product tiered_volume-exclusive-coupon#2",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#2",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Winter Sale",
+        "name": "Winter Sale",
+        "type": "fixed",
+        "fixed_value": 500,
+        "fixed_value_decimal": "5.00",
+        "fixed_value_currency": "EUR",
+        "category": "discount"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 15,
+        "unit_amount": 1000,
+        "unit_amount_decimal": "10.00",
+        "unit_amount_net": 1000,
+        "unit_amount_gross": 1190,
+        "amount_subtotal": 15000,
+        "amount_total": 17850,
+        "amount_tax": 2850
+      }
+    ],
+    "unit_amount_gross": 595,
+    "unit_amount_net": 500,
+    "amount_subtotal": 7500,
+    "amount_total": 8925,
+    "amount_tax": 1425,
+    "price_display_in_journeys": "[undefined]",
+    "unit_amount": 500,
+    "unit_discount_amount": 595,
+    "before_discount_unit_amount": 1000,
+    "before_discount_unit_amount_gross": 1190,
+    "before_discount_unit_amount_net": 1000,
+    "unit_discount_amount_net": 500,
+    "tax_discount_amount": 1425,
+    "before_discount_tax_amount": 2850,
+    "discount_amount": 8925,
+    "discount_amount_net": 7500,
+    "before_discount_amount_total": 17850,
+    "before_discount_amount_subtotal": 15000,
+    "currency": "EUR",
+    "description": "Price tiered_volume-exclusive-coupon#2",
+    "type": "recurring",
+    "billing_period": "monthly",
+    "is_tax_inclusive": false,
+    "unit_amount_decimal": "5",
+    "before_discount_unit_amount_decimal": "10",
+    "before_discount_unit_amount_gross_decimal": "11.9",
+    "before_discount_unit_amount_net_decimal": "10",
+    "unit_discount_amount_decimal": "5.95",
+    "unit_amount_net_decimal": "5",
+    "unit_discount_amount_net_decimal": "5",
+    "unit_amount_gross_decimal": "5.95",
+    "amount_subtotal_decimal": "75",
+    "amount_total_decimal": "89.25",
+    "discount_amount_decimal": "89.25",
+    "before_discount_amount_total_decimal": "178.5",
+    "before_discount_amount_subtotal_decimal": "150",
+    "tax_discount_amount_decimal": "14.25",
+    "discount_amount_net_decimal": "75",
+    "before_discount_tax_amount_decimal": "28.5"
+  },
+  "tiered_volume, tax exclusive, fixed cashback": {
+    "price_id": "tiered_volume-exclusive-coupon#3",
+    "product_id": "product-tiered_volume-exclusive-coupon#3",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 2850
+      }
+    ],
+    "_price": {
+      "_id": "tiered_volume-exclusive-coupon#3",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_volume",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": false,
+      "type": "recurring",
+      "billing_period": "monthly",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_volume-exclusive-coupon#3"
+    },
+    "_product": {
+      "_id": "product-tiered_volume-exclusive-coupon#3",
+      "name": "Product tiered_volume-exclusive-coupon#3",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#3",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Summer Cashback",
+        "name": "Summer Cashback",
+        "type": "fixed",
+        "category": "cashback",
+        "fixed_value": 1000,
+        "fixed_value_decimal": "10.00",
+        "fixed_value_currency": "EUR",
+        "cashback_period": "12"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 15,
+        "unit_amount": 1000,
+        "unit_amount_decimal": "10.00",
+        "unit_amount_net": 1000,
+        "unit_amount_gross": 1190,
+        "amount_subtotal": 15000,
+        "amount_total": 17850,
+        "amount_tax": 2850
+      }
+    ],
+    "unit_amount_gross": 1190,
+    "unit_amount_net": 1000,
+    "amount_subtotal": 15000,
+    "amount_total": 17850,
+    "amount_tax": 2850,
+    "price_display_in_journeys": "[undefined]",
+    "cashback_amount": 15000,
+    "after_cashback_amount_total": -60,
+    "currency": "EUR",
+    "description": "Price tiered_volume-exclusive-coupon#3",
+    "cashback_period": "12",
+    "type": "recurring",
+    "billing_period": "monthly",
+    "is_tax_inclusive": false,
+    "unit_amount_net_decimal": "10",
+    "unit_amount_gross_decimal": "11.9",
+    "amount_subtotal_decimal": "150",
+    "amount_total_decimal": "178.5",
+    "cashback_amount_decimal": "150",
+    "after_cashback_amount_total_decimal": "-0.6"
+  },
+  "tiered_volume, tax exclusive, percentage cashback": {
+    "price_id": "tiered_volume-exclusive-coupon#3",
+    "product_id": "product-tiered_volume-exclusive-coupon#3",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 2850
+      }
+    ],
+    "_price": {
+      "_id": "tiered_volume-exclusive-coupon#3",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_volume",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": false,
+      "type": "recurring",
+      "billing_period": "monthly",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_volume-exclusive-coupon#3"
+    },
+    "_product": {
+      "_id": "product-tiered_volume-exclusive-coupon#3",
+      "name": "Product tiered_volume-exclusive-coupon#3",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#3",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Summer Cashback",
+        "name": "Summer Cashback",
+        "type": "percentage",
+        "category": "cashback",
+        "percentage_value": "10",
+        "cashback_period": "12"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 15,
+        "unit_amount": 1000,
+        "unit_amount_decimal": "10.00",
+        "unit_amount_net": 1000,
+        "unit_amount_gross": 1190,
+        "amount_subtotal": 15000,
+        "amount_total": 17850,
+        "amount_tax": 2850
+      }
+    ],
+    "unit_amount_gross": 1190,
+    "unit_amount_net": 1000,
+    "amount_subtotal": 15000,
+    "amount_total": 17850,
+    "amount_tax": 2850,
+    "price_display_in_journeys": "[undefined]",
+    "cashback_amount": 1785,
+    "after_cashback_amount_total": 1041,
+    "currency": "EUR",
+    "description": "Price tiered_volume-exclusive-coupon#3",
+    "cashback_period": "12",
+    "type": "recurring",
+    "billing_period": "monthly",
+    "is_tax_inclusive": false,
+    "unit_amount_net_decimal": "10",
+    "unit_amount_gross_decimal": "11.9",
+    "amount_subtotal_decimal": "150",
+    "amount_total_decimal": "178.5",
+    "cashback_amount_decimal": "17.85",
+    "after_cashback_amount_total_decimal": "10.4125"
+  },
+  "tiered_graduated, tax inclusive, no coupon": {
+    "price_id": "tiered_graduated-inclusive-none",
+    "product_id": "product-tiered_graduated-inclusive-none",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 160
+      }
+    ],
+    "_price": {
+      "_id": "tiered_graduated-inclusive-none",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_graduated",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": true,
+      "type": "one_time",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_graduated-inclusive-none"
+    },
+    "_product": {
+      "_id": "product-tiered_graduated-inclusive-none",
+      "name": "Product tiered_graduated-inclusive-none",
+      "type": "product"
+    },
+    "tiers_details": [
+      {
+        "quantity": 1,
+        "unit_amount": 1000,
+        "unit_amount_decimal": "10.00",
+        "unit_amount_net": 840,
+        "unit_amount_gross": 1000,
+        "amount_subtotal": 840,
+        "amount_total": 1000,
+        "amount_tax": 160
+      }
+    ],
+    "unit_amount_gross": 1000,
+    "unit_amount_net": 840,
+    "amount_subtotal": 840,
+    "amount_total": 1000,
+    "amount_tax": 160,
+    "price_display_in_journeys": "[undefined]",
+    "currency": "EUR",
+    "description": "Price tiered_graduated-inclusive-none",
+    "type": "one_time",
+    "is_tax_inclusive": true,
+    "unit_amount_net_decimal": "8.403361344538",
+    "unit_amount_gross_decimal": "10",
+    "amount_subtotal_decimal": "8.403361344538",
+    "amount_total_decimal": "10"
+  },
+  "tiered_graduated, tax inclusive, percentage discount": {
+    "price_id": "tiered_graduated-inclusive-coupon#1",
+    "product_id": "product-tiered_graduated-inclusive-coupon#1",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 144
+      }
+    ],
+    "_price": {
+      "_id": "tiered_graduated-inclusive-coupon#1",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_graduated",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": true,
+      "type": "one_time",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_graduated-inclusive-coupon#1"
+    },
+    "_product": {
+      "_id": "product-tiered_graduated-inclusive-coupon#1",
+      "name": "Product tiered_graduated-inclusive-coupon#1",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#1",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Winter Sale",
+        "name": "Winter Sale",
+        "type": "percentage",
+        "percentage_value": "10",
+        "category": "discount"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 1,
+        "unit_amount": 1000,
+        "unit_amount_decimal": "10.00",
+        "unit_amount_net": 840,
+        "unit_amount_gross": 1000,
+        "amount_subtotal": 840,
+        "amount_total": 1000,
+        "amount_tax": 160
+      }
+    ],
+    "unit_amount_gross": 900,
+    "unit_amount_net": 756,
+    "amount_subtotal": 756,
+    "amount_total": 900,
+    "amount_tax": 144,
+    "price_display_in_journeys": "[undefined]",
+    "unit_discount_amount": 100,
+    "before_discount_unit_amount": 1000,
+    "before_discount_unit_amount_gross": 1000,
+    "before_discount_unit_amount_net": 840,
+    "unit_discount_amount_net": 84,
+    "tax_discount_amount": 16,
+    "before_discount_tax_amount": 160,
+    "discount_amount": 100,
+    "discount_amount_net": 84,
+    "before_discount_amount_total": 1000,
+    "before_discount_amount_subtotal": 840,
+    "discount_percentage": 10,
+    "currency": "EUR",
+    "description": "Price tiered_graduated-inclusive-coupon#1",
+    "type": "one_time",
+    "is_tax_inclusive": true,
+    "before_discount_unit_amount_decimal": "10",
+    "before_discount_unit_amount_gross_decimal": "10",
+    "before_discount_unit_amount_net_decimal": "8.403361344538",
+    "unit_discount_amount_decimal": "1",
+    "unit_amount_net_decimal": "7.563025210084",
+    "unit_discount_amount_net_decimal": "0.840336134454",
+    "unit_amount_gross_decimal": "9",
+    "amount_subtotal_decimal": "7.563025210084",
+    "amount_total_decimal": "9",
+    "discount_amount_decimal": "1",
+    "before_discount_amount_total_decimal": "10",
+    "before_discount_amount_subtotal_decimal": "8.403361344538",
+    "tax_discount_amount_decimal": "0.159663865546",
+    "discount_amount_net_decimal": "0.840336134454",
+    "before_discount_tax_amount_decimal": "1.596638655462"
+  },
+  "tiered_graduated, tax inclusive, fixed discount": {
+    "price_id": "tiered_graduated-inclusive-coupon#2",
+    "product_id": "product-tiered_graduated-inclusive-coupon#2",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 80
+      }
+    ],
+    "_price": {
+      "_id": "tiered_graduated-inclusive-coupon#2",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_graduated",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": true,
+      "type": "one_time",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_graduated-inclusive-coupon#2"
+    },
+    "_product": {
+      "_id": "product-tiered_graduated-inclusive-coupon#2",
+      "name": "Product tiered_graduated-inclusive-coupon#2",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#2",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Winter Sale",
+        "name": "Winter Sale",
+        "type": "fixed",
+        "fixed_value": 500,
+        "fixed_value_decimal": "5.00",
+        "fixed_value_currency": "EUR",
+        "category": "discount"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 1,
+        "unit_amount": 1000,
+        "unit_amount_decimal": "10.00",
+        "unit_amount_net": 840,
+        "unit_amount_gross": 1000,
+        "amount_subtotal": 840,
+        "amount_total": 1000,
+        "amount_tax": 160
+      }
+    ],
+    "unit_amount_gross": 500,
+    "unit_amount_net": 420,
+    "amount_subtotal": 420,
+    "amount_total": 500,
+    "amount_tax": 80,
+    "price_display_in_journeys": "[undefined]",
+    "unit_discount_amount": 500,
+    "before_discount_unit_amount": 1000,
+    "before_discount_unit_amount_gross": 1000,
+    "before_discount_unit_amount_net": 840,
+    "unit_discount_amount_net": 420,
+    "tax_discount_amount": 80,
+    "before_discount_tax_amount": 160,
+    "discount_amount": 500,
+    "discount_amount_net": 420,
+    "before_discount_amount_total": 1000,
+    "before_discount_amount_subtotal": 840,
+    "currency": "EUR",
+    "description": "Price tiered_graduated-inclusive-coupon#2",
+    "type": "one_time",
+    "is_tax_inclusive": true,
+    "before_discount_unit_amount_decimal": "10",
+    "before_discount_unit_amount_gross_decimal": "10",
+    "before_discount_unit_amount_net_decimal": "8.403361344538",
+    "unit_discount_amount_decimal": "5",
+    "unit_amount_net_decimal": "4.201680672269",
+    "unit_discount_amount_net_decimal": "4.201680672269",
+    "unit_amount_gross_decimal": "5",
+    "amount_subtotal_decimal": "4.201680672269",
+    "amount_total_decimal": "5",
+    "discount_amount_decimal": "5",
+    "before_discount_amount_total_decimal": "10",
+    "before_discount_amount_subtotal_decimal": "8.403361344538",
+    "tax_discount_amount_decimal": "0.798319327731",
+    "discount_amount_net_decimal": "4.201680672269",
+    "before_discount_tax_amount_decimal": "1.596638655462"
+  },
+  "tiered_graduated, tax inclusive, fixed cashback": {
+    "price_id": "tiered_graduated-inclusive-coupon#3",
+    "product_id": "product-tiered_graduated-inclusive-coupon#3",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 160
+      }
+    ],
+    "_price": {
+      "_id": "tiered_graduated-inclusive-coupon#3",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_graduated",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": true,
+      "type": "one_time",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_graduated-inclusive-coupon#3"
+    },
+    "_product": {
+      "_id": "product-tiered_graduated-inclusive-coupon#3",
+      "name": "Product tiered_graduated-inclusive-coupon#3",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#3",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Summer Cashback",
+        "name": "Summer Cashback",
+        "type": "fixed",
+        "category": "cashback",
+        "fixed_value": 1000,
+        "fixed_value_decimal": "10.00",
+        "fixed_value_currency": "EUR",
+        "cashback_period": "12"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 1,
+        "unit_amount": 1000,
+        "unit_amount_decimal": "10.00",
+        "unit_amount_net": 840,
+        "unit_amount_gross": 1000,
+        "amount_subtotal": 840,
+        "amount_total": 1000,
+        "amount_tax": 160
+      }
+    ],
+    "unit_amount_gross": 1000,
+    "unit_amount_net": 840,
+    "amount_subtotal": 840,
+    "amount_total": 1000,
+    "amount_tax": 160,
+    "price_display_in_journeys": "[undefined]",
+    "cashback_amount": 15000,
+    "after_cashback_amount_total": -14000,
+    "currency": "EUR",
+    "description": "Price tiered_graduated-inclusive-coupon#3",
+    "cashback_period": "12",
+    "type": "one_time",
+    "is_tax_inclusive": true,
+    "unit_amount_net_decimal": "8.403361344538",
+    "unit_amount_gross_decimal": "10",
+    "amount_subtotal_decimal": "8.403361344538",
+    "amount_total_decimal": "10",
+    "cashback_amount_decimal": "150",
+    "after_cashback_amount_total_decimal": "-140"
+  },
+  "tiered_graduated, tax inclusive, percentage cashback": {
+    "price_id": "tiered_graduated-inclusive-coupon#3",
+    "product_id": "product-tiered_graduated-inclusive-coupon#3",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 160
+      }
+    ],
+    "_price": {
+      "_id": "tiered_graduated-inclusive-coupon#3",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_graduated",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": true,
+      "type": "one_time",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_graduated-inclusive-coupon#3"
+    },
+    "_product": {
+      "_id": "product-tiered_graduated-inclusive-coupon#3",
+      "name": "Product tiered_graduated-inclusive-coupon#3",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#3",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Summer Cashback",
+        "name": "Summer Cashback",
+        "type": "percentage",
+        "category": "cashback",
+        "percentage_value": "10",
+        "cashback_period": "12"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 1,
+        "unit_amount": 1000,
+        "unit_amount_decimal": "10.00",
+        "unit_amount_net": 840,
+        "unit_amount_gross": 1000,
+        "amount_subtotal": 840,
+        "amount_total": 1000,
+        "amount_tax": 160
+      }
+    ],
+    "unit_amount_gross": 1000,
+    "unit_amount_net": 840,
+    "amount_subtotal": 840,
+    "amount_total": 1000,
+    "amount_tax": 160,
+    "price_display_in_journeys": "[undefined]",
+    "cashback_amount": 1500,
+    "after_cashback_amount_total": -500,
+    "currency": "EUR",
+    "description": "Price tiered_graduated-inclusive-coupon#3",
+    "cashback_period": "12",
+    "type": "one_time",
+    "is_tax_inclusive": true,
+    "unit_amount_net_decimal": "8.403361344538",
+    "unit_amount_gross_decimal": "10",
+    "amount_subtotal_decimal": "8.403361344538",
+    "amount_total_decimal": "10",
+    "cashback_amount_decimal": "15",
+    "after_cashback_amount_total_decimal": "-5"
+  },
+  "tiered_graduated, tax exclusive, no coupon": {
+    "price_id": "tiered_graduated-exclusive-none",
+    "product_id": "product-tiered_graduated-exclusive-none",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 190
+      }
+    ],
+    "_price": {
+      "_id": "tiered_graduated-exclusive-none",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_graduated",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": false,
+      "type": "recurring",
+      "billing_period": "monthly",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_graduated-exclusive-none"
+    },
+    "_product": {
+      "_id": "product-tiered_graduated-exclusive-none",
+      "name": "Product tiered_graduated-exclusive-none",
+      "type": "product"
+    },
+    "tiers_details": [
+      {
+        "quantity": 1,
+        "unit_amount": 1000,
+        "unit_amount_decimal": "10.00",
+        "unit_amount_net": 1000,
+        "unit_amount_gross": 1190,
+        "amount_subtotal": 1000,
+        "amount_total": 1190,
+        "amount_tax": 190
+      }
+    ],
+    "unit_amount_gross": 1190,
+    "unit_amount_net": 1000,
+    "amount_subtotal": 1000,
+    "amount_total": 1190,
+    "amount_tax": 190,
+    "price_display_in_journeys": "[undefined]",
+    "currency": "EUR",
+    "description": "Price tiered_graduated-exclusive-none",
+    "type": "recurring",
+    "billing_period": "monthly",
+    "is_tax_inclusive": false,
+    "unit_amount_net_decimal": "10",
+    "unit_amount_gross_decimal": "11.9",
+    "amount_subtotal_decimal": "10",
+    "amount_total_decimal": "11.9"
+  },
+  "tiered_graduated, tax exclusive, percentage discount": {
+    "price_id": "tiered_graduated-exclusive-coupon#1",
+    "product_id": "product-tiered_graduated-exclusive-coupon#1",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 171
+      }
+    ],
+    "_price": {
+      "_id": "tiered_graduated-exclusive-coupon#1",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_graduated",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": false,
+      "type": "recurring",
+      "billing_period": "monthly",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_graduated-exclusive-coupon#1"
+    },
+    "_product": {
+      "_id": "product-tiered_graduated-exclusive-coupon#1",
+      "name": "Product tiered_graduated-exclusive-coupon#1",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#1",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Winter Sale",
+        "name": "Winter Sale",
+        "type": "percentage",
+        "percentage_value": "10",
+        "category": "discount"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 1,
+        "unit_amount": 1000,
+        "unit_amount_decimal": "10.00",
+        "unit_amount_net": 1000,
+        "unit_amount_gross": 1190,
+        "amount_subtotal": 1000,
+        "amount_total": 1190,
+        "amount_tax": 190
+      }
+    ],
+    "unit_amount_gross": 1071,
+    "unit_amount_net": 900,
+    "amount_subtotal": 900,
+    "amount_total": 1071,
+    "amount_tax": 171,
+    "price_display_in_journeys": "[undefined]",
+    "unit_discount_amount": 119,
+    "before_discount_unit_amount": 1000,
+    "before_discount_unit_amount_gross": 1190,
+    "before_discount_unit_amount_net": 1000,
+    "unit_discount_amount_net": 100,
+    "tax_discount_amount": 19,
+    "before_discount_tax_amount": 190,
+    "discount_amount": 119,
+    "discount_amount_net": 100,
+    "before_discount_amount_total": 1190,
+    "before_discount_amount_subtotal": 1000,
+    "discount_percentage": 10,
+    "currency": "EUR",
+    "description": "Price tiered_graduated-exclusive-coupon#1",
+    "type": "recurring",
+    "billing_period": "monthly",
+    "is_tax_inclusive": false,
+    "before_discount_unit_amount_decimal": "10",
+    "before_discount_unit_amount_gross_decimal": "11.9",
+    "before_discount_unit_amount_net_decimal": "10",
+    "unit_discount_amount_decimal": "1.19",
+    "unit_amount_net_decimal": "9",
+    "unit_discount_amount_net_decimal": "1",
+    "unit_amount_gross_decimal": "10.71",
+    "amount_subtotal_decimal": "9",
+    "amount_total_decimal": "10.71",
+    "discount_amount_decimal": "1.19",
+    "before_discount_amount_total_decimal": "11.9",
+    "before_discount_amount_subtotal_decimal": "10",
+    "tax_discount_amount_decimal": "0.19",
+    "discount_amount_net_decimal": "1",
+    "before_discount_tax_amount_decimal": "1.9"
+  },
+  "tiered_graduated, tax exclusive, fixed discount": {
+    "price_id": "tiered_graduated-exclusive-coupon#2",
+    "product_id": "product-tiered_graduated-exclusive-coupon#2",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 95
+      }
+    ],
+    "_price": {
+      "_id": "tiered_graduated-exclusive-coupon#2",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_graduated",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": false,
+      "type": "recurring",
+      "billing_period": "monthly",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_graduated-exclusive-coupon#2"
+    },
+    "_product": {
+      "_id": "product-tiered_graduated-exclusive-coupon#2",
+      "name": "Product tiered_graduated-exclusive-coupon#2",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#2",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Winter Sale",
+        "name": "Winter Sale",
+        "type": "fixed",
+        "fixed_value": 500,
+        "fixed_value_decimal": "5.00",
+        "fixed_value_currency": "EUR",
+        "category": "discount"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 1,
+        "unit_amount": 1000,
+        "unit_amount_decimal": "10.00",
+        "unit_amount_net": 1000,
+        "unit_amount_gross": 1190,
+        "amount_subtotal": 1000,
+        "amount_total": 1190,
+        "amount_tax": 190
+      }
+    ],
+    "unit_amount_gross": 595,
+    "unit_amount_net": 500,
+    "amount_subtotal": 500,
+    "amount_total": 595,
+    "amount_tax": 95,
+    "price_display_in_journeys": "[undefined]",
+    "unit_discount_amount": 595,
+    "before_discount_unit_amount": 1000,
+    "before_discount_unit_amount_gross": 1190,
+    "before_discount_unit_amount_net": 1000,
+    "unit_discount_amount_net": 500,
+    "tax_discount_amount": 95,
+    "before_discount_tax_amount": 190,
+    "discount_amount": 595,
+    "discount_amount_net": 500,
+    "before_discount_amount_total": 1190,
+    "before_discount_amount_subtotal": 1000,
+    "currency": "EUR",
+    "description": "Price tiered_graduated-exclusive-coupon#2",
+    "type": "recurring",
+    "billing_period": "monthly",
+    "is_tax_inclusive": false,
+    "before_discount_unit_amount_decimal": "10",
+    "before_discount_unit_amount_gross_decimal": "11.9",
+    "before_discount_unit_amount_net_decimal": "10",
+    "unit_discount_amount_decimal": "5.95",
+    "unit_amount_net_decimal": "5",
+    "unit_discount_amount_net_decimal": "5",
+    "unit_amount_gross_decimal": "5.95",
+    "amount_subtotal_decimal": "5",
+    "amount_total_decimal": "5.95",
+    "discount_amount_decimal": "5.95",
+    "before_discount_amount_total_decimal": "11.9",
+    "before_discount_amount_subtotal_decimal": "10",
+    "tax_discount_amount_decimal": "0.95",
+    "discount_amount_net_decimal": "5",
+    "before_discount_tax_amount_decimal": "1.9"
+  },
+  "tiered_graduated, tax exclusive, fixed cashback": {
+    "price_id": "tiered_graduated-exclusive-coupon#3",
+    "product_id": "product-tiered_graduated-exclusive-coupon#3",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 190
+      }
+    ],
+    "_price": {
+      "_id": "tiered_graduated-exclusive-coupon#3",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_graduated",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": false,
+      "type": "recurring",
+      "billing_period": "monthly",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_graduated-exclusive-coupon#3"
+    },
+    "_product": {
+      "_id": "product-tiered_graduated-exclusive-coupon#3",
+      "name": "Product tiered_graduated-exclusive-coupon#3",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#3",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Summer Cashback",
+        "name": "Summer Cashback",
+        "type": "fixed",
+        "category": "cashback",
+        "fixed_value": 1000,
+        "fixed_value_decimal": "10.00",
+        "fixed_value_currency": "EUR",
+        "cashback_period": "12"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 1,
+        "unit_amount": 1000,
+        "unit_amount_decimal": "10.00",
+        "unit_amount_net": 1000,
+        "unit_amount_gross": 1190,
+        "amount_subtotal": 1000,
+        "amount_total": 1190,
+        "amount_tax": 190
+      }
+    ],
+    "unit_amount_gross": 1190,
+    "unit_amount_net": 1000,
+    "amount_subtotal": 1000,
+    "amount_total": 1190,
+    "amount_tax": 190,
+    "price_display_in_journeys": "[undefined]",
+    "cashback_amount": 15000,
+    "after_cashback_amount_total": -60,
+    "currency": "EUR",
+    "description": "Price tiered_graduated-exclusive-coupon#3",
+    "cashback_period": "12",
+    "type": "recurring",
+    "billing_period": "monthly",
+    "is_tax_inclusive": false,
+    "unit_amount_net_decimal": "10",
+    "unit_amount_gross_decimal": "11.9",
+    "amount_subtotal_decimal": "10",
+    "amount_total_decimal": "11.9",
+    "cashback_amount_decimal": "150",
+    "after_cashback_amount_total_decimal": "-0.6"
+  },
+  "tiered_graduated, tax exclusive, percentage cashback": {
+    "price_id": "tiered_graduated-exclusive-coupon#3",
+    "product_id": "product-tiered_graduated-exclusive-coupon#3",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 190
+      }
+    ],
+    "_price": {
+      "_id": "tiered_graduated-exclusive-coupon#3",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_graduated",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": false,
+      "type": "recurring",
+      "billing_period": "monthly",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_graduated-exclusive-coupon#3"
+    },
+    "_product": {
+      "_id": "product-tiered_graduated-exclusive-coupon#3",
+      "name": "Product tiered_graduated-exclusive-coupon#3",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#3",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Summer Cashback",
+        "name": "Summer Cashback",
+        "type": "percentage",
+        "category": "cashback",
+        "percentage_value": "10",
+        "cashback_period": "12"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 1,
+        "unit_amount": 1000,
+        "unit_amount_decimal": "10.00",
+        "unit_amount_net": 1000,
+        "unit_amount_gross": 1190,
+        "amount_subtotal": 1000,
+        "amount_total": 1190,
+        "amount_tax": 190
+      }
+    ],
+    "unit_amount_gross": 1190,
+    "unit_amount_net": 1000,
+    "amount_subtotal": 1000,
+    "amount_total": 1190,
+    "amount_tax": 190,
+    "price_display_in_journeys": "[undefined]",
+    "cashback_amount": 1785,
+    "after_cashback_amount_total": 1041,
+    "currency": "EUR",
+    "description": "Price tiered_graduated-exclusive-coupon#3",
+    "cashback_period": "12",
+    "type": "recurring",
+    "billing_period": "monthly",
+    "is_tax_inclusive": false,
+    "unit_amount_net_decimal": "10",
+    "unit_amount_gross_decimal": "11.9",
+    "amount_subtotal_decimal": "10",
+    "amount_total_decimal": "11.9",
+    "cashback_amount_decimal": "17.85",
+    "after_cashback_amount_total_decimal": "10.4125"
+  },
+  "tiered_flatfee, tax inclusive, no coupon": {
+    "price_id": "tiered_flatfee-inclusive-none",
+    "product_id": "product-tiered_flatfee-inclusive-none",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 798
+      }
+    ],
+    "_price": {
+      "_id": "tiered_flatfee-inclusive-none",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_flatfee",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": true,
+      "type": "one_time",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_flatfee-inclusive-none"
+    },
+    "_product": {
+      "_id": "product-tiered_flatfee-inclusive-none",
+      "name": "Product tiered_flatfee-inclusive-none",
+      "type": "product"
+    },
+    "tiers_details": [
+      {
+        "quantity": 1,
+        "unit_amount": 5000,
+        "unit_amount_decimal": "50.00",
+        "unit_amount_net": 4202,
+        "unit_amount_gross": 5000,
+        "amount_subtotal": 4202,
+        "amount_total": 5000,
+        "amount_tax": 798
+      }
+    ],
+    "unit_amount_gross": 5000,
+    "unit_amount_net": 4202,
+    "amount_subtotal": 4202,
+    "amount_total": 5000,
+    "amount_tax": 798,
+    "price_display_in_journeys": "[undefined]",
+    "currency": "EUR",
+    "description": "Price tiered_flatfee-inclusive-none",
+    "type": "one_time",
+    "is_tax_inclusive": true,
+    "unit_amount_net_decimal": "42.016806722689",
+    "unit_amount_gross_decimal": "50",
+    "amount_subtotal_decimal": "42.016806722689",
+    "amount_total_decimal": "50"
+  },
+  "tiered_flatfee, tax inclusive, percentage discount": {
+    "price_id": "tiered_flatfee-inclusive-coupon#1",
+    "product_id": "product-tiered_flatfee-inclusive-coupon#1",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 10777
+      }
+    ],
+    "_price": {
+      "_id": "tiered_flatfee-inclusive-coupon#1",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_flatfee",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": true,
+      "type": "one_time",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_flatfee-inclusive-coupon#1"
+    },
+    "_product": {
+      "_id": "product-tiered_flatfee-inclusive-coupon#1",
+      "name": "Product tiered_flatfee-inclusive-coupon#1",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#1",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Winter Sale",
+        "name": "Winter Sale",
+        "type": "percentage",
+        "percentage_value": "10",
+        "category": "discount"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 1,
+        "unit_amount": 5000,
+        "unit_amount_decimal": "50.00",
+        "unit_amount_net": 4202,
+        "unit_amount_gross": 5000,
+        "amount_subtotal": 4202,
+        "amount_total": 5000,
+        "amount_tax": 798
+      }
+    ],
+    "unit_amount_gross": 4500,
+    "unit_amount_net": 3782,
+    "amount_subtotal": 56723,
+    "amount_total": 67500,
+    "amount_tax": 10777,
+    "price_display_in_journeys": "[undefined]",
+    "unit_amount": 4500,
+    "unit_discount_amount": 500,
+    "before_discount_unit_amount": 5000,
+    "before_discount_unit_amount_gross": 5000,
+    "before_discount_unit_amount_net": 4202,
+    "unit_discount_amount_net": 420,
+    "tax_discount_amount": 1197,
+    "before_discount_tax_amount": 11975,
+    "discount_amount": 7500,
+    "discount_amount_net": 6303,
+    "discount_percentage": 10,
+    "before_discount_amount_total": 75000,
+    "before_discount_amount_subtotal": 63025,
+    "currency": "EUR",
+    "description": "Price tiered_flatfee-inclusive-coupon#1",
+    "type": "one_time",
+    "is_tax_inclusive": true,
+    "unit_amount_decimal": "45",
+    "before_discount_unit_amount_decimal": "50",
+    "before_discount_unit_amount_gross_decimal": "50",
+    "before_discount_unit_amount_net_decimal": "42.016806722689",
+    "unit_discount_amount_decimal": "5",
+    "unit_amount_net_decimal": "37.81512605042",
+    "unit_discount_amount_net_decimal": "4.201680672269",
+    "unit_amount_gross_decimal": "45",
+    "amount_subtotal_decimal": "567.2268907563",
+    "amount_total_decimal": "675",
+    "discount_amount_decimal": "75",
+    "before_discount_amount_total_decimal": "750",
+    "before_discount_amount_subtotal_decimal": "630.252100840335",
+    "tax_discount_amount_decimal": "11.974789915965",
+    "discount_amount_net_decimal": "63.025210084035",
+    "before_discount_tax_amount_decimal": "119.747899159665"
+  },
+  "tiered_flatfee, tax inclusive, fixed discount": {
+    "price_id": "tiered_flatfee-inclusive-coupon#2",
+    "product_id": "product-tiered_flatfee-inclusive-coupon#2",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 10777
+      }
+    ],
+    "_price": {
+      "_id": "tiered_flatfee-inclusive-coupon#2",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_flatfee",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": true,
+      "type": "one_time",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_flatfee-inclusive-coupon#2"
+    },
+    "_product": {
+      "_id": "product-tiered_flatfee-inclusive-coupon#2",
+      "name": "Product tiered_flatfee-inclusive-coupon#2",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#2",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Winter Sale",
+        "name": "Winter Sale",
+        "type": "fixed",
+        "fixed_value": 500,
+        "fixed_value_decimal": "5.00",
+        "fixed_value_currency": "EUR",
+        "category": "discount"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 1,
+        "unit_amount": 5000,
+        "unit_amount_decimal": "50.00",
+        "unit_amount_net": 4202,
+        "unit_amount_gross": 5000,
+        "amount_subtotal": 4202,
+        "amount_total": 5000,
+        "amount_tax": 798
+      }
+    ],
+    "unit_amount_gross": 4500,
+    "unit_amount_net": 3782,
+    "amount_subtotal": 56723,
+    "amount_total": 67500,
+    "amount_tax": 10777,
+    "price_display_in_journeys": "[undefined]",
+    "unit_amount": 4500,
+    "unit_discount_amount": 500,
+    "before_discount_unit_amount": 5000,
+    "before_discount_unit_amount_gross": 5000,
+    "before_discount_unit_amount_net": 4202,
+    "unit_discount_amount_net": 420,
+    "tax_discount_amount": 1197,
+    "before_discount_tax_amount": 11975,
+    "discount_amount": 7500,
+    "discount_amount_net": 6303,
+    "before_discount_amount_total": 75000,
+    "before_discount_amount_subtotal": 63025,
+    "currency": "EUR",
+    "description": "Price tiered_flatfee-inclusive-coupon#2",
+    "type": "one_time",
+    "is_tax_inclusive": true,
+    "unit_amount_decimal": "45",
+    "before_discount_unit_amount_decimal": "50",
+    "before_discount_unit_amount_gross_decimal": "50",
+    "before_discount_unit_amount_net_decimal": "42.016806722689",
+    "unit_discount_amount_decimal": "5",
+    "unit_amount_net_decimal": "37.81512605042",
+    "unit_discount_amount_net_decimal": "4.201680672269",
+    "unit_amount_gross_decimal": "45",
+    "amount_subtotal_decimal": "567.2268907563",
+    "amount_total_decimal": "675",
+    "discount_amount_decimal": "75",
+    "before_discount_amount_total_decimal": "750",
+    "before_discount_amount_subtotal_decimal": "630.252100840335",
+    "tax_discount_amount_decimal": "11.974789915965",
+    "discount_amount_net_decimal": "63.025210084035",
+    "before_discount_tax_amount_decimal": "119.747899159665"
+  },
+  "tiered_flatfee, tax inclusive, fixed cashback": {
+    "price_id": "tiered_flatfee-inclusive-coupon#3",
+    "product_id": "product-tiered_flatfee-inclusive-coupon#3",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 798
+      }
+    ],
+    "_price": {
+      "_id": "tiered_flatfee-inclusive-coupon#3",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_flatfee",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": true,
+      "type": "one_time",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_flatfee-inclusive-coupon#3"
+    },
+    "_product": {
+      "_id": "product-tiered_flatfee-inclusive-coupon#3",
+      "name": "Product tiered_flatfee-inclusive-coupon#3",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#3",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Summer Cashback",
+        "name": "Summer Cashback",
+        "type": "fixed",
+        "category": "cashback",
+        "fixed_value": 1000,
+        "fixed_value_decimal": "10.00",
+        "fixed_value_currency": "EUR",
+        "cashback_period": "12"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 1,
+        "unit_amount": 5000,
+        "unit_amount_decimal": "50.00",
+        "unit_amount_net": 4202,
+        "unit_amount_gross": 5000,
+        "amount_subtotal": 4202,
+        "amount_total": 5000,
+        "amount_tax": 798
+      }
+    ],
+    "unit_amount_gross": 5000,
+    "unit_amount_net": 4202,
+    "amount_subtotal": 4202,
+    "amount_total": 5000,
+    "amount_tax": 798,
+    "price_display_in_journeys": "[undefined]",
+    "cashback_amount": 15000,
+    "after_cashback_amount_total": -10000,
+    "currency": "EUR",
+    "description": "Price tiered_flatfee-inclusive-coupon#3",
+    "cashback_period": "12",
+    "type": "one_time",
+    "is_tax_inclusive": true,
+    "unit_amount_net_decimal": "42.016806722689",
+    "unit_amount_gross_decimal": "50",
+    "amount_subtotal_decimal": "42.016806722689",
+    "amount_total_decimal": "50",
+    "cashback_amount_decimal": "150",
+    "after_cashback_amount_total_decimal": "-100"
+  },
+  "tiered_flatfee, tax inclusive, percentage cashback": {
+    "price_id": "tiered_flatfee-inclusive-coupon#3",
+    "product_id": "product-tiered_flatfee-inclusive-coupon#3",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 798
+      }
+    ],
+    "_price": {
+      "_id": "tiered_flatfee-inclusive-coupon#3",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_flatfee",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": true,
+      "type": "one_time",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_flatfee-inclusive-coupon#3"
+    },
+    "_product": {
+      "_id": "product-tiered_flatfee-inclusive-coupon#3",
+      "name": "Product tiered_flatfee-inclusive-coupon#3",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#3",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Summer Cashback",
+        "name": "Summer Cashback",
+        "type": "percentage",
+        "category": "cashback",
+        "percentage_value": "10",
+        "cashback_period": "12"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 1,
+        "unit_amount": 5000,
+        "unit_amount_decimal": "50.00",
+        "unit_amount_net": 4202,
+        "unit_amount_gross": 5000,
+        "amount_subtotal": 4202,
+        "amount_total": 5000,
+        "amount_tax": 798
+      }
+    ],
+    "unit_amount_gross": 5000,
+    "unit_amount_net": 4202,
+    "amount_subtotal": 4202,
+    "amount_total": 5000,
+    "amount_tax": 798,
+    "price_display_in_journeys": "[undefined]",
+    "cashback_amount": 7500,
+    "after_cashback_amount_total": -2500,
+    "currency": "EUR",
+    "description": "Price tiered_flatfee-inclusive-coupon#3",
+    "cashback_period": "12",
+    "type": "one_time",
+    "is_tax_inclusive": true,
+    "unit_amount_net_decimal": "42.016806722689",
+    "unit_amount_gross_decimal": "50",
+    "amount_subtotal_decimal": "42.016806722689",
+    "amount_total_decimal": "50",
+    "cashback_amount_decimal": "75",
+    "after_cashback_amount_total_decimal": "-25"
+  },
+  "tiered_flatfee, tax exclusive, no coupon": {
+    "price_id": "tiered_flatfee-exclusive-none",
+    "product_id": "product-tiered_flatfee-exclusive-none",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 950
+      }
+    ],
+    "_price": {
+      "_id": "tiered_flatfee-exclusive-none",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_flatfee",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": false,
+      "type": "recurring",
+      "billing_period": "monthly",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_flatfee-exclusive-none"
+    },
+    "_product": {
+      "_id": "product-tiered_flatfee-exclusive-none",
+      "name": "Product tiered_flatfee-exclusive-none",
+      "type": "product"
+    },
+    "tiers_details": [
+      {
+        "quantity": 1,
+        "unit_amount": 5000,
+        "unit_amount_decimal": "50.00",
+        "unit_amount_net": 5000,
+        "unit_amount_gross": 5950,
+        "amount_subtotal": 5000,
+        "amount_total": 5950,
+        "amount_tax": 950
+      }
+    ],
+    "unit_amount_gross": 5950,
+    "unit_amount_net": 5000,
+    "amount_subtotal": 5000,
+    "amount_total": 5950,
+    "amount_tax": 950,
+    "price_display_in_journeys": "[undefined]",
+    "currency": "EUR",
+    "description": "Price tiered_flatfee-exclusive-none",
+    "type": "recurring",
+    "billing_period": "monthly",
+    "is_tax_inclusive": false,
+    "unit_amount_net_decimal": "50",
+    "unit_amount_gross_decimal": "59.5",
+    "amount_subtotal_decimal": "50",
+    "amount_total_decimal": "59.5"
+  },
+  "tiered_flatfee, tax exclusive, percentage discount": {
+    "price_id": "tiered_flatfee-exclusive-coupon#1",
+    "product_id": "product-tiered_flatfee-exclusive-coupon#1",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 12825
+      }
+    ],
+    "_price": {
+      "_id": "tiered_flatfee-exclusive-coupon#1",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_flatfee",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": false,
+      "type": "recurring",
+      "billing_period": "monthly",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_flatfee-exclusive-coupon#1"
+    },
+    "_product": {
+      "_id": "product-tiered_flatfee-exclusive-coupon#1",
+      "name": "Product tiered_flatfee-exclusive-coupon#1",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#1",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Winter Sale",
+        "name": "Winter Sale",
+        "type": "percentage",
+        "percentage_value": "10",
+        "category": "discount"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 1,
+        "unit_amount": 5000,
+        "unit_amount_decimal": "50.00",
+        "unit_amount_net": 5000,
+        "unit_amount_gross": 5950,
+        "amount_subtotal": 5000,
+        "amount_total": 5950,
+        "amount_tax": 950
+      }
+    ],
+    "unit_amount_gross": 5355,
+    "unit_amount_net": 4500,
+    "amount_subtotal": 67500,
+    "amount_total": 80325,
+    "amount_tax": 12825,
+    "price_display_in_journeys": "[undefined]",
+    "unit_amount": 4500,
+    "unit_discount_amount": 595,
+    "before_discount_unit_amount": 5000,
+    "before_discount_unit_amount_gross": 5950,
+    "before_discount_unit_amount_net": 5000,
+    "unit_discount_amount_net": 500,
+    "tax_discount_amount": 1425,
+    "before_discount_tax_amount": 14250,
+    "discount_amount": 8925,
+    "discount_amount_net": 7500,
+    "discount_percentage": 10,
+    "before_discount_amount_total": 89250,
+    "before_discount_amount_subtotal": 75000,
+    "currency": "EUR",
+    "description": "Price tiered_flatfee-exclusive-coupon#1",
+    "type": "recurring",
+    "billing_period": "monthly",
+    "is_tax_inclusive": false,
+    "unit_amount_decimal": "45",
+    "before_discount_unit_amount_decimal": "50",
+    "before_discount_unit_amount_gross_decimal": "59.5",
+    "before_discount_unit_amount_net_decimal": "50",
+    "unit_discount_amount_decimal": "5.95",
+    "unit_amount_net_decimal": "45",
+    "unit_discount_amount_net_decimal": "5",
+    "unit_amount_gross_decimal": "53.55",
+    "amount_subtotal_decimal": "675",
+    "amount_total_decimal": "803.25",
+    "discount_amount_decimal": "89.25",
+    "before_discount_amount_total_decimal": "892.5",
+    "before_discount_amount_subtotal_decimal": "750",
+    "tax_discount_amount_decimal": "14.25",
+    "discount_amount_net_decimal": "75",
+    "before_discount_tax_amount_decimal": "142.5"
+  },
+  "tiered_flatfee, tax exclusive, fixed discount": {
+    "price_id": "tiered_flatfee-exclusive-coupon#2",
+    "product_id": "product-tiered_flatfee-exclusive-coupon#2",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 12825
+      }
+    ],
+    "_price": {
+      "_id": "tiered_flatfee-exclusive-coupon#2",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_flatfee",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": false,
+      "type": "recurring",
+      "billing_period": "monthly",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_flatfee-exclusive-coupon#2"
+    },
+    "_product": {
+      "_id": "product-tiered_flatfee-exclusive-coupon#2",
+      "name": "Product tiered_flatfee-exclusive-coupon#2",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#2",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Winter Sale",
+        "name": "Winter Sale",
+        "type": "fixed",
+        "fixed_value": 500,
+        "fixed_value_decimal": "5.00",
+        "fixed_value_currency": "EUR",
+        "category": "discount"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 1,
+        "unit_amount": 5000,
+        "unit_amount_decimal": "50.00",
+        "unit_amount_net": 5000,
+        "unit_amount_gross": 5950,
+        "amount_subtotal": 5000,
+        "amount_total": 5950,
+        "amount_tax": 950
+      }
+    ],
+    "unit_amount_gross": 5355,
+    "unit_amount_net": 4500,
+    "amount_subtotal": 67500,
+    "amount_total": 80325,
+    "amount_tax": 12825,
+    "price_display_in_journeys": "[undefined]",
+    "unit_amount": 4500,
+    "unit_discount_amount": 595,
+    "before_discount_unit_amount": 5000,
+    "before_discount_unit_amount_gross": 5950,
+    "before_discount_unit_amount_net": 5000,
+    "unit_discount_amount_net": 500,
+    "tax_discount_amount": 1425,
+    "before_discount_tax_amount": 14250,
+    "discount_amount": 8925,
+    "discount_amount_net": 7500,
+    "before_discount_amount_total": 89250,
+    "before_discount_amount_subtotal": 75000,
+    "currency": "EUR",
+    "description": "Price tiered_flatfee-exclusive-coupon#2",
+    "type": "recurring",
+    "billing_period": "monthly",
+    "is_tax_inclusive": false,
+    "unit_amount_decimal": "45",
+    "before_discount_unit_amount_decimal": "50",
+    "before_discount_unit_amount_gross_decimal": "59.5",
+    "before_discount_unit_amount_net_decimal": "50",
+    "unit_discount_amount_decimal": "5.95",
+    "unit_amount_net_decimal": "45",
+    "unit_discount_amount_net_decimal": "5",
+    "unit_amount_gross_decimal": "53.55",
+    "amount_subtotal_decimal": "675",
+    "amount_total_decimal": "803.25",
+    "discount_amount_decimal": "89.25",
+    "before_discount_amount_total_decimal": "892.5",
+    "before_discount_amount_subtotal_decimal": "750",
+    "tax_discount_amount_decimal": "14.25",
+    "discount_amount_net_decimal": "75",
+    "before_discount_tax_amount_decimal": "142.5"
+  },
+  "tiered_flatfee, tax exclusive, fixed cashback": {
+    "price_id": "tiered_flatfee-exclusive-coupon#3",
+    "product_id": "product-tiered_flatfee-exclusive-coupon#3",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 950
+      }
+    ],
+    "_price": {
+      "_id": "tiered_flatfee-exclusive-coupon#3",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_flatfee",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": false,
+      "type": "recurring",
+      "billing_period": "monthly",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_flatfee-exclusive-coupon#3"
+    },
+    "_product": {
+      "_id": "product-tiered_flatfee-exclusive-coupon#3",
+      "name": "Product tiered_flatfee-exclusive-coupon#3",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#3",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Summer Cashback",
+        "name": "Summer Cashback",
+        "type": "fixed",
+        "category": "cashback",
+        "fixed_value": 1000,
+        "fixed_value_decimal": "10.00",
+        "fixed_value_currency": "EUR",
+        "cashback_period": "12"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 1,
+        "unit_amount": 5000,
+        "unit_amount_decimal": "50.00",
+        "unit_amount_net": 5000,
+        "unit_amount_gross": 5950,
+        "amount_subtotal": 5000,
+        "amount_total": 5950,
+        "amount_tax": 950
+      }
+    ],
+    "unit_amount_gross": 5950,
+    "unit_amount_net": 5000,
+    "amount_subtotal": 5000,
+    "amount_total": 5950,
+    "amount_tax": 950,
+    "price_display_in_journeys": "[undefined]",
+    "cashback_amount": 15000,
+    "after_cashback_amount_total": 4700,
+    "currency": "EUR",
+    "description": "Price tiered_flatfee-exclusive-coupon#3",
+    "cashback_period": "12",
+    "type": "recurring",
+    "billing_period": "monthly",
+    "is_tax_inclusive": false,
+    "unit_amount_net_decimal": "50",
+    "unit_amount_gross_decimal": "59.5",
+    "amount_subtotal_decimal": "50",
+    "amount_total_decimal": "59.5",
+    "cashback_amount_decimal": "150",
+    "after_cashback_amount_total_decimal": "47"
+  },
+  "tiered_flatfee, tax exclusive, percentage cashback": {
+    "price_id": "tiered_flatfee-exclusive-coupon#3",
+    "product_id": "product-tiered_flatfee-exclusive-coupon#3",
+    "quantity": 15,
+    "taxes": [
+      {
+        "tax": {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        },
+        "amount": 950
+      }
+    ],
+    "_price": {
+      "_id": "tiered_flatfee-exclusive-coupon#3",
+      "unit_amount_currency": "EUR",
+      "unit_amount_decimal": "12.34",
+      "pricing_model": "tiered_flatfee",
+      "tiers": [
+        {
+          "up_to": 10,
+          "unit_amount": 1000,
+          "unit_amount_decimal": "10.00",
+          "flat_fee_amount": 5000,
+          "flat_fee_amount_decimal": "50.00"
+        },
+        {
+          "up_to": 20,
+          "unit_amount": 800,
+          "unit_amount_decimal": "8.00",
+          "flat_fee_amount": 9000,
+          "flat_fee_amount_decimal": "90.00"
+        },
+        {
+          "up_to": null,
+          "unit_amount": 600,
+          "unit_amount_decimal": "6.00",
+          "flat_fee_amount": 12000,
+          "flat_fee_amount_decimal": "120.00"
+        }
+      ],
+      "is_tax_inclusive": false,
+      "type": "recurring",
+      "billing_period": "monthly",
+      "tax": [
+        {
+          "_id": "19",
+          "_schema": "tax",
+          "_org": "739224",
+          "_title": "",
+          "rate": 19,
+          "type": "VAT",
+          "_created_at": "2022-06-29T20:26:19.020Z",
+          "_updated_at": "2022-06-29T20:26:19.020Z"
+        }
+      ],
+      "description": "Price tiered_flatfee-exclusive-coupon#3"
+    },
+    "_product": {
+      "_id": "product-tiered_flatfee-exclusive-coupon#3",
+      "name": "Product tiered_flatfee-exclusive-coupon#3",
+      "type": "product"
+    },
+    "_coupons": [
+      {
+        "_id": "coupon#3",
+        "_schema": "coupon",
+        "_org": "org#1",
+        "_created_at": "2022-06-15T09:17:06.510Z",
+        "_updated_at": "2022-06-17T11:48:20.104Z",
+        "_title": "Summer Cashback",
+        "name": "Summer Cashback",
+        "type": "percentage",
+        "category": "cashback",
+        "percentage_value": "10",
+        "cashback_period": "12"
+      }
+    ],
+    "tiers_details": [
+      {
+        "quantity": 1,
+        "unit_amount": 5000,
+        "unit_amount_decimal": "50.00",
+        "unit_amount_net": 5000,
+        "unit_amount_gross": 5950,
+        "amount_subtotal": 5000,
+        "amount_total": 5950,
+        "amount_tax": 950
+      }
+    ],
+    "unit_amount_gross": 5950,
+    "unit_amount_net": 5000,
+    "amount_subtotal": 5000,
+    "amount_total": 5950,
+    "amount_tax": 950,
+    "price_display_in_journeys": "[undefined]",
+    "cashback_amount": 8925,
+    "after_cashback_amount_total": 5206,
+    "currency": "EUR",
+    "description": "Price tiered_flatfee-exclusive-coupon#3",
+    "cashback_period": "12",
+    "type": "recurring",
+    "billing_period": "monthly",
+    "is_tax_inclusive": false,
+    "unit_amount_net_decimal": "50",
+    "unit_amount_gross_decimal": "59.5",
+    "amount_subtotal_decimal": "50",
+    "amount_total_decimal": "59.5",
+    "cashback_amount_decimal": "89.25",
+    "after_cashback_amount_total_decimal": "52.0625"
+  }
+}

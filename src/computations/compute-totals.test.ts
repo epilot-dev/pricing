@@ -2,7 +2,7 @@ import type { PriceItemDto, CompositePriceItemDto, PriceItemsDto, Price } from '
 import { describe, expect, it } from 'vitest';
 import * as samples from '../__tests__/fixtures/price.samples';
 import * as results from '../__tests__/fixtures/pricing.results';
-import { taxRateless } from '../__tests__/fixtures/tax.samples';
+import { tax19percent, tax6percent, taxRateless } from '../__tests__/fixtures/tax.samples';
 import * as coupons from '../coupons/__tests__/coupon.fixtures';
 import { fixedCashbackCoupon } from '../coupons/__tests__/coupon.fixtures';
 import type { CompositePriceItem } from '../shared/types';
@@ -1061,4 +1061,214 @@ it('should apply cashbacks in composite price if it has requires_promo_code set 
       cashback_period: '12',
     },
   ]);
+});
+
+describe('computeAggregatedAndPriceTotals output', () => {
+  const discount10Percent = { ...coupons.percentage10DiscountCoupon, category: 'discount' as const };
+
+  const buildPriceItem = ({
+    id,
+    unitAmountDecimal,
+    quantity = 1,
+    tax = tax19percent,
+    type = 'one_time',
+    coupons: itemCoupons,
+  }: {
+    id: string;
+    unitAmountDecimal: string;
+    quantity?: number;
+    tax?: typeof tax19percent;
+    type?: 'one_time' | 'recurring';
+    coupons?: PriceItemDto['_coupons'];
+  }): PriceItemDto => ({
+    price_id: id,
+    quantity,
+    taxes: [{ tax }],
+    _price: {
+      _id: id,
+      unit_amount_currency: 'EUR',
+      unit_amount_decimal: unitAmountDecimal,
+      type,
+      ...(type === 'recurring' && { billing_period: 'monthly' }),
+      is_tax_inclusive: true,
+      pricing_model: 'per_unit',
+      tax: [tax],
+    },
+    ...(itemCoupons && { _coupons: itemCoupons }),
+  });
+
+  it('accumulates discounts of several items in the same recurrence', () => {
+    const result = computeAggregatedAndPriceTotals([
+      buildPriceItem({ id: 'a', unitAmountDecimal: '11.90', quantity: 2, coupons: [discount10Percent] }),
+      buildPriceItem({ id: 'b', unitAmountDecimal: '23.80', coupons: [discount10Percent] }),
+    ]);
+
+    expect(result.amount_total).toBe(4284);
+    expect(result.amount_subtotal).toBe(3600);
+    expect(result.amount_tax).toBe(684);
+    expect(result.total_details?.breakdown?.recurrences).toStrictEqual([
+      {
+        type: 'one_time',
+        unit_amount_gross: 3213,
+        unit_amount_net: 2700,
+        amount_subtotal: 3600,
+        amount_total: 4284,
+        amount_subtotal_decimal: '36',
+        amount_total_decimal: '42.84',
+        amount_tax: 684,
+        before_discount_amount_total: 4760,
+        before_discount_amount_total_decimal: '47.6',
+        before_discount_amount_subtotal: 4000,
+        before_discount_amount_subtotal_decimal: '40',
+        discount_amount: 476,
+        discount_amount_decimal: '4.76',
+      },
+    ]);
+  });
+
+  it.each([
+    ['the discounted item comes last', ['plain', 'discounted']],
+    ['the discounted item comes first', ['discounted', 'plain']],
+  ])('includes items without discount in the amounts before discount when %s', (_, order) => {
+    const items = {
+      plain: buildPriceItem({ id: 'plain', unitAmountDecimal: '11.90' }),
+      discounted: buildPriceItem({ id: 'discounted', unitAmountDecimal: '11.90', coupons: [discount10Percent] }),
+    };
+
+    const result = computeAggregatedAndPriceTotals(order.map((key) => items[key as keyof typeof items]));
+
+    expect(result.total_details?.breakdown?.recurrences?.[0]).toMatchObject({
+      amount_total: 2261,
+      before_discount_amount_total: 2380,
+      before_discount_amount_subtotal: 2000,
+      discount_amount: 119,
+    });
+  });
+
+  it('keeps one tax entry and one recurrence by tax per tax rate', () => {
+    const result = computeAggregatedAndPriceTotals([
+      buildPriceItem({ id: 'a', unitAmountDecimal: '11.90' }),
+      buildPriceItem({ id: 'b', unitAmountDecimal: '10.60', tax: tax6percent }),
+      buildPriceItem({ id: 'c', unitAmountDecimal: '23.80' }),
+    ]);
+
+    expect(result.total_details?.breakdown?.taxes).toStrictEqual([
+      { tax: { _id: '19', type: 'VAT', rate: 19 }, amount: 570 },
+      { tax: { _id: '6', type: 'VAT', rate: 6 }, amount: 60 },
+    ]);
+    expect(
+      result.total_details?.breakdown?.recurrencesByTax?.map(({ amount_total, tax }) => [amount_total, tax.tax?.rate]),
+    ).toEqual([
+      [3570, 19],
+      [1060, 6],
+    ]);
+  });
+
+  it('splits recurrences by billing period', () => {
+    const result = computeAggregatedAndPriceTotals([
+      buildPriceItem({ id: 'a', unitAmountDecimal: '11.90' }),
+      buildPriceItem({ id: 'b', unitAmountDecimal: '5.95', type: 'recurring' }),
+    ]);
+
+    expect(
+      result.total_details?.breakdown?.recurrences?.map(({ type, billing_period, amount_total }) => ({
+        type,
+        billing_period,
+        amount_total,
+      })),
+    ).toStrictEqual([
+      { type: 'one_time', billing_period: undefined, amount_total: 1190 },
+      { type: 'recurring', billing_period: 'monthly', amount_total: 595 },
+    ]);
+  });
+
+  it('keeps one cashback entry per item, including cashbacks of 0', () => {
+    const zeroCashbackCoupon = { ...fixedCashbackCoupon, _id: 'zero', fixed_value: 0, fixed_value_decimal: '0.00' };
+
+    const result = computeAggregatedAndPriceTotals([
+      buildPriceItem({ id: 'a', unitAmountDecimal: '11.90', coupons: [fixedCashbackCoupon] }),
+      buildPriceItem({ id: 'b', unitAmountDecimal: '11.90', coupons: [zeroCashbackCoupon] }),
+      buildPriceItem({ id: 'c', unitAmountDecimal: '11.90', coupons: [fixedCashbackCoupon] }),
+    ]);
+
+    expect(result.total_details?.breakdown?.cashbacks).toStrictEqual([
+      { cashback_period: '12', amount_total: 1000, cashback_name: fixedCashbackCoupon.name },
+      { cashback_period: '12', amount_total: 0, cashback_name: fixedCashbackCoupon.name },
+      { cashback_period: '12', amount_total: 1000, cashback_name: fixedCashbackCoupon.name },
+    ]);
+  });
+
+  it('outputs price items in a stable key order', () => {
+    const result = computeAggregatedAndPriceTotals([
+      buildPriceItem({ id: 'a', unitAmountDecimal: '11.90', quantity: 2, coupons: [discount10Percent] }),
+    ]);
+
+    expect(Object.keys(result)).toEqual([
+      'items',
+      'amount_subtotal',
+      'amount_total',
+      'amount_tax',
+      'total_details',
+      'currency',
+    ]);
+    expect(Object.keys(result.items?.[0] ?? {})).toMatchInlineSnapshot(`
+      [
+        "price_id",
+        "quantity",
+        "taxes",
+        "_price",
+        "_coupons",
+        "unit_amount",
+        "unit_amount_net",
+        "unit_amount_gross",
+        "amount_subtotal",
+        "amount_total",
+        "amount_tax",
+        "unit_discount_amount",
+        "before_discount_unit_amount",
+        "before_discount_unit_amount_gross",
+        "before_discount_unit_amount_net",
+        "unit_discount_amount_net",
+        "tax_discount_amount",
+        "before_discount_tax_amount",
+        "discount_amount",
+        "discount_amount_net",
+        "discount_percentage",
+        "before_discount_amount_total",
+        "before_discount_amount_subtotal",
+        "currency",
+        "type",
+        "is_tax_inclusive",
+        "unit_amount_decimal",
+        "before_discount_unit_amount_decimal",
+        "before_discount_unit_amount_gross_decimal",
+        "before_discount_unit_amount_net_decimal",
+        "unit_discount_amount_decimal",
+        "unit_amount_net_decimal",
+        "unit_discount_amount_net_decimal",
+        "unit_amount_gross_decimal",
+        "amount_subtotal_decimal",
+        "amount_total_decimal",
+        "discount_amount_decimal",
+        "before_discount_amount_total_decimal",
+        "before_discount_amount_subtotal_decimal",
+        "tax_discount_amount_decimal",
+        "discount_amount_net_decimal",
+        "before_discount_tax_amount_decimal",
+      ]
+    `);
+  });
+
+  it('does not modify the given price items', () => {
+    const priceItems = [
+      buildPriceItem({ id: 'a', unitAmountDecimal: '11.90', quantity: 2, coupons: [discount10Percent] }),
+      buildPriceItem({ id: 'b', unitAmountDecimal: '23.80', coupons: [fixedCashbackCoupon] }),
+      samples.compositePriceWithPercentageCashbackCoupon,
+    ];
+    const priceItemsCopy = structuredClone(priceItems);
+
+    computeAggregatedAndPriceTotals(priceItems);
+
+    expect(priceItems).toStrictEqual(priceItemsCopy);
+  });
 });
